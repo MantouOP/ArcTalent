@@ -27,6 +27,8 @@ Codex provided substantial assistance with brainstorming, architecture, the matc
 
 The 22 October worker-journey addition used the installed Superpowers planning/testing/review workflows, Taste Skill's app-screen guidance and source lint, and the React checklist. Browser checks used Codex browser tools. No third-party skill browser inspector was run. One fresh code reviewer completed a read-only review; it did not provide worker research or validate career outcomes.
 
+The subsequent Orion redesign followed the team's supplied visual reference: custom dark CSS, an SVG career constellation, score gauges, comparison bars, a proposed weekly-hours area chart and proportional skill-reuse bubbles. These are presentations of existing engine output. The orb is decorative, with no geographic or labour-market claim. No new chart library, data service or AI model was added. Existing application state and event handlers were preserved and checked separately from the visual review.
+
 The engine's parameters, role requirements, course mappings and scenario assumptions are initial hypotheses produced during the assisted build. The team must review and adopt or change them consciously. Do not claim those values are measured estimates from the linked sources.
 
 ## Team review and contributions — complete with real evidence

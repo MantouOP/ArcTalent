@@ -56,6 +56,21 @@ The [dashboard screenshot](images/dashboard.jpg) records the verified desktop ba
 
 The [worker bridge screenshot](images/worker-bridge.png) shows the new pathway detail. The [preference screenshot](images/learning-preferences.png) shows the optional questionnaire.
 
-## Not yet verified
+## Orion presentation checks — 22 October 2026
+
+- Restyled the explorer, pathway, workforce, evidence and profile screens with the supplied obsidian/indigo palette. Added a fixed icon rail and labelled mobile navigation, translucent panels, geometric type, glowing SVG marks and reduced-motion support.
+- Compared the application AST against `cce905f`: the full logic before the render is identical, and all **36 existing event handlers** remain present. The two additional callbacks invoke existing selection/explanation handlers. No changes to `src/lib`, API routes, schemas, exports, scoring, dependencies or request logic.
+- Scenario toggling followed the top route when enabled and retained a manually selected Sustainability destination when pinned. A newer snapshot showed its actual +3.3-point evidence delta; studied learning remained retained.
+- The score dialog opened and Escape restored focus to its trigger. The funding filter kept its truthful empty state. The three-question check advanced through review and saved through the existing profile flow.
+- Zero weekly time produced eight zero-hour points. A zero-skill profile produced 0% coverage, zero-height skill-coverage bars and zero reuse labels without filled bubbles.
+- Workforce budget/opening controls remained functional. At 390px, the heatmap was 1179px wide inside a 314px scrolling frame; the document did not overflow horizontally.
+- All five views had no document-level horizontal overflow at 768 × 1024 and 390 × 844. An intermediate-width conflict with the legacy 760px breakpoint was reproduced at 700px and fixed by aligning navigation/map reflow: the nav then measured fixed at bottom 0 and the map used three stacked columns, with no horizontal overflow. The desktop composition was inspected at 1440 × 1000.
+- Browser logs exposed a new SVG tooltip hydration mismatch and floating-point differences in radar coordinates across JavaScript engines. Rendering each tooltip as one string and rounding only SVG display coordinates to 0.001px fixed both. A subsequent development reload and a fresh production tab recorded no warning/error entries. Scores and proficiency values were untouched.
+- Final results: 22 unit tests, 14 production API checks, type checking, formatting and production build passed. One Windows build encountered EPERM creating a generated directory; stopping the temporary servers and rebuilding outside the sandbox succeeded. No build configuration or application integration was changed.
+- A fresh read-only reviewer found no critical, important or minor source issues. It declined browser appearance, measured contrast, clipping and keyboard checks; the implementer performed visual/DOM and focus checks. No formal accessibility audit or third-party browser inspector is claimed.
+
+The [full command-center screenshot](images/orion-command-center.png), [workforce screenshot](images/orion-workforce.png) and [phone screenshot](images/orion-mobile.png) record the new presentation. Temporary viewport overrides were reset; the production preview remains available at localhost:3000.
+
+## External verification still pending
 
 Replit Preview/workflow and public deployment (runtime import/build/API evidence is recorded in REPLIT_STATUS.md), a paid RunPod endpoint, Malaysian vacancy data, HRD programme claimability, worker/employer validation, measured career outcomes and the official submission package. CI has been configured; the remote status for each new commit must be checked separately.

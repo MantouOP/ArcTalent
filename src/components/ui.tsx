@@ -164,10 +164,12 @@ export function Radar({ profile }: { profile: Profile }) {
     'project',
     'stakeholder',
   ];
-  const point = (i: number, r: number) => [
-    140 + Math.sin((i * Math.PI) / 3) * r,
-    125 - Math.cos((i * Math.PI) / 3) * r,
-  ];
+  // Limit visual coordinates to 0.001px so different JS engines hydrate identically.
+  const point = (i: number, r: number) =>
+    [
+      140 + Math.sin((i * Math.PI) / 3) * r,
+      125 - Math.cos((i * Math.PI) / 3) * r,
+    ].map((coordinate) => Math.round(coordinate * 1000) / 1000);
   const poly = (r: number) =>
     ids.map((_, i) => point(i, r).join(',')).join(' ');
   return (
@@ -178,20 +180,26 @@ export function Radar({ profile }: { profile: Profile }) {
       aria-label="Current self-reported skill levels, on a scale of zero to three"
     >
       {[25, 50, 75].map((r) => (
-        <polygon key={r} points={poly(r)} fill="none" stroke="#e1e8e8" />
+        <polygon key={r} points={poly(r)} fill="none" className="radar-grid" />
       ))}
       {ids.map((id, i) => {
         const p = point(i, 75),
           label = point(i, 103);
         return (
           <g key={id}>
-            <line x1={140} y1={125} x2={p[0]} y2={p[1]} stroke="#e1e8e8" />
+            <line
+              x1={140}
+              y1={125}
+              x2={p[0]}
+              y2={p[1]}
+              className="radar-grid"
+            />
             <text
               x={label[0]}
               y={label[1]}
               textAnchor="middle"
               fontSize="10"
-              fill="#677b85"
+              className="radar-label"
             >
               {skillById[id].label}
             </text>
@@ -204,13 +212,14 @@ export function Radar({ profile }: { profile: Profile }) {
             point(i, ((profile.skills[id] ?? 0) / 3) * 75).join(','),
           )
           .join(' ')}
-        fill="#23877626"
-        stroke="#238776"
+        className="radar-shape"
         strokeWidth="2"
       />
       {ids.map((id, i) => {
         const p = point(i, ((profile.skills[id] ?? 0) / 3) * 75);
-        return <circle key={id} cx={p[0]} cy={p[1]} r={3} fill="#238776" />;
+        return (
+          <circle key={id} cx={p[0]} cy={p[1]} r={3} className="radar-point" />
+        );
       })}
     </svg>
   );

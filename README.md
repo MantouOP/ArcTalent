@@ -4,7 +4,7 @@
 
 Enter skills, interests, weekly learning time and budget. ArcTalent explains adjacent career matches, highlights the foundation shared across both scenarios, then schedules verified learning resources within the available time. A dated evidence update recomputes the same model and shows exactly what changed.
 
-![ArcTalent career explorer](docs/images/dashboard.jpg)
+![ArcTalent Orion command center](docs/images/orion-command-center.png)
 
 ## Run locally
 
@@ -44,7 +44,8 @@ See the timed [demo script](docs/DEMO.md), [editable implementation plan](docs/I
 
 - Six sourced occupations, sixteen transferable skills, eleven public learning resources and eight fictional employee profiles.
 - Deterministic, explainable matching and moderate/rapid scenario comparison.
-- A transit-style pathway map, shared learning stops, prerequisites, time and budget limits, weekly schedules and JSON export.
+- An Orion-inspired dark command center with an interactive career constellation, shared learning stops, prerequisites, time and budget limits, weekly schedules and JSON export.
+- Read-only score gauges, skill/scenario comparison bars, a weekly allocation chart and proportional skill-reuse bubbles, all derived from the existing engine output. Snapshot deltas name their comparison; no growth history is invented.
 - Synthetic TXT/text-PDF import, evidence-backed skill candidates and manual confirmation.
 - An optional three-question preference check, a current/target skill bridge and study-session guidance. Preferences are saved with the profile and included in the pathway export; they do not establish aptitude or proficiency.
 - Browser persistence for the worker profile, selected scenario, evidence snapshot, course activity and destination preference.

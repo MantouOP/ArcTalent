@@ -1,5 +1,6 @@
 'use client';
 import './worker-journey.css';
+import './orion.css';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowRight,
@@ -51,6 +52,7 @@ import { EmployerPanel } from './employer-panel';
 import { EvidencePanel } from './evidence-panel';
 import { SkillBridge } from './skill-bridge';
 import { StudyRhythm } from './study-rhythm';
+import { RouteSummary, RouteAnalytics } from './command-overview';
 import { buildSkillBridge } from '@/lib/skill-bridge';
 import { buildStudyRhythm } from '@/lib/learning-preferences';
 type View = 'explore' | 'pathway' | 'team' | 'evidence' | 'profile';
@@ -252,7 +254,7 @@ export function ArcTalentApp() {
           <span className="brand-icon">
             <GitBranch size={24} />
           </span>
-          <span>
+          <span className="brand-wordmark">
             Arc<span className="brand-light">Talent</span>
             <small>BUILD YOUR NEXT CHAPTER</small>
           </span>
@@ -265,6 +267,8 @@ export function ArcTalentApp() {
               className={view === item.id ? 'active' : ''}
               onClick={() => navigate(item.id)}
               aria-current={view === item.id ? 'page' : undefined}
+              title={item.label}
+              aria-label={item.label}
             >
               <item.icon size={19} />
               <span>{item.label}</span>
@@ -273,18 +277,12 @@ export function ArcTalentApp() {
           ))}
         </nav>
         <div className="sidebar-note">
-          <div className="orbit-icon">
-            <Sparkles size={21} />
-          </div>
-          <h3>
-            Many possible futures.
-            <br />
-            One useful next step.
-          </h3>
-          <p>Build skills that keep your options open.</p>
-          <button onClick={() => navigate('pathway')}>
-            Explore your pathway
-            <ArrowUpRight size={15} />
+          <button
+            onClick={() => navigate('pathway')}
+            title="Explore your pathway"
+            aria-label="Explore your pathway"
+          >
+            <Sparkles size={20} />
           </button>
         </div>
         <div className="sidebar-bottom">
@@ -297,7 +295,10 @@ export function ArcTalentApp() {
             <b>inclusive future of work.</b>
           </span>
         </div>
-        <div className="sidebar-user">
+        <div
+          className="sidebar-user"
+          title={`${profile.name} · Synthetic demo profile`}
+        >
           <span className="avatar">{profile.name.slice(0, 1)}</span>
           <div>
             <strong>{profile.name}</strong>
@@ -315,7 +316,9 @@ export function ArcTalentApp() {
       <div className="app-content">
         <header className="topbar">
           <div className="breadcrumb">
-            Workspace
+            <span className="topbar-brand">
+              ArcTalent<span className="product-label"> / WORKSPACE</span>
+            </span>
             <ChevronRight size={13} />
             <strong>{navigation.find((n) => n.id === view)?.label}</strong>
           </div>
@@ -349,24 +352,20 @@ export function ArcTalentApp() {
               </span>
               <h1>
                 {view === 'explore' ? (
-                  <>
-                    Your next chapter,
-                    <br />
-                    <span>within reach.</span>
-                  </>
+                  <>Career command center</>
                 ) : view === 'pathway' ? (
-                  'Your pathway, at your pace.'
+                  'Your learning pathway'
                 ) : view === 'team' ? (
-                  'Build capability. Keep talent.'
+                  'Workforce command center'
                 ) : view === 'evidence' ? (
-                  'From signals to better decisions.'
+                  'Evidence intelligence'
                 ) : (
-                  'Start with what you know.'
+                  'Your skills & profile'
                 )}
               </h1>
               <p>
                 {view === 'explore'
-                  ? `Hi ${profile.name}. You’re bringing more skills than you think. Let’s see where they can take you.`
+                  ? `${profile.name}, explore where your skills can take you across different AI futures.`
                   : view === 'pathway'
                     ? 'A practical route that respects your time, budget and the skills you already have.'
                     : view === 'team'
@@ -480,144 +479,42 @@ export function ArcTalentApp() {
                 </div>
               </div>
               <div className="explorer-grid">
-                <div className="explorer-main">
-                  <section className="panel map-panel">
-                    <div className="panel-heading">
-                      <div>
-                        <span className="eyebrow">
-                          YOUR POSSIBILITIES, CONNECTED
-                        </span>
-                        <h2>A foundation for more than one future.</h2>
-                      </div>
-                      <button
-                        className="icon-button"
-                        onClick={() => navigate('pathway')}
-                        aria-label="Open full learning pathway"
-                      >
-                        <ArrowUpRight size={20} />
-                      </button>
+                <RouteSummary
+                  active={active}
+                  matches={matches}
+                  delta={
+                    previous
+                      ? (changes.find((change) => change.id === active.role.id)
+                          ?.delta ?? 0)
+                      : undefined
+                  }
+                  onSelect={chooseRole}
+                  onExplain={() => setDetails(active)}
+                />
+                <section className="panel map-panel">
+                  <div className="panel-heading">
+                    <div>
+                      <span className="eyebrow">
+                        YOUR POSSIBILITIES, CONNECTED
+                      </span>
+                      <h2>Your career constellation</h2>
                     </div>
-                    <LearningMap
-                      matches={matches}
-                      shared={shared}
-                      profile={profile}
-                      selected={active.role.id}
-                      onSelect={chooseRole}
-                    />
-                  </section>
-                  <section className="career-section">
-                    <div className="section-title">
-                      <div>
-                        <h2>Where your skills could take you</h2>
-                        <p className="muted">
-                          Ranked for your profile and the {scenario} adoption
-                          scenario.
-                        </p>
-                      </div>
-                      <button
-                        className="text-button"
-                        onClick={() => setShowAll(!showAll)}
-                      >
-                        {showAll ? 'Show top three' : 'View all six'}
-                        <ArrowRight size={15} />
-                      </button>
-                    </div>
-                    {showAll && (
-                      <label className="search-box">
-                        <Search size={16} />
-                        <input
-                          aria-label="Search career options"
-                          placeholder="Find a career option…"
-                          value={query}
-                          onChange={(e) => setQuery(e.target.value)}
-                        />
-                      </label>
-                    )}
-                    <div className="career-cards">
-                      {visibleMatches.map((m, i) => (
-                        <article
-                          className={`career-card ${m.role.id === active.role.id ? 'is-selected' : ''}`}
-                          key={m.role.id}
-                        >
-                          <div className="card-top">
-                            <span
-                              className="role-icon"
-                              style={{
-                                color: m.role.color,
-                                background: m.role.color + '12',
-                              }}
-                            >
-                              {m.role.family === 'sustainability' ? (
-                                <Leaf size={19} />
-                              ) : m.role.family === 'people' ? (
-                                <Users size={19} />
-                              ) : (
-                                <GitBranch size={19} />
-                              )}
-                            </span>
-                            <span className="rank">
-                              {i === 0 ? 'TOP MATCH' : `OPTION ${i + 1}`}
-                            </span>
-                            <button
-                              className="icon-button"
-                              aria-label={`Explain ${m.role.title} score`}
-                              onClick={() => setDetails(m)}
-                            >
-                              <Info size={16} />
-                            </button>
-                          </div>
-                          <h3>{m.role.title}</h3>
-                          <p>{m.role.description}</p>
-                          <div className="match-score">
-                            <strong>
-                              {Math.round(m.score)}
-                              <small>/100</small>
-                            </strong>
-                            <span>
-                              Suitability
-                              <small>
-                                Skill match {Math.round(m.coverage)}%
-                              </small>
-                            </span>
-                            <svg viewBox="0 0 40 40" aria-hidden="true">
-                              <circle cx="20" cy="20" r="16" />
-                              <circle
-                                cx="20"
-                                cy="20"
-                                r="16"
-                                strokeDasharray={`${m.score} 100`}
-                                pathLength="100"
-                              />
-                            </svg>
-                          </div>
-                          <div className="career-meta">
-                            <span>{m.reused.length} transferable skills</span>
-                            <span>{m.gaps.length} gaps</span>
-                          </div>
-                          <button
-                            className={
-                              m.role.id === active.role.id
-                                ? 'primary full'
-                                : 'secondary full'
-                            }
-                            onClick={() => {
-                              chooseRole(m.role.id);
-                              navigate('pathway');
-                            }}
-                          >
-                            Explore pathway
-                            <ArrowRight size={14} />
-                          </button>
-                        </article>
-                      ))}
-                    </div>
-                    {visibleMatches.length === 0 && (
-                      <div className="empty-state">
-                        No occupation matches that search.
-                      </div>
-                    )}
-                  </section>
-                </div>
+                    <button
+                      className="icon-button"
+                      onClick={() => navigate('pathway')}
+                      aria-label="Open full learning pathway"
+                    >
+                      <ArrowUpRight size={20} />
+                    </button>
+                  </div>
+                  <LearningMap
+                    matches={matches}
+                    shared={shared}
+                    profile={profile}
+                    selected={active.role.id}
+                    onSelect={chooseRole}
+                  />
+                </section>
                 <aside className="explorer-aside">
                   <section className="panel profile-card">
                     <div className="panel-heading">
@@ -668,6 +565,121 @@ export function ArcTalentApp() {
                     </p>
                   </div>
                 </aside>
+                <RouteAnalytics
+                  matches={matches}
+                  plan={plan}
+                  profile={profile}
+                />
+                <section className="career-section">
+                  <div className="section-title">
+                    <div>
+                      <h2>Where your skills could take you</h2>
+                      <p className="muted">
+                        Ranked for your profile and the {scenario} adoption
+                        scenario.
+                      </p>
+                    </div>
+                    <button
+                      className="text-button"
+                      onClick={() => setShowAll(!showAll)}
+                    >
+                      {showAll ? 'Show top three' : 'View all six'}
+                      <ArrowRight size={15} />
+                    </button>
+                  </div>
+                  {showAll && (
+                    <label className="search-box">
+                      <Search size={16} />
+                      <input
+                        aria-label="Search career options"
+                        placeholder="Find a career option…"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                      />
+                    </label>
+                  )}
+                  <div className="career-cards">
+                    {visibleMatches.map((m, i) => (
+                      <article
+                        className={`career-card ${m.role.id === active.role.id ? 'is-selected' : ''}`}
+                        key={m.role.id}
+                      >
+                        <div className="card-top">
+                          <span
+                            className="role-icon"
+                            style={{
+                              color: m.role.color,
+                              background: m.role.color + '12',
+                            }}
+                          >
+                            {m.role.family === 'sustainability' ? (
+                              <Leaf size={19} />
+                            ) : m.role.family === 'people' ? (
+                              <Users size={19} />
+                            ) : (
+                              <GitBranch size={19} />
+                            )}
+                          </span>
+                          <span className="rank">
+                            {i === 0 ? 'TOP MATCH' : `OPTION ${i + 1}`}
+                          </span>
+                          <button
+                            className="icon-button"
+                            aria-label={`Explain ${m.role.title} score`}
+                            onClick={() => setDetails(m)}
+                          >
+                            <Info size={16} />
+                          </button>
+                        </div>
+                        <h3>{m.role.title}</h3>
+                        <p>{m.role.description}</p>
+                        <div className="match-score">
+                          <strong>
+                            {Math.round(m.score)}
+                            <small>/100</small>
+                          </strong>
+                          <span>
+                            Suitability
+                            <small>Skill match {Math.round(m.coverage)}%</small>
+                          </span>
+                          <svg viewBox="0 0 40 40" aria-hidden="true">
+                            <circle cx="20" cy="20" r="16" />
+                            <circle
+                              cx="20"
+                              cy="20"
+                              r="16"
+                              strokeDasharray={`${m.score} 100`}
+                              pathLength="100"
+                            />
+                          </svg>
+                        </div>
+                        <div className="career-meta">
+                          <span>{m.reused.length} transferable skills</span>
+                          <span>{m.gaps.length} gaps</span>
+                        </div>
+                        <button
+                          className={
+                            m.role.id === active.role.id
+                              ? 'primary full'
+                              : 'secondary full'
+                          }
+                          onClick={() => {
+                            chooseRole(m.role.id);
+                            navigate('pathway');
+                          }}
+                        >
+                          Explore pathway
+                          <ArrowRight size={14} />
+                        </button>
+                      </article>
+                    ))}
+                  </div>
+                  {visibleMatches.length === 0 && (
+                    <div className="empty-state">
+                      No occupation matches that search.
+                    </div>
+                  )}
+                </section>
               </div>
               <section className="update-banner">
                 <div className="update-icon">
