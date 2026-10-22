@@ -1090,7 +1090,7 @@ label {
   color: #556c5d;
   margin: 15px 0 7px;
 }
-input:not([type='checkbox']):not([type='file']),
+input:not([type='checkbox']):not([type='file']):not([type='radio']),
 select,
 textarea {
   border: 1px solid #dce5db;

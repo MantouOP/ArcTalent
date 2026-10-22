@@ -38,8 +38,13 @@ export function Modal({
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const el = ref.current;
+    const previousFocus = document.activeElement;
     el?.showModal();
-    return () => el?.close();
+    return () => {
+      el?.close();
+      if (previousFocus instanceof HTMLElement && previousFocus.isConnected)
+        previousFocus.focus({ preventScroll: true });
+    };
   }, []);
   return (
     <dialog

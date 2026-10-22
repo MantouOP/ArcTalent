@@ -1,4 +1,5 @@
 'use client';
+import './worker-journey.css';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowRight,
@@ -48,6 +49,10 @@ import { LearningMap } from './learning-map';
 import { ProfilePanel } from './profile-panel';
 import { EmployerPanel } from './employer-panel';
 import { EvidencePanel } from './evidence-panel';
+import { SkillBridge } from './skill-bridge';
+import { StudyRhythm } from './study-rhythm';
+import { buildSkillBridge } from '@/lib/skill-bridge';
+import { buildStudyRhythm } from '@/lib/learning-preferences';
 type View = 'explore' | 'pathway' | 'team' | 'evidence' | 'profile';
 const navigation = [
   { id: 'explore' as const, label: 'Career explorer', icon: Compass },
@@ -212,6 +217,13 @@ export function ArcTalentApp() {
           scenario,
           snapshot,
           role: active.role,
+          skillBridge: buildSkillBridge(profile, active.role),
+          studyRhythm: profile.learningPreferences
+            ? buildStudyRhythm(
+                profile.hours,
+                profile.learningPreferences.sessionMinutes,
+              )
+            : null,
           plan,
         },
         null,
@@ -738,6 +750,7 @@ export function ArcTalentApp() {
               </section>
               <div className="pathway-grid">
                 <section>
+                  <SkillBridge profile={profile} role={active.role} />
                   <div className="section-title">
                     <div>
                       <span className="eyebrow">YOUR CHOSEN ROUTE</span>
@@ -930,6 +943,10 @@ export function ArcTalentApp() {
                       Device, software, data and staff-time costs are separate.
                     </p>
                   </section>
+                  <StudyRhythm
+                    profile={profile}
+                    onEdit={() => navigate('profile')}
+                  />
                   <section className="panel qualification-panel">
                     <GraduationCap size={23} />
                     <h3>Keep the destination realistic</h3>

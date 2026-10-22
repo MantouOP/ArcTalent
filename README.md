@@ -36,6 +36,7 @@ npm run test:integration
 4. Open **Evidence lab → Apply newer demo snapshot**. Inspect the dated source fixture and the score differences. This replay is explicitly simulated.
 5. Open **SME workspace** for eight synthetic workers, a role-specific gap heatmap, internal capacity controls, grouped training and planned SDG activities.
 6. Try **My skills & profile** with the supplied [TXT](public/synthetic-cv.txt) or [PDF](public/synthetic-cv.pdf). Confirm synthetic data and review every detected skill before using it.
+7. Try **Start the quick check** in the profile. Review three optional preferences, apply them to the draft, adjust interests if needed, then save. In the pathway, inspect the transferable skill bridge and study-session guidance. Reset before repeating the baseline scenario demonstration.
 
 See the timed [demo script](docs/DEMO.md), [editable implementation plan](docs/IMPLEMENTATION_PLAN.md) and [submission checklist](docs/SUBMISSION.md).
 
@@ -45,6 +46,7 @@ See the timed [demo script](docs/DEMO.md), [editable implementation plan](docs/I
 - Deterministic, explainable matching and moderate/rapid scenario comparison.
 - A transit-style pathway map, shared learning stops, prerequisites, time and budget limits, weekly schedules and JSON export.
 - Synthetic TXT/text-PDF import, evidence-backed skill candidates and manual confirmation.
+- An optional three-question preference check, a current/target skill bridge and study-session guidance. Preferences are saved with the profile and included in the pathway export; they do not establish aptitude or proficiency.
 - Browser persistence for the worker profile, selected scenario, evidence snapshot, course activity and destination preference.
 - A workforce heatmap, proposed internal openings, grouped training, CSV export and planned SDG contribution view.
 - Dated synthetic replay plus a real refresh adapter for Arbeitnow job postings and arXiv AI research, with source dates and partial-failure handling.
@@ -58,6 +60,7 @@ The shared TypeScript engine in `src/lib/engine.ts` powers the browser and `/api
 
 - Skill coverage compares self-reported levels 0–3 with a simplified role requirement model. Pivot distance is 100 minus coverage.
 - Interest is 100 for a matching work-family preference and 40 otherwise.
+- The optional check initially replaces interests with one explicitly chosen focus; manual interest edits then take priority. Practice format and session length only change study guidance. They never alter course durations, skill levels or score weights.
 - Scenario suitability is `1 − adoption factor × role exposure`. Moderate uses 0.35; rapid uses 0.75. Exposure values and weights are illustrative team-model parameters. They require calibration and are not unemployment probabilities.
 - Shared foundation means missing skills required by every role in the top three of **both** scenarios. It can change when a profile or evidence snapshot changes.
 - The planner expands prerequisite skills and greedily selects useful course coverage per study hour, weighting shared skills first. It respects course prerequisites, total course fees and weekly capacity. It is a heuristic rather than an optimal solver.

@@ -14,6 +14,8 @@ Target **6:15**, leaving room within the handbook's 5–7 minute preliminary vid
 
 ## Recording preparation
 
+For the profile segment, the optional quick check can replace the longer CV walkthrough: choose a work interest, a practice activity and a session length, review the changes and save. In the pathway segment, briefly expand **Inspect skill requirements** to show current versus target levels. The study-rhythm card explains how the chosen session length fits the existing weekly limit. Keep the whole recording within 5–7 minutes, and use Reset demo before the baseline scenario switch so preference changes do not alter that example.
+
 - Use **Reset demo** and the baseline snapshot before starting. Keep the default synthetic profile.
 - Use the deterministic replay for the required change demonstration. Live feeds are a separate capability and may be unavailable or unchanged.
 - Rehearse a second run with the internet disconnected: the baseline and replay still work. External course pages, fonts and live refresh require connectivity.

@@ -52,6 +52,57 @@ await check('invalid skill levels are rejected', async () => {
   });
   assert.equal(response.status, 400);
 });
+await check(
+  'preference-bearing profiles retain explicit interests in API matching',
+  async () => {
+    const profile = {
+      ...baseProfile,
+      interests: ['sustainability'],
+      learningPreferences: {
+        focus: 'data',
+        format: 'practice',
+        sessionMinutes: 30,
+      },
+    };
+    const response = await post('/api/analyze', {
+      profile,
+      scenario: 'moderate',
+      snapshot: baseline,
+    });
+    assert.equal(response.status, 200);
+    const result = await response.json();
+    assert.equal(
+      result.matches.find(
+        (match: { role: { id: string } }) => match.role.id === 'sustainability',
+      ).interest,
+      100,
+    );
+    assert.equal(
+      result.matches.find(
+        (match: { role: { id: string } }) => match.role.id === 'bi',
+      ).interest,
+      40,
+    );
+  },
+);
+await check(
+  'invalid study preferences are rejected instead of silently discarded',
+  async () => {
+    const response = await post('/api/analyze', {
+      profile: {
+        ...baseProfile,
+        learningPreferences: {
+          focus: 'data',
+          format: 'practice',
+          sessionMinutes: -30,
+        },
+      },
+      scenario: 'moderate',
+      snapshot: baseline,
+    });
+    assert.equal(response.status, 400);
+  },
+);
 await check('malformed JSON is rejected', async () => {
   const response = await fetch(origin + '/api/analyze', {
     method: 'POST',

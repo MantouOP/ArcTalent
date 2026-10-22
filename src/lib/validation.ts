@@ -1,4 +1,9 @@
 import { z } from 'zod';
+export const learningPreferencesSchema = z.object({
+  focus: z.enum(['data', 'people', 'operations', 'sustainability']),
+  format: z.enum(['guided', 'practice', 'discussion']),
+  sessionMinutes: z.union([z.literal(15), z.literal(30), z.literal(60)]),
+});
 export const skillIdSchema = z.enum([
   'excel',
   'data',
@@ -29,6 +34,7 @@ export const profileSchema = z.object({
     .max(4),
   skills: z.partialRecord(skillIdSchema, z.number().int().min(0).max(3)),
   completed: z.array(z.string().max(50)).max(30),
+  learningPreferences: learningPreferencesSchema.optional(),
 });
 export const snapshotSchema = z.object({
   id: z.string().max(100),

@@ -1,4 +1,9 @@
 export type Scenario = 'moderate' | 'rapid';
+export type LearningPreferences = {
+  focus: 'data' | 'people' | 'operations' | 'sustainability';
+  format: 'guided' | 'practice' | 'discussion';
+  sessionMinutes: 15 | 30 | 60;
+};
 export type SkillId =
   | 'excel'
   | 'data'
@@ -26,6 +31,7 @@ export type Profile = {
   interests: string[];
   skills: Partial<Record<SkillId, number>>;
   completed: string[];
+  learningPreferences?: LearningPreferences;
 };
 export type Skill = {
   id: SkillId;

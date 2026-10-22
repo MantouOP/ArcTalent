@@ -7,15 +7,19 @@ Run date: **22 October 2026 (MYT)**. Local Windows environment: Node.js 24.13.1,
 | Check                                                      | Observed result                            |
 | ---------------------------------------------------------- | ------------------------------------------ |
 | `npm run typecheck`                                        | Passed                                     |
-| `npm test`                                                 | 14 passed, 0 failed                        |
+| `npm test`                                                 | 22 passed, 0 failed                        |
 | `npm run format:check`                                     | Passed                                     |
 | `npm run build`                                            | Passed, all five API routes and page built |
-| `npm run test:integration` against final production server | 12 passed, 0 failed                        |
+| `npm run test:integration` against final production server | 14 passed, 0 failed                        |
 | `git diff --check`                                         | Passed                                     |
 
 Engine checks cover skill coverage, monotonic improvement, scenario sensitivity, shared foundations, deterministic evidence changes, budget/time limits, prerequisite order, zero-time constraints, funding gaps, name independence, retained studied courses, supported extraction candidates, snapshot identity and the minimum live-sample rule.
 
+Worker-journey tests additionally cover optional preference validation, old-profile compatibility, unchanged skill/time/budget values when applying preferences, unchanged ranking from practice/session preferences, exact weekly-session arithmetic including zero time/remainders, bridge status boundaries, capped coverage and agreement with each role's score explanation in both scenarios.
+
 Production integration checks cover the page, health, API/engine parity, invalid skill levels, malformed and oversized requests, synthetic confirmation, extraction evidence, non-PDF rejection and successful parsing of the actual one-page synthetic PDF fixture.
+
+Two new production checks verify that explicit interests override the check-in focus for matching, and invalid preference values receive HTTP 400.
 
 The integration script assumes the default extraction mode. A configured model requires a separate evaluation of output validity, latency and supported candidates.
 
@@ -37,6 +41,21 @@ The integration script assumes the default extraction mode. A configured model r
 
 The [dashboard screenshot](images/dashboard.jpg) records the verified desktop baseline. Temporary viewport overrides were reset after testing.
 
+## Worker-journey browser checks
+
+- Closing a partially answered check discarded its choices; reopening required a new answer.
+- Completing the three questions showed a review before application. Applying selected Sustainability only; a subsequent manual Data & insights selection remained authoritative after saving.
+- The saved 30-minute practice preference survived a browser reload and showed up to eight sessions within the existing four-hour weekly limit.
+- Selecting Sustainability changed bridge coverage to 45.5%, with two skills at target, two to strengthen and two new skills. Switching AI scenario kept that manually pinned role and its skill coverage.
+- Aina's BI bridge showed 58.3% coverage: two skills at target, three to strengthen and one new skill. Its rows matched current and target levels.
+- Zero weekly hours showed no study sessions. Clearing preferences restored the optional-check invitation; switching synthetic profiles and Reset demo discarded those edits.
+- Escape dismissed the questionnaire. A reproduced focus-restoration bug in the shared dialog was fixed so closing returns keyboard focus to the trigger.
+- New views checked at desktop 1440 × 1000, tablet 768 × 1024 and mobile 390 × 844. No document-level horizontal overflow in the new bridge/profile views; long mobile dialogs scroll internally.
+- Taste Skill source lint on the four new interface files: zero failures and zero warnings. Its Chromium inspector was not run; browser screenshots and DOM measurements used the available Codex browser API.
+- A fresh read-only code reviewer found no critical, important or actionable minor source issues. Browser findings and the focus fix were verified by the implementer.
+
+The [worker bridge screenshot](images/worker-bridge.png) shows the new pathway detail. The [preference screenshot](images/learning-preferences.png) shows the optional questionnaire.
+
 ## Not yet verified
 
-Actual Replit import/deployment, a paid RunPod endpoint, Malaysian vacancy data, HRD programme claimability, worker/employer validation, measured career outcomes and the official submission package. CI has been configured; its remote status must be checked after pushing.
+Replit Preview/workflow and public deployment (runtime import/build/API evidence is recorded in REPLIT_STATUS.md), a paid RunPod endpoint, Malaysian vacancy data, HRD programme claimability, worker/employer validation, measured career outcomes and the official submission package. CI has been configured; the remote status for each new commit must be checked separately.

@@ -23,7 +23,9 @@ The scenario switch and explainable replanning are the central demonstration. Th
 
 Core app, deterministic matching, scenario comparison, shared pathway, synthetic import, SME heatmap, dated replay, public adapters, exports and tests are implemented. Source and provider facts have been checked during the AI-assisted build. The team still needs to review and understand them.
 
-External prerequisites remain: actual Replit import/use evidence; RunPod configuration only if the team uses GPU-based AI; official template completion; committee collaborator details; final public submission links.
+The worker journey now includes an optional three-question preference check, a selected-role skill bridge and study-session guidance. The check measures preferences only; self-reported skills still determine coverage. The editable [implementation record](superpowers/plans/2026-10-22-worker-bridge.md) records this addition.
+
+External prerequisites remain: Replit Preview/workflow and publication verification (see [runtime evidence](REPLIT_STATUS.md)); RunPod configuration only if the team uses GPU-based AI; official template completion; committee collaborator details; final public submission links.
 
 ## Acceptance criteria
 
