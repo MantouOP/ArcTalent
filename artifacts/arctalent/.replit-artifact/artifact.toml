@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "ArcTalent"
+description = "An evidence-based career and skills navigator that helps people map their experience, explore suitable roles, and plan learning pathways."
+version = "1.0.0"
+id = "artifacts/arctalent"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23585
+
+[services.development]
+run = "pnpm --filter @workspace/arctalent run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/arctalent", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/arctalent/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23585"
+BASE_PATH = "/"
