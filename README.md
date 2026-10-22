@@ -86,6 +86,8 @@ Occupational descriptions come from US O*NET context, while learning-resource fa
 
 Import this GitHub repository into the team's own Replit project. The included `.replit` starts port 3000 and defines a production build/start command. Run the project, check the preview and preserve genuine account/project evidence for the hackathon. Replit import and deployment are **not verified by the local build**.
 
+The team's subsequent Replit import passed its build and API checks during recovery. Browser Preview and publication remain pending; see the [Replit runtime status](docs/REPLIT_STATUS.md) for the tested app location and remaining steps.
+
 For optional AI extraction, deploy a compatible model on RunPod, then configure server secrets using `.env.example`:
 
 ```dotenv
