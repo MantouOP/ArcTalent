@@ -10,6 +10,8 @@ See the [feature acceptance matrix](FEATURE_ACCEPTANCE.md) for the boundary betw
 
 A final file-picker check exposed `pdf-parse` rendering the supplied PDF's dash punctuation as mojibake, while an independent PDF reader recovered the original dashes. The synthetic PDF fixture was regenerated with ASCII hyphens. Both readers then extracted the expected text, and a rendered-page inspection confirmed legibility. This corrects the demo fixture; it does not claim universal PDF font/Unicode compatibility or change the parser/backend.
 
+The final release (`53fdc89`, runtime `a8086ef`) is **Live on Replit**. Its public PDF checksum exactly matched the corrected fixture before all 14 HTTPS API checks passed again. Public Chrome checks verified CV invalidation, the new single Python candidate, manager settings retained through scenario/replay/reload, and clean PDF text through the actual file picker. The final log inspection contained no application warnings/errors; an earlier extension-origin error was outside the app. The demo was reset to Aina's baseline and the [final live screenshot](images/replit-acceptance-live.jpg) saved. Both source and runtime GitHub CI runs passed; details are in REPLIT_STATUS.md.
+
 Run date: **22 October 2026 (MYT)**. Local Windows environment: Node.js 24.13.1, npm, production Next.js Webpack build. These results do not establish deployment or external platform compliance.
 
 ## Automated results

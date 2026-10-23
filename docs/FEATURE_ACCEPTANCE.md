@@ -26,9 +26,10 @@ Reviewed **23 October 2026 (MYT)** against the team's three concept descriptions
 
 - 32 unit tests passed, including ten new CV/workforce regression tests.
 - Type checking, repository formatting, production build and whitespace checks passed.
-- All 14 API integration checks passed against the revised local production build.
+- All 14 API integration checks passed against the revised local production build, Replit's production runtime and the final public HTTPS deployment.
 - Chrome verified the two original failure cases, consent gating, synthetic PDF import, workforce reload/reset and exports. No warning/error entries were captured on the revised local test tab.
 - An independent read-only code review reported no actionable findings; component wiring was checked separately in Chrome.
+- Both fixes were verified on the public deployment. The corrected PDF was imported through its file picker, and the served PDF's checksum matched the final source file. The demo was reset afterwards. See [exact release evidence](REPLIT_STATUS.md).
 
 ## Before claiming the broader product vision
 

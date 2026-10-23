@@ -2,7 +2,17 @@
 
 Verified on **23 October 2026** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
-## Current release
+## Current verified acceptance release
+
+Source commit `53fdc890dafb483dee7331bff5aceebdf01c3749` is imported unchanged into `artifacts/arctalent-release-53fdc89`. Its 32 unit tests, TypeScript production build and 14 API integration checks passed inside Replit before publishing. An additional production request confirmed that the regenerated synthetic PDF extracts with clean ASCII punctuation. A Git tree comparison confirmed exact source equality; the launch TOML was parsed and checked. The artifact now points to this release on port 23585. Previous release directories and the prior launch configuration remain available for recovery.
+
+The actual runtime commit is `a8086ef5fb323cc4e2bab4cfc9fd788aac6e5aeb`, preserved in a verified Git bundle and pushed to `replit-runtime`. The [canonical source CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/39917079124), and the [final runtime CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/39917615173).
+
+Replit reports **Live** for the final publication. Its public PDF download has SHA-256 `610db32272280193fc7402464d57f87b219ace604788a1f20a57ee5199c7da68`, matching the corrected source fixture exactly. All **14 HTTPS API checks passed again after that match**. The [final live screenshot](images/replit-acceptance-live.jpg) records the interface reset to Aina's baseline.
+
+Public browser checks verified both functional fixes: editing the CV cleared four stale candidates and a Python-only extraction returned one supported candidate; RM750, Aina's Sustainability destination and three openings survived a newer snapshot, a scenario switch and reload. The corrected PDF was also imported through the public file picker and displayed clean punctuation. No application warning/error entries were captured in the final browser log inspection; an earlier Chrome extension error was unrelated to application code.
+
+## Previously published Orion release
 
 The Orion application source is GitHub commit `2a5b6cf4d1c0ee466c287c4148f07a102ca121ef`. Its complete source tree was imported unchanged into `artifacts/arctalent-release-2a5b6cf` in Replit. A Git tree comparison confirmed that the imported application matches that source commit.
 
@@ -27,18 +37,18 @@ The runtime history was exported from Replit, verified with `git bundle verify`,
 From the Replit workspace root:
 
 ```sh
-npm --prefix artifacts/arctalent-release-2a5b6cf ci --workspaces=false
-npm --prefix artifacts/arctalent-release-2a5b6cf run build
-npm --prefix artifacts/arctalent-release-2a5b6cf run start -- --port 23585
+npm --prefix artifacts/arctalent-release-53fdc89 ci --workspaces=false
+npm --prefix artifacts/arctalent-release-53fdc89 run build
+npm --prefix artifacts/arctalent-release-53fdc89 run start -- --port 23585
 ```
 
-For development, use `npm --prefix artifacts/arctalent-release-2a5b6cf run dev -- --port 23585`.
+For development, use `npm --prefix artifacts/arctalent-release-53fdc89 run dev -- --port 23585`.
 
 ## Publishing and submission evidence
 
 **[Live ArcTalent demo](https://arc-talent--emmanuelheng.replit.app/)** — verified publicly on 23 October 2026. Replit reports Live, public access, Autoscale and the Asia region. The [live screenshot](images/replit-live.jpg) records the deployed interface. Use this URL for the working-prototype field and the team project URL for project-history evidence.
 
-The first publishing attempt passed build/security/bundling but stayed at Promote for 16 minutes. It was cancelled and retried once. The retry completed promotion after a further delay, without application or launch-configuration changes. The temporary workspace test port was confirmed closed. The deployed application source remains `2a5b6cf`.
+The original publishing attempt passed build/security/bundling but stayed at Promote for 16 minutes. It was cancelled and retried once. The retry completed promotion after a further delay, without application or launch-configuration changes. The temporary workspace test port was confirmed closed. That original publication used source `2a5b6cf`; the acceptance release is recorded above.
 
 The account displays a **29-day expiry** for its Starter publication. No paid upgrade was purchased. Activate the organiser-provided Replit benefit or review the hosting arrangement before that expiry if the app must remain available longer.
 

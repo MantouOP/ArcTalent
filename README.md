@@ -40,7 +40,7 @@ npm run test:integration
 6. Try **My skills & profile** with the supplied [TXT](public/synthetic-cv.txt) or [PDF](public/synthetic-cv.pdf). Confirm synthetic data and review every detected skill before using it.
 7. Try **Start the quick check** in the profile. Review three optional preferences, apply them to the draft, adjust interests if needed, then save. In the pathway, inspect the transferable skill bridge and study-session guidance. Reset before repeating the baseline scenario demonstration.
 
-See the timed [demo script](docs/DEMO.md), [editable implementation plan](docs/IMPLEMENTATION_PLAN.md) and [submission checklist](docs/SUBMISSION.md).
+See the timed [demo script](docs/DEMO.md), [editable implementation plan](docs/IMPLEMENTATION_PLAN.md), [feature acceptance matrix](docs/FEATURE_ACCEPTANCE.md) and [submission checklist](docs/SUBMISSION.md).
 
 ## What is implemented
 
@@ -84,7 +84,7 @@ Next.js App Router, React, TypeScript, CSS and Lucide icons. Route handlers run 
 | `POST /api/pdf`     | Confirmed synthetic text PDF → text; 5 MB / 10 pages maximum              |
 | `GET /api/signals`  | Fixed public feed adapters, bounded records and five-minute process cache |
 
-Profiles and completed activity are stored only in this browser's local storage. CV text is not intentionally saved by the app server. A configured RunPod extractor receives the submitted synthetic CV text. Do not use real CVs in this public hackathon prototype. The app has no accounts, database, production HR controls, OCR, validated psychometric assessment or audited employment-outcome model. PDF import requires readable text.
+Profiles, completed activity and manager planning settings are stored only in this browser's local storage. CV text is not intentionally saved by the app server. A configured RunPod extractor receives the submitted synthetic CV text. Do not use real CVs in this public hackathon prototype. The app has no accounts, database, production HR controls, OCR, validated psychometric assessment or audited employment-outcome model. PDF import requires readable text.
 
 Occupational descriptions come from US O*NET context, while learning-resource facts are checked against provider pages. Course-to-skill and SDG mappings are project interpretations. No verified HRD Corp programmes have been added: the HRD filter correctly shows an empty state. Do not claim provider registration establishes programme claimability. [Sources and limitations](docs/SOURCES.md).
 
@@ -92,7 +92,7 @@ Occupational descriptions come from US O*NET context, while learning-resource fa
 
 Import this GitHub repository into the team's own Replit project. The included `.replit` starts port 3000 and defines a production build/start command. Run the project, check the preview and preserve genuine account/project evidence for the hackathon. Replit import and deployment are **not verified by the local build**.
 
-The [live Replit deployment](https://arc-talent--emmanuelheng.replit.app/) was verified on 23 October 2026. Its 22 unit tests, production build, type checking and 14 production API checks passed inside Replit; all 14 API checks also passed against the public URL without authentication. Browser checks confirmed the scenario switch, dated evidence replay and eight-worker SME view. The [replit-runtime branch](https://github.com/MantouOP/ArcTalent/tree/replit-runtime) preserves the workspace launch configuration and recovery history; its GitHub CI passed. See the [Replit runtime status](docs/REPLIT_STATUS.md) for the exact release, evidence and Starter hosting expiry.
+The [live Replit deployment](https://arc-talent--emmanuelheng.replit.app/) was verified on 23 October 2026. The acceptance revision passed 32 unit tests, a production build, type checking and 14 production API checks inside Replit; all 14 API checks also passed against the final public release without authentication. Browser checks confirmed scenario switching, dated evidence replay, retained SME settings, fresh CV evidence and clean synthetic PDF import. The [replit-runtime branch](https://github.com/MantouOP/ArcTalent/tree/replit-runtime) preserves the workspace launch configuration and recovery history. See the [Replit runtime status](docs/REPLIT_STATUS.md) for the exact release, served-file checksum, CI evidence and Starter hosting expiry.
 
 For optional AI extraction, deploy a compatible model on RunPod, then configure server secrets using `.env.example`:
 
