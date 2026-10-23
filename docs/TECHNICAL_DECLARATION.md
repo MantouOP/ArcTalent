@@ -2,24 +2,24 @@
 
 **This is a preparation document. Transfer the reviewed details into the organiser's official template.** Do not submit unchecked statements as completed work.
 
-| Item                   | Actual use / status                                                                                                              |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| Project                | ArcTalent                                                                                                                        |
-| Team members / IDs     | TODO: enter the four actual members                                                                                              |
-| Main stack             | Next.js 16, React 19, TypeScript; exact installed versions in package-lock.json                                                  |
-| UI                     | Custom CSS, SVG learning map/radar and Lucide icons                                                                              |
-| Matching / planning    | Deterministic TypeScript heuristics written with AI assistance; source in src/lib/engine.ts                                      |
-| Input validation       | Zod                                                                                                                              |
-| PDF extraction         | pdf-parse, readable synthetic PDFs only                                                                                          |
-| AI integration library | Vercel AI SDK and OpenAI-compatible provider adapter                                                                             |
-| Runtime AI mode        | Local alias matching by default; no LLM required for matching or planning                                                        |
-| Optional GPU provider  | RunPod adapter implemented; a real endpoint/model must be configured and tested before claiming operational use                  |
-| Replit                 | Team project imported and original runtime tested on 22 October; Preview/workflow and publication pending. See REPLIT_STATUS.md. |
-| Repository             | https://github.com/MantouOP/ArcTalent                                                                                            |
-| Tests                  | Node test runner via tsx; production API integration script; manual browser checks documented in VERIFICATION.md                 |
-| External information   | O*NET occupations; public provider learning-resource pages; Arbeitnow API; arXiv RSS; UN SDG target pages                        |
-| Data                   | Eight fictional profiles, two labelled synthetic snapshots; optional public feed refresh                                         |
-| License                | Apache-2.0 for project code; external rights remain with their owners                                                            |
+| Item                   | Actual use / status                                                                                                                                                                                            |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Project                | ArcTalent                                                                                                                                                                                                      |
+| Team members / IDs     | TODO: enter the four actual members                                                                                                                                                                            |
+| Main stack             | Next.js 16, React 19, TypeScript; exact installed versions in package-lock.json                                                                                                                                |
+| UI                     | Custom CSS, SVG learning map/radar and Lucide icons                                                                                                                                                            |
+| Matching / planning    | Deterministic TypeScript heuristics written with AI assistance; source in src/lib/engine.ts                                                                                                                    |
+| Input validation       | Zod                                                                                                                                                                                                            |
+| PDF extraction         | pdf-parse, readable synthetic PDFs only                                                                                                                                                                        |
+| AI integration library | Vercel AI SDK and OpenAI-compatible provider adapter                                                                                                                                                           |
+| Runtime AI mode        | Local alias matching by default; no LLM required for matching or planning                                                                                                                                      |
+| Optional GPU provider  | RunPod adapter implemented; a real endpoint/model must be configured and tested before claiming operational use                                                                                                |
+| Replit                 | Orion release tested in the team project on 23 October: 22 unit tests, build/types and 14 production API checks passed; runtime history pushed. Public publication verification pending. See REPLIT_STATUS.md. |
+| Repository             | https://github.com/MantouOP/ArcTalent                                                                                                                                                                          |
+| Tests                  | Node test runner via tsx; production API integration script; manual browser checks documented in VERIFICATION.md                                                                                               |
+| External information   | O*NET occupations; public provider learning-resource pages; Arbeitnow API; arXiv RSS; UN SDG target pages                                                                                                      |
+| Data                   | Eight fictional profiles, two labelled synthetic snapshots; optional public feed refresh                                                                                                                       |
+| License                | Apache-2.0 for project code; external rights remain with their owners                                                                                                                                          |
 
 ## AI assistance disclosure
 

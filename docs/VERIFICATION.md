@@ -73,4 +73,4 @@ The [full command-center screenshot](images/orion-command-center.png), [workforc
 
 ## External verification still pending
 
-Replit Preview/workflow and public deployment (runtime import/build/API evidence is recorded in REPLIT_STATUS.md), a paid RunPod endpoint, Malaysian vacancy data, HRD programme claimability, worker/employer validation, measured career outcomes and the official submission package. CI has been configured; the remote status for each new commit must be checked separately.
+Replit development Preview/workflow and public deployment (current Orion import/build/API and pushed runtime CI evidence are recorded in REPLIT_STATUS.md), a paid RunPod endpoint, Malaysian vacancy data, HRD programme claimability, worker/employer validation, measured career outcomes and the official submission package. Remote CI status must be checked for each new commit.
