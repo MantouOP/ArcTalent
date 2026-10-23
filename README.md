@@ -2,6 +2,8 @@
 
 **Skills that travel with you.** A hackathon prototype that helps working adults and SME learning managers choose a practical reskilling route under two possible AI adoption scenarios.
 
+**[Open the live ArcTalent demo](https://arc-talent--emmanuelheng.replit.app/)** · [Team Replit project](https://replit.com/@EmmanuelHeng/ArcTalent)
+
 Enter skills, interests, weekly learning time and budget. ArcTalent explains adjacent career matches, highlights the foundation shared across both scenarios, then schedules verified learning resources within the available time. A dated evidence update recomputes the same model and shows exactly what changed.
 
 ![ArcTalent Orion command center](docs/images/orion-command-center.png)
@@ -90,7 +92,7 @@ Occupational descriptions come from US O*NET context, while learning-resource fa
 
 Import this GitHub repository into the team's own Replit project. The included `.replit` starts port 3000 and defines a production build/start command. Run the project, check the preview and preserve genuine account/project evidence for the hackathon. Replit import and deployment are **not verified by the local build**.
 
-The team's [Replit project](https://replit.com/@EmmanuelHeng/ArcTalent) now contains the Orion release. Its 22 unit tests, production build, type checking and 14 production API checks passed inside Replit. The [replit-runtime branch](https://github.com/MantouOP/ArcTalent/tree/replit-runtime) preserves the workspace launch configuration and recovery history; its GitHub CI passed. Public publishing verification remains pending; see the [Replit runtime status](docs/REPLIT_STATUS.md) for the exact release and observed status.
+The [live Replit deployment](https://arc-talent--emmanuelheng.replit.app/) was verified on 23 October 2026. Its 22 unit tests, production build, type checking and 14 production API checks passed inside Replit; all 14 API checks also passed against the public URL without authentication. Browser checks confirmed the scenario switch, dated evidence replay and eight-worker SME view. The [replit-runtime branch](https://github.com/MantouOP/ArcTalent/tree/replit-runtime) preserves the workspace launch configuration and recovery history; its GitHub CI passed. See the [Replit runtime status](docs/REPLIT_STATUS.md) for the exact release, evidence and Starter hosting expiry.
 
 For optional AI extraction, deploy a compatible model on RunPod, then configure server secrets using `.env.example`:
 

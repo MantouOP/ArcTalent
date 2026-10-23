@@ -71,6 +71,12 @@ The [worker bridge screenshot](images/worker-bridge.png) shows the new pathway d
 
 The [full command-center screenshot](images/orion-command-center.png), [workforce screenshot](images/orion-workforce.png) and [phone screenshot](images/orion-mobile.png) record the new presentation. Temporary viewport overrides were reset; the production preview remains available at localhost:3000.
 
+## Public Replit deployment — 23 October 2026
+
+The [public deployment](https://arc-talent--emmanuelheng.replit.app/) is Live with public access. All 14 production integration checks passed against its HTTPS URL without credentials, including real synthetic PDF parsing. Browser checks confirmed the Orion interface, moderate/rapid scenario change with shared foundational learning retained, the dated synthetic replay with explicit score deltas, and the eight-worker SME workspace. The demo was reset after verification; no browser warning/error entries were captured. See [Replit runtime evidence](REPLIT_STATUS.md) and the [deployed screenshot](images/replit-live.jpg).
+
+The deployed public-source refresh also returned 100 Arbeitnow job records and 12 arXiv research records during this verification, exercising the fifth API route (`/api/signals`).
+
 ## External verification still pending
 
-Replit development Preview/workflow and public deployment (current Orion import/build/API and pushed runtime CI evidence are recorded in REPLIT_STATUS.md), a paid RunPod endpoint, Malaysian vacancy data, HRD programme claimability, worker/employer validation, measured career outcomes and the official submission package. Remote CI status must be checked for each new commit.
+Replit development Preview/workflow, a paid RunPod endpoint, Malaysian vacancy data, HRD programme claimability, worker/employer validation, measured career outcomes and the official submission package. Production publication and the public API/browser checks are verified separately from the development Preview/workflow. Remote CI status must be checked for each new commit.

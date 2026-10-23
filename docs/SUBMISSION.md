@@ -8,7 +8,7 @@ Based on the supplied official handbooks and the team's stated dates. The organi
 
 - [ ] PRD in the official template.
 - [ ] Pitch slides in the official format.
-- [ ] Working prototype and accessible link.
+- [x] Working prototype and accessible link: https://arc-talent--emmanuelheng.replit.app/ — verified on 23 October 2026.
 - [ ] Completed Technical & Tools Declaration in the official template.
 - [ ] Public GitHub repository with Apache-2.0 license and authentic development history.
 - [ ] Publicly accessible or appropriately unlisted YouTube video, **5–7 minutes**.
@@ -17,7 +17,7 @@ Official template folder referenced in the handbook: https://drive.google.com/dr
 
 ## Platform and repository evidence
 
-- [ ] Import and genuinely use the team Replit project; record the URL and evidence.
+- [x] Import and genuinely use the [team Replit project](https://replit.com/@EmmanuelHeng/ArcTalent); build, API, publication and browser evidence are recorded in REPLIT_STATUS.md.
 - [ ] If GPU-dependent work is used, complete it on RunPod and document actual use.
 - [ ] Confirm the repository is public and was created within the permitted period.
 - [ ] Add the organiser's specified committee collaborator accounts. TODO: obtain the exact account IDs.

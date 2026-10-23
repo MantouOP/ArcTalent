@@ -15,7 +15,10 @@ The workspace's web artifact uses Next.js for both the interface and all five AP
 - All **14 production API integration checks** passed against a temporary server inside Replit, including parsing the actual synthetic PDF fixture.
 - Default extraction used labelled local matching; no RunPod model was configured.
 - The artifact TOML parsed successfully and points to the current release.
-- Replit's cloud publishing build, automatic security checks and bundle stages passed. A publication request was started on 23 October; promotion and the public browser journey must be confirmed before claiming a live deployment.
+- Replit's cloud publishing build, automatic security checks, bundle and promotion stages completed. The Publishing tool reports **Live** with public access.
+- All **14 production API integration checks** also passed against the public HTTPS URL without credentials, including synthetic PDF parsing.
+- Public browser checks confirmed the Orion interface, moderate-to-rapid destination change with the shared foundation retained, the dated replay with explicit score changes, and the eight-worker SME view. No browser warning/error entries were captured. The demo was reset to its starting profile afterwards.
+- A public-source refresh through the deployed `/api/signals` route returned 100 Arbeitnow job records and 12 arXiv research records during verification.
 
 The runtime history was exported from Replit, verified with `git bundle verify`, imported locally and pushed to the [replit-runtime branch](https://github.com/MantouOP/ArcTalent/tree/replit-runtime), commit `b4c0c05875baa957f2ba365604e98ef1db78ea81`. Its [GitHub Actions run](https://github.com/MantouOP/ArcTalent/actions/runs/39889898689) passed. GitHub `main` remains the canonical root-level Next.js source; the runtime branch records Replit's existing workspace layout.
 
@@ -33,9 +36,9 @@ For development, use `npm --prefix artifacts/arctalent-release-2a5b6cf run dev -
 
 ## Publishing and submission evidence
 
-The Publishing tool assigns `https://arc-talent--emmanuelheng.replit.app/`, public access, Autoscale and the Asia region. An assigned URL alone is not evidence that the app is live. Confirm the successful publish status, open the public URL and repeat the API/browser checks before submitting it.
+**[Live ArcTalent demo](https://arc-talent--emmanuelheng.replit.app/)** — verified publicly on 23 October 2026. Replit reports Live, public access, Autoscale and the Asia region. The [live screenshot](images/replit-live.jpg) records the deployed interface. Use this URL for the working-prototype field and the team project URL for project-history evidence.
 
-The first publishing attempt passed build/security/bundling but stayed at **Promote** for 16 minutes. The public URL reported that the app was not live, and the production Logs tab had no logs. That attempt was cancelled, and one retry of the unchanged release was started. The retry also passed build/security/bundling and reached Promote; public availability remains unverified. No application or launch commands were changed speculatively during that retry. The temporary workspace test port was confirmed closed.
+The first publishing attempt passed build/security/bundling but stayed at Promote for 16 minutes. It was cancelled and retried once. The retry completed promotion after a further delay, without application or launch-configuration changes. The temporary workspace test port was confirmed closed. The deployed application source remains `2a5b6cf`.
 
 The account displays a **29-day expiry** for its Starter publication. No paid upgrade was purchased. Activate the organiser-provided Replit benefit or review the hosting arrangement before that expiry if the app must remain available longer.
 
