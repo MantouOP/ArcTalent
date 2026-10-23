@@ -1,0 +1,26 @@
+kind = "web"
+previewPath = "/"
+title = "ArcTalent"
+version = "1.0.0"
+id = "artifacts/arctalent"
+router = "path"
+
+[[services]]
+name = "ArcTalent Next.js"
+paths = ["/"]
+localPort = 23585
+
+[services.development]
+run = "npm --prefix artifacts/arctalent-release-8317cab run dev -- --port 23585"
+
+[services.production.build]
+args = ["sh", "-c", "npm --prefix artifacts/arctalent-release-8317cab ci --workspaces=false && npm --prefix artifacts/arctalent-release-8317cab run build"]
+
+[services.production.run]
+args = ["npm", "--prefix", "artifacts/arctalent-release-8317cab", "run", "start", "--", "--port", "23585"]
+
+[services.production.health.startup]
+path = "/api/health"
+
+[services.env]
+PORT = "23585"
