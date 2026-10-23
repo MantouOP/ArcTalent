@@ -8,6 +8,8 @@ The final production build loaded the scene with `data-state="ready"`, one canva
 
 Production build, type checking, formatting, 32 unit tests and all 14 local production API checks passed. Exact public release status is recorded separately in REPLIT_STATUS.md.
 
+Source `5273e76` is now Live on Replit through runtime `68bda37`. Replit's locked install, 32 tests, production build and 14 API checks passed before publication; all 14 API checks passed again against public HTTPS after the new background host appeared. The public browser initialized one scene successfully, with an inert host and no overflow. Scenario switching and SME navigation passed, and no browser warnings/errors were captured. The demo was reset and the [live screenshot](images/unicorn-background-live.jpg) saved. An initial browser-tool click timed out during first scene startup; inspection showed a loaded canvas with no application error, and the subsequent interaction checks passed.
+
 ## Acceptance fixes — 23 October 2026
 
 Two live failures were reproduced: SME settings disappeared when its view unmounted, and edited CV text retained candidates from the previous sample. Workforce settings now live in the application state and validated optional browser storage. CV evidence uses an invalidating reducer and request IDs to reject superseded async completions and errors.

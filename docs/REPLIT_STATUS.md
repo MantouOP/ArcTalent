@@ -2,7 +2,15 @@
 
 Verified on **23 October 2026** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
-## Current verified acceptance release
+## Current verified Unicorn Studio background release
+
+The background release uses canonical source `5273e76b83142de55b68f0ce99931c53c3bef49d`, imported unchanged into `artifacts/arctalent-release-5273e76`. Replit passed its 32 unit tests, TypeScript production build and all 14 production API checks. An additional HTTP check confirmed the background host appears in server-rendered HTML. The launch TOML was parsed and checked, and a Git tree comparison confirmed exact source equality.
+
+Runtime commit `68bda37acd10fa5237546faf3b06314e0d9d526e` is preserved in a verified incremental Git bundle and pushed to `replit-runtime`. The [canonical source CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/39923185328), and the [runtime history CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/39924118380).
+
+Replit reports **Live** after its build, security checks, bundle and promotion stages completed. The public server-rendered page contains the new background host, and all **14 HTTPS API checks passed** against the updated deployment. Chrome confirmed `data-state="ready"`, one canvas, an inert decorative host and no horizontal overflow. Scenario switching and SME navigation worked above the animation. No browser warnings/errors were captured. The demo was reset to Aina's baseline; the [live background screenshot](images/unicorn-background-live.jpg) records the result. The supplied scene's repeating Unicorn watermarks remain visible.
+
+## Previously verified acceptance release
 
 Source commit `53fdc890dafb483dee7331bff5aceebdf01c3749` is imported unchanged into `artifacts/arctalent-release-53fdc89`. Its 32 unit tests, TypeScript production build and 14 API integration checks passed inside Replit before publishing. An additional production request confirmed that the regenerated synthetic PDF extracts with clean ASCII punctuation. A Git tree comparison confirmed exact source equality; the launch TOML was parsed and checked. The artifact now points to this release on port 23585. Previous release directories and the prior launch configuration remain available for recovery.
 
@@ -37,12 +45,12 @@ The runtime history was exported from Replit, verified with `git bundle verify`,
 From the Replit workspace root:
 
 ```sh
-npm --prefix artifacts/arctalent-release-53fdc89 ci --workspaces=false
-npm --prefix artifacts/arctalent-release-53fdc89 run build
-npm --prefix artifacts/arctalent-release-53fdc89 run start -- --port 23585
+npm --prefix artifacts/arctalent-release-5273e76 ci --workspaces=false
+npm --prefix artifacts/arctalent-release-5273e76 run build
+npm --prefix artifacts/arctalent-release-5273e76 run start -- --port 23585
 ```
 
-For development, use `npm --prefix artifacts/arctalent-release-53fdc89 run dev -- --port 23585`.
+For development, use `npm --prefix artifacts/arctalent-release-5273e76 run dev -- --port 23585`.
 
 ## Publishing and submission evidence
 
