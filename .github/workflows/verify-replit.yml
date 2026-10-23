@@ -10,14 +10,14 @@ jobs:
     timeout-minutes: 10
     defaults:
       run:
-        working-directory: artifacts/arctalent-next
+        working-directory: artifacts/arctalent-release-2a5b6cf
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: artifacts/arctalent-next/package-lock.json
+          cache-dependency-path: artifacts/arctalent-release-2a5b6cf/package-lock.json
       - run: npm ci --no-audit --no-fund --workspaces=false
       - run: npm run typecheck
       - run: npm test
