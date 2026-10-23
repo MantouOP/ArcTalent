@@ -11,13 +11,13 @@ paths = ["/"]
 localPort = 23585
 
 [services.development]
-run = "npm --prefix artifacts/arctalent-release-53fdc89 run dev -- --port 23585"
+run = "npm --prefix artifacts/arctalent-release-40c9e05 run dev -- --port 23585"
 
 [services.production.build]
-args = ["sh", "-c", "npm --prefix artifacts/arctalent-release-53fdc89 ci --workspaces=false && npm --prefix artifacts/arctalent-release-53fdc89 run build"]
+args = ["sh", "-c", "npm --prefix artifacts/arctalent-release-40c9e05 ci --workspaces=false && npm --prefix artifacts/arctalent-release-40c9e05 run build"]
 
 [services.production.run]
-args = ["npm", "--prefix", "artifacts/arctalent-release-53fdc89", "run", "start", "--", "--port", "23585"]
+args = ["npm", "--prefix", "artifacts/arctalent-release-40c9e05", "run", "start", "--", "--port", "23585"]
 
 [services.production.health.startup]
 path = "/api/health"
