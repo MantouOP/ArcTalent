@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { UnicornBackground } from '@/components/unicorn-background';
 import './globals.css';
 export const metadata: Metadata = {
   title: 'ArcTalent — Your next chapter, mapped',
@@ -12,10 +11,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>
-        <UnicornBackground />
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

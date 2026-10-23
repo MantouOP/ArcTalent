@@ -47,7 +47,6 @@ See the timed [demo script](docs/DEMO.md), [editable implementation plan](docs/I
 - Six sourced occupations, sixteen transferable skills, eleven public learning resources and eight fictional employee profiles.
 - Deterministic, explainable matching and moderate/rapid scenario comparison.
 - An Orion-inspired dark command center with an interactive career constellation, shared learning stops, prerequisites, time and budget limits, weekly schedules and JSON export.
-- The team's Unicorn Studio scene as a responsive, decorative background. It loads separately from the dashboard, respects reduced-motion preferences and falls back to the existing gradient if unavailable. Edit the scene ID in `src/components/unicorn-background.tsx`.
 - Read-only score gauges, skill/scenario comparison bars, a weekly allocation chart and proportional skill-reuse bubbles, all derived from the existing engine output. Snapshot deltas name their comparison; no growth history is invented.
 - Synthetic TXT/text-PDF import, evidence-backed skill candidates and manual confirmation.
 - An optional three-question preference check, a current/target skill bridge and study-session guidance. Preferences are saved with the profile and included in the pathway export; they do not establish aptitude or proficiency.

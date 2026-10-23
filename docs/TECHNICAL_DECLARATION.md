@@ -33,6 +33,8 @@ The 23 October acceptance audit reproduced and corrected stale CV evidence and m
 
 The team subsequently supplied Unicorn Studio project `1tL5S72Xeil63nK5HBc1` for the site background. Its scene is embedded through `unicornstudio-react` 2.4.0 using the Next.js entry point, client-only loading, scale 1, DPI 1.5 and a 30 FPS ambient render target. This is decorative artwork, not labour-market data. The published scene's visible watermarks remain as supplied. The wrapper is MIT-licensed; the scene and Unicorn Studio SDK retain their own rights and terms.
 
+**Current status:** the team requested removal because of the watermark and lag. The embed, its component/styles and its package have now been removed from the application. The preceding paragraph records historical use; the current clean release uses the original CSS background and loads no Unicorn renderer.
+
 The engine's parameters, role requirements, course mappings and scenario assumptions are initial hypotheses produced during the assisted build. The team must review and adopt or change them consciously. Do not claim those values are measured estimates from the linked sources.
 
 ## Team review and contributions — complete with real evidence

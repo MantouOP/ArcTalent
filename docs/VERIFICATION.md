@@ -1,5 +1,11 @@
 # Verification record
 
+## Watermark and graphics-load removal — 23 October 2026
+
+The user reported intrusive Unicorn watermarks and lag after the embed was published. Removed the entire Unicorn background component, its CSS, root-layout mount and npm dependency. The original Orion CSS background is restored. This removes the additional continuously rendered WebGL scene rather than hiding its branding. The previously observed desktop canvas was about 7.5 million pixels at DPI 1.5; no frame-time or whole-app performance benchmark is claimed.
+
+The clean local production build passed type checking and all 32 tests. Chrome showed zero background hosts, zero canvas elements and zero Unicorn SDK script tags; scenario switching and SME navigation worked with no captured warnings/errors. The core layout, original styling, engine, APIs and dependency manifests match clean source `53fdc89`. That release passed a fresh 32 tests and 14 API checks in Replit and is being restored there; public verification is tracked in REPLIT_STATUS.md.
+
 ## Unicorn Studio background — 23 October 2026
 
 Added only a root-layout background component, its styles and the pinned `unicornstudio-react` 2.4.0 dependency. Existing application handlers, state, scoring and API routes were not edited. The supplied scene `1tL5S72Xeil63nK5HBc1` loads through a client-only chunk with viewport dimensions, scale 1, DPI 1.5 and a 30 FPS target. The existing Orion gradient remains available while loading or after failure. A local error boundary contains chunk/render failures; the decorative layer is inert, hidden from assistive technology and cannot intercept pointer events. Reduced-motion preferences control whether the scene mounts and destroy it when disabled; OS preference changes were source-reviewed rather than toggled in the browser.
