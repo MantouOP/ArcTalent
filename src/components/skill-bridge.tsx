@@ -4,6 +4,7 @@ import { ArrowRight, Check, Circle, ArrowUp } from 'lucide-react';
 import { skillById } from '@/lib/catalogue';
 import { buildSkillBridge } from '@/lib/skill-bridge';
 import type { Profile, Role } from '@/lib/types';
+import { useI18n } from './language-provider';
 
 const statuses = {
   ready: { label: 'Meets target', Icon: Check },
@@ -18,31 +19,36 @@ export function SkillBridge({
   profile: Profile;
   role: Role;
 }) {
+  const { t, locale } = useI18n();
   const bridge = buildSkillBridge(profile, role);
   return (
-    <section className="panel skill-bridge" aria-labelledby="bridge-title">
+    <section
+      className="panel skill-bridge"
+      aria-labelledby="bridge-title"
+      lang={locale}
+    >
       <div className="bridge-route">
-        <span>{profile.currentRole || 'Your starting point'}</span>
+        <span>{t(profile.currentRole || 'Your starting point')}</span>
         <ArrowRight size={15} />
-        <strong>{role.shortTitle}</strong>
+        <strong>{t(role.shortTitle)}</strong>
       </div>
       <div className="bridge-heading">
         <div>
-          <h3 id="bridge-title">Your transferable skill bridge</h3>
-          <p>See what carries across, and what comes next.</p>
+          <h3 id="bridge-title">{t('Your transferable skill bridge')}</h3>
+          <p>{t('See what carries across, and what comes next.')}</p>
         </div>
         <div className="bridge-coverage">
           <strong>
             {bridge.coverage.toFixed(1)}
             <small>%</small>
           </strong>
-          <span>skill coverage</span>
+          <span>{t('skill coverage')}</span>
         </div>
       </div>
       <div
         className="bridge-track"
         role="meter"
-        aria-label="Coverage of assumed role skill requirements"
+        aria-label={t('Coverage of assumed role skill requirements')}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={bridge.coverage}
@@ -51,40 +57,43 @@ export function SkillBridge({
       </div>
       <dl className="bridge-counts">
         <div>
-          <dt>Meet target</dt>
+          <dt>{t('Meet target')}</dt>
           <dd>
             {bridge.ready}
-            <small>{bridge.ready === 1 ? 'skill' : 'skills'}</small>
+            <small>{t(bridge.ready === 1 ? 'skill' : 'skills')}</small>
           </dd>
         </div>
         <div>
-          <dt>Build further</dt>
+          <dt>{t('Build further')}</dt>
           <dd>
             {bridge.developing}
-            <small>{bridge.developing === 1 ? 'skill' : 'skills'}</small>
+            <small>{t(bridge.developing === 1 ? 'skill' : 'skills')}</small>
           </dd>
         </div>
         <div>
-          <dt>Learn from scratch</dt>
+          <dt>{t('Learn from scratch')}</dt>
           <dd>
             {bridge.newSkills}
-            <small>{bridge.newSkills === 1 ? 'skill' : 'skills'}</small>
+            <small>{t(bridge.newSkills === 1 ? 'skill' : 'skills')}</small>
           </dd>
         </div>
       </dl>
       <details className="bridge-details">
-        <summary>Inspect {bridge.rows.length} skill requirements</summary>
+        <summary>
+          {t('Inspect {0} skill requirements', { 0: bridge.rows.length })}
+        </summary>
         <div className="bridge-table-wrap">
           <table className="bridge-table">
             <caption>
-              Self-reported current level compared with the assumed target. 0
-              Not yet · 1 Basic · 2 Independent · 3 Advanced.
+              {t(
+                'Self-reported current level compared with the assumed target. 0 Not yet · 1 Basic · 2 Independent · 3 Advanced.',
+              )}
             </caption>
             <thead>
               <tr>
-                <th scope="col">Skill</th>
-                <th scope="col">Current → target</th>
-                <th scope="col">Next step</th>
+                <th scope="col">{t('Skill')}</th>
+                <th scope="col">{t('Current → target')}</th>
+                <th scope="col">{t('Next step')}</th>
               </tr>
             </thead>
             <tbody>
@@ -92,17 +101,17 @@ export function SkillBridge({
                 const { label, Icon } = statuses[row.status];
                 return (
                   <tr key={row.id}>
-                    <th scope="row">{skillById[row.id].label}</th>
+                    <th scope="row">{t(skillById[row.id].label)}</th>
                     <td>
                       {row.current}
                       <span aria-hidden="true"> → </span>
-                      <span className="sr-only"> to </span>
+                      <span className="sr-only"> {t('to')} </span>
                       {row.required}
                     </td>
                     <td>
                       <span className={`bridge-status ${row.status}`}>
                         <Icon size={13} />
-                        {label}
+                        {t(label)}
                       </span>
                     </td>
                   </tr>
@@ -112,13 +121,13 @@ export function SkillBridge({
           </table>
         </div>
         {!bridge.rows.length && (
-          <p>No skill requirements have been mapped for this role.</p>
+          <p>{t('No skill requirements have been mapped for this role.')}</p>
         )}
       </details>
       <p className="bridge-note">
-        Coverage compares your self-reported levels with the team’s simplified
-        role requirements. It is not a qualification or a chance of getting
-        hired.
+        {t(
+          'Coverage compares your self-reported levels with the team’s simplified role requirements. It is not a qualification or a chance of getting hired.',
+        )}
       </p>
     </section>
   );

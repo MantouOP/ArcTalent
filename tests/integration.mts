@@ -19,7 +19,13 @@ async function check(name: string, action: () => Promise<void>) {
 await check('production page renders', async () => {
   const response = await fetch(origin);
   assert.equal(response.status, 200);
-  assert.match(await response.text(), /ArcTalent/);
+  const html = await response.text();
+  assert.match(html, /ArcTalent/);
+  assert.match(html, /Language \/ Bahasa \/ 语言/);
+  assert.match(html, /value="en"/);
+  assert.match(html, /value="ms"/);
+  assert.match(html, /value="zh-CN"/);
+  assert.match(html, /简体中文/);
 });
 await check('health reports actual extraction mode', async () => {
   const response = await fetch(origin + '/api/health');

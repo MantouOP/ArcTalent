@@ -12,6 +12,7 @@ import { buildPlan, rankRoles } from '@/lib/engine';
 import type { Profile, Scenario, Snapshot } from '@/lib/types';
 import type { WorkforceSettings } from '@/lib/workforce-settings';
 import { downloadFile, External, Tag } from './ui';
+import { useI18n } from './language-provider';
 export function EmployerPanel({
   profile,
   scenario,
@@ -25,6 +26,7 @@ export function EmployerPanel({
   workforce: WorkforceSettings;
   onChange: (settings: WorkforceSettings) => void;
 }) {
+  const { t } = useI18n();
   const { destinations, budget, slots } = workforce;
   const team = useMemo(
     () => employees.map((e) => (e.id === profile.id ? profile : e)),
@@ -124,22 +126,23 @@ export function EmployerPanel({
     <>
       <div className="section-title">
         <div>
-          <span className="eyebrow">SYNTHETIC COMPANY · 8 PEOPLE</span>
-          <h2>A stronger team starts with shared skills.</h2>
+          <span className="eyebrow">{t('SYNTHETIC COMPANY · 8 PEOPLE')}</span>
+          <h2>{t('A stronger team starts with shared skills.')}</h2>
           <p className="muted">
-            Explore internal opportunities. A manager and each employee decide
-            what happens next.
+            {t(
+              'Explore internal opportunities. A manager and each employee decide what happens next.',
+            )}
           </p>
         </div>
         <button className="secondary" onClick={exportCsv}>
           <Download size={16} />
-          Export plan
+          {t('Export plan')}
         </button>
       </div>
       <div className="stats-grid three">
         <div className="stat">
           <Users />
-          <span>Planned learners</span>
+          <span>{t('Planned learners')}</span>
           <strong>
             {learners}
             <small>/ 8</small>
@@ -147,42 +150,46 @@ export function EmployerPanel({
         </div>
         <div className="stat">
           <Clock3 />
-          <span>Planned learning</span>
+          <span>{t('Planned learning')}</span>
           <strong>
             {hours}
-            <small>person-hours</small>
+            <small>{t('person-hours')}</small>
           </strong>
         </div>
         <div className="stat">
           <GraduationCap />
-          <span>Training groups</span>
+          <span>{t('Training groups')}</span>
           <strong>
             {groups.size}
-            <small>shared courses</small>
+            <small>{t('shared courses')}</small>
           </strong>
         </div>
       </div>
       <section className="panel">
         <div className="panel-heading">
           <div>
-            <h2>Workforce skills heatmap</h2>
-            <p>Each row is measured against its proposed destination role.</p>
+            <h2>{t('Workforce skills heatmap')}</h2>
+            <p>
+              {t('Each row is measured against its proposed destination role.')}
+            </p>
           </div>
           <Tag tone={snapshot.kind === 'live' ? 'blue' : 'amber'}>
-            {snapshot.kind === 'live'
-              ? 'Public evidence'
-              : 'Simulated evidence'}
+            {t(
+              snapshot.kind === 'live'
+                ? 'Public evidence'
+                : 'Simulated evidence',
+            )}
           </Tag>
         </div>
         <div className="heatmap-wrap">
           <table className="heatmap">
             <thead>
               <tr>
-                <th>Team member / destination</th>
+                <th>{t('Team member / destination')}</th>
                 {shown.map((s) => (
-                  <th key={s.id}>{s.label}</th>
+                  <th key={s.id}>{t(s.label)}</th>
                 ))}
-                <th>Plan status</th>
+                <th>{t('Plan status')}</th>
               </tr>
             </thead>
             <tbody>
@@ -190,9 +197,11 @@ export function EmployerPanel({
                 <tr key={row.profile.id}>
                   <td>
                     <strong>{row.profile.name}</strong>
-                    <small>{row.profile.currentRole}</small>
+                    <small>{t(row.profile.currentRole)}</small>
                     <select
-                      aria-label={`Destination role for ${row.profile.name}`}
+                      aria-label={t('Destination role for {0}', {
+                        0: row.profile.name,
+                      })}
                       value={row.role.id}
                       onChange={(e) =>
                         onChange({
@@ -206,7 +215,7 @@ export function EmployerPanel({
                     >
                       {roles.map((r) => (
                         <option value={r.id} key={r.id}>
-                          {r.title}
+                          {t(r.title)}
                         </option>
                       ))}
                     </select>
@@ -219,7 +228,12 @@ export function EmployerPanel({
                       <td key={s.id}>
                         <span
                           className={`heat-cell ${gap === null ? 'na' : gap === 0 ? 'ready' : gap === 1 ? 'develop' : 'gap'}`}
-                          title={`${row.profile.name}: ${s.label}; current ${value}, required ${required ?? 'not required'}`}
+                          title={t('{0}: {1}; current {2}, required {3}', {
+                            0: row.profile.name,
+                            1: t(s.label),
+                            2: value,
+                            3: required ?? t('not required'),
+                          })}
                         >
                           {gap === null ? '—' : gap === 0 ? '✓' : `−${gap}`}
                         </span>
@@ -228,7 +242,7 @@ export function EmployerPanel({
                   })}
                   <td>
                     <span className={`tag ${row.included ? 'green' : 'amber'}`}>
-                      {row.reason}
+                      {t(row.reason)}
                     </span>
                   </td>
                 </tr>
@@ -238,22 +252,25 @@ export function EmployerPanel({
         </div>
         <div className="heatmap-legend">
           <span>
-            <i className="heat-cell ready">✓</i>Current level meets model
+            <i className="heat-cell ready">✓</i>
+            {t('Current level meets model')}
           </span>
           <span>
-            <i className="heat-cell develop">−1</i>One level gap
+            <i className="heat-cell develop">−1</i>
+            {t('One level gap')}
           </span>
           <span>
-            <i className="heat-cell gap">−2</i>Two level gap
+            <i className="heat-cell gap">−2</i>
+            {t('Two level gap')}
           </span>
-          <span>— Not required</span>
+          <span>{t('— Not required')}</span>
         </div>
       </section>
       <div className="two-columns">
         <section className="panel">
-          <h2>Plan within real constraints</h2>
+          <h2>{t('Plan within real constraints')}</h2>
           <label>
-            Company training budget (RM)
+            {t('Company training budget (RM)')}
             <input
               type="number"
               min={0}
@@ -268,19 +285,21 @@ export function EmployerPanel({
             />
           </label>
           <p className="muted">
-            RM {allocated} allocated · RM {Math.max(0, budget - allocated)}{' '}
-            remaining. Catalogue fees are currently free; staff time and
-            software costs are separate.
+            {t(
+              'RM {0} allocated · RM {1} remaining. Catalogue fees are currently free; staff time and software costs are separate.',
+              { 0: allocated, 1: Math.max(0, budget - allocated) },
+            )}
           </p>
-          <h3>Proposed internal openings</h3>
+          <h3>{t('Proposed internal openings')}</h3>
           <p className="muted small">
-            Demo assumptions entered by the employer. These are not vacancies
-            inferred from public job postings.
+            {t(
+              'Demo assumptions entered by the employer. These are not vacancies inferred from public job postings.',
+            )}
           </p>
           <div className="slot-inputs">
             {roles.map((r) => (
               <label key={r.id}>
-                {r.shortTitle}
+                {t(r.shortTitle)}
                 <input
                   type="number"
                   min={0}
@@ -303,14 +322,17 @@ export function EmployerPanel({
             ))}
           </div>
           <p className="notice small">
-            Allocation follows the displayed worker order. It is a planning
-            heuristic, not an optimum allocation or an employment decision.
+            {t(
+              'Allocation follows the displayed worker order. It is a planning heuristic, not an optimum allocation or an employment decision.',
+            )}
           </p>
         </section>
         <section className="panel">
-          <h2>Learn together</h2>
+          <h2>{t('Learn together')}</h2>
           <p className="muted">
-            Compatible needs grouped into the same verified learning resource.
+            {t(
+              'Compatible needs grouped into the same verified learning resource.',
+            )}
           </p>
           {[...groups].map(([id, g]) => (
             <div className="training-group" key={id}>
@@ -321,16 +343,20 @@ export function EmployerPanel({
                 <h3>{g.title}</h3>
                 <p>{g.names.join(', ')}</p>
                 <small>
-                  {g.names.length} learners · {g.hours} hours each · RM {g.fee}{' '}
-                  each
+                  {t('{0} learners · {1} hours each · RM {2} each', {
+                    0: g.names.length,
+                    1: g.hours,
+                    2: g.fee,
+                  })}
                 </small>
               </div>
             </div>
           ))}
           {!groups.size && (
             <div className="empty-state">
-              No training fits the current slots and constraints. Increase
-              capacity or choose a different role.
+              {t(
+                'No training fits the current slots and constraints. Increase capacity or choose a different role.',
+              )}
             </div>
           )}
         </section>
@@ -338,40 +364,46 @@ export function EmployerPanel({
       <section className="panel impact-panel">
         <div className="panel-heading">
           <div>
-            <span className="eyebrow">SDG CONTRIBUTION PLAN</span>
-            <h2>Make the activity visible.</h2>
+            <span className="eyebrow">{t('SDG CONTRIBUTION PLAN')}</span>
+            <h2>{t('Make the activity visible.')}</h2>
           </div>
-          <Tag>Planned · synthetic</Tag>
+          <Tag>{t('Planned · synthetic')}</Tag>
         </div>
         <div className="impact-grid">
           <div>
             <span className="sdg-square red">4</span>
-            <h3>Relevant work skills</h3>
-            <strong>{learners} learners</strong>
-            <p>With at least one planned learning activity.</p>
-            <External href={sdgUrl('4.4')}>Target 4.4</External>
+            <h3>{t('Relevant work skills')}</h3>
+            <strong>{t('{0} learners', { 0: learners })}</strong>
+            <p>{t('With at least one planned learning activity.')}</p>
+            <External href={sdgUrl('4.4')}>{t('Target 4.4')}</External>
           </div>
           <div>
             <span className="sdg-square burgundy">8</span>
-            <h3>Technological upgrading</h3>
-            <strong>{hours} person-hours</strong>
-            <p>Proposed training time; productivity effects are unmeasured.</p>
-            <External href={sdgUrl('8.2')}>Targets 8.2 & 8.5</External>
+            <h3>{t('Technological upgrading')}</h3>
+            <strong>{t('{0} person-hours', { 0: hours })}</strong>
+            <p>
+              {t(
+                'Proposed training time; productivity effects are unmeasured.',
+              )}
+            </p>
+            <External href={sdgUrl('8.2')}>{t('Targets 8.2 & 8.5')}</External>
           </div>
           <div>
             <span className="sdg-square pink">10</span>
-            <h3>Accessible pathways</h3>
-            <strong>{learners} free routes</strong>
+            <h3>{t('Accessible pathways')}</h3>
+            <strong>{t('{0} free routes', { 0: learners })}</strong>
             <p>
-              At least one free activity; routes may still have uncovered gaps.
+              {t(
+                'At least one free activity; routes may still have uncovered gaps.',
+              )}
             </p>
-            <External href={sdgUrl('10.2')}>Target 10.2</External>
+            <External href={sdgUrl('10.2')}>{t('Target 10.2')}</External>
           </div>
         </div>
         <p className="muted small">
-          These are overlapping activity counts, not official UN indicators. No
-          jobs saved, employment outcomes or inequality reductions have been
-          measured.
+          {t(
+            'These are overlapping activity counts, not official UN indicators. No jobs saved, employment outcomes or inequality reductions have been measured.',
+          )}
         </p>
       </section>
     </>

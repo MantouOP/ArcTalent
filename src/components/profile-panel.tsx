@@ -6,6 +6,7 @@ import type { Profile } from '@/lib/types';
 import { profileSchema } from '@/lib/validation';
 import { cvEvidenceReducer, initialCvEvidence } from '@/lib/cv-evidence';
 import { PreferenceCheck } from './preference-check';
+import { useI18n } from './language-provider';
 export function ProfilePanel({
   profile,
   onSave,
@@ -13,11 +14,31 @@ export function ProfilePanel({
   profile: Profile;
   onSave: (p: Profile) => void;
 }) {
+  const { t, locale } = useI18n();
   const [form, setForm] = useState(profile);
   const [cv, dispatchCv] = useReducer(cvEvidenceReducer, initialCvEvidence);
   const request = useRef(0);
   const { text, synthetic, message, candidates } = cv;
   const busy = cv.requestId !== null;
+  const reviewSuffix =
+    '. Review these candidates and set your own skill levels below.';
+  let statusMessage = t(message);
+  if (message.endsWith(reviewSuffix)) {
+    const mode = message.slice(0, -reviewSuffix.length);
+    const runPodMode = mode.match(
+      /^RunPod extraction · (.+) · human confirmation required$/,
+    );
+    statusMessage = t(
+      '{0}. Review these candidates and set your own skill levels below.',
+      {
+        0: runPodMode
+          ? t('RunPod extraction · {0} · human confirmation required', {
+              0: runPodMode[1],
+            })
+          : t(mode),
+      },
+    );
+  }
   const setMessage = (message: string) =>
     dispatchCv({ type: 'message', message });
   const update = <K extends keyof Profile>(key: K, value: Profile[K]) =>
@@ -104,23 +125,24 @@ export function ProfilePanel({
     }
   }
   return (
-    <div className="profile-flow">
+    <div className="profile-flow" lang={locale}>
       <PreferenceCheck profile={form} onChange={setForm} />
       <div className="profile-grid">
         <section className="panel">
           <div className="panel-heading">
             <div>
-              <span className="eyebrow">YOUR STARTING POINT</span>
-              <h2>Experience counts.</h2>
+              <span className="eyebrow">{t('YOUR STARTING POINT')}</span>
+              <h2>{t('Experience counts.')}</h2>
             </div>
             <FileText size={22} />
           </div>
           <p className="muted">
-            Use a fictional profile for this hackathon demo. Confirm every
-            inferred skill.
+            {t(
+              'Use a fictional profile for this hackathon demo. Confirm every inferred skill.',
+            )}
           </p>
           <label>
-            Choose a synthetic profile
+            {t('Choose a synthetic profile')}
             <select
               value={form.id}
               onChange={(e) => {
@@ -132,14 +154,14 @@ export function ProfilePanel({
             >
               {employees.map((p) => (
                 <option value={p.id} key={p.id}>
-                  {p.name} · {p.currentRole}
+                  {p.name} · {t(p.currentRole)}
                 </option>
               ))}
             </select>
           </label>
           <div className="form-row">
             <label>
-              Display name
+              {t('Display name')}
               <input
                 maxLength={60}
                 value={form.name}
@@ -147,7 +169,7 @@ export function ProfilePanel({
               />
             </label>
             <label>
-              Current role
+              {t('Current role')}
               <input
                 maxLength={100}
                 value={form.currentRole}
@@ -157,7 +179,7 @@ export function ProfilePanel({
           </div>
           <div className="form-row thirds">
             <label>
-              Hours / week
+              {t('Hours / week')}
               <input
                 type="number"
                 min={0}
@@ -167,7 +189,7 @@ export function ProfilePanel({
               />
             </label>
             <label>
-              Budget (RM)
+              {t('Budget (RM)')}
               <input
                 type="number"
                 min={0}
@@ -177,7 +199,7 @@ export function ProfilePanel({
               />
             </label>
             <label>
-              Plan (weeks)
+              {t('Plan (weeks)')}
               <input
                 type="number"
                 min={1}
@@ -188,7 +210,7 @@ export function ProfilePanel({
             </label>
           </div>
           <fieldset>
-            <legend>What work interests you?</legend>
+            <legend>{t('What work interests you?')}</legend>
             <div className="interest-options">
               {[
                 ['data', 'Data & insights'],
@@ -209,21 +231,22 @@ export function ProfilePanel({
                       )
                     }
                   />
-                  {title}
+                  {t(title)}
                 </label>
               ))}
             </div>
           </fieldset>
           <div className="section-divider" />
-          <h3>Your current skills</h3>
+          <h3>{t('Your current skills')}</h3>
           <p className="muted small">
-            0 Not yet · 1 Basic · 2 Independent · 3 Advanced. Self-reported
-            levels, not certifications.
+            {t(
+              '0 Not yet · 1 Basic · 2 Independent · 3 Advanced. Self-reported levels, not certifications.',
+            )}
           </p>
           <div className="skill-edit-grid">
             {skills.map((s) => (
               <label key={s.id}>
-                {s.label}
+                {t(s.label)}
                 <select
                   value={form.skills[s.id] ?? 0}
                   onChange={(e) =>
@@ -233,10 +256,10 @@ export function ProfilePanel({
                     })
                   }
                 >
-                  <option value={0}>0 · Not yet</option>
-                  <option value={1}>1 · Basic</option>
-                  <option value={2}>2 · Independent</option>
-                  <option value={3}>3 · Advanced</option>
+                  <option value={0}>{t('0 · Not yet')}</option>
+                  <option value={1}>{t('1 · Basic')}</option>
+                  <option value={2}>{t('2 · Independent')}</option>
+                  <option value={3}>{t('3 · Advanced')}</option>
                 </select>
               </label>
             ))}
@@ -252,24 +275,25 @@ export function ProfilePanel({
               onSave(parsed.data);
             }}
           >
-            Update my pathways
+            {t('Update my pathways')}
             <ArrowRight size={16} />
           </button>
         </section>
         <aside className="panel upload-panel">
-          <span className="eyebrow">OPTIONAL · SYNTHETIC CV</span>
-          <h2>Discover your building blocks.</h2>
+          <span className="eyebrow">{t('OPTIONAL · SYNTHETIC CV')}</span>
+          <h2>{t('Discover your building blocks.')}</h2>
           <p>
-            Import a fictional CV or paste a short description of work
-            experience.
+            {t(
+              'Import a fictional CV or paste a short description of work experience.',
+            )}
           </p>
           <p>
             <a className="external" href="/synthetic-cv.txt" download>
-              Download the sample TXT
+              {t('Download the sample TXT')}
             </a>{' '}
             ·{' '}
             <a className="external" href="/synthetic-cv.pdf" download>
-              Sample PDF
+              {t('Sample PDF')}
             </a>
           </p>
           <label className="checkbox-label">
@@ -280,12 +304,12 @@ export function ProfilePanel({
                 dispatchCv({ type: 'source', synthetic: e.target.checked })
               }
             />
-            This is synthetic data, with no real personal information.
+            {t('This is synthetic data, with no real personal information.')}
           </label>
           <label className="upload-zone">
             <Upload size={28} />
-            <strong>Import a synthetic CV</strong>
-            <span>Text PDF or TXT · up to 5 MB</span>
+            <strong>{t('Import a synthetic CV')}</strong>
+            <span>{t('Text PDF or TXT · up to 5 MB')}</span>
             <input
               type="file"
               accept=".pdf,.txt"
@@ -294,10 +318,12 @@ export function ProfilePanel({
             />
           </label>
           <textarea
-            aria-label="Synthetic CV text"
+            aria-label={t('Synthetic CV text')}
             rows={8}
             maxLength={12000}
-            placeholder="Example: I prepare reports in Excel, coordinate scheduling and communicate with customers…"
+            placeholder={t(
+              'Example: I prepare reports in Excel, coordinate scheduling and communicate with customers…',
+            )}
             value={text}
             onChange={(e) =>
               dispatchCv({ type: 'source', text: e.target.value })
@@ -308,15 +334,15 @@ export function ProfilePanel({
             disabled={!synthetic || !text.trim() || busy}
             onClick={analyze}
           >
-            {busy ? 'Reading your sample…' : 'Find skills in this sample'}
+            {t(busy ? 'Reading your sample…' : 'Find skills in this sample')}
             <ArrowRight size={15} />
           </button>
           <p className="status-text" role="status">
-            {message}
+            {statusMessage}
           </p>
           {candidates.map((c) => (
             <div className="candidate" key={c.id}>
-              <strong>{skills.find((s) => s.id === c.id)?.label}</strong>
+              <strong>{t(skills.find((s) => s.id === c.id)?.label)}</strong>
               <p>“{c.evidence}”</p>
               <button
                 className="text-button"
@@ -328,14 +354,14 @@ export function ProfilePanel({
                 }
               >
                 <Check size={14} />
-                Add as basic — review above
+                {t('Add as basic — review above')}
               </button>
             </div>
           ))}
           <p className="muted small">
-            Skill detection uses local word matching unless a RunPod model is
-            configured. AI suggestions always need your confirmation. CV text is
-            processed without being saved on the server.
+            {t(
+              'Skill detection uses local word matching unless a RunPod model is configured. AI suggestions always need your confirmation. CV text is processed without being saved on the server.',
+            )}
           </p>
         </aside>
       </div>

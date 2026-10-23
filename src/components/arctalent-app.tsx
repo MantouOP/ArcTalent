@@ -1,6 +1,7 @@
 'use client';
 import './worker-journey.css';
 import './orion.css';
+import { useI18n, LanguageSelector } from './language-provider';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowRight,
@@ -69,6 +70,8 @@ const navigation = [
 ];
 const defaultRole = rankRoles(baseProfile, 'moderate', baseline)[0].role.id;
 export function ArcTalentApp() {
+  const { t, locale } = useI18n();
+
   const [view, setView] = useState<View>('explore'),
     [profile, setProfile] = useState<Profile>(baseProfile),
     [scenario, setScenario] = useState<Scenario>('moderate'),
@@ -250,12 +253,16 @@ export function ArcTalentApp() {
     );
   }
   const visibleMatches = matches
-    .filter((m) => m.role.title.toLowerCase().includes(query.toLowerCase()))
+    .filter((m) =>
+      [m.role.title, t(m.role.title), t(m.role.shortTitle)].some((title) =>
+        title.toLocaleLowerCase().includes(query.toLocaleLowerCase()),
+      ),
+    )
     .slice(0, showAll ? 6 : 3);
   return (
     <div className="app-shell">
       <a href="#main-content" className="skip-link">
-        Skip to content
+        {t('Skip to content')}{' '}
       </a>
       <aside className="sidebar">
         <a
@@ -265,29 +272,30 @@ export function ArcTalentApp() {
             e.preventDefault();
             navigate('explore');
           }}
-          aria-label="ArcTalent home"
+          aria-label={t('ArcTalent home')}
         >
           <span className="brand-icon">
             <GitBranch size={24} />
           </span>
           <span className="brand-wordmark">
-            Arc<span className="brand-light">Talent</span>
-            <small>BUILD YOUR NEXT CHAPTER</small>
+            {t('Arc')}
+            <span className="brand-light">{t('Talent')}</span>
+            <small>{t('BUILD YOUR NEXT CHAPTER')}</small>
           </span>
         </a>
-        <div className="workspace-label">YOUR WORKSPACE</div>
-        <nav aria-label="Main navigation">
+        <div className="workspace-label">{t('YOUR WORKSPACE')}</div>
+        <nav aria-label={t('Main navigation')}>
           {navigation.map((item) => (
             <button
               key={item.id}
               className={view === item.id ? 'active' : ''}
               onClick={() => navigate(item.id)}
               aria-current={view === item.id ? 'page' : undefined}
-              title={item.label}
-              aria-label={item.label}
+              title={t(item.label)}
+              aria-label={t(item.label)}
             >
               <item.icon size={19} />
-              <span>{item.label}</span>
+              <span>{t(item.label)}</span>
               {view === item.id && <span className="active-dot" />}
             </button>
           ))}
@@ -295,8 +303,8 @@ export function ArcTalentApp() {
         <div className="sidebar-note">
           <button
             onClick={() => navigate('pathway')}
-            title="Explore your pathway"
-            aria-label="Explore your pathway"
+            title={t('Explore your pathway')}
+            aria-label={t('Explore your pathway')}
           >
             <Sparkles size={20} />
           </button>
@@ -306,24 +314,23 @@ export function ArcTalentApp() {
             <Leaf size={17} />
           </span>
           <span>
-            Built for a more
-            <br />
-            <b>inclusive future of work.</b>
+            {t('Built for a more')} <br />
+            <b>{t('inclusive future of work.')}</b>
           </span>
         </div>
         <div
           className="sidebar-user"
-          title={`${profile.name} · Synthetic demo profile`}
+          title={t('{0} · Synthetic demo profile', { 0: profile.name })}
         >
           <span className="avatar">{profile.name.slice(0, 1)}</span>
           <div>
             <strong>{profile.name}</strong>
-            <small>Synthetic demo profile</small>
+            <small>{t('Synthetic demo profile')}</small>
           </div>
           <button
             onClick={() => navigate('profile')}
             className="icon-button"
-            aria-label="Edit profile"
+            aria-label={t('Edit profile')}
           >
             <ChevronRight size={18} />
           </button>
@@ -333,23 +340,30 @@ export function ArcTalentApp() {
         <header className="topbar">
           <div className="breadcrumb">
             <span className="topbar-brand">
-              ArcTalent<span className="product-label"> / WORKSPACE</span>
+              {t('ArcTalent')}
+              <span className="product-label"> {t('/ WORKSPACE')}</span>
             </span>
             <ChevronRight size={13} />
-            <strong>{navigation.find((n) => n.id === view)?.label}</strong>
+            <strong>{t(navigation.find((n) => n.id === view)?.label)}</strong>
           </div>
           <div className="topbar-actions">
+            <LanguageSelector />
             <span className="demo-indicator">
               <i />
-              Hackathon prototype
+              {t('Hackathon prototype')}{' '}
             </span>
-            <button className="text-button" onClick={reset}>
+            <button
+              className="text-button reset-demo"
+              onClick={reset}
+              aria-label={t('Reset demo')}
+              title={t('Reset demo')}
+            >
               <RotateCcw size={15} />
-              Reset demo
+              <span className="reset-label">{t('Reset demo')}</span>
             </button>
             <button
               className="avatar small-avatar"
-              aria-label="Open my profile"
+              aria-label={t('Open my profile')}
               onClick={() => navigate('profile')}
             >
               {profile.name.slice(0, 1)}
@@ -361,41 +375,49 @@ export function ArcTalentApp() {
             <div>
               <span className="eyebrow">
                 {view === 'team'
-                  ? 'GROW YOUR PEOPLE, TOGETHER'
+                  ? t('GROW YOUR PEOPLE, TOGETHER')
                   : view === 'profile'
-                    ? 'YOUR EXPERIENCE IS A HEAD START'
-                    : 'A LITTLE CLARITY FOR WHAT COMES NEXT'}
+                    ? t('YOUR EXPERIENCE IS A HEAD START')
+                    : t('A LITTLE CLARITY FOR WHAT COMES NEXT')}
               </span>
               <h1>
-                {view === 'explore' ? (
-                  <>Career command center</>
-                ) : view === 'pathway' ? (
-                  'Your learning pathway'
-                ) : view === 'team' ? (
-                  'Workforce command center'
-                ) : view === 'evidence' ? (
-                  'Evidence intelligence'
-                ) : (
-                  'Your skills & profile'
-                )}
+                {view === 'explore'
+                  ? t('Career command center')
+                  : view === 'pathway'
+                    ? t('Your learning pathway')
+                    : view === 'team'
+                      ? t('Workforce command center')
+                      : view === 'evidence'
+                        ? t('Evidence intelligence')
+                        : t('Your skills & profile')}
               </h1>
               <p>
                 {view === 'explore'
-                  ? `${profile.name}, explore where your skills can take you across different AI futures.`
+                  ? t(
+                      '{0}, explore where your skills can take you across different AI futures.',
+                      { 0: profile.name },
+                    )
                   : view === 'pathway'
-                    ? 'A practical route that respects your time, budget and the skills you already have.'
+                    ? t(
+                        'A practical route that respects your time, budget and the skills you already have.',
+                      )
                     : view === 'team'
-                      ? 'Connect individual growth to a thoughtful workforce learning plan.'
+                      ? t(
+                          'Connect individual growth to a thoughtful workforce learning plan.',
+                        )
                       : view === 'evidence'
-                        ? 'Every source has a date. Every assumption has an explanation.'
-                        : 'Your skills, interests and constraints shape every recommendation.'}
+                        ? t(
+                            'Every source has a date. Every assumption has an explanation.',
+                          )
+                        : t(
+                            'Your skills, interests and constraints shape every recommendation.',
+                          )}
               </p>
             </div>
             {view !== 'profile' && (
               <div className="scenario-box">
                 <label id="scenario-label">
-                  EXPLORE AN AI FUTURE
-                  <Info size={13} />
+                  {t('EXPLORE AN AI FUTURE')} <Info size={13} />
                 </label>
                 <div
                   className="segmented"
@@ -407,7 +429,7 @@ export function ArcTalentApp() {
                     className={scenario === 'moderate' ? 'selected' : ''}
                     onClick={() => setScenario('moderate')}
                   >
-                    Moderate adoption
+                    {t('Moderate adoption')}{' '}
                   </button>
                   <button
                     aria-pressed={scenario === 'rapid'}
@@ -415,13 +437,13 @@ export function ArcTalentApp() {
                     onClick={() => setScenario('rapid')}
                   >
                     <Sparkles size={13} />
-                    Rapid adoption
+                    {t('Rapid adoption')}{' '}
                   </button>
                 </div>
                 <small>
-                  Planning scenarios, not predictions.
+                  {t('Planning scenarios, not predictions.')}{' '}
                   <button onClick={() => navigate('evidence')}>
-                    See assumptions <ArrowUpRight size={11} />
+                    {t('See assumptions')} <ArrowUpRight size={11} />
                   </button>
                 </small>
               </div>
@@ -434,24 +456,30 @@ export function ArcTalentApp() {
               <span>
                 <span className="strip-dot" />
                 {snapshot.kind === 'simulation'
-                  ? 'Simulated evidence'
-                  : 'Public evidence'}
+                  ? t('Simulated evidence')
+                  : t('Public evidence')}
                 <span className="strip-divider">/</span>
-                {snapshot.label}
+                {t(snapshot.label)}
                 <span className="strip-date">
                   {' '}
                   ·{' '}
-                  {new Date(snapshot.asOf).toLocaleDateString('en-MY', {
-                    timeZone: 'Asia/Kuala_Lumpur',
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                  })}
+                  {new Date(snapshot.asOf).toLocaleDateString(
+                    locale === 'en'
+                      ? 'en-MY'
+                      : locale === 'ms'
+                        ? 'ms-MY'
+                        : 'zh-CN',
+                    {
+                      timeZone: 'Asia/Kuala_Lumpur',
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                    },
+                  )}
                 </span>
               </span>
               <button onClick={() => navigate('evidence')}>
-                Inspect sources
-                <ArrowRight size={13} />
+                {t('Inspect sources')} <ArrowRight size={13} />
               </button>
             </div>
           )}
@@ -460,37 +488,37 @@ export function ArcTalentApp() {
               <div className="stats-grid">
                 <div className="stat">
                   <Compass />
-                  <span>Career options</span>
+                  <span>{t('Career options')}</span>
                   <strong>
                     {roles.length}
-                    <small>sourced occupations</small>
+                    <small>{t('sourced occupations')}</small>
                   </strong>
                 </div>
                 <div className="stat">
                   <ShieldCheck />
-                  <span>Transferable strengths</span>
+                  <span>{t('Transferable strengths')}</span>
                   <strong>
                     {
                       Object.values(profile.skills).filter((v) => v && v > 0)
                         .length
                     }
-                    <small>skills to build on</small>
+                    <small>{t('skills to build on')}</small>
                   </strong>
                 </div>
                 <div className="stat">
                   <Clock3 />
-                  <span>Your learning rhythm</span>
+                  <span>{t('Your learning rhythm')}</span>
                   <strong>
                     {profile.hours}
-                    <small>hours per week</small>
+                    <small>{t('hours per week')}</small>
                   </strong>
                 </div>
                 <div className="stat">
                   <Wallet />
-                  <span>Your course budget</span>
+                  <span>{t('Your course budget')}</span>
                   <strong>
-                    RM {profile.budget}
-                    <small>over {profile.weeks} weeks</small>
+                    {t('RM')} {profile.budget}
+                    <small>{t('over {0} weeks', { 0: profile.weeks })}</small>
                   </strong>
                 </div>
               </div>
@@ -511,14 +539,14 @@ export function ArcTalentApp() {
                   <div className="panel-heading">
                     <div>
                       <span className="eyebrow">
-                        YOUR POSSIBILITIES, CONNECTED
+                        {t('YOUR POSSIBILITIES, CONNECTED')}{' '}
                       </span>
-                      <h2>Your career constellation</h2>
+                      <h2>{t('Your career constellation')}</h2>
                     </div>
                     <button
                       className="icon-button"
                       onClick={() => navigate('pathway')}
-                      aria-label="Open full learning pathway"
+                      aria-label={t('Open full learning pathway')}
                     >
                       <ArrowUpRight size={20} />
                     </button>
@@ -534,13 +562,12 @@ export function ArcTalentApp() {
                 <aside className="explorer-aside">
                   <section className="panel profile-card">
                     <div className="panel-heading">
-                      <h2>Your skills radar</h2>
+                      <h2>{t('Your skills radar')}</h2>
                       <button
                         className="text-button"
                         onClick={() => navigate('profile')}
                       >
-                        Edit
-                        <ArrowUpRight size={13} />
+                        {t('Edit')} <ArrowUpRight size={13} />
                       </button>
                     </div>
                     <Radar profile={profile} />
@@ -548,36 +575,43 @@ export function ArcTalentApp() {
                       <span className="avatar">{profile.name.slice(0, 1)}</span>
                       <div>
                         <strong>{profile.name}</strong>
-                        <small>{profile.currentRole}</small>
+                        <small>{t(profile.currentRole)}</small>
                       </div>
                     </div>
-                    <p className="muted small">Self-reported levels · 0 to 3</p>
+                    <p className="muted small">
+                      {t('Self-reported levels · 0 to 3')}
+                    </p>
                   </section>
                   <section className="next-step-card">
                     <span className="eyebrow">
                       <Sparkles size={13} />
-                      YOUR NEXT USEFUL STEP
+                      {t('YOUR NEXT USEFUL STEP')}{' '}
                     </span>
                     <h3>
                       {plan.steps[0]?.course.title ??
-                        'Review your learning constraints'}
+                        t('Review your learning constraints')}
                     </h3>
                     <p>
                       {plan.steps.length
-                        ? `${plan.steps[0].course.hours} study hours · ${plan.steps[0].course.provider}`
-                        : 'Try a longer horizon or inspect uncovered skills.'}
+                        ? t('{0} study hours · {1}', {
+                            0: plan.steps[0].course.hours,
+                            1: plan.steps[0].course.provider,
+                          })
+                        : t(
+                            'Try a longer horizon or inspect uncovered skills.',
+                          )}
                     </p>
                     <button onClick={() => navigate('pathway')}>
-                      See the learning plan
-                      <ArrowRight size={16} />
+                      {t('See the learning plan')} <ArrowRight size={16} />
                     </button>
                   </section>
                   <div className="small-callout">
                     <ShieldCheck size={20} />
                     <p>
-                      Your experience stays valuable.
-                      <br />
-                      <strong>We show the bridge, not a blank slate.</strong>
+                      {t('Your experience stays valuable.')} <br />
+                      <strong>
+                        {t('We show the bridge, not a blank slate.')}
+                      </strong>
                     </p>
                   </div>
                 </aside>
@@ -589,17 +623,19 @@ export function ArcTalentApp() {
                 <section className="career-section">
                   <div className="section-title">
                     <div>
-                      <h2>Where your skills could take you</h2>
+                      <h2>{t('Where your skills could take you')}</h2>
                       <p className="muted">
-                        Ranked for your profile and the {scenario} adoption
-                        scenario.
+                        {t(
+                          'Ranked for your profile and the {0} adoption scenario.',
+                          { 0: t(scenario) },
+                        )}{' '}
                       </p>
                     </div>
                     <button
                       className="text-button"
                       onClick={() => setShowAll(!showAll)}
                     >
-                      {showAll ? 'Show top three' : 'View all six'}
+                      {showAll ? t('Show top three') : t('View all six')}
                       <ArrowRight size={15} />
                     </button>
                   </div>
@@ -607,8 +643,8 @@ export function ArcTalentApp() {
                     <label className="search-box">
                       <Search size={16} />
                       <input
-                        aria-label="Search career options"
-                        placeholder="Find a career option…"
+                        aria-label={t('Search career options')}
+                        placeholder={t('Find a career option…')}
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                       />
@@ -637,26 +673,34 @@ export function ArcTalentApp() {
                             )}
                           </span>
                           <span className="rank">
-                            {i === 0 ? 'TOP MATCH' : `OPTION ${i + 1}`}
+                            {i === 0
+                              ? t('TOP MATCH')
+                              : t('OPTION {0}', { 0: i + 1 })}
                           </span>
                           <button
                             className="icon-button"
-                            aria-label={`Explain ${m.role.title} score`}
+                            aria-label={t('Explain {0} score', {
+                              0: t(m.role.title),
+                            })}
                             onClick={() => setDetails(m)}
                           >
                             <Info size={16} />
                           </button>
                         </div>
-                        <h3>{m.role.title}</h3>
-                        <p>{m.role.description}</p>
+                        <h3>{t(m.role.title)}</h3>
+                        <p>{t(m.role.description)}</p>
                         <div className="match-score">
                           <strong>
                             {Math.round(m.score)}
                             <small>/100</small>
                           </strong>
                           <span>
-                            Suitability
-                            <small>Skill match {Math.round(m.coverage)}%</small>
+                            {t('Suitability')}{' '}
+                            <small>
+                              {t('Skill match {0}%', {
+                                0: Math.round(m.coverage),
+                              })}
+                            </small>
                           </span>
                           <svg viewBox="0 0 40 40" aria-hidden="true">
                             <circle cx="20" cy="20" r="16" />
@@ -670,8 +714,12 @@ export function ArcTalentApp() {
                           </svg>
                         </div>
                         <div className="career-meta">
-                          <span>{m.reused.length} transferable skills</span>
-                          <span>{m.gaps.length} gaps</span>
+                          <span>
+                            {t('{0} transferable skills', {
+                              0: m.reused.length,
+                            })}
+                          </span>
+                          <span>{t('{0} gaps', { 0: m.gaps.length })}</span>
                         </div>
                         <button
                           className={
@@ -684,15 +732,14 @@ export function ArcTalentApp() {
                             navigate('pathway');
                           }}
                         >
-                          Explore pathway
-                          <ArrowRight size={14} />
+                          {t('Explore pathway')} <ArrowRight size={14} />
                         </button>
                       </article>
                     ))}
                   </div>
                   {visibleMatches.length === 0 && (
                     <div className="empty-state">
-                      No occupation matches that search.
+                      {t('No occupation matches that search.')}{' '}
                     </div>
                   )}
                 </section>
@@ -702,11 +749,12 @@ export function ArcTalentApp() {
                   <RefreshCw size={22} />
                 </div>
                 <div>
-                  <span className="eyebrow">BUILT TO ADAPT</span>
-                  <h3>What if the evidence changes?</h3>
+                  <span className="eyebrow">{t('BUILT TO ADAPT')}</span>
+                  <h3>{t('What if the evidence changes?')}</h3>
                   <p>
-                    Try a newer demo snapshot and see exactly why the
-                    recommendations move.
+                    {t(
+                      'Try a newer demo snapshot and see exactly why the recommendations move.',
+                    )}{' '}
                   </p>
                 </div>
                 <button
@@ -718,8 +766,7 @@ export function ArcTalentApp() {
                     navigate('evidence');
                   }}
                 >
-                  Try the replanning demo
-                  <ArrowRight size={16} />
+                  {t('Try the replanning demo')} <ArrowRight size={16} />
                 </button>
               </section>
             </>
@@ -728,34 +775,34 @@ export function ArcTalentApp() {
             <>
               <div className="pathway-toolbar">
                 <label>
-                  Your destination
+                  {t('Your destination')}{' '}
                   <select
                     value={active.role.id}
                     onChange={(e) => chooseRole(e.target.value)}
                   >
                     {matches.map((m) => (
                       <option key={m.role.id} value={m.role.id}>
-                        {m.role.title}
+                        {t(m.role.title)}
                       </option>
                     ))}
                   </select>
                 </label>
                 <label>
-                  Course funding
+                  {t('Course funding')}{' '}
                   <select
                     value={funding}
                     onChange={(e) =>
                       setFunding(e.target.value as typeof funding)
                     }
                   >
-                    <option value="all">All verified options</option>
-                    <option value="free">Verified free</option>
-                    <option value="hrd">Verified HRD Corp listed</option>
+                    <option value="all">{t('All verified options')}</option>
+                    <option value="free">{t('Verified free')}</option>
+                    <option value="hrd">{t('Verified HRD Corp listed')}</option>
                   </select>
                 </label>
                 <button className="secondary" onClick={exportPlan}>
                   <Download size={16} />
-                  Export pathway
+                  {t('Export pathway')}{' '}
                 </button>
               </div>
               <label className="checkbox-label follow-recommendation">
@@ -764,8 +811,9 @@ export function ArcTalentApp() {
                   checked={followTop}
                   onChange={(e) => setFollowTop(e.target.checked)}
                 />
-                Follow the leading recommendation as scenarios and evidence
-                change
+                {t(
+                  'Follow the leading recommendation as scenarios and evidence change',
+                )}{' '}
               </label>
               <section className="panel map-panel">
                 <LearningMap
@@ -781,33 +829,38 @@ export function ArcTalentApp() {
                   <SkillBridge profile={profile} role={active.role} />
                   <div className="section-title">
                     <div>
-                      <span className="eyebrow">YOUR CHOSEN ROUTE</span>
-                      <h2>{active.role.title}</h2>
+                      <span className="eyebrow">{t('YOUR CHOSEN ROUTE')}</span>
+                      <h2>{t(active.role.title)}</h2>
                       <p className="muted">
-                        {plan.totalHours} planned hours · RM {plan.totalCost} in
-                        course fees · {profile.weeks}-week horizon
+                        {t(
+                          '{0} planned hours · RM {1} in course fees · {2}-week horizon',
+                          {
+                            0: plan.totalHours,
+                            1: plan.totalCost,
+                            2: profile.weeks,
+                          },
+                        )}{' '}
                       </p>
                       <p className="muted small">
-                        Course coverage is a planning assumption. Study and
-                        assessment are needed to confirm proficiency.
+                        {t(
+                          'Course coverage is a planning assumption. Study and assessment are needed to confirm proficiency.',
+                        )}{' '}
                       </p>
                     </div>
                     <button
                       className="text-button"
                       onClick={() => setDetails(active)}
                     >
-                      Why this route?
-                      <Info size={15} />
+                      {t('Why this route?')} <Info size={15} />
                     </button>
                   </div>
                   {funding === 'hrd' && (
                     <div className="notice">
-                      No HRD Corp programme has been verified in this starter
-                      catalogue yet. Use verified free options, or verify an
-                      individual programme before adding it. Provider
-                      registration alone does not guarantee claimability.{' '}
+                      {t(
+                        'No HRD Corp programme has been verified in this starter catalogue yet. Use verified free options, or verify an individual programme before adding it. Provider registration alone does not guarantee claimability.',
+                      )}{' '}
                       <External href="https://hrdcorp.gov.my/hrdcorp-claimable-courses">
-                        Check HRD Corp guidance
+                        {t('Check HRD Corp guidance')}{' '}
                       </External>
                     </div>
                   )}
@@ -822,48 +875,55 @@ export function ArcTalentApp() {
                         <div className="course-top">
                           <Tag tone={step.shared ? 'green' : 'blue'}>
                             {step.shared
-                              ? 'Shared foundation'
-                              : 'Career branch'}
+                              ? t('Shared foundation')
+                              : t('Career branch')}
                           </Tag>
                           <small>
-                            Week {step.startWeek}
-                            {step.endWeek !== step.startWeek
-                              ? `–${step.endWeek}`
-                              : ''}
+                            {t('Week {0}{1}', {
+                              0: step.startWeek,
+                              1:
+                                step.endWeek !== step.startWeek
+                                  ? `–${step.endWeek}`
+                                  : '',
+                            })}
                           </small>
                         </div>
                         <h3>{step.course.title}</h3>
                         <p>
-                          {step.course.provider} · {step.course.hours} hours (
-                          {step.course.durationKind}) · RM {step.course.fee}
+                          {t('{0} · {1} hours ( {2}) · RM {3}', {
+                            0: step.course.provider,
+                            1: step.course.hours,
+                            2: t(step.course.durationKind),
+                            3: step.course.fee,
+                          })}
                         </p>
                         <div className="chips">
                           {step.course.skills.map((id) => (
                             <SkillChip key={id} id={id} />
                           ))}
                         </div>
-                        <p className="muted small">{step.course.note}</p>
+                        <p className="muted small">{t(step.course.note)}</p>
                         <div className="course-bottom">
                           <External href={step.course.url}>
-                            Open learning resource
+                            {t('Open learning resource')}{' '}
                           </External>
                           <button
                             className="text-button"
                             onClick={() => complete(step.course.id)}
                           >
                             <CheckCircle2 size={15} />
-                            Mark studied
+                            {t('Mark studied')}{' '}
                           </button>
                         </div>
                         <small className="verification">
                           <ShieldCheck size={12} />
-                          Source checked {step.course.checkedAt} ·{' '}
+                          {t('Source checked')} {step.course.checkedAt} ·{' '}
                           <a
                             href={sdgUrl('4.4')}
                             target="_blank"
                             rel="noreferrer"
                           >
-                            SDG 4.4: relevant work skills
+                            {t('SDG 4.4: relevant work skills')}{' '}
                           </a>
                         </small>
                       </div>
@@ -872,23 +932,23 @@ export function ArcTalentApp() {
                   {!plan.steps.length && (
                     <div className="panel empty-state">
                       <BookOpen size={28} />
-                      <h3>No new course fits this selection.</h3>
+                      <h3>{t('No new course fits this selection.')}</h3>
                       <p>
-                        Review the available time, funding filter and gaps
-                        below. You may have already studied the relevant
-                        courses.
+                        {t(
+                          'Review the available time, funding filter and gaps below. You may have already studied the relevant courses.',
+                        )}{' '}
                       </p>
                       <button
                         className="secondary"
                         onClick={() => navigate('profile')}
                       >
-                        Edit constraints
+                        {t('Edit constraints')}{' '}
                       </button>
                     </div>
                   )}
                   {plan.completed.length > 0 && (
                     <section className="panel completed-panel">
-                      <h3>Learning you’re keeping</h3>
+                      <h3>{t('Learning you’re keeping')}</h3>
                       {plan.completed.map((c) => (
                         <div key={c.id}>
                           <span>
@@ -899,23 +959,24 @@ export function ArcTalentApp() {
                             className="text-button"
                             onClick={() => complete(c.id)}
                           >
-                            Undo
+                            {t('Undo')}{' '}
                           </button>
                         </div>
                       ))}
                       <p className="muted small">
-                        Marked studied in this browser. Your assessed skill
-                        levels do not change automatically.
+                        {t(
+                          'Marked studied in this browser. Your assessed skill levels do not change automatically.',
+                        )}{' '}
                       </p>
                     </section>
                   )}
                   {plan.uncovered.length > 0 && (
                     <section className="panel gap-panel">
-                      <h3>A useful start, with gaps still to cover.</h3>
+                      <h3>{t('A useful start, with gaps still to cover.')}</h3>
                       <p>
-                        These needs do not fit the available time, prerequisites
-                        or verified catalogue. Finishing the plan does not
-                        establish full role readiness.
+                        {t(
+                          'These needs do not fit the available time, prerequisites or verified catalogue. Finishing the plan does not establish full role readiness.',
+                        )}{' '}
                       </p>
                       <div className="chips">
                         {plan.uncovered.map((id) => (
@@ -927,10 +988,14 @@ export function ArcTalentApp() {
                 </section>
                 <aside>
                   <section className="panel">
-                    <span className="eyebrow">MAKE ROOM FOR LEARNING</span>
-                    <h2>Your weekly rhythm</h2>
+                    <span className="eyebrow">
+                      {t('MAKE ROOM FOR LEARNING')}
+                    </span>
+                    <h2>{t('Your weekly rhythm')}</h2>
                     <p className="muted">
-                      Maximum {profile.hours} hours each week.
+                      {t('Maximum {0} hours each week.', {
+                        0: profile.hours,
+                      })}{' '}
                     </p>
                     <div className="weekly-chart">
                       {Array.from(
@@ -939,7 +1004,7 @@ export function ArcTalentApp() {
                           const w = plan.weeks[i];
                           return (
                             <div key={i}>
-                              <span>W{i + 1}</span>
+                              <span>{t('W{0}', { 0: i + 1 })}</span>
                               <div className="bar">
                                 <i
                                   style={{
@@ -947,7 +1012,7 @@ export function ArcTalentApp() {
                                   }}
                                 />
                               </div>
-                              <b>{w?.hours ?? 0} h</b>
+                              <b>{t('{0} h', { 0: w?.hours ?? 0 })}</b>
                             </div>
                           );
                         },
@@ -955,20 +1020,24 @@ export function ArcTalentApp() {
                     </div>
                     {profile.weeks > 12 && (
                       <p className="muted small">
-                        First 12 weeks shown. Export includes the full schedule.
+                        {t(
+                          'First 12 weeks shown. Export includes the full schedule.',
+                        )}{' '}
                       </p>
                     )}
                     <div className="section-divider" />
                     <div className="budget-line">
-                      <span>Course fees</span>
-                      <strong>RM {plan.totalCost}</strong>
+                      <span>{t('Course fees')}</span>
+                      <strong>{t('RM {0}', { 0: plan.totalCost })}</strong>
                     </div>
                     <div className="budget-line">
-                      <span>Available budget</span>
-                      <strong>RM {profile.budget}</strong>
+                      <span>{t('Available budget')}</span>
+                      <strong>{t('RM {0}', { 0: profile.budget })}</strong>
                     </div>
                     <p className="muted small">
-                      Device, software, data and staff-time costs are separate.
+                      {t(
+                        'Device, software, data and staff-time costs are separate.',
+                      )}{' '}
                     </p>
                   </section>
                   <StudyRhythm
@@ -977,26 +1046,26 @@ export function ArcTalentApp() {
                   />
                   <section className="panel qualification-panel">
                     <GraduationCap size={23} />
-                    <h3>Keep the destination realistic</h3>
-                    <p>{active.role.entry}</p>
+                    <h3>{t('Keep the destination realistic')}</h3>
+                    <p>{t(active.role.entry)}</p>
                     <External href={active.role.source}>
-                      Explore role requirements
+                      {t('Explore role requirements')}{' '}
                     </External>
                   </section>
                   {previous && (
                     <section className="panel">
-                      <h3>Your plan can adapt</h3>
+                      <h3>{t('Your plan can adapt')}</h3>
                       <p>
-                        {changes.length} occupation scores changed after the
-                        latest snapshot. Completed learning was retained.
-                        Manually chosen destinations stay pinned.
+                        {t(
+                          '{0} occupation scores changed after the latest snapshot. Completed learning was retained. Manually chosen destinations stay pinned.',
+                          { 0: changes.length },
+                        )}{' '}
                       </p>
                       <button
                         className="text-button"
                         onClick={() => navigate('evidence')}
                       >
-                        Inspect the changes
-                        <ArrowRight size={14} />
+                        {t('Inspect the changes')} <ArrowRight size={14} />
                       </button>
                     </section>
                   )}
@@ -1042,10 +1111,12 @@ export function ArcTalentApp() {
           <footer className="app-footer">
             <span>
               <GitBranch size={15} />
-              ArcTalent · Skills that travel with you.
+              {t('ArcTalent · Skills that travel with you.')}{' '}
             </span>
             <span>
-              Synthetic profiles · Human decisions · Evidence you can inspect
+              {t(
+                'Synthetic profiles · Human decisions · Evidence you can inspect',
+              )}{' '}
             </span>
           </footer>
         </main>
@@ -1053,10 +1124,10 @@ export function ArcTalentApp() {
       {toast && (
         <div className="toast" role="status">
           <CheckCircle2 size={20} />
-          <span>{toast}</span>
+          <span>{t(toast)}</span>
           <button
             className="icon-button"
-            aria-label="Dismiss notification"
+            aria-label={t('Dismiss notification')}
             onClick={() => setToast('')}
           >
             <X size={16} />
@@ -1064,7 +1135,7 @@ export function ArcTalentApp() {
         </div>
       )}
       {details && (
-        <Modal title={details.role.title} onClose={() => setDetails(null)}>
+        <Modal title={t(details.role.title)} onClose={() => setDetails(null)}>
           <MatchDetails match={details} />
         </Modal>
       )}

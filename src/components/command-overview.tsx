@@ -1,3 +1,4 @@
+import { useI18n } from './language-provider';
 import { ArrowUpRight, CircleDot, Layers3 } from 'lucide-react';
 import { useId } from 'react';
 import type { LearningPlan, Match, Profile } from '@/lib/types';
@@ -16,16 +17,18 @@ export function RouteSummary({
   onSelect: (id: string) => void;
   onExplain: () => void;
 }) {
+  const { t } = useI18n();
+
   return (
     <section
       className="panel route-summary"
-      aria-label="Selected route overview"
+      aria-label={t('Selected route overview')}
     >
       <div className="widget-heading">
-        <span>Selected route</span>
+        <span>{t('Selected route')}</span>
         <CircleDot size={16} />
       </div>
-      <h2>{active.role.shortTitle}</h2>
+      <h2>{t(active.role.shortTitle)}</h2>
       <div className="hero-metric">
         <strong>{Math.round(active.score)}</strong>
         <span>/ 100</span>
@@ -40,27 +43,27 @@ export function RouteSummary({
           />
         </svg>
       </div>
-      <p className="metric-caption">Overall route score</p>
+      <p className="metric-caption">{t('Overall route score')}</p>
       {delta !== undefined ? (
         <span
           className={`metric-delta ${delta > 0 ? 'positive' : delta < 0 ? 'negative' : ''}`}
         >
           {delta > 0 ? '▲ +' : delta < 0 ? '▼ ' : ''}
-          {delta.toFixed(1)} pts vs previous snapshot
+          {t('{0} pts vs previous snapshot', { 0: delta.toFixed(1) })}
         </span>
       ) : (
         <span className="metric-delta">
-          Current snapshot · no prior comparison
+          {t('Current snapshot · no prior comparison')}
         </span>
       )}
       <div className="summary-coverage">
-        <span>Current skill coverage</span>
+        <span>{t('Current skill coverage')}</span>
         <strong>{Math.round(active.coverage)}%</strong>
       </div>
       <div
         className="segmented-meter"
         role="meter"
-        aria-label="Current skill coverage"
+        aria-label={t('Current skill coverage')}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={active.coverage}
@@ -69,8 +72,8 @@ export function RouteSummary({
       </div>
       <div className="summary-ranking">
         <div className="ranking-label">
-          <span>Leading routes</span>
-          <span>Score</span>
+          <span>{t('Leading routes')}</span>
+          <span>{t('Score')}</span>
         </div>
         {matches.slice(0, 3).map((match, i) => (
           <button
@@ -80,16 +83,16 @@ export function RouteSummary({
             className="ranking-row"
           >
             <i className={`data-dot series-${i}`} />
-            <span>{match.role.shortTitle}</span>
+            <span>{t(match.role.shortTitle)}</span>
             <strong>{Math.round(match.score)}</strong>
           </button>
         ))}
       </div>
       <button className="text-button summary-action" onClick={onExplain}>
-        Understand this score <ArrowUpRight size={15} />
+        {t('Understand this score')} <ArrowUpRight size={15} />
       </button>
       <p className="chart-note">
-        A planning estimate, not a hiring probability.
+        {t('A planning estimate, not a hiring probability.')}{' '}
       </p>
     </section>
   );
@@ -104,6 +107,8 @@ export function RouteAnalytics({
   plan: LearningPlan;
   profile: Profile;
 }) {
+  const { t } = useI18n();
+
   const fillId = useId();
   const weeks = Array.from({ length: Math.min(profile.weeks, 12) }, (_, i) => ({
     week: i + 1,
@@ -126,17 +131,17 @@ export function RouteAnalytics({
     <div className="analytics-grid">
       <section className="panel comparison-widget">
         <div className="widget-heading">
-          <h2>Skills & scenario fit</h2>
+          <h2>{t('Skills & scenario fit')}</h2>
           <Layers3 size={16} />
         </div>
         <div className="chart-legend">
           <span>
             <i className="data-dot cyan" />
-            Skill coverage
+            {t('Skill coverage')}{' '}
           </span>
           <span>
             <i className="data-dot violet" />
-            Scenario suitability
+            {t('Scenario suitability')}{' '}
           </span>
         </div>
         <div
@@ -144,9 +149,15 @@ export function RouteAnalytics({
           role="img"
           aria-label={matches
             .slice(0, 3)
-            .map(
-              (m) =>
-                `${m.role.shortTitle}: ${Math.round(m.coverage)} percent skill coverage, ${Math.round(m.resilience)} percent scenario suitability`,
+            .map((m) =>
+              t(
+                '{0}: {1} percent skill coverage, {2} percent scenario suitability',
+                {
+                  0: t(m.role.shortTitle),
+                  1: Math.round(m.coverage),
+                  2: Math.round(m.resilience),
+                },
+              ),
             )
             .join('; ')}
         >
@@ -161,30 +172,34 @@ export function RouteAnalytics({
                 <i style={{ height: `${m.coverage}%` }} />
                 <i style={{ height: `${m.resilience}%` }} />
               </div>
-              <span>{m.role.shortTitle}</span>
+              <span>{t(m.role.shortTitle)}</span>
             </div>
           ))}
         </div>
         <p className="chart-note">
-          Modelled fit for the active scenario; 0–100 scale.
+          {t('Modelled fit for the active scenario; 0–100 scale.')}{' '}
         </p>
       </section>
       <section className="panel pace-widget">
         <div className="widget-heading">
-          <h2>Learning allocation</h2>
-          <span>First {weeks.length} weeks</span>
+          <h2>{t('Learning allocation')}</h2>
+          <span>{t('First {0} weeks', { 0: weeks.length })}</span>
         </div>
         <div className="widget-metric">
           <strong>
             {plan.totalHours}
-            <small> h</small>
+            <small> {t('h')}</small>
           </strong>
-          <span>planned across {profile.weeks} weeks</span>
+          <span>{t('planned across {0} weeks', { 0: profile.weeks })}</span>
         </div>
         <svg
           viewBox="0 0 300 132"
           role="img"
-          aria-label={`Planned weekly hours: ${weeks.map((w) => `week ${w.week}: ${w.hours} hours`).join(', ')}`}
+          aria-label={t('Planned weekly hours: {0}', {
+            0: weeks
+              .map((w) => t('Week {0}: {1} hours', { 0: w.week, 1: w.hours }))
+              .join(', '),
+          })}
           className="pace-chart"
         >
           <defs>
@@ -196,10 +211,10 @@ export function RouteAnalytics({
           <line x1="24" x2="276" y1="28" y2="28" className="chart-grid" />
           <line x1="24" x2="276" y1="106" y2="106" className="chart-grid" />
           <text x="0" y="31">
-            {maxHours}h
+            {t('{0}h', { 0: maxHours })}{' '}
           </text>
           <text x="0" y="109">
-            0h
+            {t('0h')}{' '}
           </text>
           {points.length > 0 && (
             <>
@@ -216,27 +231,34 @@ export function RouteAnalytics({
                   r="2.5"
                   className="pace-point"
                 >
-                  <title>{`Week ${weeks[i].week}: ${weeks[i].hours} hours`}</title>
+                  <title>
+                    {t('Week {0}: {1} hours', {
+                      0: weeks[i].week,
+                      1: weeks[i].hours,
+                    })}
+                  </title>
                 </circle>
               ))}
             </>
           )}
           <text x="24" y="129">
-            W1
+            {t('W1')}{' '}
           </text>
           <text x="276" y="129" textAnchor="end">
-            W{weeks.length}
+            {t('W{0}', { 0: weeks.length })}
           </text>
         </svg>
         <p className="chart-note">
-          Weekly capacity: {profile.hours} h · Proposed study, not completed
-          activity.
+          {t(
+            'Weekly capacity: {0} h · Proposed study, not completed activity.',
+            { 0: profile.hours },
+          )}{' '}
         </p>
       </section>
       <section className="panel bubble-widget">
         <div className="widget-heading">
-          <h2>Transferable strengths</h2>
-          <span>Top 3 routes</span>
+          <h2>{t('Transferable strengths')}</h2>
+          <span>{t('Top 3 routes')}</span>
         </div>
         <div className="bubble-chart">
           {matches.slice(0, 3).map((m, i) => (
@@ -252,12 +274,12 @@ export function RouteAnalytics({
                   <b>{m.reused.length}</b>
                 </span>
               </div>
-              <strong>{m.role.shortTitle}</strong>
+              <strong>{t(m.role.shortTitle)}</strong>
             </div>
           ))}
         </div>
         <p className="chart-note">
-          Existing skills reused by each route; skills may overlap.
+          {t('Existing skills reused by each route; skills may overlap.')}{' '}
         </p>
       </section>
     </div>

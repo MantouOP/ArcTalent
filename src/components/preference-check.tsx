@@ -10,6 +10,7 @@ import {
 import { learningPreferencesSchema } from '@/lib/validation';
 import type { LearningPreferences, Profile } from '@/lib/types';
 import { Modal } from './ui';
+import { useI18n } from './language-provider';
 
 export function PreferenceCheck({
   profile,
@@ -18,41 +19,48 @@ export function PreferenceCheck({
   profile: Profile;
   onChange: (profile: Profile) => void;
 }) {
+  const { t, locale } = useI18n();
   const [open, setOpen] = useState(false);
   const preferences = profile.learningPreferences;
   return (
-    <section className="preference-banner" aria-labelledby="preference-title">
+    <section
+      className="preference-banner"
+      aria-labelledby="preference-title"
+      lang={locale}
+    >
       <div className="preference-intro">
-        <h2 id="preference-title">Make room for the way you learn.</h2>
+        <h2 id="preference-title">{t('Make room for the way you learn.')}</h2>
         <p>
-          Three questions to choose a work interest and a study rhythm that fits
-          your week.
+          {t(
+            'Three questions to choose a work interest and a study rhythm that fits your week.',
+          )}
         </p>
         {preferences && (
           <p className="preference-summary">
-            Check-in focus:{' '}
-            {
-              focusOptions.find((option) => option.value === preferences.focus)
-                ?.interest
-            }
-            {' · '}
-            {
-              formatOptions.find(
-                (option) => option.value === preferences.format,
-              )?.label
-            }
-            {' · '}
-            {preferences.sessionMinutes}-minute sessions
+            {t('Check-in focus: {0} · {1} · {2}-minute sessions', {
+              0: t(
+                focusOptions.find(
+                  (option) => option.value === preferences.focus,
+                )?.interest,
+              ),
+              1: t(
+                formatOptions.find(
+                  (option) => option.value === preferences.format,
+                )?.label,
+              ),
+              2: preferences.sessionMinutes,
+            })}
           </p>
         )}
         <p className="preference-footnote">
-          Optional · about a minute. Answers are preferences, not an ability
-          test. Save your profile below to update your pathways.
+          {t(
+            'Optional · about a minute. Answers are preferences, not an ability test. Save your profile below to update your pathways.',
+          )}
         </p>
       </div>
       <div className="preference-actions">
         <button className="secondary" onClick={() => setOpen(true)}>
-          {preferences ? 'Review my answers' : 'Start the quick check'}
+          {t(preferences ? 'Review my answers' : 'Start the quick check')}
           <ArrowRight size={16} />
         </button>
         {preferences && (
@@ -62,7 +70,7 @@ export function PreferenceCheck({
               onChange({ ...profile, learningPreferences: undefined })
             }
           >
-            Clear study preferences
+            {t('Clear study preferences')}
           </button>
         )}
       </div>
@@ -89,6 +97,7 @@ function PreferenceDialog({
   onClose: () => void;
   onApply: (answers: LearningPreferences) => void;
 }) {
+  const { t, locale } = useI18n();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Partial<LearningPreferences>>(
     profile.learningPreferences ?? {},
@@ -111,34 +120,45 @@ function PreferenceDialog({
         : !!answers.sessionMinutes;
   const parsed = learningPreferencesSchema.safeParse(answers);
   return (
-    <Modal title="Your learning preferences" onClose={onClose}>
-      <div className="preference-check">
+    <Modal title={t('Your learning preferences')} onClose={onClose}>
+      <div className="preference-check" lang={locale}>
         <div
           className="check-progress"
           aria-label={
-            step < 3 ? `Question ${step + 1} of 3` : 'Review your answers'
+            step < 3
+              ? t('Question {0} of 3', { 0: step + 1 })
+              : t('Review your answers')
           }
         >
           {['Work interest', 'Practice', 'Session length'].map(
             (label, index) => (
               <span className={index <= step ? 'reached' : ''} key={label}>
                 <b>{index < step ? <Check size={12} /> : index + 1}</b>
-                {label}
+                {t(label)}
               </span>
             ),
           )}
         </div>
         <h3 ref={heading} tabIndex={-1} id="check-question">
-          {questions[step]}
+          {t(questions[step])}
         </h3>
         <p className="check-help">
           {step === 0
-            ? 'Pick the one that appeals most today. You can select more interests in your profile afterwards.'
+            ? t(
+                'Pick the one that appeals most today. You can select more interests in your profile afterwards.',
+              )
             : step === 1
-              ? 'This changes your practice suggestion. It does not measure how quickly you learn.'
+              ? t(
+                  'This changes your practice suggestion. It does not measure how quickly you learn.',
+                )
               : step === 2
-                ? `Your weekly limit stays at ${profile.hours} hours. Shorter sessions divide that time into smaller blocks.`
-                : 'Review what will change before applying these answers to your profile draft.'}
+                ? t(
+                    'Your weekly limit stays at {0} hours. Shorter sessions divide that time into smaller blocks.',
+                    { 0: profile.hours },
+                  )
+                : t(
+                    'Review what will change before applying these answers to your profile draft.',
+                  )}
         </p>
         {step < 3 ? (
           <fieldset className="check-options" aria-labelledby="check-question">
@@ -155,8 +175,8 @@ function PreferenceDialog({
                     }
                   />
                   <span>
-                    <strong>{option.label}</strong>
-                    <small>{option.detail}</small>
+                    <strong>{t(option.label)}</strong>
+                    <small>{t(option.detail)}</small>
                   </span>
                 </label>
               ))}
@@ -173,8 +193,8 @@ function PreferenceDialog({
                     }
                   />
                   <span>
-                    <strong>{option.label}</strong>
-                    <small>{option.detail}</small>
+                    <strong>{t(option.label)}</strong>
+                    <small>{t(option.detail)}</small>
                   </span>
                 </label>
               ))}
@@ -191,13 +211,15 @@ function PreferenceDialog({
                     }
                   />
                   <span>
-                    <strong>{minutes} minutes</strong>
+                    <strong>{t('{0} minutes', { 0: minutes })}</strong>
                     <small>
-                      {minutes === 15
-                        ? 'A small window in a busy day.'
-                        : minutes === 30
-                          ? 'A focused block with time to try something.'
-                          : 'A longer block for deeper practice.'}
+                      {t(
+                        minutes === 15
+                          ? 'A small window in a busy day.'
+                          : minutes === 30
+                            ? 'A focused block with time to try something.'
+                            : 'A longer block for deeper practice.',
+                      )}
                     </small>
                   </span>
                 </label>
@@ -207,34 +229,34 @@ function PreferenceDialog({
           <>
             <dl className="check-review">
               <div>
-                <dt>Selected work interest</dt>
+                <dt>{t('Selected work interest')}</dt>
                 <dd>
-                  {
+                  {t(
                     focusOptions.find(
                       (option) => option.value === answers.focus,
-                    )?.interest
-                  }
+                    )?.interest,
+                  )}
                 </dd>
               </div>
               <div>
-                <dt>Practice preference</dt>
+                <dt>{t('Practice preference')}</dt>
                 <dd>
-                  {
+                  {t(
                     formatOptions.find(
                       (option) => option.value === answers.format,
-                    )?.label
-                  }
+                    )?.label,
+                  )}
                 </dd>
               </div>
               <div>
-                <dt>Session length</dt>
-                <dd>{answers.sessionMinutes} minutes</dd>
+                <dt>{t('Session length')}</dt>
+                <dd>{t('{0} minutes', { 0: answers.sessionMinutes })}</dd>
               </div>
             </dl>
             <p className="check-explanation">
-              Applying replaces your current interest selections with this
-              focus. You can adjust them below before saving. Your skill levels,
-              completed learning, weekly hours and budget stay the same.
+              {t(
+                'Applying replaces your current interest selections with this focus. You can adjust them below before saving. Your skill levels, completed learning, weekly hours and budget stay the same.',
+              )}
             </p>
           </>
         )}
@@ -244,7 +266,7 @@ function PreferenceDialog({
             onClick={step === 0 ? onClose : () => setStep(step - 1)}
           >
             <ArrowLeft size={15} />
-            {step === 0 ? 'Cancel' : 'Back'}
+            {t(step === 0 ? 'Cancel' : 'Back')}
           </button>
           {step < 3 ? (
             <button
@@ -252,7 +274,7 @@ function PreferenceDialog({
               disabled={!canContinue}
               onClick={() => setStep(step + 1)}
             >
-              {step === 2 ? 'Review answers' : 'Continue'}
+              {t(step === 2 ? 'Review answers' : 'Continue')}
               <ArrowRight size={15} />
             </button>
           ) : (
@@ -263,15 +285,16 @@ function PreferenceDialog({
                 if (parsed.success) onApply(parsed.data);
               }}
             >
-              Apply to profile draft
+              {t('Apply to profile draft')}
               <Check size={15} />
             </button>
           )}
         </div>
         {step < 3 && !canContinue && (
           <p className="check-footnote">
-            Choose one answer to continue, or cancel to keep your current
-            profile.
+            {t(
+              'Choose one answer to continue, or cancel to keep your current profile.',
+            )}
           </p>
         )}
       </div>

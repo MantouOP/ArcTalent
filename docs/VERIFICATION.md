@@ -1,5 +1,13 @@
 # Verification record
 
+## English, Bahasa Melayu and Simplified Chinese — 23 October 2026
+
+Added a header language selector with native names, a separate validated browser preference and document-language/title updates. The interface uses 495 paired translation keys, including role/skill descriptions, accessible chart labels, profile controls, learning preferences, planning explanations and ordinary feed-failure messages. Names, editable text, CV evidence, external resource titles, source data and exports remain canonical. No runtime dependency, service or animation was added.
+
+All **38 unit tests**, type checking, formatting and the production build pass. The six locale tests cover validation, unknown text/prototype-name fallback, interpolation including zero, matching dictionary keys/placeholders, catalogue display metadata and evidence provenance/failure copy. A source-copy audit found no missing literal translation keys. The production page check also requires all three selector options.
+
+Chrome confirmed Malay and Chinese display, Chinese retained after reload, the correct `html` language, an unsaved profile name retained across switching, the SME destination retained across switching, and an RM750 training budget retained after reload. Pathway and evidence replay views translate; a replay toast changes language correctly. The Malay reset text initially overflowed the phone header; a compact labelled icon control fixed it. At 375px and 320px, the final header fits without document overflow, including Chinese at 320px. The [Malay phone screenshot](images/language-ms-mobile.jpg) records the result. Temporary viewport overrides were reset. No browser warning/error entries were captured. Replit publication is tracked separately in [runtime status](REPLIT_STATUS.md).
+
 ## Watermark and graphics-load removal — 23 October 2026
 
 The user reported intrusive Unicorn watermarks and lag after the embed was published. Removed the entire Unicorn background component, its CSS, root-layout mount and npm dependency. The original Orion CSS background is restored. This removes the additional continuously rendered WebGL scene rather than hiding its branding. The previously observed desktop canvas was about 7.5 million pixels at DPI 1.5; no frame-time or whole-app performance benchmark is claimed.

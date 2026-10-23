@@ -3,6 +3,7 @@ import { ArrowRight, Check, GitBranch, Sparkles } from 'lucide-react';
 import { useId } from 'react';
 import { skillById } from '@/lib/catalogue';
 import type { Match, Profile, SkillId } from '@/lib/types';
+import { useI18n } from './language-provider';
 export function LearningMap({
   matches,
   shared,
@@ -16,6 +17,7 @@ export function LearningMap({
   selected: string;
   onSelect: (id: string) => void;
 }) {
+  const { t } = useI18n();
   const orbId = useId();
   return (
     <div className="learning-map">
@@ -81,24 +83,25 @@ export function LearningMap({
       <div className="map-legend">
         <span>
           <i className="legend-dot existing-dot" />
-          Existing strengths
+          {t('Existing strengths')}
         </span>
         <span>
           <i className="legend-dot shared-dot" />
-          Shared foundation
+          {t('Shared foundation')}
         </span>
         <span>
           <GitBranch size={13} />
-          Career branches
+          {t('Career branches')}
         </span>
       </div>
       <div className="map-flow">
         <div className="map-start">
           <span className="map-avatar">{profile.name.slice(0, 1)}</span>
-          <strong>You are here</strong>
+          <strong>{t('You are here')}</strong>
           <small>
-            {Object.values(profile.skills).filter((v) => v && v > 0).length}{' '}
-            existing skills
+            {t('{0} existing skills', {
+              0: Object.values(profile.skills).filter((v) => v && v > 0).length,
+            })}
           </small>
         </div>
         <div className="map-connector" aria-hidden="true">
@@ -108,23 +111,24 @@ export function LearningMap({
         <div className="foundation">
           <span className="eyebrow">
             <Sparkles size={13} />
-            SHARED ACROSS FUTURES
+            {t('SHARED ACROSS FUTURES')}
           </span>
-          <h3>Your shared foundation</h3>
+          <h3>{t('Your shared foundation')}</h3>
           {shared.length ? (
             shared.map((id) => (
               <div className="foundation-stop" key={id}>
                 <span className="stop-node" />
-                <span>{skillById[id].label}</span>
+                <span>{t(skillById[id].label)}</span>
               </div>
             ))
           ) : (
             <p>
-              No missing skill is common to every compared route. Explore each
-              branch.
+              {t(
+                'No missing skill is common to every compared route. Explore each branch.',
+              )}
             </p>
           )}
-          <small>Useful across the top routes in both scenarios.</small>
+          <small>{t('Useful across the top routes in both scenarios.')}</small>
         </div>
         <div className="map-fork" aria-hidden="true">
           <svg viewBox="0 0 70 220" preserveAspectRatio="none">
@@ -145,10 +149,11 @@ export function LearningMap({
                 {String.fromCharCode(65 + i)}
               </span>
               <span>
-                <strong>{m.role.shortTitle}</strong>
+                <strong>{t(m.role.shortTitle)}</strong>
                 <small>
-                  {m.gaps.filter((g) => !shared.includes(g.id)).length}{' '}
-                  branch-specific gaps
+                  {t('{0} branch-specific gaps', {
+                    0: m.gaps.filter((g) => !shared.includes(g.id)).length,
+                  })}
                 </small>
               </span>
               <b className="destination-score">
@@ -165,10 +170,11 @@ export function LearningMap({
         </div>
       </div>
       <div className="map-caption">
-        <span className="tag green">The ArcTalent approach</span>
+        <span className="tag green">{t('The ArcTalent approach')}</span>
         <p>
-          Start with skills that travel with you. Specialise when the next step
-          is clearer.
+          {t(
+            'Start with skills that travel with you. Specialise when the next step is clearer.',
+          )}
         </p>
       </div>
     </div>
