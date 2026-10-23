@@ -2,7 +2,15 @@
 
 Verified on **23 October 2026** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
-## Clean background restoration — Live
+## Three-language interface — Live
+
+Canonical source `40c9e05545cde8eb09cdc97569b631fb9228bbe6` adds English, Bahasa Melayu and Simplified Chinese interface options. Its [GitHub CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/39963901230). Replit imported the source unchanged into `artifacts/arctalent-release-40c9e05`; the staged directory tree exactly matched the canonical source tree before installation. A fresh locked install, **38 unit tests**, the production build and all **14 production API/selector checks** passed inside Replit.
+
+Runtime commit `0cc2afc4b2352c03493aecd4346874f3ca511d07` switches the artifact launch commands to that directory, retains the previous configuration and records the verification. Its incremental Git bundle was downloaded, verified, imported locally and pushed to `replit-runtime`; its [CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/39964694094). A second local Git comparison confirmed exact imported-source equality. The existing APIs, matching engine and dependency manifests are unchanged.
+
+Replit reports **Live** after completing promotion. All **14 public HTTPS API/selector checks passed**, including PDF parsing. Chrome verified the English, Malay and Chinese choices, the Chinese preference retained after reload, correct document language, scenario switching and SME navigation. No browser warnings/errors were captured; there is no background canvas or document overflow. The demo was reset to Aina's moderate-adoption baseline, retaining the selected language, and the [live multilingual screenshot](images/language-options-live.jpg) saved. Promotion took longer than the build/bundle stages; it completed without cancelling or changing the verified source.
+
+## Previously published clean background restoration
 
 The user requested removal of the watermark and lag. Canonical commit `1fc58451de5426971ff253a9b7a2791d97f9fe31` removes the Unicorn component, stylesheet, root mount and package. The application source and dependency manifests match the clean `53fdc89` release, retaining the workforce/CV fixes and corrected PDF. The [removal CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/39927400169).
 
@@ -53,16 +61,16 @@ The runtime history was exported from Replit, verified with `git bundle verify`,
 From the Replit workspace root:
 
 ```sh
-npm --prefix artifacts/arctalent-release-53fdc89 ci --workspaces=false
-npm --prefix artifacts/arctalent-release-53fdc89 run build
-npm --prefix artifacts/arctalent-release-53fdc89 run start -- --port 23585
+npm --prefix artifacts/arctalent-release-40c9e05 ci --workspaces=false
+npm --prefix artifacts/arctalent-release-40c9e05 run build
+npm --prefix artifacts/arctalent-release-40c9e05 run start -- --port 23585
 ```
 
-For development, use `npm --prefix artifacts/arctalent-release-53fdc89 run dev -- --port 23585`.
+For development, use `npm --prefix artifacts/arctalent-release-40c9e05 run dev -- --port 23585`.
 
 ## Publishing and submission evidence
 
-**[Live ArcTalent demo](https://arc-talent--emmanuelheng.replit.app/)** — verified publicly on 23 October 2026. Replit reports Live, public access, Autoscale and the Asia region. The [live screenshot](images/replit-live.jpg) records the deployed interface. Use this URL for the working-prototype field and the team project URL for project-history evidence.
+**[Live ArcTalent demo](https://arc-talent--emmanuelheng.replit.app/)** — verified publicly on 23 October 2026. Replit reports Live, public access, Autoscale and the Asia region. The [current live screenshot](images/language-options-live.jpg) records the multilingual interface. Use this URL for the working-prototype field and the team project URL for project-history evidence.
 
 The original publishing attempt passed build/security/bundling but stayed at Promote for 16 minutes. It was cancelled and retried once. The retry completed promotion after a further delay, without application or launch-configuration changes. The temporary workspace test port was confirmed closed. That original publication used source `2a5b6cf`; the acceptance release is recorded above.
 

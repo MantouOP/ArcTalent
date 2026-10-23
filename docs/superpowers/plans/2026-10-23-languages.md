@@ -32,5 +32,5 @@
 
 - [x] Test all three languages in Chrome, saved preference after reload, and switching language without losing an edited profile or SME settings.
 - [x] Check desktop/mobile layout, document language and browser errors; save screenshots.
-- [ ] Review the whole change, commit, push GitHub, import the exact release into Replit and publish.
-- [ ] Verify the live selector and all 14 production API checks, record the deployed source and evidence.
+- [x] Review the whole change, commit, push GitHub, import the exact release into Replit and publish.
+- [x] Verify the live selector and all 14 production API checks, record the deployed source and evidence.
