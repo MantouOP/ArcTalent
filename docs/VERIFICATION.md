@@ -1,5 +1,13 @@
 # Verification record
 
+## Unicorn Studio background — 23 October 2026
+
+Added only a root-layout background component, its styles and the pinned `unicornstudio-react` 2.4.0 dependency. Existing application handlers, state, scoring and API routes were not edited. The supplied scene `1tL5S72Xeil63nK5HBc1` loads through a client-only chunk with viewport dimensions, scale 1, DPI 1.5 and a 30 FPS target. The existing Orion gradient remains available while loading or after failure. A local error boundary contains chunk/render failures; the decorative layer is inert, hidden from assistive technology and cannot intercept pointer events. Reduced-motion preferences control whether the scene mounts and destroy it when disabled; OS preference changes were source-reviewed rather than toggled in the browser.
+
+The final production build loaded the scene with `data-state="ready"`, one canvas and no captured browser warnings/errors. Scenario switching and SME navigation worked above it. Desktop, 768 × 1024 and 390 × 844 checks showed a viewport-sized canvas with no document-level horizontal overflow. Temporary viewport overrides were reset. The published scene includes repeating Unicorn watermarks; they were preserved. A read-only reviewer identified an import-error isolation gap; the local error boundary resolved it and the reviewer confirmed the fix. Source lint on the two new interface files reported zero failures/warnings; no third-party browser inspector was used.
+
+Production build, type checking, formatting, 32 unit tests and all 14 local production API checks passed. Exact public release status is recorded separately in REPLIT_STATUS.md.
+
 ## Acceptance fixes — 23 October 2026
 
 Two live failures were reproduced: SME settings disappeared when its view unmounted, and edited CV text retained candidates from the previous sample. Workforce settings now live in the application state and validated optional browser storage. CV evidence uses an invalidating reducer and request IDs to reject superseded async completions and errors.

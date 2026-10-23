@@ -31,6 +31,8 @@ The subsequent Orion redesign followed the team's supplied visual reference: cus
 
 The 23 October acceptance audit reproduced and corrected stale CV evidence and manager settings lost on navigation. Codex used the installed debugging, testing, parallel-agent and independent review workflows for those two fixes, and the PDF skill to regenerate a synthetic fixture with parser-compatible punctuation. The revised app passed 32 unit tests and 14 production API checks; browser observations and exact release status are recorded in VERIFICATION.md and REPLIT_STATUS.md. No model was trained or newly configured during this audit.
 
+The team subsequently supplied Unicorn Studio project `1tL5S72Xeil63nK5HBc1` for the site background. Its scene is embedded through `unicornstudio-react` 2.4.0 using the Next.js entry point, client-only loading, scale 1, DPI 1.5 and a 30 FPS ambient render target. This is decorative artwork, not labour-market data. The published scene's visible watermarks remain as supplied. The wrapper is MIT-licensed; the scene and Unicorn Studio SDK retain their own rights and terms.
+
 The engine's parameters, role requirements, course mappings and scenario assumptions are initial hypotheses produced during the assisted build. The team must review and adopt or change them consciously. Do not claim those values are measured estimates from the linked sources.
 
 ## Team review and contributions — complete with real evidence
