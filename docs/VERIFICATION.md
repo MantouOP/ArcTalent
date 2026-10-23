@@ -128,7 +128,7 @@ The deployed public-source refresh also returned 100 Arbeitnow job records and 1
 - Chat layout checked at 320 × 740, 375 × 812, 700 × 900 and the default desktop viewport. No document overflow; at 700px the launcher bottom was 820px and navigation top 833px, leaving the controls separate. Zero canvas elements and no captured browser warning/error entries.
 - A fresh read-only review identified and verified fixes for learning-topic precedence, Escape during composition and the tablet navigation breakpoint; no remaining blocking findings were reported.
 
-Public release provenance and verification are recorded in [Replit status](REPLIT_STATUS.md) after publishing.
+The exact source was imported into Replit and independently passed all 95 unit tests, the production build and 14 integration checks. Replit then reported Live, all 14 public HTTPS checks passed, and Chrome verified typed replies, all three languages, scenario context and a 320px layout. No captured warning/error entries or canvas elements. The [live screenshot](images/career-chat-live.jpg), [mobile screenshot](images/career-chat-mobile-live.jpg) and [exact release provenance](REPLIT_STATUS.md) record these results. The newer-snapshot browser test also confirmed retained baseline/updated evidence dates in the two replies.
 
 ## External verification still pending
 

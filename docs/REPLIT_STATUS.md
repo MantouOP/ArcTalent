@@ -2,7 +2,17 @@
 
 Verified on **23 October 2026** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
-## Three-language interface — Live
+## Career and learning guide — Live
+
+Canonical source `bfc8eab51c22f17f3e426f2f92d5547168a8b1a9` adds the multilingual plan-based career guide. Its [GitHub CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/39971315998). Replit imported the complete source unchanged into `artifacts/arctalent-release-bfc8eab`; Git tree comparisons before installation and after downloading the runtime history confirmed exact source equality. A locked install, **95 unit tests**, the production build and all **14 production integration checks** passed inside Replit.
+
+Runtime commit `df121b63a20389cca2126eaad0e3cc8df047cc65` switches the artifact to the new directory and retains the previous launch configuration. Its verified incremental Git bundle was downloaded and pushed to `replit-runtime`; the [runtime CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/39971913680). The bundle is 6,449,213 bytes and requires runtime ancestor `0cc2afc4b2352c03493aecd4346874f3ca511d07`.
+
+Replit reports **Live** after its build, security checks, bundle and promotion completed. The new public launcher was observed at **2026-10-23 14:51:23 UTC (22:51:23 MYT)**. All **14 public HTTPS integration checks passed**, including PDF parsing and the rendered chat launcher. Publication completed in approximately 12 minutes without cancellation or source changes.
+
+Chrome verified typed learning questions and the four-course/22-hour/RM0 plan, Malay translation and typed budget questions, Chinese translation and typed skill-gap questions, current scenario context, retained original user messages, the historical-context notice, and a 320px layout with no horizontal overflow or navigation overlap. A manually pinned route stayed authoritative after switching scenario. No warning/error entries were captured and no canvas elements were present. The demo was reset to Aina's moderate baseline and English; the open guide shows a fresh route explanation. The [live chat screenshot](images/career-chat-live.jpg) and [mobile language screenshot](images/career-chat-mobile-live.jpg) record the deployed interface.
+
+## Previously published three-language interface
 
 Canonical source `40c9e05545cde8eb09cdc97569b631fb9228bbe6` adds English, Bahasa Melayu and Simplified Chinese interface options. Its [GitHub CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/39963901230). Replit imported the source unchanged into `artifacts/arctalent-release-40c9e05`; the staged directory tree exactly matched the canonical source tree before installation. A fresh locked install, **38 unit tests**, the production build and all **14 production API/selector checks** passed inside Replit.
 
@@ -61,16 +71,16 @@ The runtime history was exported from Replit, verified with `git bundle verify`,
 From the Replit workspace root:
 
 ```sh
-npm --prefix artifacts/arctalent-release-40c9e05 ci --workspaces=false
-npm --prefix artifacts/arctalent-release-40c9e05 run build
-npm --prefix artifacts/arctalent-release-40c9e05 run start -- --port 23585
+npm --prefix artifacts/arctalent-release-bfc8eab ci --workspaces=false
+npm --prefix artifacts/arctalent-release-bfc8eab run build
+npm --prefix artifacts/arctalent-release-bfc8eab run start -- --port 23585
 ```
 
-For development, use `npm --prefix artifacts/arctalent-release-40c9e05 run dev -- --port 23585`.
+For development, use `npm --prefix artifacts/arctalent-release-bfc8eab run dev -- --port 23585`.
 
 ## Publishing and submission evidence
 
-**[Live ArcTalent demo](https://arc-talent--emmanuelheng.replit.app/)** — verified publicly on 23 October 2026. Replit reports Live, public access, Autoscale and the Asia region. The [current live screenshot](images/language-options-live.jpg) records the multilingual interface. Use this URL for the working-prototype field and the team project URL for project-history evidence.
+**[Live ArcTalent demo](https://arc-talent--emmanuelheng.replit.app/)** — verified publicly on 23 October 2026. Replit reports Live, public access, Autoscale and the Asia region. The [current live screenshot](images/career-chat-live.jpg) records the multilingual interface and career guide. Use this URL for the working-prototype field and the team project URL for project-history evidence.
 
 The original publishing attempt passed build/security/bundling but stayed at Promote for 16 minutes. It was cancelled and retried once. The retry completed promotion after a further delay, without application or launch-configuration changes. The temporary workspace test port was confirmed closed. That original publication used source `2a5b6cf`; the acceptance release is recorded above.
 

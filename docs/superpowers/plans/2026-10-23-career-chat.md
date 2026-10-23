@@ -46,4 +46,4 @@ The UI component receives `{ context: ChatContext; onNavigate: (view: ChatView) 
 
 - [x] Check 320px/375px and desktop layout, keyboard behavior, browser logs, and preserved app controls.
 - [x] Run tests, type checking, formatting, production build and API checks; review the change.
-- [ ] Commit and push, import the exact release into Replit, publish and verify the public chatbox and APIs. Save proof and record release provenance.
+- [x] Commit and push, import the exact release into Replit, publish and verify the public chatbox and APIs. Save proof and record release provenance.
