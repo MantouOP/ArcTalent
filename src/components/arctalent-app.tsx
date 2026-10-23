@@ -54,6 +54,7 @@ import { EvidencePanel } from './evidence-panel';
 import { SkillBridge } from './skill-bridge';
 import { StudyRhythm } from './study-rhythm';
 import { RouteSummary, RouteAnalytics } from './command-overview';
+import { CareerChat } from './career-chat';
 import { buildSkillBridge } from '@/lib/skill-bridge';
 import { buildStudyRhythm } from '@/lib/learning-preferences';
 import {
@@ -1134,6 +1135,18 @@ export function ArcTalentApp() {
           </button>
         </div>
       )}
+      <CareerChat
+        context={{
+          profile,
+          scenario,
+          snapshot,
+          active,
+          plan,
+          shared,
+          workforce,
+        }}
+        onNavigate={navigate}
+      />
       {details && (
         <Modal title={t(details.role.title)} onClose={() => setDetails(null)}>
           <MatchDetails match={details} />

@@ -4,6 +4,8 @@ import teamMs from './messages/team.ms.json';
 import teamZh from './messages/team.zh-CN.json';
 import workerMs from './messages/worker.ms.json';
 import workerZh from './messages/worker.zh-CN.json';
+import chatMs from './messages/chat.ms.json';
+import chatZh from './messages/chat.zh-CN.json';
 
 export const locales = ['en', 'ms', 'zh-CN'] as const;
 export type Locale = (typeof locales)[number];
@@ -26,8 +28,8 @@ export const dictionaries: Record<
   Exclude<Locale, 'en'>,
   Record<string, string>
 > = {
-  ms: { ...teamMs, ...workerMs, ...ms },
-  'zh-CN': { ...teamZh, ...workerZh, ...zh },
+  ms: { ...teamMs, ...workerMs, ...chatMs, ...ms },
+  'zh-CN': { ...teamZh, ...workerZh, ...chatZh, ...zh },
 };
 
 /** Display translation only: canonical data, identifiers and source quotes are untouched. */

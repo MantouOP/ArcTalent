@@ -117,6 +117,19 @@ The [public deployment](https://arc-talent--emmanuelheng.replit.app/) is Live wi
 
 The deployed public-source refresh also returned 100 Arbeitnow job records and 12 arXiv research records during this verification, exercising the fifth API route (`/api/signals`).
 
+## Career guide — 23 October 2026
+
+- Added a local plan-based guide without changing existing API routes, engine logic, dependencies or saved worker/manager state. All 76 chat translation units have paired Malay/Chinese entries and pass the existing interpolation/parity checks.
+- **95 unit tests passed**, including 57 chat tests for topic recognition, exact selected-route values, scenario rankings, time/budget, zero-time and HRD-filter-empty plans, dated evidence, short follow-ups, input purity and bounded replies. The topic-precedence regression was observed failing before its fix.
+- Type checking, formatting, whitespace checks and the production build passed. A sandboxed Windows build hit EPERM on a generated Next.js directory; the same build succeeded outside the sandbox without source/configuration changes.
+- **14 production integration checks passed** against the final local build, including the new rendered-launcher assertion and all existing APIs/PDF parsing.
+- Chrome verified English/Malay/Chinese presentation and typed questions, verbatim user messages during language switching, current scenario replies, retained historical context, suggested questions, navigation actions, close/reopen draft/history, Enter, Shift+Enter, Escape focus restoration, clearing and the 20-turn cap. IME Enter/Escape guards were source-reviewed; native IME candidate interaction was not automated.
+- The HRD-only filter produced an empty plan and the guide described that exact empty result. An unrelated Chinese poetry request returned the supported scope without invented content.
+- Chat layout checked at 320 × 740, 375 × 812, 700 × 900 and the default desktop viewport. No document overflow; at 700px the launcher bottom was 820px and navigation top 833px, leaving the controls separate. Zero canvas elements and no captured browser warning/error entries.
+- A fresh read-only review identified and verified fixes for learning-topic precedence, Escape during composition and the tablet navigation breakpoint; no remaining blocking findings were reported.
+
+Public release provenance and verification are recorded in [Replit status](REPLIT_STATUS.md) after publishing.
+
 ## External verification still pending
 
 Replit development Preview/workflow, a paid RunPod endpoint, Malaysian vacancy data, HRD programme claimability, worker/employer validation, measured career outcomes and the official submission package. Production publication and the public API/browser checks are verified separately from the development Preview/workflow. Remote CI status must be checked for each new commit.

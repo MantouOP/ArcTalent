@@ -40,6 +40,7 @@ npm run test:integration
 6. Try **My skills & profile** with the supplied [TXT](public/synthetic-cv.txt) or [PDF](public/synthetic-cv.pdf). Confirm synthetic data and review every detected skill before using it.
 7. Try **Start the quick check** in the profile. Review three optional preferences, apply them to the draft, adjust interests if needed, then save. In the pathway, inspect the transferable skill bridge and study-session guidance. Reset before repeating the baseline scenario demonstration.
 8. Use the header language selector to switch between **English**, **Bahasa Melayu** and **简体中文**. The browser remembers your choice. Language changes preserve drafts and planning settings; names, CV evidence, original resource titles and exported data remain unchanged.
+9. Open **Ask ArcTalent** in the lower-right corner. Ask about the selected career, learning steps, skill gaps, time, budget, funding, scenarios or evidence. Change the scenario and ask again to compare the reply context. The guide runs locally using the current planning data; it is not a language-model service.
 
 See the timed [demo script](docs/DEMO.md), [editable implementation plan](docs/IMPLEMENTATION_PLAN.md), [feature acceptance matrix](docs/FEATURE_ACCEPTANCE.md) and [submission checklist](docs/SUBMISSION.md).
 
@@ -53,6 +54,7 @@ See the timed [demo script](docs/DEMO.md), [editable implementation plan](docs/I
 - An optional three-question preference check, a current/target skill bridge and study-session guidance. Preferences are saved with the profile and included in the pathway export; they do not establish aptitude or proficiency.
 - Browser persistence for the worker profile, selected scenario, evidence snapshot, course activity, destination preference and manager budget/opening/destination settings.
 - English, Bahasa Melayu and Simplified Chinese interface options, including skill/role labels, explanations, charts and profile controls. Translation dictionaries run locally without an external service; unknown source text retains its original wording.
+- A floating career and learning guide in all three languages. Replies explain the current selected route and filtered plan, link to catalogue sources and open relevant views. Up to 20 questions stay in memory in the current tab; closing preserves them and clearing removes them. New replies use current data while older replies retain their original context.
 - A workforce heatmap, proposed internal openings, grouped training, CSV export and planned SDG contribution view.
 - Dated synthetic replay plus a real refresh adapter for Arbeitnow job postings and arXiv AI research, with source dates and partial-failure handling.
 - Optional RunPod-hosted model extraction through the AI SDK. The default mode uses local alias matching and labels it clearly.

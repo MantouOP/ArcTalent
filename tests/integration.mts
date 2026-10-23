@@ -26,6 +26,10 @@ await check('production page renders', async () => {
   assert.match(html, /value="ms"/);
   assert.match(html, /value="zh-CN"/);
   assert.match(html, /简体中文/);
+  assert.ok(
+    html.includes('Open career assistant'),
+    'Career assistant launcher is rendered',
+  );
 });
 await check('health reports actual extraction mode', async () => {
   const response = await fetch(origin + '/api/health');

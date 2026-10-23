@@ -25,6 +25,8 @@ Reviewed **23 October 2026 (MYT)** against the team's three concept descriptions
 
 ## Acceptance revision checks
 
+The 23 October career-guide addition explains current selected routes, learning steps, gaps, scenarios, time, budget, funding, evidence and team-planning context in English, Malay and Simplified Chinese. It uses deterministic local topic recognition and existing engine results, not an LLM or unrestricted question answering. No message is sent to an external service. The current funding-filtered personal plan stays authoritative; team allocation is delegated to the existing SME view. Unsupported questions show the supported scope. History is limited to 20 turns in tab memory, with explicit context-change notices.
+
 - 32 unit tests passed, including ten new CV/workforce regression tests.
 - Type checking, repository formatting, production build and whitespace checks passed.
 - All 14 API integration checks passed against the revised local production build, Replit's production runtime and the final public HTTPS deployment.
