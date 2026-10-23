@@ -2,13 +2,21 @@
 
 Verified on **23 October 2026** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
-## Current verified Unicorn Studio background release
+## Clean background restoration — Live
+
+The user requested removal of the watermark and lag. Canonical commit `1fc58451de5426971ff253a9b7a2791d97f9fe31` removes the Unicorn component, stylesheet, root mount and package. The application source and dependency manifests match the clean `53fdc89` release, retaining the workforce/CV fixes and corrected PDF. The [removal CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/39927400169).
+
+Replit restored `artifacts/arctalent-release-53fdc89` through runtime commit `a5d91fc84c78fd89cdebdca1ee89fa6384cc78e1`. Exact source equality, 32 unit tests and all 14 production API checks passed again before publishing. The configuration/history was exported in a verified Git bundle and pushed to `replit-runtime`.
+
+The Publishing tool reports **Live**. All **14 HTTPS API checks passed** against the clean public deployment. Chrome confirmed zero Unicorn background hosts, zero canvas elements, zero Unicorn SDK script tags and no horizontal overflow. The rapid-adoption switch changed the leading route to Project management; SME navigation worked, with no captured browser warnings/errors. The demo was reset to its baseline and the [clean live screenshot](images/clean-background-live.jpg) saved. Open tabs need a refresh to unload a previously loaded renderer. These checks confirm removal of the animation; they do not measure overall frame time or rule out other sources of latency.
+
+## Withdrawn Unicorn Studio background release
 
 The background release uses canonical source `5273e76b83142de55b68f0ce99931c53c3bef49d`, imported unchanged into `artifacts/arctalent-release-5273e76`. Replit passed its 32 unit tests, TypeScript production build and all 14 production API checks. An additional HTTP check confirmed the background host appears in server-rendered HTML. The launch TOML was parsed and checked, and a Git tree comparison confirmed exact source equality.
 
 Runtime commit `68bda37acd10fa5237546faf3b06314e0d9d526e` is preserved in a verified incremental Git bundle and pushed to `replit-runtime`. The [canonical source CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/39923185328), and the [runtime history CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/39924118380).
 
-Replit reports **Live** after its build, security checks, bundle and promotion stages completed. The public server-rendered page contains the new background host, and all **14 HTTPS API checks passed** against the updated deployment. Chrome confirmed `data-state="ready"`, one canvas, an inert decorative host and no horizontal overflow. Scenario switching and SME navigation worked above the animation. No browser warnings/errors were captured. The demo was reset to Aina's baseline; the [live background screenshot](images/unicorn-background-live.jpg) records the result. The supplied scene's repeating Unicorn watermarks remain visible.
+Replit reported **Live** for this now-withdrawn release after its build, security checks, bundle and promotion stages completed. The public server-rendered page contained the new background host, and all **14 HTTPS API checks passed** against that deployment. Chrome confirmed `data-state="ready"`, one canvas, an inert decorative host and no horizontal overflow. Scenario switching and SME navigation worked above the animation. No browser warnings/errors were captured. The demo was reset to Aina's baseline; the [historical background screenshot](images/unicorn-background-live.jpg) records the result. The supplied scene's repeating Unicorn watermarks were visible; the entire embed has since been removed as recorded above.
 
 ## Previously verified acceptance release
 
@@ -45,12 +53,12 @@ The runtime history was exported from Replit, verified with `git bundle verify`,
 From the Replit workspace root:
 
 ```sh
-npm --prefix artifacts/arctalent-release-5273e76 ci --workspaces=false
-npm --prefix artifacts/arctalent-release-5273e76 run build
-npm --prefix artifacts/arctalent-release-5273e76 run start -- --port 23585
+npm --prefix artifacts/arctalent-release-53fdc89 ci --workspaces=false
+npm --prefix artifacts/arctalent-release-53fdc89 run build
+npm --prefix artifacts/arctalent-release-53fdc89 run start -- --port 23585
 ```
 
-For development, use `npm --prefix artifacts/arctalent-release-5273e76 run dev -- --port 23585`.
+For development, use `npm --prefix artifacts/arctalent-release-53fdc89 run dev -- --port 23585`.
 
 ## Publishing and submission evidence
 
