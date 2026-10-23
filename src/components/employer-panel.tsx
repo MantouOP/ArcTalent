@@ -5,10 +5,10 @@ import {
   Users,
   GraduationCap,
   Clock3,
-  ArrowUpRight,
 } from 'lucide-react';
-import { employees, roles, skills, skillById, sdgUrl } from '@/lib/catalogue';
+import { employees, roles, skills, sdgUrl } from '@/lib/catalogue';
 import { buildPlan, rankRoles } from '@/lib/engine';
+import { useLanguage } from '@/lib/i18n';
 import type { Profile, Scenario, Snapshot } from '@/lib/types';
 import type { WorkforceSettings } from '@/lib/workforce-settings';
 import { downloadFile, External, Tag } from './ui';
@@ -25,6 +25,13 @@ export function EmployerPanel({
   workforce: WorkforceSettings;
   onChange: (settings: WorkforceSettings) => void;
 }) {
+  const {
+    t,
+    skillLabel,
+    roleText,
+    courseText,
+    translateCurrentRole,
+  } = useLanguage();
   const { destinations, budget, slots } = workforce;
   const team = useMemo(
     () => employees.map((e) => (e.id === profile.id ? profile : e)),
@@ -54,7 +61,7 @@ export function EmployerPanel({
       used[row.role.id] = (used[row.role.id] ?? 0) + 1;
       allocated += row.plan.totalCost;
       row.plan.steps.forEach((step) => {
-        const c = step.course,
+        const c = courseText(step.course),
           group = groups.get(c.id) ?? {
             title: c.title,
             names: [],
@@ -69,12 +76,12 @@ export function EmployerPanel({
       ...row,
       included: slotOk && budgetOk,
       reason: !slotOk
-        ? 'No internal slot'
+        ? t.employerPanel.reasons.noSlot
         : !budgetOk
-          ? 'Over team budget'
+          ? t.employerPanel.reasons.overBudget
           : row.plan.uncovered.length
-            ? 'Partial learning route'
-            : 'Learning route fits',
+            ? t.employerPanel.reasons.partial
+            : t.employerPanel.reasons.fits,
     };
   });
   const hours = [...groups.values()].reduce(
@@ -103,8 +110,8 @@ export function EmployerPanel({
       ],
       ...allocations.map((r) => [
         r.profile.name,
-        r.profile.currentRole,
-        r.role.title,
+        translateCurrentRole(r.profile.currentRole),
+        roleText(r.role).title,
         scenario,
         snapshot.id,
         r.reason,
@@ -124,22 +131,19 @@ export function EmployerPanel({
     <>
       <div className="section-title">
         <div>
-          <span className="eyebrow">SYNTHETIC COMPANY · 8 PEOPLE</span>
-          <h2>A stronger team starts with shared skills.</h2>
-          <p className="muted">
-            Explore internal opportunities. A manager and each employee decide
-            what happens next.
-          </p>
+          <span className="eyebrow">{t.employerPanel.eyebrow}</span>
+          <h2>{t.employerPanel.title}</h2>
+          <p className="muted">{t.employerPanel.subtitle}</p>
         </div>
         <button className="secondary" onClick={exportCsv}>
           <Download size={16} />
-          Export plan
+          {t.employerPanel.exportPlan}
         </button>
       </div>
       <div className="stats-grid three">
         <div className="stat">
           <Users />
-          <span>Planned learners</span>
+          <span>{t.employerPanel.plannedLearners}</span>
           <strong>
             {learners}
             <small>/ 8</small>
@@ -147,42 +151,42 @@ export function EmployerPanel({
         </div>
         <div className="stat">
           <Clock3 />
-          <span>Planned learning</span>
+          <span>{t.employerPanel.plannedLearning}</span>
           <strong>
             {hours}
-            <small>person-hours</small>
+            <small>{t.employerPanel.personHours}</small>
           </strong>
         </div>
         <div className="stat">
           <GraduationCap />
-          <span>Training groups</span>
+          <span>{t.employerPanel.trainingGroups}</span>
           <strong>
             {groups.size}
-            <small>shared courses</small>
+            <small>{t.employerPanel.sharedCourses}</small>
           </strong>
         </div>
       </div>
       <section className="panel">
         <div className="panel-heading">
           <div>
-            <h2>Workforce skills heatmap</h2>
-            <p>Each row is measured against its proposed destination role.</p>
+            <h2>{t.employerPanel.heatmapTitle}</h2>
+            <p>{t.employerPanel.heatmapDesc}</p>
           </div>
           <Tag tone={snapshot.kind === 'live' ? 'blue' : 'amber'}>
             {snapshot.kind === 'live'
-              ? 'Public evidence'
-              : 'Simulated evidence'}
+              ? t.publicEvidence
+              : t.simulatedEvidence}
           </Tag>
         </div>
         <div className="heatmap-wrap">
           <table className="heatmap">
             <thead>
               <tr>
-                <th>Team member / destination</th>
+                <th>{t.employerPanel.colTeamMember}</th>
                 {shown.map((s) => (
-                  <th key={s.id}>{s.label}</th>
+                  <th key={s.id}>{skillLabel(s.id)}</th>
                 ))}
-                <th>Plan status</th>
+                <th>{t.employerPanel.colPlanStatus}</th>
               </tr>
             </thead>
             <tbody>
@@ -190,9 +194,11 @@ export function EmployerPanel({
                 <tr key={row.profile.id}>
                   <td>
                     <strong>{row.profile.name}</strong>
-                    <small>{row.profile.currentRole}</small>
+                    <small>{translateCurrentRole(row.profile.currentRole)}</small>
                     <select
-                      aria-label={`Destination role for ${row.profile.name}`}
+                      aria-label={t.employerPanel.destinationRoleAria(
+                        row.profile.name,
+                      )}
                       value={row.role.id}
                       onChange={(e) =>
                         onChange({
@@ -206,7 +212,7 @@ export function EmployerPanel({
                     >
                       {roles.map((r) => (
                         <option value={r.id} key={r.id}>
-                          {r.title}
+                          {roleText(r).title}
                         </option>
                       ))}
                     </select>
@@ -219,7 +225,7 @@ export function EmployerPanel({
                       <td key={s.id}>
                         <span
                           className={`heat-cell ${gap === null ? 'na' : gap === 0 ? 'ready' : gap === 1 ? 'develop' : 'gap'}`}
-                          title={`${row.profile.name}: ${s.label}; current ${value}, required ${required ?? 'not required'}`}
+                          title={`${row.profile.name}: ${skillLabel(s.id)}; ${value} / ${required ?? '—'}`}
                         >
                           {gap === null ? '—' : gap === 0 ? '✓' : `−${gap}`}
                         </span>
@@ -238,22 +244,25 @@ export function EmployerPanel({
         </div>
         <div className="heatmap-legend">
           <span>
-            <i className="heat-cell ready">✓</i>Current level meets model
+            <i className="heat-cell ready">✓</i>
+            {t.employerPanel.legendMeets}
           </span>
           <span>
-            <i className="heat-cell develop">−1</i>One level gap
+            <i className="heat-cell develop">−1</i>
+            {t.employerPanel.legendOneGap}
           </span>
           <span>
-            <i className="heat-cell gap">−2</i>Two level gap
+            <i className="heat-cell gap">−2</i>
+            {t.employerPanel.legendTwoGap}
           </span>
-          <span>— Not required</span>
+          <span>{t.employerPanel.legendNotRequired}</span>
         </div>
       </section>
       <div className="two-columns">
         <section className="panel">
-          <h2>Plan within real constraints</h2>
+          <h2>{t.employerPanel.planWithinConstraints}</h2>
           <label>
-            Company training budget (RM)
+            {t.employerPanel.companyBudgetLabel}
             <input
               type="number"
               min={0}
@@ -268,19 +277,17 @@ export function EmployerPanel({
             />
           </label>
           <p className="muted">
-            RM {allocated} allocated · RM {Math.max(0, budget - allocated)}{' '}
-            remaining. Catalogue fees are currently free; staff time and
-            software costs are separate.
+            {t.employerPanel.budgetAllocationSummary(
+              allocated,
+              Math.max(0, budget - allocated),
+            )}
           </p>
-          <h3>Proposed internal openings</h3>
-          <p className="muted small">
-            Demo assumptions entered by the employer. These are not vacancies
-            inferred from public job postings.
-          </p>
+          <h3>{t.employerPanel.proposedOpenings}</h3>
+          <p className="muted small">{t.employerPanel.proposedOpeningsDesc}</p>
           <div className="slot-inputs">
             {roles.map((r) => (
               <label key={r.id}>
-                {r.shortTitle}
+                {roleText(r).shortTitle}
                 <input
                   type="number"
                   min={0}
@@ -303,15 +310,12 @@ export function EmployerPanel({
             ))}
           </div>
           <p className="notice small">
-            Allocation follows the displayed worker order. It is a planning
-            heuristic, not an optimum allocation or an employment decision.
+            {t.employerPanel.allocationHeuristicNotice}
           </p>
         </section>
         <section className="panel">
-          <h2>Learn together</h2>
-          <p className="muted">
-            Compatible needs grouped into the same verified learning resource.
-          </p>
+          <h2>{t.employerPanel.learnTogether}</h2>
+          <p className="muted">{t.employerPanel.learnTogetherDesc}</p>
           {[...groups].map(([id, g]) => (
             <div className="training-group" key={id}>
               <div className="course-icon">
@@ -321,58 +325,50 @@ export function EmployerPanel({
                 <h3>{g.title}</h3>
                 <p>{g.names.join(', ')}</p>
                 <small>
-                  {g.names.length} learners · {g.hours} hours each · RM {g.fee}{' '}
-                  each
+                  {t.employerPanel.groupMeta(g.names.length, g.hours, g.fee)}
                 </small>
               </div>
             </div>
           ))}
           {!groups.size && (
-            <div className="empty-state">
-              No training fits the current slots and constraints. Increase
-              capacity or choose a different role.
-            </div>
+            <div className="empty-state">{t.employerPanel.noTrainingFits}</div>
           )}
         </section>
       </div>
       <section className="panel impact-panel">
         <div className="panel-heading">
           <div>
-            <span className="eyebrow">SDG CONTRIBUTION PLAN</span>
-            <h2>Make the activity visible.</h2>
+            <span className="eyebrow">{t.employerPanel.sdgEyebrow}</span>
+            <h2>{t.employerPanel.sdgTitle}</h2>
           </div>
-          <Tag>Planned · synthetic</Tag>
+          <Tag>{t.employerPanel.plannedSyntheticTag}</Tag>
         </div>
         <div className="impact-grid">
           <div>
             <span className="sdg-square red">4</span>
-            <h3>Relevant work skills</h3>
-            <strong>{learners} learners</strong>
-            <p>With at least one planned learning activity.</p>
-            <External href={sdgUrl('4.4')}>Target 4.4</External>
+            <h3>{t.employerPanel.sdg4Title}</h3>
+            <strong>{t.employerPanel.sdg4Count(learners)}</strong>
+            <p>{t.employerPanel.sdg4Desc}</p>
+            <External href={sdgUrl('4.4')}>{t.employerPanel.sdg4Link}</External>
           </div>
           <div>
             <span className="sdg-square burgundy">8</span>
-            <h3>Technological upgrading</h3>
-            <strong>{hours} person-hours</strong>
-            <p>Proposed training time; productivity effects are unmeasured.</p>
-            <External href={sdgUrl('8.2')}>Targets 8.2 & 8.5</External>
+            <h3>{t.employerPanel.sdg8Title}</h3>
+            <strong>{t.employerPanel.sdg8Count(hours)}</strong>
+            <p>{t.employerPanel.sdg8Desc}</p>
+            <External href={sdgUrl('8.2')}>{t.employerPanel.sdg8Link}</External>
           </div>
           <div>
             <span className="sdg-square pink">10</span>
-            <h3>Accessible pathways</h3>
-            <strong>{learners} free routes</strong>
-            <p>
-              At least one free activity; routes may still have uncovered gaps.
-            </p>
-            <External href={sdgUrl('10.2')}>Target 10.2</External>
+            <h3>{t.employerPanel.sdg10Title}</h3>
+            <strong>{t.employerPanel.sdg10Count(learners)}</strong>
+            <p>{t.employerPanel.sdg10Desc}</p>
+            <External href={sdgUrl('10.2')}>
+              {t.employerPanel.sdg10Link}
+            </External>
           </div>
         </div>
-        <p className="muted small">
-          These are overlapping activity counts, not official UN indicators. No
-          jobs saved, employment outcomes or inequality reductions have been
-          measured.
-        </p>
+        <p className="muted small">{t.employerPanel.sdgDisclaimer}</p>
       </section>
     </>
   );

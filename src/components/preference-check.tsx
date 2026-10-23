@@ -2,11 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
-import {
-  applyLearningPreferences,
-  focusOptions,
-  formatOptions,
-} from '@/lib/learning-preferences';
+import { useLanguage } from '@/lib/i18n';
+import { applyLearningPreferences } from '@/lib/learning-preferences';
 import { learningPreferencesSchema } from '@/lib/validation';
 import type { LearningPreferences, Profile } from '@/lib/types';
 import { Modal } from './ui';
@@ -18,19 +15,17 @@ export function PreferenceCheck({
   profile: Profile;
   onChange: (profile: Profile) => void;
 }) {
+  const { t, focusOptions, formatOptions } = useLanguage();
   const [open, setOpen] = useState(false);
   const preferences = profile.learningPreferences;
   return (
     <section className="preference-banner" aria-labelledby="preference-title">
       <div className="preference-intro">
-        <h2 id="preference-title">Make room for the way you learn.</h2>
-        <p>
-          Three questions to choose a work interest and a study rhythm that fits
-          your week.
-        </p>
+        <h2 id="preference-title">{t.prefCheck.bannerTitle}</h2>
+        <p>{t.prefCheck.bannerDesc}</p>
         {preferences && (
           <p className="preference-summary">
-            Check-in focus:{' '}
+            {t.prefCheck.checkInFocus}{' '}
             {
               focusOptions.find((option) => option.value === preferences.focus)
                 ?.interest
@@ -42,17 +37,16 @@ export function PreferenceCheck({
               )?.label
             }
             {' · '}
-            {preferences.sessionMinutes}-minute sessions
+            {t.prefCheck.minuteSessions(preferences.sessionMinutes)}
           </p>
         )}
-        <p className="preference-footnote">
-          Optional · about a minute. Answers are preferences, not an ability
-          test. Save your profile below to update your pathways.
-        </p>
+        <p className="preference-footnote">{t.prefCheck.bannerFootnote}</p>
       </div>
       <div className="preference-actions">
         <button className="secondary" onClick={() => setOpen(true)}>
-          {preferences ? 'Review my answers' : 'Start the quick check'}
+          {preferences
+            ? t.prefCheck.reviewMyAnswers
+            : t.prefCheck.startQuickCheck}
           <ArrowRight size={16} />
         </button>
         {preferences && (
@@ -62,7 +56,7 @@ export function PreferenceCheck({
               onChange({ ...profile, learningPreferences: undefined })
             }
           >
-            Clear study preferences
+            {t.prefCheck.clearPreferences}
           </button>
         )}
       </div>
@@ -89,6 +83,7 @@ function PreferenceDialog({
   onClose: () => void;
   onApply: (answers: LearningPreferences) => void;
 }) {
+  const { t, focusOptions, formatOptions } = useLanguage();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Partial<LearningPreferences>>(
     profile.learningPreferences ?? {},
@@ -97,12 +92,7 @@ function PreferenceDialog({
   useEffect(() => {
     heading.current?.focus();
   }, [step]);
-  const questions = [
-    'Which problem would you enjoy working on?',
-    'How would you like to practise?',
-    'How long is a realistic study session?',
-    'Your answers, your choice.',
-  ];
+  const questions = t.prefCheck.questions;
   const canContinue =
     step === 0
       ? !!answers.focus
@@ -111,34 +101,34 @@ function PreferenceDialog({
         : !!answers.sessionMinutes;
   const parsed = learningPreferencesSchema.safeParse(answers);
   return (
-    <Modal title="Your learning preferences" onClose={onClose}>
+    <Modal title={t.prefCheck.modalTitle} onClose={onClose}>
       <div className="preference-check">
         <div
           className="check-progress"
           aria-label={
-            step < 3 ? `Question ${step + 1} of 3` : 'Review your answers'
+            step < 3
+              ? t.prefCheck.questionProgress(step + 1)
+              : t.prefCheck.reviewProgress
           }
         >
-          {['Work interest', 'Practice', 'Session length'].map(
-            (label, index) => (
-              <span className={index <= step ? 'reached' : ''} key={label}>
-                <b>{index < step ? <Check size={12} /> : index + 1}</b>
-                {label}
-              </span>
-            ),
-          )}
+          {t.prefCheck.steps.map((label, index) => (
+            <span className={index <= step ? 'reached' : ''} key={label}>
+              <b>{index < step ? <Check size={12} /> : index + 1}</b>
+              {label}
+            </span>
+          ))}
         </div>
         <h3 ref={heading} tabIndex={-1} id="check-question">
           {questions[step]}
         </h3>
         <p className="check-help">
           {step === 0
-            ? 'Pick the one that appeals most today. You can select more interests in your profile afterwards.'
+            ? t.prefCheck.help[0]
             : step === 1
-              ? 'This changes your practice suggestion. It does not measure how quickly you learn.'
+              ? t.prefCheck.help[1]
               : step === 2
-                ? `Your weekly limit stays at ${profile.hours} hours. Shorter sessions divide that time into smaller blocks.`
-                : 'Review what will change before applying these answers to your profile draft.'}
+                ? t.prefCheck.help[2](profile.hours)
+                : t.prefCheck.help[3]}
         </p>
         {step < 3 ? (
           <fieldset className="check-options" aria-labelledby="check-question">
@@ -191,14 +181,8 @@ function PreferenceDialog({
                     }
                   />
                   <span>
-                    <strong>{minutes} minutes</strong>
-                    <small>
-                      {minutes === 15
-                        ? 'A small window in a busy day.'
-                        : minutes === 30
-                          ? 'A focused block with time to try something.'
-                          : 'A longer block for deeper practice.'}
-                    </small>
+                    <strong>{t.prefCheck.minutesLabel(minutes)}</strong>
+                    <small>{t.prefCheck.minutesDetail[minutes]}</small>
                   </span>
                 </label>
               ))}
@@ -207,7 +191,7 @@ function PreferenceDialog({
           <>
             <dl className="check-review">
               <div>
-                <dt>Selected work interest</dt>
+                <dt>{t.prefCheck.selectedWorkInterest}</dt>
                 <dd>
                   {
                     focusOptions.find(
@@ -217,7 +201,7 @@ function PreferenceDialog({
                 </dd>
               </div>
               <div>
-                <dt>Practice preference</dt>
+                <dt>{t.prefCheck.practicePreference}</dt>
                 <dd>
                   {
                     formatOptions.find(
@@ -227,15 +211,11 @@ function PreferenceDialog({
                 </dd>
               </div>
               <div>
-                <dt>Session length</dt>
-                <dd>{answers.sessionMinutes} minutes</dd>
+                <dt>{t.prefCheck.sessionLength}</dt>
+                <dd>{t.prefCheck.minutesLabel(answers.sessionMinutes ?? 30)}</dd>
               </div>
             </dl>
-            <p className="check-explanation">
-              Applying replaces your current interest selections with this
-              focus. You can adjust them below before saving. Your skill levels,
-              completed learning, weekly hours and budget stay the same.
-            </p>
+            <p className="check-explanation">{t.prefCheck.applyExplanation}</p>
           </>
         )}
         <div className="check-controls">
@@ -244,7 +224,7 @@ function PreferenceDialog({
             onClick={step === 0 ? onClose : () => setStep(step - 1)}
           >
             <ArrowLeft size={15} />
-            {step === 0 ? 'Cancel' : 'Back'}
+            {step === 0 ? t.prefCheck.cancel : t.prefCheck.back}
           </button>
           {step < 3 ? (
             <button
@@ -252,7 +232,9 @@ function PreferenceDialog({
               disabled={!canContinue}
               onClick={() => setStep(step + 1)}
             >
-              {step === 2 ? 'Review answers' : 'Continue'}
+              {step === 2
+                ? t.prefCheck.reviewAnswersBtn
+                : t.prefCheck.continueBtn}
               <ArrowRight size={15} />
             </button>
           ) : (
@@ -263,16 +245,13 @@ function PreferenceDialog({
                 if (parsed.success) onApply(parsed.data);
               }}
             >
-              Apply to profile draft
+              {t.prefCheck.applyToProfileDraft}
               <Check size={15} />
             </button>
           )}
         </div>
         {step < 3 && !canContinue && (
-          <p className="check-footnote">
-            Choose one answer to continue, or cancel to keep your current
-            profile.
-          </p>
+          <p className="check-footnote">{t.prefCheck.chooseOneFootnote}</p>
         )}
       </div>
     </Modal>

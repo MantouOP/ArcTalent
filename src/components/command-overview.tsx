@@ -1,5 +1,6 @@
 import { ArrowUpRight, CircleDot, Layers3 } from 'lucide-react';
 import { useId } from 'react';
+import { useLanguage } from '@/lib/i18n';
 import type { LearningPlan, Match, Profile } from '@/lib/types';
 
 /** Read-only presentation of the existing engine output. No ranking or state lives here. */
@@ -16,16 +17,18 @@ export function RouteSummary({
   onSelect: (id: string) => void;
   onExplain: () => void;
 }) {
+  const { t, roleText } = useLanguage();
+  const activeRole = roleText(active.role);
   return (
     <section
       className="panel route-summary"
-      aria-label="Selected route overview"
+      aria-label={t.overview.selectedRouteAria}
     >
       <div className="widget-heading">
-        <span>Selected route</span>
+        <span>{t.overview.selectedRoute}</span>
         <CircleDot size={16} />
       </div>
-      <h2>{active.role.shortTitle}</h2>
+      <h2>{activeRole.shortTitle}</h2>
       <div className="hero-metric">
         <strong>{Math.round(active.score)}</strong>
         <span>/ 100</span>
@@ -40,27 +43,26 @@ export function RouteSummary({
           />
         </svg>
       </div>
-      <p className="metric-caption">Overall route score</p>
+      <p className="metric-caption">{t.overview.overallRouteScore}</p>
       {delta !== undefined ? (
         <span
           className={`metric-delta ${delta > 0 ? 'positive' : delta < 0 ? 'negative' : ''}`}
         >
-          {delta > 0 ? '▲ +' : delta < 0 ? '▼ ' : ''}
-          {delta.toFixed(1)} pts vs previous snapshot
+          {t.overview.ptsVsPrevious(
+            `${delta > 0 ? '▲ +' : delta < 0 ? '▼ ' : ''}${delta.toFixed(1)}`,
+          )}
         </span>
       ) : (
-        <span className="metric-delta">
-          Current snapshot · no prior comparison
-        </span>
+        <span className="metric-delta">{t.overview.noPriorComparison}</span>
       )}
       <div className="summary-coverage">
-        <span>Current skill coverage</span>
+        <span>{t.overview.currentSkillCoverage}</span>
         <strong>{Math.round(active.coverage)}%</strong>
       </div>
       <div
         className="segmented-meter"
         role="meter"
-        aria-label="Current skill coverage"
+        aria-label={t.overview.currentSkillCoverage}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={active.coverage}
@@ -69,8 +71,8 @@ export function RouteSummary({
       </div>
       <div className="summary-ranking">
         <div className="ranking-label">
-          <span>Leading routes</span>
-          <span>Score</span>
+          <span>{t.overview.leadingRoutes}</span>
+          <span>{t.overview.score}</span>
         </div>
         {matches.slice(0, 3).map((match, i) => (
           <button
@@ -80,17 +82,15 @@ export function RouteSummary({
             className="ranking-row"
           >
             <i className={`data-dot series-${i}`} />
-            <span>{match.role.shortTitle}</span>
+            <span>{roleText(match.role).shortTitle}</span>
             <strong>{Math.round(match.score)}</strong>
           </button>
         ))}
       </div>
       <button className="text-button summary-action" onClick={onExplain}>
-        Understand this score <ArrowUpRight size={15} />
+        {t.overview.understandScore} <ArrowUpRight size={15} />
       </button>
-      <p className="chart-note">
-        A planning estimate, not a hiring probability.
-      </p>
+      <p className="chart-note">{t.overview.planningEstimateNote}</p>
     </section>
   );
 }
@@ -104,6 +104,7 @@ export function RouteAnalytics({
   plan: LearningPlan;
   profile: Profile;
 }) {
+  const { t, roleText } = useLanguage();
   const fillId = useId();
   const weeks = Array.from({ length: Math.min(profile.weeks, 12) }, (_, i) => ({
     week: i + 1,
@@ -126,17 +127,17 @@ export function RouteAnalytics({
     <div className="analytics-grid">
       <section className="panel comparison-widget">
         <div className="widget-heading">
-          <h2>Skills & scenario fit</h2>
+          <h2>{t.overview.skillsScenarioFit}</h2>
           <Layers3 size={16} />
         </div>
         <div className="chart-legend">
           <span>
             <i className="data-dot cyan" />
-            Skill coverage
+            {t.overview.skillCoverage}
           </span>
           <span>
             <i className="data-dot violet" />
-            Scenario suitability
+            {t.overview.scenarioSuitability}
           </span>
         </div>
         <div
@@ -146,7 +147,7 @@ export function RouteAnalytics({
             .slice(0, 3)
             .map(
               (m) =>
-                `${m.role.shortTitle}: ${Math.round(m.coverage)} percent skill coverage, ${Math.round(m.resilience)} percent scenario suitability`,
+                `${roleText(m.role).shortTitle}: ${Math.round(m.coverage)}% ${t.overview.skillCoverage}, ${Math.round(m.resilience)}% ${t.overview.scenarioSuitability}`,
             )
             .join('; ')}
         >
@@ -161,30 +162,28 @@ export function RouteAnalytics({
                 <i style={{ height: `${m.coverage}%` }} />
                 <i style={{ height: `${m.resilience}%` }} />
               </div>
-              <span>{m.role.shortTitle}</span>
+              <span>{roleText(m.role).shortTitle}</span>
             </div>
           ))}
         </div>
-        <p className="chart-note">
-          Modelled fit for the active scenario; 0–100 scale.
-        </p>
+        <p className="chart-note">{t.overview.modelledFitNote}</p>
       </section>
       <section className="panel pace-widget">
         <div className="widget-heading">
-          <h2>Learning allocation</h2>
-          <span>First {weeks.length} weeks</span>
+          <h2>{t.overview.learningAllocation}</h2>
+          <span>{t.overview.firstNWeeks(weeks.length)}</span>
         </div>
         <div className="widget-metric">
           <strong>
             {plan.totalHours}
             <small> h</small>
           </strong>
-          <span>planned across {profile.weeks} weeks</span>
+          <span>{t.overview.plannedAcrossWeeks(profile.weeks)}</span>
         </div>
         <svg
           viewBox="0 0 300 132"
           role="img"
-          aria-label={`Planned weekly hours: ${weeks.map((w) => `week ${w.week}: ${w.hours} hours`).join(', ')}`}
+          aria-label={`${t.overview.learningAllocation}: ${weeks.map((w) => `W${w.week}: ${w.hours}h`).join(', ')}`}
           className="pace-chart"
         >
           <defs>
@@ -216,7 +215,7 @@ export function RouteAnalytics({
                   r="2.5"
                   className="pace-point"
                 >
-                  <title>{`Week ${weeks[i].week}: ${weeks[i].hours} hours`}</title>
+                  <title>{`W${weeks[i].week}: ${weeks[i].hours}h`}</title>
                 </circle>
               ))}
             </>
@@ -229,14 +228,13 @@ export function RouteAnalytics({
           </text>
         </svg>
         <p className="chart-note">
-          Weekly capacity: {profile.hours} h · Proposed study, not completed
-          activity.
+          {t.overview.weeklyCapacityNote(profile.hours)}
         </p>
       </section>
       <section className="panel bubble-widget">
         <div className="widget-heading">
-          <h2>Transferable strengths</h2>
-          <span>Top 3 routes</span>
+          <h2>{t.overview.transferableStrengths}</h2>
+          <span>{t.overview.top3Routes}</span>
         </div>
         <div className="bubble-chart">
           {matches.slice(0, 3).map((m, i) => (
@@ -252,13 +250,11 @@ export function RouteAnalytics({
                   <b>{m.reused.length}</b>
                 </span>
               </div>
-              <strong>{m.role.shortTitle}</strong>
+              <strong>{roleText(m.role).shortTitle}</strong>
             </div>
           ))}
         </div>
-        <p className="chart-note">
-          Existing skills reused by each route; skills may overlap.
-        </p>
+        <p className="chart-note">{t.overview.existingSkillsReusedNote}</p>
       </section>
     </div>
   );

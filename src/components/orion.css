@@ -255,6 +255,41 @@ h3 {
 .topbar-actions {
   gap: 20px;
 }
+.lang-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 4px 10px;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  background: #141127a6;
+  color: #c6b8ea;
+}
+.lang-switcher:hover {
+  border-color: #7c58c9;
+}
+.lang-switcher svg {
+  color: #9a75ff;
+}
+.lang-switcher select {
+  margin: 0;
+  padding: 2px 4px;
+  width: auto;
+  min-height: 24px;
+  border: 0;
+  background: transparent;
+  color: #ede6ff;
+  font-size: 11px;
+  font-weight: 500;
+}
+.lang-switcher select:focus-visible {
+  outline: none;
+}
+.lang-switcher:focus-within {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
 .demo-indicator {
   color: #a0aac0;
   font-size: 10px;

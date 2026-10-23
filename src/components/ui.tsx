@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { ArrowUpRight, X, Check, Circle } from 'lucide-react';
 import { skillById, sdgUrl } from '@/lib/catalogue';
+import { useLanguage } from '@/lib/i18n';
 import type { Match, Profile, SkillId } from '@/lib/types';
 export function External({
   href,
@@ -35,6 +36,7 @@ export function Modal({
   children: React.ReactNode;
   onClose: () => void;
 }) {
+  const { t } = useLanguage();
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const el = ref.current;
@@ -60,7 +62,7 @@ export function Modal({
         <button
           className="icon-button"
           onClick={onClose}
-          aria-label="Close dialog"
+          aria-label={t.ui.closeDialogAria}
         >
           <X size={20} />
         </button>
@@ -76,21 +78,26 @@ export function SkillChip({
   id: SkillId;
   existing?: boolean;
 }) {
+  const { skillLabel, skillRationale } = useLanguage();
   const skill = skillById[id];
+  const label = skillLabel(id);
+  const rationale = skillRationale(id);
   return (
     <a
       className={`skill-chip ${existing ? 'existing' : ''}`}
       href={sdgUrl(skill.target)}
       target="_blank"
       rel="noreferrer"
-      title={`SDG ${skill.target}: ${skill.rationale}`}
-      aria-label={`${skill.label} — SDG target ${skill.target}. ${skill.rationale}`}
+      title={`SDG ${skill.target}: ${rationale}`}
+      aria-label={`${label} — SDG target ${skill.target}. ${rationale}`}
     >
-      {existing ? <Check size={12} /> : <Circle size={9} />} {skill.label}
+      {existing ? <Check size={12} /> : <Circle size={9} />} {label}
     </a>
   );
 }
 export function MatchDetails({ match }: { match: Match }) {
+  const { t, skillLabel, roleText } = useLanguage();
+  const role = roleText(match.role);
   return (
     <>
       <div className="score-detail">
@@ -99,21 +106,21 @@ export function MatchDetails({ match }: { match: Match }) {
           <small>/100</small>
         </strong>
         <div>
-          <h3>Why this route?</h3>
-          <p>A transparent suitability estimate, not a hiring probability.</p>
+          <h3>{t.ui.whyThisRoute}</h3>
+          <p>{t.ui.transparentEstimate}</p>
         </div>
       </div>
       <div className="component-bars">
         {[
-          ['Current skills', match.coverage, '55%'],
-          ['Your interests', match.interest, '15%'],
-          ['Evidence signal', match.market, '15%'],
-          ['Scenario suitability', match.resilience, '15%'],
+          [t.ui.currentSkills, match.coverage, '55%'],
+          [t.ui.yourInterests, match.interest, '15%'],
+          [t.ui.evidenceSignal, match.market, '15%'],
+          [t.ui.scenarioSuitability, match.resilience, '15%'],
         ].map(([label, value, weight]) => (
-          <div key={label}>
+          <div key={String(label)}>
             <span>
               {label}
-              <small>weight {weight}</small>
+              <small>{t.ui.weightLabel(String(weight))}</small>
             </span>
             <div className="bar">
               <i style={{ width: `${value}%` }} />
@@ -122,40 +129,35 @@ export function MatchDetails({ match }: { match: Match }) {
           </div>
         ))}
       </div>
-      <h3>Your transferable skills</h3>
+      <h3>{t.ui.yourTransferableSkills}</h3>
       <div className="chips">
         {match.reused.map((id) => (
           <SkillChip key={id} id={id} existing />
         ))}
       </div>
-      <h3>Skills to develop</h3>
+      <h3>{t.ui.skillsToDevelop}</h3>
       <div className="gap-list">
         {match.gaps.map((g) => (
           <div key={g.id}>
-            <span>{skillById[g.id].label}</span>
-            <span>
-              Level {g.current} → {g.required}
-            </span>
+            <span>{skillLabel(g.id)}</span>
+            <span>{t.ui.levelChange(g.current, g.required)}</span>
           </div>
         ))}
       </div>
-      <p className="notice">{match.role.entry}</p>
-      <p className="muted">
-        Role requirements and exposure factors are simplified team assumptions
-        informed by occupational tasks. O*NET describes US occupations;
-        Malaysian entry requirements need local validation.
-      </p>
+      <p className="notice">{role.entry}</p>
+      <p className="muted">{t.ui.onetAssumptionNote}</p>
       <div className="source-links">
-        <External href={match.role.source}>Occupational source: O*NET</External>
-        <External href={sdgUrl(match.role.target)}>
-          SDG target {match.role.target}
+        <External href={role.source}>{t.ui.occupationalSourceOnet}</External>
+        <External href={sdgUrl(role.target)}>
+          {t.ui.sdgTarget(role.target)}
         </External>
       </div>
-      <p className="muted">{match.role.rationale}</p>
+      <p className="muted">{role.rationale}</p>
     </>
   );
 }
 export function Radar({ profile }: { profile: Profile }) {
+  const { t, skillLabel } = useLanguage();
   const ids: SkillId[] = [
     'excel',
     'data',
@@ -177,7 +179,7 @@ export function Radar({ profile }: { profile: Profile }) {
       viewBox="0 0 280 260"
       className="radar"
       role="img"
-      aria-label="Current self-reported skill levels, on a scale of zero to three"
+      aria-label={t.ui.radarAria}
     >
       {[25, 50, 75].map((r) => (
         <polygon key={r} points={poly(r)} fill="none" className="radar-grid" />
@@ -201,7 +203,7 @@ export function Radar({ profile }: { profile: Profile }) {
               fontSize="10"
               className="radar-label"
             >
-              {skillById[id].label}
+              {skillLabel(id)}
             </text>
           </g>
         );

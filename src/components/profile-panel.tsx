@@ -2,6 +2,7 @@
 import { useReducer, useRef, useState } from 'react';
 import { Upload, Check, ArrowRight, FileText } from 'lucide-react';
 import { skills, baseProfile, employees } from '@/lib/catalogue';
+import { useLanguage } from '@/lib/i18n';
 import type { Profile } from '@/lib/types';
 import { profileSchema } from '@/lib/validation';
 import { cvEvidenceReducer, initialCvEvidence } from '@/lib/cv-evidence';
@@ -13,6 +14,7 @@ export function ProfilePanel({
   profile: Profile;
   onSave: (p: Profile) => void;
 }) {
+  const { t, skillLabel, translateCurrentRole } = useLanguage();
   const [form, setForm] = useState(profile);
   const [cv, dispatchCv] = useReducer(cvEvidenceReducer, initialCvEvidence);
   const request = useRef(0);
@@ -24,7 +26,7 @@ export function ProfilePanel({
     setForm((p) => ({ ...p, [key]: value }));
   async function analyze() {
     if (!synthetic) {
-      setMessage('Confirm that the CV is synthetic first.');
+      setMessage(t.profilePanel.cvMessages.confirmFirst);
       return;
     }
     const requestId = ++request.current;
@@ -41,13 +43,16 @@ export function ProfilePanel({
         type: 'complete',
         requestId,
         candidates: body.skills,
-        message: `${body.mode}. Review these candidates and set your own skill levels below.`,
+        message: t.profilePanel.cvMessages.reviewCandidates(body.mode),
       });
     } catch (e) {
       dispatchCv({
         type: 'complete',
         requestId,
-        message: e instanceof Error ? e.message : 'Extraction unavailable',
+        message:
+          e instanceof Error
+            ? e.message
+            : t.profilePanel.cvMessages.extractionUnavailable,
       });
     }
   }
@@ -55,16 +60,16 @@ export function ProfilePanel({
     if (!file) return;
     dispatchCv({ type: 'source' });
     if (!synthetic) {
-      setMessage('Confirm synthetic data before importing a file.');
+      setMessage(t.profilePanel.cvMessages.confirmBeforeImport);
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      setMessage('Choose a file smaller than 5 MB.');
+      setMessage(t.profilePanel.cvMessages.fileTooLarge);
       return;
     }
     const filename = file.name.toLowerCase();
     if (!filename.endsWith('.txt') && !filename.endsWith('.pdf')) {
-      setMessage('Use a text PDF or .txt file.');
+      setMessage(t.profilePanel.cvMessages.invalidFileType);
       return;
     }
     const requestId = ++request.current;
@@ -75,7 +80,7 @@ export function ProfilePanel({
           type: 'complete',
           requestId,
           text: (await file.text()).slice(0, 12000),
-          message: 'Text imported. Choose Find skills to review candidates.',
+          message: t.profilePanel.cvMessages.txtImported,
         });
       } else {
         const data = new FormData();
@@ -88,8 +93,7 @@ export function ProfilePanel({
           type: 'complete',
           requestId,
           text: json.text,
-          message:
-            'PDF text imported. Choose Find skills to review candidates.',
+          message: t.profilePanel.cvMessages.pdfImported,
         });
       }
     } catch (e) {
@@ -97,9 +101,7 @@ export function ProfilePanel({
         type: 'complete',
         requestId,
         message:
-          e instanceof Error
-            ? e.message
-            : 'File could not be read. Paste its text instead.',
+          e instanceof Error ? e.message : t.profilePanel.cvMessages.readError,
       });
     }
   }
@@ -110,17 +112,16 @@ export function ProfilePanel({
         <section className="panel">
           <div className="panel-heading">
             <div>
-              <span className="eyebrow">YOUR STARTING POINT</span>
-              <h2>Experience counts.</h2>
+              <span className="eyebrow">
+                {t.profilePanel.startingPointEyebrow}
+              </span>
+              <h2>{t.profilePanel.experienceCounts}</h2>
             </div>
             <FileText size={22} />
           </div>
-          <p className="muted">
-            Use a fictional profile for this hackathon demo. Confirm every
-            inferred skill.
-          </p>
+          <p className="muted">{t.profilePanel.demoNote}</p>
           <label>
-            Choose a synthetic profile
+            {t.profilePanel.chooseSyntheticProfile}
             <select
               value={form.id}
               onChange={(e) => {
@@ -132,14 +133,14 @@ export function ProfilePanel({
             >
               {employees.map((p) => (
                 <option value={p.id} key={p.id}>
-                  {p.name} · {p.currentRole}
+                  {p.name} · {translateCurrentRole(p.currentRole)}
                 </option>
               ))}
             </select>
           </label>
           <div className="form-row">
             <label>
-              Display name
+              {t.profilePanel.displayName}
               <input
                 maxLength={60}
                 value={form.name}
@@ -147,7 +148,7 @@ export function ProfilePanel({
               />
             </label>
             <label>
-              Current role
+              {t.profilePanel.currentRole}
               <input
                 maxLength={100}
                 value={form.currentRole}
@@ -157,7 +158,7 @@ export function ProfilePanel({
           </div>
           <div className="form-row thirds">
             <label>
-              Hours / week
+              {t.profilePanel.hoursPerWeek}
               <input
                 type="number"
                 min={0}
@@ -167,7 +168,7 @@ export function ProfilePanel({
               />
             </label>
             <label>
-              Budget (RM)
+              {t.profilePanel.budgetRm}
               <input
                 type="number"
                 min={0}
@@ -177,7 +178,7 @@ export function ProfilePanel({
               />
             </label>
             <label>
-              Plan (weeks)
+              {t.profilePanel.planWeeks}
               <input
                 type="number"
                 min={1}
@@ -188,14 +189,16 @@ export function ProfilePanel({
             </label>
           </div>
           <fieldset>
-            <legend>What work interests you?</legend>
+            <legend>{t.profilePanel.whatWorkInterests}</legend>
             <div className="interest-options">
-              {[
-                ['data', 'Data & insights'],
-                ['people', 'People & projects'],
-                ['operations', 'Business operations'],
-                ['sustainability', 'Sustainability'],
-              ].map(([id, title]) => (
+              {(
+                [
+                  ['data', t.profilePanel.interests.data],
+                  ['people', t.profilePanel.interests.people],
+                  ['operations', t.profilePanel.interests.operations],
+                  ['sustainability', t.profilePanel.interests.sustainability],
+                ] as const
+              ).map(([id, title]) => (
                 <label key={id}>
                   <input
                     type="checkbox"
@@ -215,15 +218,12 @@ export function ProfilePanel({
             </div>
           </fieldset>
           <div className="section-divider" />
-          <h3>Your current skills</h3>
-          <p className="muted small">
-            0 Not yet · 1 Basic · 2 Independent · 3 Advanced. Self-reported
-            levels, not certifications.
-          </p>
+          <h3>{t.profilePanel.yourCurrentSkills}</h3>
+          <p className="muted small">{t.profilePanel.skillScaleNote}</p>
           <div className="skill-edit-grid">
             {skills.map((s) => (
               <label key={s.id}>
-                {s.label}
+                {skillLabel(s.id)}
                 <select
                   value={form.skills[s.id] ?? 0}
                   onChange={(e) =>
@@ -233,10 +233,10 @@ export function ProfilePanel({
                     })
                   }
                 >
-                  <option value={0}>0 · Not yet</option>
-                  <option value={1}>1 · Basic</option>
-                  <option value={2}>2 · Independent</option>
-                  <option value={3}>3 · Advanced</option>
+                  <option value={0}>{t.profilePanel.skillLevels[0]}</option>
+                  <option value={1}>{t.profilePanel.skillLevels[1]}</option>
+                  <option value={2}>{t.profilePanel.skillLevels[2]}</option>
+                  <option value={3}>{t.profilePanel.skillLevels[3]}</option>
                 </select>
               </label>
             ))}
@@ -246,30 +246,27 @@ export function ProfilePanel({
             onClick={() => {
               const parsed = profileSchema.safeParse(form);
               if (!parsed.success) {
-                setMessage('Check the name and numeric limits before saving.');
+                setMessage(t.profilePanel.checkLimitsError);
                 return;
               }
               onSave(parsed.data);
             }}
           >
-            Update my pathways
+            {t.profilePanel.updatePathwaysBtn}
             <ArrowRight size={16} />
           </button>
         </section>
         <aside className="panel upload-panel">
-          <span className="eyebrow">OPTIONAL · SYNTHETIC CV</span>
-          <h2>Discover your building blocks.</h2>
-          <p>
-            Import a fictional CV or paste a short description of work
-            experience.
-          </p>
+          <span className="eyebrow">{t.profilePanel.optionalSyntheticCv}</span>
+          <h2>{t.profilePanel.discoverBuildingBlocks}</h2>
+          <p>{t.profilePanel.importCvDesc}</p>
           <p>
             <a className="external" href="/synthetic-cv.txt" download>
-              Download the sample TXT
+              {t.profilePanel.downloadSampleTxt}
             </a>{' '}
             ·{' '}
             <a className="external" href="/synthetic-cv.pdf" download>
-              Sample PDF
+              {t.profilePanel.samplePdf}
             </a>
           </p>
           <label className="checkbox-label">
@@ -280,12 +277,12 @@ export function ProfilePanel({
                 dispatchCv({ type: 'source', synthetic: e.target.checked })
               }
             />
-            This is synthetic data, with no real personal information.
+            {t.profilePanel.syntheticConfirmCheckbox}
           </label>
           <label className="upload-zone">
             <Upload size={28} />
-            <strong>Import a synthetic CV</strong>
-            <span>Text PDF or TXT · up to 5 MB</span>
+            <strong>{t.profilePanel.importSyntheticCv}</strong>
+            <span>{t.profilePanel.fileFormatHint}</span>
             <input
               type="file"
               accept=".pdf,.txt"
@@ -294,10 +291,10 @@ export function ProfilePanel({
             />
           </label>
           <textarea
-            aria-label="Synthetic CV text"
+            aria-label={t.profilePanel.cvTextareaAria}
             rows={8}
             maxLength={12000}
-            placeholder="Example: I prepare reports in Excel, coordinate scheduling and communicate with customers…"
+            placeholder={t.profilePanel.cvPlaceholder}
             value={text}
             onChange={(e) =>
               dispatchCv({ type: 'source', text: e.target.value })
@@ -308,7 +305,9 @@ export function ProfilePanel({
             disabled={!synthetic || !text.trim() || busy}
             onClick={analyze}
           >
-            {busy ? 'Reading your sample…' : 'Find skills in this sample'}
+            {busy
+              ? t.profilePanel.readingSample
+              : t.profilePanel.findSkillsBtn}
             <ArrowRight size={15} />
           </button>
           <p className="status-text" role="status">
@@ -316,7 +315,7 @@ export function ProfilePanel({
           </p>
           {candidates.map((c) => (
             <div className="candidate" key={c.id}>
-              <strong>{skills.find((s) => s.id === c.id)?.label}</strong>
+              <strong>{skillLabel(c.id)}</strong>
               <p>“{c.evidence}”</p>
               <button
                 className="text-button"
@@ -328,15 +327,11 @@ export function ProfilePanel({
                 }
               >
                 <Check size={14} />
-                Add as basic — review above
+                {t.profilePanel.addAsBasicBtn}
               </button>
             </div>
           ))}
-          <p className="muted small">
-            Skill detection uses local word matching unless a RunPod model is
-            configured. AI suggestions always need your confirmation. CV text is
-            processed without being saved on the server.
-          </p>
+          <p className="muted small">{t.profilePanel.privacyNote}</p>
         </aside>
       </div>
     </div>

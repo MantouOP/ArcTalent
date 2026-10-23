@@ -1,15 +1,9 @@
 'use client';
 
 import { ArrowRight, Check, Circle, ArrowUp } from 'lucide-react';
-import { skillById } from '@/lib/catalogue';
+import { useLanguage } from '@/lib/i18n';
 import { buildSkillBridge } from '@/lib/skill-bridge';
 import type { Profile, Role } from '@/lib/types';
-
-const statuses = {
-  ready: { label: 'Meets target', Icon: Check },
-  developing: { label: 'Build further', Icon: ArrowUp },
-  new: { label: 'New skill', Icon: Circle },
-};
 
 export function SkillBridge({
   profile,
@@ -18,31 +12,42 @@ export function SkillBridge({
   profile: Profile;
   role: Role;
 }) {
+  const { t, skillLabel, roleText, translateCurrentRole } = useLanguage();
+  const localizedRole = roleText(role);
   const bridge = buildSkillBridge(profile, role);
+  const statuses = {
+    ready: { label: t.bridge.meetsTarget, Icon: Check },
+    developing: { label: t.bridge.buildFurther, Icon: ArrowUp },
+    new: { label: t.bridge.newSkill, Icon: Circle },
+  };
   return (
     <section className="panel skill-bridge" aria-labelledby="bridge-title">
       <div className="bridge-route">
-        <span>{profile.currentRole || 'Your starting point'}</span>
+        <span>
+          {profile.currentRole
+            ? translateCurrentRole(profile.currentRole)
+            : t.bridge.startingPointFallback}
+        </span>
         <ArrowRight size={15} />
-        <strong>{role.shortTitle}</strong>
+        <strong>{localizedRole.shortTitle}</strong>
       </div>
       <div className="bridge-heading">
         <div>
-          <h3 id="bridge-title">Your transferable skill bridge</h3>
-          <p>See what carries across, and what comes next.</p>
+          <h3 id="bridge-title">{t.bridge.title}</h3>
+          <p>{t.bridge.subtitle}</p>
         </div>
         <div className="bridge-coverage">
           <strong>
             {bridge.coverage.toFixed(1)}
             <small>%</small>
           </strong>
-          <span>skill coverage</span>
+          <span>{t.bridge.skillCoverage}</span>
         </div>
       </div>
       <div
         className="bridge-track"
         role="meter"
-        aria-label="Coverage of assumed role skill requirements"
+        aria-label={t.bridge.meterAria}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={bridge.coverage}
@@ -51,40 +56,37 @@ export function SkillBridge({
       </div>
       <dl className="bridge-counts">
         <div>
-          <dt>Meet target</dt>
+          <dt>{t.bridge.meetTargetCount}</dt>
           <dd>
             {bridge.ready}
-            <small>{bridge.ready === 1 ? 'skill' : 'skills'}</small>
+            <small>{t.bridge.skillUnit(bridge.ready)}</small>
           </dd>
         </div>
         <div>
-          <dt>Build further</dt>
+          <dt>{t.bridge.buildFurtherCount}</dt>
           <dd>
             {bridge.developing}
-            <small>{bridge.developing === 1 ? 'skill' : 'skills'}</small>
+            <small>{t.bridge.skillUnit(bridge.developing)}</small>
           </dd>
         </div>
         <div>
-          <dt>Learn from scratch</dt>
+          <dt>{t.bridge.learnFromScratchCount}</dt>
           <dd>
             {bridge.newSkills}
-            <small>{bridge.newSkills === 1 ? 'skill' : 'skills'}</small>
+            <small>{t.bridge.skillUnit(bridge.newSkills)}</small>
           </dd>
         </div>
       </dl>
       <details className="bridge-details">
-        <summary>Inspect {bridge.rows.length} skill requirements</summary>
+        <summary>{t.bridge.inspectRequirements(bridge.rows.length)}</summary>
         <div className="bridge-table-wrap">
           <table className="bridge-table">
-            <caption>
-              Self-reported current level compared with the assumed target. 0
-              Not yet · 1 Basic · 2 Independent · 3 Advanced.
-            </caption>
+            <caption>{t.bridge.tableCaption}</caption>
             <thead>
               <tr>
-                <th scope="col">Skill</th>
-                <th scope="col">Current → target</th>
-                <th scope="col">Next step</th>
+                <th scope="col">{t.bridge.colSkill}</th>
+                <th scope="col">{t.bridge.colCurrentTarget}</th>
+                <th scope="col">{t.bridge.colNextStep}</th>
               </tr>
             </thead>
             <tbody>
@@ -92,11 +94,11 @@ export function SkillBridge({
                 const { label, Icon } = statuses[row.status];
                 return (
                   <tr key={row.id}>
-                    <th scope="row">{skillById[row.id].label}</th>
+                    <th scope="row">{skillLabel(row.id)}</th>
                     <td>
                       {row.current}
                       <span aria-hidden="true"> → </span>
-                      <span className="sr-only"> to </span>
+                      <span className="sr-only">{t.bridge.toSrOnly}</span>
                       {row.required}
                     </td>
                     <td>
@@ -111,15 +113,9 @@ export function SkillBridge({
             </tbody>
           </table>
         </div>
-        {!bridge.rows.length && (
-          <p>No skill requirements have been mapped for this role.</p>
-        )}
+        {!bridge.rows.length && <p>{t.bridge.noRequirementsMapped}</p>}
       </details>
-      <p className="bridge-note">
-        Coverage compares your self-reported levels with the team’s simplified
-        role requirements. It is not a qualification or a chance of getting
-        hired.
-      </p>
+      <p className="bridge-note">{t.bridge.bridgeNote}</p>
     </section>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 import { ArrowRight, Check, GitBranch, Sparkles } from 'lucide-react';
 import { useId } from 'react';
-import { skillById } from '@/lib/catalogue';
+import { useLanguage } from '@/lib/i18n';
 import type { Match, Profile, SkillId } from '@/lib/types';
 export function LearningMap({
   matches,
@@ -16,6 +16,7 @@ export function LearningMap({
   selected: string;
   onSelect: (id: string) => void;
 }) {
+  const { t, skillLabel, roleText } = useLanguage();
   const orbId = useId();
   return (
     <div className="learning-map">
@@ -81,24 +82,25 @@ export function LearningMap({
       <div className="map-legend">
         <span>
           <i className="legend-dot existing-dot" />
-          Existing strengths
+          {t.map.existingStrengths}
         </span>
         <span>
           <i className="legend-dot shared-dot" />
-          Shared foundation
+          {t.map.sharedFoundation}
         </span>
         <span>
           <GitBranch size={13} />
-          Career branches
+          {t.map.careerBranches}
         </span>
       </div>
       <div className="map-flow">
         <div className="map-start">
           <span className="map-avatar">{profile.name.slice(0, 1)}</span>
-          <strong>You are here</strong>
+          <strong>{t.map.youAreHere}</strong>
           <small>
-            {Object.values(profile.skills).filter((v) => v && v > 0).length}{' '}
-            existing skills
+            {t.map.existingSkillsCount(
+              Object.values(profile.skills).filter((v) => v && v > 0).length,
+            )}
           </small>
         </div>
         <div className="map-connector" aria-hidden="true">
@@ -108,23 +110,20 @@ export function LearningMap({
         <div className="foundation">
           <span className="eyebrow">
             <Sparkles size={13} />
-            SHARED ACROSS FUTURES
+            {t.map.sharedAcrossFutures}
           </span>
-          <h3>Your shared foundation</h3>
+          <h3>{t.map.yourSharedFoundation}</h3>
           {shared.length ? (
             shared.map((id) => (
               <div className="foundation-stop" key={id}>
                 <span className="stop-node" />
-                <span>{skillById[id].label}</span>
+                <span>{skillLabel(id)}</span>
               </div>
             ))
           ) : (
-            <p>
-              No missing skill is common to every compared route. Explore each
-              branch.
-            </p>
+            <p>{t.map.noMissingSkillCommon}</p>
           )}
-          <small>Useful across the top routes in both scenarios.</small>
+          <small>{t.map.usefulAcrossTopRoutes}</small>
         </div>
         <div className="map-fork" aria-hidden="true">
           <svg viewBox="0 0 70 220" preserveAspectRatio="none">
@@ -145,10 +144,11 @@ export function LearningMap({
                 {String.fromCharCode(65 + i)}
               </span>
               <span>
-                <strong>{m.role.shortTitle}</strong>
+                <strong>{roleText(m.role).shortTitle}</strong>
                 <small>
-                  {m.gaps.filter((g) => !shared.includes(g.id)).length}{' '}
-                  branch-specific gaps
+                  {t.map.branchSpecificGaps(
+                    m.gaps.filter((g) => !shared.includes(g.id)).length,
+                  )}
                 </small>
               </span>
               <b className="destination-score">
@@ -165,11 +165,8 @@ export function LearningMap({
         </div>
       </div>
       <div className="map-caption">
-        <span className="tag green">The ArcTalent approach</span>
-        <p>
-          Start with skills that travel with you. Specialise when the next step
-          is clearer.
-        </p>
+        <span className="tag green">{t.map.arcTalentApproach}</span>
+        <p>{t.map.mapCaptionDesc}</p>
       </div>
     </div>
   );

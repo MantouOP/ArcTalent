@@ -6,10 +6,10 @@ import {
   Database,
   ArrowRight,
   FlaskConical,
-  ExternalLink,
 } from 'lucide-react';
-import { skillById, roles } from '@/lib/catalogue';
+import { roles } from '@/lib/catalogue';
 import { diffSnapshots, MODEL_VERSION } from '@/lib/engine';
+import { useLanguage } from '@/lib/i18n';
 import type { Profile, Scenario, Snapshot } from '@/lib/types';
 import { External, Tag } from './ui';
 export function EvidencePanel({
@@ -31,19 +31,27 @@ export function EvidencePanel({
   onReplay: () => void;
   onBaseline: () => void;
 }) {
+  const {
+    t,
+    dateLocale,
+    skillLabel,
+    roleText,
+    snapshotText,
+    signalText,
+  } = useLanguage();
   const [all, setAll] = useState(false);
   const changes = previous
     ? diffSnapshots(profile, scenario, previous, snapshot)
     : [];
+  const snapMeta = snapshotText(snapshot);
+  const prevMeta = previous ? snapshotText(previous) : null;
   return (
     <>
       <div className="section-title">
         <div>
-          <span className="eyebrow">EVIDENCE LAB</span>
-          <h2>A recommendation should show its work.</h2>
-          <p className="muted">
-            Inspect the source, the assumption and the reason a pathway changed.
-          </p>
+          <span className="eyebrow">{t.evidencePanel.eyebrow}</span>
+          <h2>{t.evidencePanel.title}</h2>
+          <p className="muted">{t.evidencePanel.subtitle}</p>
         </div>
       </div>
       <div className="two-columns evidence-actions">
@@ -51,45 +59,39 @@ export function EvidencePanel({
           <div className="course-icon">
             <Database />
           </div>
-          <h2>Refresh public evidence</h2>
-          <p>
-            Fetch a bounded sample of European job postings from Arbeitnow and
-            recent AI research from arXiv.
-          </p>
+          <h2>{t.evidencePanel.refreshTitle}</h2>
+          <p>{t.evidencePanel.refreshDesc}</p>
           <button className="primary" disabled={busy} onClick={onRefresh}>
             <RefreshCw size={16} className={busy ? 'spin' : ''} />
-            {busy ? 'Fetching sources…' : 'Refresh public sources'}
+            {busy ? t.evidencePanel.fetchingSources : t.evidencePanel.refreshBtn}
           </button>
-          <small>Five-minute cache · Sources may be unavailable</small>
+          <small>{t.evidencePanel.cacheNote}</small>
         </section>
         <section className="panel warm">
           <div className="course-icon">
             <FlaskConical />
           </div>
-          <h2>See the replanning moment</h2>
-          <p>
-            Replay a dated synthetic shift in skill demand. The same engine
-            recomputes the worker and team views.
-          </p>
+          <h2>{t.evidencePanel.replanningTitle}</h2>
+          <p>{t.evidencePanel.replanningDesc}</p>
           <div className="button-row">
             <button className="secondary" onClick={onReplay}>
               <Play size={15} />
-              Apply newer demo snapshot
+              {t.evidencePanel.applyNewerSnapshotBtn}
             </button>
             <button className="text-button" onClick={onBaseline}>
-              Restore baseline
+              {t.evidencePanel.restoreBaselineBtn}
             </button>
           </div>
-          <small>Clearly simulated. No invented market event.</small>
+          <small>{t.evidencePanel.simulatedNote}</small>
         </section>
       </div>
       <section className="panel">
         <div className="panel-heading">
           <div>
-            <h2>{snapshot.label}</h2>
+            <h2>{snapMeta.label}</h2>
             <p>
-              Snapshot {snapshot.id} ·{' '}
-              {new Date(snapshot.asOf).toLocaleString('en-MY', {
+              {t.evidencePanel.snapshotPrefix} {snapshot.id} ·{' '}
+              {new Date(snapshot.asOf).toLocaleString(dateLocale, {
                 timeZone: 'Asia/Kuala_Lumpur',
                 dateStyle: 'medium',
                 timeStyle: 'short',
@@ -98,153 +100,147 @@ export function EvidencePanel({
             </p>
           </div>
           <Tag tone={snapshot.kind === 'live' ? 'blue' : 'amber'}>
-            {snapshot.kind === 'live' ? 'Public data' : 'Simulation'}
+            {snapshot.kind === 'live'
+              ? t.evidencePanel.publicDataTag
+              : t.evidencePanel.simulationTag}
           </Tag>
         </div>
-        <p className="notice">{snapshot.note}</p>
+        <p className="notice">{snapMeta.note}</p>
         <div className="signal-metrics">
           <span>
-            <strong>{snapshot.sampleSize}</strong>job records
+            <strong>{snapshot.sampleSize}</strong>
+            {t.evidencePanel.jobRecords}
           </span>
           <span>
             <strong>
               {snapshot.signals.filter((s) => s.kind === 'research').length}
             </strong>
-            research records
+            {t.evidencePanel.researchRecords}
           </span>
           <span>
-            <strong>{MODEL_VERSION}</strong>scoring model
+            <strong>{MODEL_VERSION}</strong>
+            {t.evidencePanel.scoringModel}
           </span>
         </div>
-        {snapshot.signals.slice(0, all ? 200 : 8).map((s) => (
-          <article className="source-item" key={s.id}>
-            <span className="source-type">
-              {s.kind === 'research'
-                ? 'AI RESEARCH'
-                : s.kind === 'jobs'
-                  ? 'JOB POSTING'
-                  : 'DEMO FIXTURE'}
-            </span>
-            <h3>
-              {s.url ? <External href={s.url}>{s.title}</External> : s.title}
-            </h3>
-            <p>{s.geography}</p>
-            <small>
-              Published:{' '}
-              {s.publishedAt
-                ? new Date(s.publishedAt).toLocaleDateString('en-MY', {
-                    timeZone: 'Asia/Kuala_Lumpur',
-                  })
-                : 'Unknown'}{' '}
-              · Collected:{' '}
-              {new Date(s.collectedAt).toLocaleDateString('en-MY', {
-                timeZone: 'Asia/Kuala_Lumpur',
-              })}
-            </small>
-            <div className="chips">
-              {s.skills.map((id) => (
-                <span className="skill-chip" key={id}>
-                  {skillById[id].label}
-                </span>
-              ))}
-            </div>
-          </article>
-        ))}
+        {snapshot.signals.slice(0, all ? 200 : 8).map((s) => {
+          const sig = signalText(s);
+          return (
+            <article className="source-item" key={s.id}>
+              <span className="source-type">
+                {s.kind === 'research'
+                  ? t.evidencePanel.sourceTypes.research
+                  : s.kind === 'jobs'
+                    ? t.evidencePanel.sourceTypes.jobs
+                    : t.evidencePanel.sourceTypes.simulation}
+              </span>
+              <h3>
+                {s.url ? <External href={s.url}>{sig.title}</External> : sig.title}
+              </h3>
+              <p>{sig.geography}</p>
+              <small>
+                {t.evidencePanel.published}{' '}
+                {s.publishedAt
+                  ? new Date(s.publishedAt).toLocaleDateString(dateLocale, {
+                      timeZone: 'Asia/Kuala_Lumpur',
+                    })
+                  : t.evidencePanel.unknown}{' '}
+                · {t.evidencePanel.collected}{' '}
+                {new Date(s.collectedAt).toLocaleDateString(dateLocale, {
+                  timeZone: 'Asia/Kuala_Lumpur',
+                })}
+              </small>
+              <div className="chips">
+                {s.skills.map((id) => (
+                  <span className="skill-chip" key={id}>
+                    {skillLabel(id)}
+                  </span>
+                ))}
+              </div>
+            </article>
+          );
+        })}
         {snapshot.signals.length > 8 && (
           <button className="text-button" onClick={() => setAll(!all)}>
-            {all ? 'Show fewer' : `Show all ${snapshot.signals.length} records`}
+            {all
+              ? t.evidencePanel.showFewer
+              : t.evidencePanel.showAllRecords(snapshot.signals.length)}
           </button>
         )}
         <div className="source-links">
           <External href="https://www.arbeitnow.com/blog/job-board-api">
-            Arbeitnow API & attribution
+            {t.evidencePanel.arbeitnowLink}
           </External>
           <External href="https://info.arxiv.org/help/rss.html">
-            arXiv RSS documentation
+            {t.evidencePanel.arxivLink}
           </External>
         </div>
       </section>
-      {previous && (
+      {previous && prevMeta && (
         <section className="panel">
-          <h2>What changed, exactly?</h2>
+          <h2>{t.evidencePanel.whatChangedTitle}</h2>
           <p className="muted">
-            {previous.label} → {snapshot.label}. Scores below use your current
-            profile and scenario for both snapshots.
+            {t.evidencePanel.whatChangedDesc(prevMeta.label, snapMeta.label)}
           </p>
           {previous.kind !== snapshot.kind && (
             <p className="notice">
-              The evidence mode changed. This comparison shows model
-              sensitivity, not a measured market trend over time.
+              {t.evidencePanel.evidenceModeChangedNotice}
             </p>
           )}
           <div className="change-list">
-            {changes.map((c) => (
-              <div key={c.id}>
-                <span>
-                  <strong>{c.title}</strong>
-                  <small>
-                    {c.changedSkills.length
-                      ? c.changedSkills
-                          .map((id) => skillById[id].label)
-                          .join(', ')
-                      : 'No mapped signal changed'}
-                  </small>
-                </span>
-                <span className="score-change">
-                  {c.before.toFixed(1)}
-                  <ArrowRight size={14} />
-                  <b>{c.after.toFixed(1)}</b>
-                </span>
-                <span
-                  className={`delta ${c.delta >= 0 ? 'positive' : 'negative'}`}
-                >
-                  {c.delta > 0 ? '+' : ''}
-                  {c.delta.toFixed(1)}
-                </span>
-              </div>
-            ))}
+            {changes.map((c) => {
+              const r = roles.find((role) => role.id === c.id);
+              return (
+                <div key={c.id}>
+                  <span>
+                    <strong>{r ? roleText(r).title : c.title}</strong>
+                    <small>
+                      {c.changedSkills.length
+                        ? c.changedSkills.map((id) => skillLabel(id)).join(', ')
+                        : t.evidencePanel.noMappedSignalChanged}
+                    </small>
+                  </span>
+                  <span className="score-change">
+                    {c.before.toFixed(1)}
+                    <ArrowRight size={14} />
+                    <b>{c.after.toFixed(1)}</b>
+                  </span>
+                  <span
+                    className={`delta ${c.delta >= 0 ? 'positive' : 'negative'}`}
+                  >
+                    {c.delta > 0 ? '+' : ''}
+                    {c.delta.toFixed(1)}
+                  </span>
+                </div>
+              );
+            })}
           </div>
           <p className="muted small">
-            Only the evidence component changed. Existing skills, interests and
-            scenario exposure assumptions remain fixed in this comparison.
+            {t.evidencePanel.onlyEvidenceChangedNote}
           </p>
         </section>
       )}
       <section className="panel">
-        <h2>Assumptions, in the open</h2>
-        <p>
-          Suitability = 55% skill coverage + 15% interest + 15% evidence + 15%
-          scenario suitability.
-        </p>
+        <h2>{t.evidencePanel.assumptionsTitle}</h2>
+        <p>{t.evidencePanel.suitabilityFormula}</p>
         <div className="two-columns compact">
           <div>
-            <h3>Two possible futures</h3>
-            <p className="muted">
-              Moderate uses an illustrative adoption factor of 0.35; rapid uses
-              0.75. Scenario suitability = 1 − adoption factor × task exposure.
-              Neither factor is an unemployment probability.
-            </p>
-            <h3>Evidence quality</h3>
-            <p className="muted">
-              Live evidence uses skill mentions in one sample, with a neutral
-              market score below 30 valid postings. Research is shown for
-              interpretation, not treated as proof of automation. Reliable
-              growth estimates need comparable historical windows.
-            </p>
+            <h3>{t.evidencePanel.twoPossibleFutures}</h3>
+            <p className="muted">{t.evidencePanel.twoPossibleFuturesDesc}</p>
+            <h3>{t.evidencePanel.evidenceQuality}</h3>
+            <p className="muted">{t.evidencePanel.evidenceQualityDesc}</p>
           </div>
           <div>
-            <h3>Role exposure assumptions</h3>
+            <h3>{t.evidencePanel.roleExposureAssumptions}</h3>
             <div className="gap-list">
               {roles.map((r) => (
                 <div key={r.id}>
-                  <External href={r.source}>{r.shortTitle}</External>
+                  <External href={r.source}>{roleText(r).shortTitle}</External>
                   <span>{r.exposure.toFixed(2)}</span>
                 </div>
               ))}
             </div>
             <p className="muted small">
-              Team-model parameters, not O*NET estimates. Role sources inform
-              task context; they do not validate these values.
+              {t.evidencePanel.teamModelParamsNote}
             </p>
           </div>
         </div>
