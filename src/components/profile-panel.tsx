@@ -1,9 +1,10 @@
 'use client';
-import { useState } from 'react';
+import { useReducer, useRef, useState } from 'react';
 import { Upload, Check, ArrowRight, FileText } from 'lucide-react';
 import { skills, baseProfile, employees } from '@/lib/catalogue';
-import type { Profile, SkillId } from '@/lib/types';
+import type { Profile } from '@/lib/types';
 import { profileSchema } from '@/lib/validation';
+import { cvEvidenceReducer, initialCvEvidence } from '@/lib/cv-evidence';
 import { PreferenceCheck } from './preference-check';
 export function ProfilePanel({
   profile,
@@ -12,14 +13,13 @@ export function ProfilePanel({
   profile: Profile;
   onSave: (p: Profile) => void;
 }) {
-  const [form, setForm] = useState(profile),
-    [text, setText] = useState(''),
-    [synthetic, setSynthetic] = useState(false),
-    [busy, setBusy] = useState(false),
-    [message, setMessage] = useState(''),
-    [candidates, setCandidates] = useState<
-      { id: SkillId; evidence: string; level: number }[]
-    >([]);
+  const [form, setForm] = useState(profile);
+  const [cv, dispatchCv] = useReducer(cvEvidenceReducer, initialCvEvidence);
+  const request = useRef(0);
+  const { text, synthetic, message, candidates } = cv;
+  const busy = cv.requestId !== null;
+  const setMessage = (message: string) =>
+    dispatchCv({ type: 'message', message });
   const update = <K extends keyof Profile>(key: K, value: Profile[K]) =>
     setForm((p) => ({ ...p, [key]: value }));
   async function analyze() {
@@ -27,7 +27,8 @@ export function ProfilePanel({
       setMessage('Confirm that the CV is synthetic first.');
       return;
     }
-    setBusy(true);
+    const requestId = ++request.current;
+    dispatchCv({ type: 'start', requestId });
     try {
       const r = await fetch('/api/extract', {
         method: 'POST',
@@ -36,18 +37,23 @@ export function ProfilePanel({
       });
       const body = await r.json();
       if (!r.ok) throw new Error(body.error);
-      setCandidates(body.skills);
-      setMessage(
-        `${body.mode}. Review these candidates and set your own skill levels below.`,
-      );
+      dispatchCv({
+        type: 'complete',
+        requestId,
+        candidates: body.skills,
+        message: `${body.mode}. Review these candidates and set your own skill levels below.`,
+      });
     } catch (e) {
-      setMessage(e instanceof Error ? e.message : 'Extraction unavailable');
-    } finally {
-      setBusy(false);
+      dispatchCv({
+        type: 'complete',
+        requestId,
+        message: e instanceof Error ? e.message : 'Extraction unavailable',
+      });
     }
   }
   async function upload(file: File | undefined) {
     if (!file) return;
+    dispatchCv({ type: 'source' });
     if (!synthetic) {
       setMessage('Confirm synthetic data before importing a file.');
       return;
@@ -56,36 +62,46 @@ export function ProfilePanel({
       setMessage('Choose a file smaller than 5 MB.');
       return;
     }
-    if (file.name.toLowerCase().endsWith('.txt')) {
-      setText((await file.text()).slice(0, 12000));
-      setMessage('Text imported. Choose Find skills to review candidates.');
+    const filename = file.name.toLowerCase();
+    if (!filename.endsWith('.txt') && !filename.endsWith('.pdf')) {
+      setMessage('Use a text PDF or .txt file.');
       return;
     }
-    if (file.name.toLowerCase().endsWith('.pdf')) {
-      setBusy(true);
-      try {
+    const requestId = ++request.current;
+    dispatchCv({ type: 'start', requestId });
+    try {
+      if (filename.endsWith('.txt')) {
+        dispatchCv({
+          type: 'complete',
+          requestId,
+          text: (await file.text()).slice(0, 12000),
+          message: 'Text imported. Choose Find skills to review candidates.',
+        });
+      } else {
         const data = new FormData();
         data.set('file', file);
         data.set('synthetic', 'true');
         const res = await fetch('/api/pdf', { method: 'POST', body: data });
         const json = await res.json();
         if (!res.ok) throw new Error(json.error);
-        setText(json.text);
-        setMessage(
-          'PDF text imported. Choose Find skills to review candidates.',
-        );
-      } catch (e) {
-        setMessage(
+        dispatchCv({
+          type: 'complete',
+          requestId,
+          text: json.text,
+          message:
+            'PDF text imported. Choose Find skills to review candidates.',
+        });
+      }
+    } catch (e) {
+      dispatchCv({
+        type: 'complete',
+        requestId,
+        message:
           e instanceof Error
             ? e.message
-            : 'PDF could not be read. Paste its text instead.',
-        );
-      } finally {
-        setBusy(false);
-      }
-      return;
+            : 'File could not be read. Paste its text instead.',
+      });
     }
-    setMessage('Use a text PDF or .txt file.');
   }
   return (
     <div className="profile-flow">
@@ -111,6 +127,7 @@ export function ProfilePanel({
                 const p =
                   employees.find((x) => x.id === e.target.value) ?? baseProfile;
                 setForm({ ...p, skills: { ...p.skills }, completed: [] });
+                dispatchCv({ type: 'reset' });
               }}
             >
               {employees.map((p) => (
@@ -259,7 +276,9 @@ export function ProfilePanel({
             <input
               type="checkbox"
               checked={synthetic}
-              onChange={(e) => setSynthetic(e.target.checked)}
+              onChange={(e) =>
+                dispatchCv({ type: 'source', synthetic: e.target.checked })
+              }
             />
             This is synthetic data, with no real personal information.
           </label>
@@ -280,7 +299,9 @@ export function ProfilePanel({
             maxLength={12000}
             placeholder="Example: I prepare reports in Excel, coordinate scheduling and communicate with customers…"
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={(e) =>
+              dispatchCv({ type: 'source', text: e.target.value })
+            }
           />
           <button
             className="secondary full"

@@ -50,7 +50,7 @@ See the timed [demo script](docs/DEMO.md), [editable implementation plan](docs/I
 - Read-only score gauges, skill/scenario comparison bars, a weekly allocation chart and proportional skill-reuse bubbles, all derived from the existing engine output. Snapshot deltas name their comparison; no growth history is invented.
 - Synthetic TXT/text-PDF import, evidence-backed skill candidates and manual confirmation.
 - An optional three-question preference check, a current/target skill bridge and study-session guidance. Preferences are saved with the profile and included in the pathway export; they do not establish aptitude or proficiency.
-- Browser persistence for the worker profile, selected scenario, evidence snapshot, course activity and destination preference.
+- Browser persistence for the worker profile, selected scenario, evidence snapshot, course activity, destination preference and manager budget/opening/destination settings.
 - A workforce heatmap, proposed internal openings, grouped training, CSV export and planned SDG contribution view.
 - Dated synthetic replay plus a real refresh adapter for Arbeitnow job postings and arXiv AI research, with source dates and partial-failure handling.
 - Optional RunPod-hosted model extraction through the AI SDK. The default mode uses local alias matching and labels it clearly.

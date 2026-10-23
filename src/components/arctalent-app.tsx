@@ -55,6 +55,10 @@ import { StudyRhythm } from './study-rhythm';
 import { RouteSummary, RouteAnalytics } from './command-overview';
 import { buildSkillBridge } from '@/lib/skill-bridge';
 import { buildStudyRhythm } from '@/lib/learning-preferences';
+import {
+  restoreWorkforceSettings,
+  type WorkforceSettings,
+} from '@/lib/workforce-settings';
 type View = 'explore' | 'pathway' | 'team' | 'evidence' | 'profile';
 const navigation = [
   { id: 'explore' as const, label: 'Career explorer', icon: Compass },
@@ -80,6 +84,9 @@ export function ArcTalentApp() {
     [query, setQuery] = useState('');
   const revision = useRef(0);
   const [followTop, setFollowTop] = useState(true);
+  const [workforce, setWorkforce] = useState<WorkforceSettings>(() =>
+    restoreWorkforceSettings(),
+  );
   function chooseRole(id: string) {
     setSelected(id);
     setFollowTop(false);
@@ -98,6 +105,7 @@ export function ArcTalentApp() {
         if (roles.some((r) => r.id === saved.selected))
           setSelected(saved.selected);
         if (typeof saved.followTop === 'boolean') setFollowTop(saved.followTop);
+        setWorkforce(restoreWorkforceSettings(saved.workforce));
       }
     } catch {
       /* Browser storage is optional. */
@@ -109,12 +117,19 @@ export function ArcTalentApp() {
       try {
         localStorage.setItem(
           'arctalent-v1',
-          JSON.stringify({ profile, scenario, snapshot, selected, followTop }),
+          JSON.stringify({
+            profile,
+            scenario,
+            snapshot,
+            selected,
+            followTop,
+            workforce,
+          }),
         );
       } catch {
         /* Storage is optional. */
       }
-  }, [ready, profile, scenario, snapshot, selected, followTop]);
+  }, [ready, profile, scenario, snapshot, selected, followTop, workforce]);
   useEffect(() => {
     if (!toast) return;
     const timer = setTimeout(() => setToast(''), 7000);
@@ -192,6 +207,7 @@ export function ArcTalentApp() {
     setPrevious(null);
     setSelected(defaultRole);
     setFollowTop(true);
+    setWorkforce(restoreWorkforceSettings());
     setFunding('all');
     setView('explore');
     setToast('Demo reset to Aina’s starting profile.');
@@ -993,6 +1009,8 @@ export function ArcTalentApp() {
               profile={profile}
               scenario={scenario}
               snapshot={snapshot}
+              workforce={workforce}
+              onChange={setWorkforce}
             />
           )}
           {view === 'evidence' && (

@@ -1,5 +1,5 @@
 'use client';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import {
   Download,
   Users,
@@ -10,26 +10,22 @@ import {
 import { employees, roles, skills, skillById, sdgUrl } from '@/lib/catalogue';
 import { buildPlan, rankRoles } from '@/lib/engine';
 import type { Profile, Scenario, Snapshot } from '@/lib/types';
+import type { WorkforceSettings } from '@/lib/workforce-settings';
 import { downloadFile, External, Tag } from './ui';
 export function EmployerPanel({
   profile,
   scenario,
   snapshot,
+  workforce,
+  onChange,
 }: {
   profile: Profile;
   scenario: Scenario;
   snapshot: Snapshot;
+  workforce: WorkforceSettings;
+  onChange: (settings: WorkforceSettings) => void;
 }) {
-  const [destinations, setDestinations] = useState<Record<string, string>>({}),
-    [budget, setBudget] = useState(500),
-    [slots, setSlots] = useState<Record<string, number>>({
-      bi: 2,
-      project: 2,
-      sustainability: 1,
-      logistics: 1,
-      training: 1,
-      management: 1,
-    });
+  const { destinations, budget, slots } = workforce;
   const team = useMemo(
     () => employees.map((e) => (e.id === profile.id ? profile : e)),
     [profile],
@@ -199,10 +195,13 @@ export function EmployerPanel({
                       aria-label={`Destination role for ${row.profile.name}`}
                       value={row.role.id}
                       onChange={(e) =>
-                        setDestinations((v) => ({
-                          ...v,
-                          [row.profile.id]: e.target.value,
-                        }))
+                        onChange({
+                          ...workforce,
+                          destinations: {
+                            ...destinations,
+                            [row.profile.id]: e.target.value,
+                          },
+                        })
                       }
                     >
                       {roles.map((r) => (
@@ -260,7 +259,12 @@ export function EmployerPanel({
               min={0}
               max={100000}
               value={budget}
-              onChange={(e) => setBudget(Math.max(0, Number(e.target.value)))}
+              onChange={(e) =>
+                onChange({
+                  ...workforce,
+                  budget: Math.max(0, Math.min(100000, Number(e.target.value))),
+                })
+              }
             />
           </label>
           <p className="muted">
@@ -283,13 +287,16 @@ export function EmployerPanel({
                   max={8}
                   value={slots[r.id] ?? 0}
                   onChange={(e) =>
-                    setSlots((s) => ({
-                      ...s,
-                      [r.id]: Math.max(
-                        0,
-                        Math.min(8, Math.floor(Number(e.target.value))),
-                      ),
-                    }))
+                    onChange({
+                      ...workforce,
+                      slots: {
+                        ...slots,
+                        [r.id]: Math.max(
+                          0,
+                          Math.min(8, Math.floor(Number(e.target.value))),
+                        ),
+                      },
+                    })
                   }
                 />
               </label>

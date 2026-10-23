@@ -1,5 +1,13 @@
 # Verification record
 
+## Acceptance fixes — 23 October 2026
+
+Two live failures were reproduced: SME settings disappeared when its view unmounted, and edited CV text retained candidates from the previous sample. Workforce settings now live in the application state and validated optional browser storage. CV evidence uses an invalidating reducer and request IDs to reject superseded async completions and errors.
+
+The revised local production build passed **32 unit tests**, type checking, repository formatting, compilation and all **14 API integration checks**. Chrome confirmed that RM750, Aina's Sustainability destination and three openings survived evidence replay and reload; Reset demo restored defaults. Editing an Excel/SQL/Power BI sample immediately removed its four candidates, and re-extracting a Python-only sample returned only Python. Revoking synthetic confirmation disabled extraction. The actual synthetic PDF passed through Chrome's file picker after the extension permission was enabled. Worker JSON and workforce CSV downloads were inspected. No warning/error entries were captured in the revised local tab. An independent read-only code reviewer found no actionable issues.
+
+See the [feature acceptance matrix](FEATURE_ACCEPTANCE.md) for the boundary between the implemented prototype and the broader concept. Public deployment of this revision is tracked separately in [Replit status](REPLIT_STATUS.md).
+
 Run date: **22 October 2026 (MYT)**. Local Windows environment: Node.js 24.13.1, npm, production Next.js Webpack build. These results do not establish deployment or external platform compliance.
 
 ## Automated results
