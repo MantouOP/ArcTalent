@@ -1,0 +1,229 @@
+.settings-panel {
+  min-width: 0;
+}
+.settings-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.settings-identity > div {
+  min-width: 0;
+}
+.settings-identity strong {
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+.settings-panel p {
+  margin: 4px 0 0;
+  color: #a6a2bb;
+  font-size: 12px;
+  line-height: 1.65;
+}
+.settings-identity .avatar {
+  flex-shrink: 0;
+}
+.settings-panel .settings-intro {
+  margin: 16px 0 20px;
+  color: #ccc6df;
+}
+.settings-panel section {
+  border-top: 1px solid #759bc126;
+  padding: 16px 0 8px;
+}
+.settings-panel section h3 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 650;
+  color: #d4c8ee;
+}
+.settings-row {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+}
+.settings-row > div {
+  flex: 1;
+  min-width: 0;
+}
+.settings-row label,
+.settings-row strong {
+  display: block;
+  font-size: 13px;
+  color: #f1eafa;
+  font-weight: 500;
+}
+.settings-row select {
+  width: 165px;
+  flex-shrink: 0;
+  margin: 0;
+  min-height: 40px;
+  padding: 8px 28px 8px 10px;
+  font-size: 12px;
+  border: 1px solid #759bc13d;
+  border-radius: 8px;
+  color: #f0eafb;
+  background: #0a0919;
+}
+.settings-row input.settings-switch {
+  appearance: none;
+  -webkit-appearance: none;
+  display: block;
+  width: 38px;
+  height: 22px;
+  min-height: 0;
+  padding: 0;
+  margin: 0 3px;
+  flex-shrink: 0;
+  border: 1px solid #89809f;
+  border-radius: 12px;
+  background: #211c34;
+  cursor: pointer;
+  position: relative;
+}
+.settings-row input.settings-switch::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  top: 3px;
+  left: 3px;
+  background: #b6adc9;
+  border-radius: 50%;
+  transition: transform 150ms ease-out;
+}
+.settings-row input.settings-switch:checked {
+  background: #5320ca;
+  border-color: #9c7bed;
+}
+.settings-row input.settings-switch:checked::after {
+  background: #fff;
+  transform: translateX(16px);
+}
+.settings-panel button {
+  cursor: pointer;
+}
+.settings-panel :is(button, select, input):focus-visible {
+  outline: 2px solid #b798ff;
+  outline-offset: 3px;
+}
+.settings-save-state {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 0 7px;
+}
+.settings-save-state > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #9fb5aa;
+  font-size: 10px;
+  line-height: 1.6;
+}
+.settings-save-state > button {
+  font-size: 10px;
+  color: #bcacd9;
+  padding: 4px 0;
+  min-height: 28px;
+}
+.settings-action,
+.settings-reset-trigger,
+.settings-confirm-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 11px;
+  min-height: 38px;
+  border: 1px solid #759bc13d;
+  border-radius: 7px;
+  background: #19132c;
+  color: #d3c2ef;
+  font: inherit;
+  font-size: 11px;
+  text-align: left;
+}
+.settings-learning-row {
+  flex-wrap: wrap;
+}
+.settings-learning-row > div {
+  min-width: 190px;
+}
+.settings-panel .settings-data-copy {
+  margin: 9px 0 15px;
+}
+.settings-data-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-bottom: 8px;
+}
+.settings-reset-trigger {
+  background: transparent;
+  border-color: #ad657453;
+  color: #e4a6b6;
+}
+.settings-confirm {
+  margin: 10px 0 6px;
+  padding: 14px;
+  border: 1px solid #bc6c795e;
+  border-radius: 8px;
+  background: #30141b45;
+}
+.settings-confirm > strong {
+  font-size: 13px;
+  color: #f0cad3;
+}
+.settings-confirm > div {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin-top: 13px;
+}
+.settings-confirm-button {
+  background: #6f2540;
+  border-color: #b66a7e;
+  color: white;
+}
+.settings-panel .settings-message {
+  padding: 12px 0 0;
+  color: #9ce0c1;
+}
+.settings-open-button {
+  min-width: 34px;
+  min-height: 36px;
+  color: #b5a5d0;
+}
+@media (max-width: 600px) {
+  .settings-row {
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .settings-row:has(select) {
+    flex-direction: column;
+    gap: 9px;
+  }
+  .settings-row select {
+    width: 100%;
+    min-height: 44px;
+    font-size: 16px;
+  }
+  .settings-action,
+  .settings-reset-trigger,
+  .settings-confirm-button {
+    min-height: 44px;
+  }
+  .topbar .reset-demo {
+    display: none;
+  }
+  .settings-save-state > button {
+    min-height: 36px;
+  }
+  .settings-save-state > span {
+    font-size: 11px;
+  }
+}
