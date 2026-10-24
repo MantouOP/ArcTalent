@@ -170,6 +170,8 @@ Three regression tests failed for the expected old identity/date and truncated c
 
 Chrome verified four baseline course links, the rapid scenario's later project course, the overview link, completed-course access, all six SME training groups, named chat sources and the HRD-only empty state. Clicking SQLBolt opened its actual Introduction to SQL page. Malay and Chinese labels retained course titles. The viewport override did not change the measured browser width; it was reset, and no new narrow-phone browser verification is claimed.
 
+Source `7b759d7` is **Live on Replit**. Exact imported-source equality, 115 runtime unit tests, the production build and 16 runtime integration checks passed. Source and runtime CI passed. Public metadata changed at **07:28:14 UTC / 15:28:14 MYT on 24 October 2026**; all **16 public HTTPS integration checks passed**. Chrome confirmed the public overview and four course cards, including SQLBolt's corrected title/direct URL. See the [live course cards](images/direct-course-links-live.jpg) and [release provenance](REPLIT_STATUS.md).
+
 ## External verification still pending
 
 Replit development Preview/workflow, a paid RunPod endpoint, Malaysian vacancy data, HRD programme claimability, worker/employer validation, measured career outcomes and the official submission package. Production publication and the public API/browser checks are verified separately from the development Preview/workflow. Remote CI status must be checked for each new commit.

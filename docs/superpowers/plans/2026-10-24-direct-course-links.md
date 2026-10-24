@@ -26,8 +26,8 @@
 - [x] Write failing tests for the SQLBolt identity and full named chat course links; observe the failures.
 - [x] Correct catalogue metadata and add course access across the existing views; translate new UI copy.
 - [x] Run unit tests, formatting, typecheck, production build and integration checks. Inspect rendered UI and actual external navigation.
-- [ ] Obtain independent review, resolve concrete issues, commit and push to GitHub.
-- [ ] Import the exact source into Replit, verify its tests/build, clear obsolete generated build folders, publish and verify public links.
+- [x] Obtain independent review, resolve concrete issues, commit and push to GitHub.
+- [x] Import the exact source into Replit, verify its tests/build, clear obsolete generated build folders, publish and verify public links.
 
 ## Evidence and rulings
 
@@ -38,3 +38,4 @@
 - Browser: the four baseline steps, rapid scenario project route, overview, completed-course access, all six SME groups and named chat sources matched catalogue URLs. SQL navigation opened the actual Introduction to SQL page. Malay and Chinese labels preserve canonical course titles. HRD-only filtering retained an honest empty plan.
 - Responsive limitation: the browser viewport override returned without changing the measured 2560px viewport. Temporary overrides were reset; this change's narrow-phone layout was reviewed in CSS but was not claimed as a measured phone browser test.
 - Independent read-only reviewer found no concrete actionable issues.
+- Shipped source `7b759d7`, runtime `a9baef3`; both GitHub CI runs passed. Replit exact-tree/build/115-test/16-integration verification passed. Removed 840,928 KiB of old regenerable output before publishing. Public version observed 2026-10-24 07:28:14 UTC; all 16 public HTTPS integration checks passed. Public browser course cards confirmed and screenshot saved at `docs/images/direct-course-links-live.jpg`.

@@ -2,6 +2,14 @@
 
 Verified on **24 October 2026** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
+## Exact course links — live
+
+Canonical app source `7b759d7b89a0767bbe57e87e6e6d80b9e5450939` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). Its [source CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40073826553). All eleven official course pages were rechecked on 24 October; SQLBolt now uses its published **Introduction to SQL** title and direct tutorial URL. Scheduled steps, overview, completed learning and SME groups share accessible direct-course links; chat names and links every scheduled course.
+
+Replit imported the source unchanged at `artifacts/arctalent-release-7b759d7`. Exact Git tree comparisons passed both in Replit and against the downloaded runtime history. The locked install, **115 unit tests**, production build and **16 production integration checks** passed in Replit. Runtime `a9baef3b8a60082845bb68722646d5aa3dee0261` changes the artifact launch configuration and preserves the previous configuration. The verified incremental bundle is **2,033,544 bytes**, requires ancestor `61def1f9f6f2a9ca98fa4ddc55df5c9899937675`, and is pushed to `replit-runtime`; its [runtime CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40074178462).
+
+Before publishing, bounded cleanup removed **840,928 KiB** of untracked, regenerable `node_modules`/`.next` output from the previous release. All tracked sources/history and the complete new release were retained. Publishing completed successfully and Replit reports **Live**. The new public course metadata was observed at **2026-10-24 07:28:14 UTC (15:28:14 MYT)**. All **16 public HTTPS integration checks passed**, including exact catalogue metadata across all six role pathways and the existing PDF/custom-input flows. Public Chrome confirmed the overview link and four baseline course cards, with canonical titles, official URLs and 24 October source-check dates. The [live course cards](images/direct-course-links-live.jpg) record the result.
+
 ## Custom inputs and CV import — live
 
 Canonical source `27648ef95d9a5c64f390bd83a984e001bea6b052` repairs the inactive CV import experience and adds blank profiles, typed check-in answers, custom session lengths, editable fictional teams and dated simulation inputs. Its [source CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40069241921). Replit imported it unchanged into `artifacts/arctalent-release-27648ef`; exact Git tree comparisons passed before installation and again after downloading the runtime history. A locked install, **112 unit tests**, production build and all **15 production integration checks** passed inside Replit.
