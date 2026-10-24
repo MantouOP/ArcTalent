@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { LanguageProvider } from '@/components/language-provider';
+import { DisplayPreferencesProvider } from '@/components/display-preferences-provider';
 export const metadata: Metadata = {
   title: 'ArcTalent — Your next chapter, mapped',
   description:
@@ -13,7 +14,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          <DisplayPreferencesProvider>{children}</DisplayPreferencesProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

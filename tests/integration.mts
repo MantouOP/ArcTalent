@@ -26,6 +26,7 @@ await check('production page renders', async () => {
   assert.match(html, /value="ms"/);
   assert.match(html, /value="zh-CN"/);
   assert.match(html, /简体中文/);
+  assert.ok(html.includes('Open settings'), 'Settings launcher is rendered');
   assert.ok(
     html.includes('Open career assistant'),
     'Career assistant launcher is rendered',

@@ -1,0 +1,23 @@
+/* Reading preferences adjust prose and fields; navigation and SVG geometry stay stable. */
+html[data-reading-size='larger']
+  .app-shell
+  main
+  :is(p, li, input, select, textarea),
+html[data-reading-size='larger']
+  .settings-panel
+  :is(p, label, input, select, textarea),
+html[data-reading-size='larger'] .career-chat-answer,
+html[data-reading-size='larger'] .career-chat-input-row textarea,
+html[data-reading-size='larger'] .career-chat-question p,
+html[data-reading-size='larger'] .career-chat-intro > p {
+  font-size: 16px;
+  line-height: 1.7;
+}
+html[data-reduce-motion='true'],
+html[data-reduce-motion='true'] *,
+html[data-reduce-motion='true'] *::before,
+html[data-reduce-motion='true'] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}

@@ -130,6 +130,19 @@ The deployed public-source refresh also returned 100 Arbeitnow job records and 1
 
 The exact source was imported into Replit and independently passed all 95 unit tests, the production build and 14 integration checks. Replit then reported Live, all 14 public HTTPS checks passed, and Chrome verified typed replies, all three languages, scenario context and a 320px layout. No captured warning/error entries or canvas elements. The [live screenshot](images/career-chat-live.jpg), [mobile screenshot](images/career-chat-mobile-live.jpg) and [exact release provenance](REPLIT_STATUS.md) record these results. The newer-snapshot browser test also confirmed retained baseline/updated evidence dates in the two replies.
 
+## Settings — 24 October 2026
+
+- Added header/desktop-rail Settings using the existing native dialog, language provider and profile/export/reset handlers. A separate validated `arctalent-display-v1` preference stores standard/larger reading text and reduced motion. APIs, dependencies and scoring are unchanged.
+- **100 unit tests passed**, including five new preference tests. Restoration and motion checks were observed failing against the inert contract before implementation; the rendered-launcher integration assertion also failed before the control was added. Paired dictionaries add 31 settings translation units.
+- Type checking, formatting, whitespace checks, production build and **14 local production integration checks passed**.
+- Chrome verified paragraph text changing from 12px to 16px, a transition duration of 0s with manual reduced motion, and language/display preferences retained after reload. Native Escape returned focus to the Settings trigger.
+- Reset cancellation kept the rapid scenario. Confirmation restored the moderate baseline and retained Malay/larger-text/reduced-motion preferences. Opening confirmation focuses Cancel; cancellation/confirmation return focus to Reset demo data. Restore display defaults affects only reading/motion settings.
+- The profile shortcut retained an unsaved seven-hour weekly draft. Settings export produced a synthetic BI plan with four courses, 22 hours and RM0 course fees.
+- The dialog and document had no horizontal overflow at 320 × 740, 375 × 812 and 700 × 900, including larger Chinese/Malay text. Default desktop layout also inspected. No warning/error entries captured.
+- An independent read-only review identified a missing desktop guide-input selector; the fixed larger-text field measured 16px at 700px instead of the reproduced 12px. Storage-unavailable behavior is source-reviewed; no browser storage failure was injected.
+
+Public Settings release evidence is recorded in [Replit status](REPLIT_STATUS.md) after publication.
+
 ## External verification still pending
 
 Replit development Preview/workflow, a paid RunPod endpoint, Malaysian vacancy data, HRD programme claimability, worker/employer validation, measured career outcomes and the official submission package. Production publication and the public API/browser checks are verified separately from the development Preview/workflow. Remote CI status must be checked for each new commit.

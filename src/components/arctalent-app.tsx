@@ -21,6 +21,7 @@ import {
   RefreshCw,
   RotateCcw,
   Search,
+  Settings2,
   ShieldCheck,
   Sparkles,
   UserRound,
@@ -55,6 +56,9 @@ import { SkillBridge } from './skill-bridge';
 import { StudyRhythm } from './study-rhythm';
 import { RouteSummary, RouteAnalytics } from './command-overview';
 import { CareerChat } from './career-chat';
+import { SettingsPanel } from './settings-panel';
+import { useDisplayPreferences } from './display-preferences-provider';
+import { shouldReduceMotion } from '@/lib/display-preferences';
 import { buildSkillBridge } from '@/lib/skill-bridge';
 import { buildStudyRhythm } from '@/lib/learning-preferences';
 import {
@@ -72,6 +76,8 @@ const navigation = [
 const defaultRole = rankRoles(baseProfile, 'moderate', baseline)[0].role.id;
 export function ArcTalentApp() {
   const { t, locale } = useI18n();
+  const { preferences: displayPreferences } = useDisplayPreferences();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const [view, setView] = useState<View>('explore'),
     [profile, setProfile] = useState<Profile>(baseProfile),
@@ -161,7 +167,15 @@ export function ArcTalentApp() {
     : [];
   function navigate(next: View) {
     setView(next);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({
+      top: 0,
+      behavior: shouldReduceMotion(
+        displayPreferences,
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+      )
+        ? 'auto'
+        : 'smooth',
+    });
   }
   function useSnapshot(next: Snapshot) {
     revision.current++;
@@ -303,6 +317,14 @@ export function ArcTalentApp() {
         </nav>
         <div className="sidebar-note">
           <button
+            type="button"
+            onClick={() => setSettingsOpen(true)}
+            title={t('Settings')}
+            aria-label={t('Open settings')}
+          >
+            <Settings2 size={20} />
+          </button>
+          <button
             onClick={() => navigate('pathway')}
             title={t('Explore your pathway')}
             aria-label={t('Explore your pathway')}
@@ -349,6 +371,15 @@ export function ArcTalentApp() {
           </div>
           <div className="topbar-actions">
             <LanguageSelector />
+            <button
+              type="button"
+              className="icon-button settings-open-button"
+              onClick={() => setSettingsOpen(true)}
+              title={t('Settings')}
+              aria-label={t('Open settings')}
+            >
+              <Settings2 size={18} />
+            </button>
             <span className="demo-indicator">
               <i />
               {t('Hackathon prototype')}{' '}
@@ -1151,6 +1182,18 @@ export function ArcTalentApp() {
         <Modal title={t(details.role.title)} onClose={() => setDetails(null)}>
           <MatchDetails match={details} />
         </Modal>
+      )}
+      {settingsOpen && (
+        <SettingsPanel
+          profile={profile}
+          onClose={() => setSettingsOpen(false)}
+          onEditProfile={() => {
+            setSettingsOpen(false);
+            navigate('profile');
+          }}
+          onExport={exportPlan}
+          onReset={reset}
+        />
       )}
     </div>
   );
