@@ -25,7 +25,7 @@
 | **Replit Team Project** | [https://replit.com/@EmmanuelHeng/ArcTalent](https://replit.com/@EmmanuelHeng/ArcTalent) |
 | **Replit Runtime Branch** | [https://github.com/MantouOP/ArcTalent/tree/replit-runtime](https://github.com/MantouOP/ArcTalent/tree/replit-runtime) |
 | **RunPod Endpoint** | `https://api.runpod.ai/v2/` *(Qwen/Qwen2.5-7B-Instruct Serverless vLLM)* |
-| **Slide Deck** | *(Paste your Slide Deck / PDF link here)* |
+| **Slide Deck** | [https://canva.link/upnutijay2qn7vn](https://canva.link/upnutijay2qn7vn) |
 | **Demo Video (YouTube)** | *(Paste your 5–7 min YouTube demo link here)* |
 
 ---
@@ -146,7 +146,7 @@ $$\text{Suitability} = 55\% \times \text{Skill Coverage} + 15\% \times \text{Int
 - [x] Preliminary Proposal PDF completed (`submission/SDC2026_XenoForce_Preliminary.pdf`)
 - [x] Technology Declaration PDF completed (`submission/SDC2026_XenoForce_TechDeclaration.pdf`)
 - [x] Fully populated README summary with required hackathon sections
-- [ ] Pitch deck slide link added
+- [x] Pitch deck slide link added ([Canva Slide Deck](https://canva.link/upnutijay2qn7vn))
 - [ ] YouTube demo video link added (5–7 minutes)
 
 ---
