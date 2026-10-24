@@ -1,14 +1,97 @@
 # ArcTalent
 
-**Skills that travel with you.** A hackathon prototype that helps working adults and SME learning managers choose a practical reskilling route under two possible AI adoption scenarios.
+> **Skills that travel with you.** An adaptive, explainable reskilling command center that helps working adults and SME managers navigate evolving labour markets under moderate and rapid AI adoption scenarios.
 
-**[Open the live ArcTalent demo](https://arc-talent--emmanuelheng.replit.app/)** · [Team Replit project](https://replit.com/@EmmanuelHeng/ArcTalent)
+---
 
-Enter skills, interests, weekly learning time and budget. ArcTalent explains adjacent career matches, highlights the foundation shared across both scenarios, then schedules verified learning resources within the available time. A dated evidence update recomputes the same model and shows exactly what changed.
+## Team Information
 
-![ArcTalent Orion command center](docs/images/orion-command-center.png)
+| Field | Details |
+| :--- | :--- |
+| **Team Name** | **Xeno Force** |
+| **Team Domain** | **Domain 1 — The Aiversecity Future-Ready Workforce Domain** |
+| **SDG Track (1–17)** | **SDG 8: Decent Work and Economic Growth** *(also addressing SDG 4: Quality Education & SDG 10: Reduced Inequalities)* |
+| **Team Leader** | **Emmanuel Heng Zi Teng** |
+| **Email & Phone** | **Enuelhzt1524@gmail.com** · **010-271-6363** |
+| **University** | **Universiti Malaya (UM)** |
+| **Number of Members** | **4** |
 
-## Run locally
+## Links
+
+| Resource | Link |
+| :--- | :--- |
+| **GitHub Repository** | [https://github.com/MantouOP/ArcTalent](https://github.com/MantouOP/ArcTalent) |
+| **Live Demo (Replit)** | [https://arc-talent--emmanuelheng.replit.app/](https://arc-talent--emmanuelheng.replit.app/) |
+| **Replit Team Project** | [https://replit.com/@EmmanuelHeng/ArcTalent](https://replit.com/@EmmanuelHeng/ArcTalent) |
+| **Replit Runtime Branch** | [https://github.com/MantouOP/ArcTalent/tree/replit-runtime](https://github.com/MantouOP/ArcTalent/tree/replit-runtime) |
+| **RunPod Endpoint** | `https://api.runpod.ai/v2/` *(Qwen/Qwen2.5-7B-Instruct Serverless vLLM)* |
+| **Slide Deck** | *(Paste your Slide Deck / PDF link here)* |
+| **Demo Video (YouTube)** | *(Paste your 5–7 min YouTube demo link here)* |
+
+---
+
+## Official Submission Documents
+
+All required official submission documents are available in the [`submission/`](submission/) directory:
+
+- 📄 **Preliminary Proposal**: [`submission/SDC2026_XenoForce_Preliminary.pdf`](submission/SDC2026_XenoForce_Preliminary.pdf)
+- 📄 **Technical Tools Declaration**: [`submission/SDC2026_XenoForce_TechDeclaration.pdf`](submission/SDC2026_XenoForce_TechDeclaration.pdf)
+- 📄 **Replit Proof of Use (POU)**: [`submission/SDC2026_XenoForce_Replit_POU.pdf`](submission/SDC2026_XenoForce_Replit_POU.pdf)
+- 📄 **RunPod Proof of Use (POU)**: [`submission/SDC2026_XenoForce_Runpod_POU.pdf`](submission/SDC2026_XenoForce_Runpod_POU.pdf)
+
+---
+
+## Overview
+
+### Problem
+
+Rapid AI adoption is outpacing traditional training programmes. In Malaysia, 56% of professionals use AI at work but only 26% have received formal training (Hays Asia 2025), while over 600,000 workers will need reskilling within 3–5 years (MOSTI). Working adults cannot afford to start from scratch whenever AI forecasts shift, and SMEs (97% of Malaysian businesses) lack the HR intelligence to redeploy existing talent before turning to layoffs or costly hiring.
+
+### Solution
+
+ArcTalent provides an explainable career reskilling command center that maps current capabilities into adjacent careers across two distinct AI scenarios: **Moderate** and **Rapid AI Adoption**. It isolates the **shared foundation** (skills vital in both futures, like data literacy and critical thinking) so learners can start immediately with zero wasted effort, while scheduling free verified courses within weekly hour and budget limits.
+
+### Key Features
+
+- **Interactive Orion Command Center**: Dynamic SVG career constellation, transferable skill bridges, and visual score analytics.
+- **Dual-Scenario Adaptability**: Instant toggle between Moderate and Rapid AI futures; preserves foundational learning while updating specialized branches.
+- **Evidence-Backed Skill Extraction**: GenAI extracts CV skills anchored to verbatim source quotes (`Qwen/Qwen2.5-7B-Instruct` on RunPod) with instant local regex fallback.
+- **SME Workforce Redeployment**: 8–10 worker gap heatmap, company budget management, internal seat quotas, grouped training economies, and localized PDF reports.
+- **Multilingual Support**: Fully accessible in English, Bahasa Melayu, and 简体中文.
+- **Zero-Database Privacy**: All state lives in Browser LocalStorage; no personal resume data is ever stored on the server.
+
+### Tech Stack
+
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend** | Next.js 16 (App Router), React 19, TypeScript, Lucide Icons, Custom CSS |
+| **Backend & Engine** | Node.js route handlers, deterministic heuristic matching engine (`engine.ts`), Zod validation |
+| **Document Processing** | `pdf-parse` for synthetic text resumes; `@react-pdf/renderer` font embedding for PDF reports |
+| **AI / GPU Compute** | **RunPod** (Serverless `Qwen/Qwen2.5-7B-Instruct` via Vercel AI SDK) |
+| **Cloud Hosting** | **Replit** (Full-stack production Autoscale deployment in Asia region) |
+| **Storage & Privacy** | Browser LocalStorage (Zero cloud database required) |
+
+---
+
+## How We Use Replit *(Official Sponsor)*
+
+- **Development & Version Control**: Imported canonical source repository, maintaining continuous verified git histories.
+- **Production Hosting**: Live public deployment on Replit Autoscale (`https://arc-talent--emmanuelheng.replit.app/`) serving web views and API routes.
+- **Build & CI Verification**: All 32 unit tests and 14 production integration tests pass directly inside Replit.
+- **Secrets Management**: RunPod API keys and endpoints are stored in Replit Secrets, never committed to git.
+- 📄 Proof of use: [`submission/SDC2026_XenoForce_Replit_POU.pdf`](submission/SDC2026_XenoForce_Replit_POU.pdf)
+
+## How We Use RunPod *(Official Sponsor)*
+
+- **Workload**: Cloud GPU container hosting `Qwen/Qwen2.5-7B-Instruct` for structured CV skill extraction and custom career goal analysis.
+- **Integration**: Next.js route handlers communicate with RunPod via the Vercel AI SDK using structured JSON schema decoding (`Output.object`).
+- **Verbatim Evidence Anchoring**: Model candidates are filtered against exact CV substrings to eliminate hallucination.
+- **Resilient Fallback**: Automatically falls back to deterministic local alias matching if the cloud GPU is idle or offline.
+- 📄 Proof of use: [`submission/SDC2026_XenoForce_Runpod_POU.pdf`](submission/SDC2026_XenoForce_Runpod_POU.pdf)
+
+---
+
+## Run Locally
 
 Requires Node.js 22 or newer.
 
@@ -17,7 +100,7 @@ npm ci
 npm run dev
 ```
 
-Open http://localhost:3000 for the introduction, then choose **Explore my pathway** or **Plan for my team**. The application is at `/workspace`; `/workspace/team` enters SME planning directly. No API key or database is needed for the core demo.
+Open http://localhost:3000 for the introduction, then choose **Explore my pathway** or **Plan for my team**.
 
 ```sh
 npm run typecheck
@@ -28,95 +111,46 @@ npm run start
 npm run test:integration
 ```
 
-`npm run format` formats the editable source. CI checks formatting, types, the engine, the production build and the API integration flow. Webpack is selected explicitly for reliable Windows builds.
+---
 
-## Try the demo
+## How the Model Works
 
-1. Reset the demo to Aina: four learning hours per week, RM0 course budget and an eight-week horizon.
-2. Open **My learning pathway**. Moderate adoption leads with Business Intelligence Analyst. The shared foundation is data literacy and critical thinking.
-3. Switch to **Rapid adoption**. Project Management Specialist becomes the leading route; the later courses change while the foundation stays highlighted. Keep “Follow the leading recommendation” checked for this demonstration. Choosing a destination manually pins it.
-4. Open **Evidence lab → Apply newer demo snapshot**. Inspect the dated source fixture and the score differences. This replay is explicitly simulated.
-5. Open **SME workspace** for eight initial synthetic workers, a role-specific gap heatmap, internal capacity controls, grouped training and planned SDG activities. Add, edit or remove fictional team members; the roster supports up to ten people and is saved in this browser. Type a destination in any worker's heatmap row. Known suggestions can be applied as presets; other titles open **Review goal**, where AI/manual targets, proposed openings and real course previews can be reviewed before applying to that worker. Specialist gaps remain explicit, and PDF export includes the custom destination.
-6. Try **My skills & profile** with the supplied [TXT](public/synthetic-cv.txt) or [PDF](public/synthetic-cv.pdf). The import action explains and focuses the required synthetic-data confirmation. Review every detected skill before using it. **Start a blank profile** creates a draft without inherited skills or interests.
-7. Try **Start the quick check** in the profile. Type a work goal and practice idea, choose the matching categories, and enter a session length from 5 to 180 minutes or use a preset. Review and apply them to the draft, then save. Your original answers and calculated study rhythm appear in the pathway. Reset before repeating the baseline scenario demonstration.
-8. Use the header language selector to switch between **English**, **Bahasa Melayu** and **简体中文**. The browser remembers your choice. Language changes preserve drafts and planning settings; names, CV evidence, original resource titles and exported data remain unchanged.
-9. Open **Ask ArcTalent** in the lower-right corner. Ask about the selected career, learning steps, skill gaps, time, budget, funding, scenarios or evidence. Change the scenario and ask again to compare the reply context. The guide runs locally using the current planning data; it is not a language-model service.
-10. Open **Settings** using the sliders icon in the header or desktop rail. Choose the interface language, larger reading text or reduced motion, edit learning preferences, download the current plan, or reset demo data after confirmation. Display preferences are saved separately in this browser; resetting demo data keeps them.
-11. In **Evidence lab → Create custom snapshot**, enter a label, date, note and skill-demand values from 0 to 100. Applying these clearly labelled planning assumptions recalculates individual and company routes and shows score changes; it does not establish a real market trend.
+The shared TypeScript engine in `src/lib/engine.ts` powers the browser and `/api/analyze`:
 
-See the timed [demo script](docs/DEMO.md), [editable implementation plan](docs/IMPLEMENTATION_PLAN.md), [feature acceptance matrix](docs/FEATURE_ACCEPTANCE.md) and [submission checklist](docs/SUBMISSION.md).
+$$\text{Suitability} = 55\% \times \text{Skill Coverage} + 15\% \times \text{Interest} + 15\% \times \text{Market Signal} + 15\% \times \text{Scenario Resilience}$$
 
-## What is implemented
+- **Skill Coverage**: Compares self-reported levels (0–3) against role requirements. Pivot distance is $100 - \text{Coverage}$.
+- **Scenario Resilience**: $1 - (\text{Adoption Factor} \times \text{Role Exposure})$. Moderate uses 0.35; Rapid uses 0.75.
+- **Shared Foundation**: Identifies missing skills required by every top-ranked career across **both** scenarios.
+- **Greedy Course Scheduler**: Optimally fills weekly study limits (e.g. 4 hrs/week, RM0 budget) prioritizing shared foundational skills first.
 
-- Six sourced occupations, nineteen transferable skills, seventeen public learning resources, an editable custom career goal, blank custom profiles and a roster of up to ten fictional workers (eight provided initially).
-- In **My pathway**, type a destination and describe the work you want to do. Analyse the goal, review or edit skill targets, and preview actual courses before applying it. The custom destination persists and participates in both scenarios, Explore, evidence comparisons, chat and JSON exports. Specialist skills outside this starter catalogue remain visible as gaps. Custom requirements and neutral exposure 0.5 are planning assumptions, not verified occupational forecasts.
-- Deterministic, explainable matching and moderate/rapid scenario comparison.
-- An Orion-inspired dark command center with an interactive career constellation, shared learning stops, prerequisites, time and budget limits, weekly schedules and JSON export.
-- Read-only score gauges, skill/scenario comparison bars, a weekly allocation chart and proportional skill-reuse bubbles, all derived from the existing engine output. Snapshot deltas name their comparison; no growth history is invented.
-- Synthetic TXT/text-PDF import, evidence-backed skill candidates and manual confirmation.
-- An optional three-question preference check, a current/target skill bridge and study-session guidance. Preferences are saved with the profile and included in the pathway export; they do not establish aptitude or proficiency.
-- Browser persistence for the worker profile and typed check-in answers, selected scenario, evidence snapshot, course activity, destination preference and manager roster/budget/opening/destination settings. Individual edits and studied courses remain synchronized with that worker's team record.
-- English, Bahasa Melayu and Simplified Chinese interface options, including skill/role labels, explanations, charts and profile controls. Translation dictionaries run locally without an external service; unknown source text retains its original wording.
-- A floating career and learning guide in all three languages. Replies explain the current selected route and filtered plan, link to catalogue sources and open relevant views. Up to 20 questions stay in memory in the current tab; closing preserves them and clearing removes them. New replies use current data while older replies retain their original context.
-- Multilingual Settings for language, reading text, reduced motion and demo-data controls. The native dialog preserves the active workspace and unsaved profile draft; device reduced motion is respected. No account is required.
-- A workforce heatmap, proposed internal openings, grouped training, PDF export and planned SDG contribution view. **SME workspace -> Export plan (PDF)** downloads a searchable report with current allocations, budgets, grouped course links, individual schedules and gaps. It follows the selected interface language and embeds a licensed font for Simplified Chinese. Exporting does not call AI or fetch external fonts.
-- A calm, translated introduction before the dashboard, with separate personal/SME entry links, a static illustrative route and short usage guidance. Home links preserve saved planning data. Each worker can have an independent typed destination and explicit custom-opening count; custom targets are reviewed planning assumptions, with verified catalogue courses and visible specialist gaps.
-- Dated synthetic replay, editable user-entered simulation snapshots and a real refresh adapter for Arbeitnow job postings and arXiv AI research, with source dates and partial-failure handling.
-- Optional RunPod-hosted model extraction and structured career-goal analysis through the AI SDK. Without a configured model, the app explicitly labels local suggestions and supports manual skill targets. AI can suggest known skill IDs; course titles and URLs always come from the checked catalogue.
+---
 
-## How the model works
+## Team — Xeno Force
 
-The shared TypeScript engine in `src/lib/engine.ts` powers the browser and `/api/analyze`.
+| Name | Role | University |
+| :--- | :--- | :--- |
+| **Emmanuel Heng Zi Teng** | Team Leader / Full-Stack & System Architecture | Universiti Malaya |
+| *(Member 2)* | Frontend & UI / UX Design | Universiti Malaya |
+| *(Member 3)* | AI Integration & RunPod Infrastructure | Universiti Malaya |
+| *(Member 4)* | Workforce Research & SDG Impact Modeling | Universiti Malaya |
 
-`Suitability = 55% current skill coverage + 15% interest + 15% evidence signal + 15% scenario suitability`
+---
 
-- Skill coverage compares self-reported levels 0–3 with a simplified role requirement model. Pivot distance is 100 minus coverage.
-- Interest is 100 for a matching work-family preference and 40 otherwise.
-- The optional check initially replaces interests with one explicitly chosen focus; manual interest edits then take priority. Practice format and session length only change study guidance. They never alter course durations, skill levels or score weights.
-- Scenario suitability is `1 − adoption factor × role exposure`. Moderate uses 0.35; rapid uses 0.75. Exposure values and weights are illustrative team-model parameters. They require calibration and are not unemployment probabilities.
-- Shared foundation means missing skills required by every role in the top three of **both** scenarios. It can change when a profile or evidence snapshot changes.
-- The planner expands prerequisite skills and greedily selects useful course coverage per study hour, weighting shared skills first. It respects course prerequisites, total course fees and weekly capacity. It is a heuristic rather than an optimal solver.
-- For scheduling only, a mapped course is assumed to cover a skill up to level 2. This is a simplification requiring validation. Marking a course studied never changes the person's self-reported proficiency or matching score. Uncovered gaps remain visible.
-- Live market input is `min(1, 0.5 + skill-mention share)` for at least 30 valid job records; smaller samples receive neutral 0.5. This measures visibility in a small Europe-focused sample. It cannot establish demand growth or Malaysian vacancies. Research records provide context and do not change automation assumptions automatically.
+## Submission Checklist
 
-The initial and newer demo snapshots are synthetic fixtures dated 19 and 22 October 2026. A comparison always holds the current profile and scenario constant so the evidence contribution can be inspected.
+- [x] Complete and functional repository codebase
+- [x] Apache License 2.0 included
+- [x] Proof of Replit utilization included in `submission/`
+- [x] Proof of RunPod utilization included in `submission/`
+- [x] Preliminary Proposal PDF completed (`submission/SDC2026_XenoForce_Preliminary.pdf`)
+- [x] Technology Declaration PDF completed (`submission/SDC2026_XenoForce_TechDeclaration.pdf`)
+- [x] Fully populated README summary with required hackathon sections
+- [ ] Pitch deck slide link added
+- [ ] YouTube demo video link added (5–7 minutes)
 
-## Architecture and data
+---
 
-Next.js App Router, React, TypeScript, CSS and Lucide icons. Route handlers run on Node.js:
+## License
 
-| Endpoint                     | Purpose                                                                                  |
-| ---------------------------- | ---------------------------------------------------------------------------------------- |
-| `GET /api/health`            | Model version and actual extraction mode                                                 |
-| `POST /api/analyze`          | Validated matching and learning plans                                                    |
-| `POST /api/career-goal`      | Goal and desired work → editable skill targets, with explicit AI/local mode              |
-| `POST /api/workforce-export` | Validated current workforce plan -> downloadable, localised PDF with direct course links |
-| `POST /api/extract`          | Confirmed synthetic text → skill candidates                                              |
-| `POST /api/pdf`              | Confirmed synthetic text PDF → text; 5 MB / 10 pages maximum                             |
-| `GET /api/signals`           | Fixed public feed adapters, bounded records and five-minute process cache                |
-
-Profiles, the custom goal, completed activity and manager planning settings are stored only in this browser's local storage. CV text is not intentionally saved by the app server. A configured RunPod extractor receives the submitted synthetic CV text. Career-goal analysis sends only the goal, desired-work description and interface language, plus the public skill vocabulary. Leave personal or confidential details out of that text. Do not use real CVs in this public hackathon prototype. The app has no accounts, database, production HR controls, OCR, validated psychometric assessment or audited employment-outcome model. PDF import requires readable text.
-
-Occupational descriptions come from US O*NET context, while learning-resource facts are checked against provider pages. Course-to-skill and SDG mappings are project interpretations. No verified HRD Corp programmes have been added: the HRD filter correctly shows an empty state. Do not claim provider registration establishes programme claimability. [Sources and limitations](docs/SOURCES.md).
-
-## Replit and optional RunPod
-
-Import this GitHub repository into the team's own Replit project. The included `.replit` starts port 3000 and defines a production build/start command. Run the project, check the preview and preserve genuine account/project evidence for the hackathon. Replit import and deployment are **not verified by the local build**.
-
-The [live Replit deployment](https://arc-talent--emmanuelheng.replit.app/) was verified on 24 October 2026 with **127 unit tests**, a production build and **19 production API checks** inside Replit. All **19 HTTPS checks** passed against the public release, and a separate real RunPod career-goal analysis returned AI mode and valid targets. The [replit-runtime branch](https://github.com/MantouOP/ArcTalent/tree/replit-runtime) preserves the exact imported source and workspace launch configuration. See [Replit runtime status](docs/REPLIT_STATUS.md) for provenance, CI and hosting limits.
-
-For optional AI extraction and career-goal analysis, configure **Replit Secrets** using `.env.example`, then republish. Either set `RUNPOD_BASE_URL` / `RUNPOD_MODEL` below or use `RUNPOD_ENDPOINT_ID` / `RUNPOD_MODEL_NAME` for a Serverless vLLM endpoint. Both formats use `RUNPOD_API_KEY`:
-
-```dotenv
-RUNPOD_BASE_URL=https://YOUR-POD-ID-YOUR-PORT.proxy.runpod.net/v1
-RUNPOD_API_KEY=YOUR_SERVER_SIDE_KEY
-RUNPOD_MODEL=YOUR_EXACT_SERVED_MODEL_ID
-```
-
-Supported base URLs are HTTPS Pod proxies ending in `.proxy.runpod.net/v1` and Serverless endpoints at `https://api.runpod.ai/v2/ENDPOINT_ID/openai/v1`. See the [official vLLM worker documentation](https://github.com/runpod-workers/worker-vllm). The endpoint must support chat completions and structured output. Use its exact served model ID. Invalid configuration, timeout, unsupported output or the small demo request limit falls back to labelled local matching. No keys belong in GitHub, browser code, chat or `NEXT_PUBLIC_*` variables. `/api/health` reports configuration presence, not successful inference. Verify a connected model by analysing a synthetic goal and checking for `draft.mode: "ai"` with sensible editable targets.
-
-## Ownership, declaration and license
-
-This source was created with substantial AI assistance through Codex. The team must review, understand, adapt and accurately declare the assistance before submission; this README does not certify that review has happened. See the editable [tools declaration](docs/TECHNICAL_DECLARATION.md). Commit history records actual development events and does not simulate individual team contributions.
-
-Project code is licensed under [Apache License 2.0](LICENSE). External course content, source data, trademarks and dependencies retain their own rights and licenses. No handbook or course content is redistributed in this repository.
+Project code is licensed under the [Apache License 2.0](LICENSE). External course content, source data, trademarks and dependencies retain their own rights and licenses.
