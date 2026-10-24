@@ -53,3 +53,6 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Generated ArcTalent runtime history exports
+ArcTalent-*-runtime.bundle*
