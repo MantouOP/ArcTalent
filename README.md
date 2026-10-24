@@ -3,7 +3,7 @@
 > **Skills that travel with you.** An adaptive, explainable reskilling command center that helps working adults and SME managers navigate evolving labour markets under moderate and rapid AI adoption scenarios.
 
 ### 🌟 Quick Links:
-👉 **[📊 Open Canva Pitch Deck Slides](https://canva.link/upnutijay2qn7vn)** · **[🚀 Open Live App Demo](https://arc-talent--emmanuelheng.replit.app/)** · **[📁 View Official Submission PDFs](submission/)**
+👉 **[🎥 Watch YouTube Demo Video](https://youtu.be/PYpaD5IAYpE)** · **[📊 Open Canva Pitch Deck Slides](https://canva.link/upnutijay2qn7vn)** · **[🚀 Open Live App Demo](https://arc-talent--emmanuelheng.replit.app/)** · **[📁 View Official Submission PDFs](submission/)**
 
 ---
 
@@ -29,7 +29,7 @@
 | **☁️ Replit Team Project** | [https://replit.com/@EmmanuelHeng/ArcTalent](https://replit.com/@EmmanuelHeng/ArcTalent) |
 | **🌿 Replit Runtime Branch** | [https://github.com/MantouOP/ArcTalent/tree/replit-runtime](https://github.com/MantouOP/ArcTalent/tree/replit-runtime) |
 | **⚡ RunPod Serverless Endpoint** | `https://api.runpod.ai/v2/` *(Qwen/Qwen2.5-7B-Instruct vLLM)* |
-| **🎥 Demo Walkthrough Video** | *(Paste your 5–7 min YouTube demo link here)* |
+| **🎥 Demo Walkthrough Video** | **[👉 Watch on YouTube (5–7 min)](https://youtu.be/PYpaD5IAYpE)** |
 
 ---
 
@@ -37,6 +37,7 @@
 
 All required official submission deliverables are accessible below and archived in the [`submission/`](submission/) directory:
 
+- 🎥 **Pitching & Demo Video**: **[Watch on YouTube](https://youtu.be/PYpaD5IAYpE)**
 - 📊 **Pitch Deck Slides**: **[Open Canva Presentation](https://canva.link/upnutijay2qn7vn)**
 - 📄 **Preliminary Proposal PDF**: [`submission/SDC2026_XenoForce_Preliminary.pdf`](submission/SDC2026_XenoForce_Preliminary.pdf)
 - 📄 **Technical Tools Declaration PDF**: [`submission/SDC2026_XenoForce_TechDeclaration.pdf`](submission/SDC2026_XenoForce_TechDeclaration.pdf)
@@ -151,7 +152,7 @@ $$\text{Suitability} = 55\% \times \text{Skill Coverage} + 15\% \times \text{Int
 - [x] Technology Declaration PDF completed (`submission/SDC2026_XenoForce_TechDeclaration.pdf`)
 - [x] Fully populated README summary with required hackathon sections
 - [x] Pitch deck slide link added ([Canva Slide Deck](https://canva.link/upnutijay2qn7vn))
-- [ ] YouTube demo video link added (5–7 minutes)
+- [x] YouTube demo video link added ([YouTube Demo Video](https://youtu.be/PYpaD5IAYpE))
 
 ---
 
