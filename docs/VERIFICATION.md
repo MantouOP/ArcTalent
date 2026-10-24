@@ -141,7 +141,9 @@ The exact source was imported into Replit and independently passed all 95 unit t
 - The dialog and document had no horizontal overflow at 320 × 740, 375 × 812 and 700 × 900, including larger Chinese/Malay text. Default desktop layout also inspected. No warning/error entries captured.
 - An independent read-only review identified a missing desktop guide-input selector; the fixed larger-text field measured 16px at 700px instead of the reproduced 12px. Storage-unavailable behavior is source-reviewed; no browser storage failure was injected.
 
-Public Settings release evidence is recorded in [Replit status](REPLIT_STATUS.md) after publication.
+The exact source `e8ab8d0` was imported unchanged into Replit and passed a locked install, 100 unit tests, the production build and 14 integration checks. Runtime `ef59495` is pushed to `replit-runtime`; both source and runtime CI passed. Replit reports **Live**, with the new public launcher first observed at 09:49:21 MYT on 24 October. All **14 public HTTPS integration checks passed**.
+
+Public Chrome verified the three Settings languages, 16px larger reading text, 0s transitions with manual reduced motion, and saved language/display choices after reload. Chinese at 320 × 740 and Malay at 375 × 812 had no document/dialog horizontal overflow. Reset cancellation and its focus restoration worked; Escape returned focus to the header launcher. English and display defaults were restored with Aina's moderate baseline retained. No canvas elements or application warning/error entries were captured; one logged error originated from a browser extension. The [live Settings screenshot](images/settings-live.jpg), [phone screenshot](images/settings-mobile-live.jpg) and [release provenance](REPLIT_STATUS.md) record the result. Temporary viewport overrides were reset.
 
 ## External verification still pending
 

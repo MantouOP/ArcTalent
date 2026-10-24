@@ -1,8 +1,18 @@
 # Replit runtime and publishing verification
 
-Verified on **23 October 2026** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
+Verified on **24 October 2026** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
-## Career and learning guide — Live
+## Settings — live
+
+Canonical source `e8ab8d077a58f56d45209adfaf187c678e688d6d` adds language, reading-size, reduced-motion, profile-shortcut and demo-data settings. Its [GitHub CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40050258636). Replit imported it unchanged into `artifacts/arctalent-release-e8ab8d0`; Git tree comparisons before installation and after downloading the runtime history confirmed exact source equality. A locked install, **100 unit tests**, the production build and all **14 production integration checks** passed inside Replit.
+
+Runtime commit `ef59495988dd903d1c816da7d6d133fcac8f16e3` switches the launch configuration to that directory and retains its predecessor. Its 8,155,924-byte incremental Git bundle was downloaded, verified and pushed to `replit-runtime`; it requires ancestor `df121b63a20389cca2126eaad0e3cc8df047cc65`. Its [runtime CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40050691283). The default extraction mode, existing APIs and dependencies remain unchanged.
+
+Replit reports **Live** after its build, security checks, bundle and promotion completed. The public Settings launcher was observed at **2026-10-24 01:49:21 UTC (09:49:21 MYT)**. All **14 public HTTPS integration checks passed**, including the Settings/chat launchers, API/engine parity and synthetic PDF parsing. Promotion completed without cancellation or source changes, approximately 14 minutes after publishing began.
+
+Public Chrome verified English, Malay and Simplified Chinese Settings; larger text measured 16px, manual reduced motion produced a 0s button transition, and Chinese/larger-text/reduced-motion preferences survived reload. Reset confirmation focused Cancel, cancellation returned focus to Reset demo data, and Escape returned focus to the header Settings trigger. There was no document/dialog horizontal overflow at 320 × 740 with larger Chinese text or 375 × 812 with larger Malay text. Display defaults and English were restored, with Aina's moderate baseline retained. Zero canvas elements were present. The captured log contained one browser-extension bridge error and no application warning/error entries. The [live Settings screenshot](images/settings-live.jpg) and [phone screenshot](images/settings-mobile-live.jpg) record the deployed interface; temporary viewport overrides were reset.
+
+## Previously published career and learning guide
 
 Canonical source `bfc8eab51c22f17f3e426f2f92d5547168a8b1a9` adds the multilingual plan-based career guide. Its [GitHub CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/39971315998). Replit imported the complete source unchanged into `artifacts/arctalent-release-bfc8eab`; Git tree comparisons before installation and after downloading the runtime history confirmed exact source equality. A locked install, **95 unit tests**, the production build and all **14 production integration checks** passed inside Replit.
 
@@ -71,16 +81,16 @@ The runtime history was exported from Replit, verified with `git bundle verify`,
 From the Replit workspace root:
 
 ```sh
-npm --prefix artifacts/arctalent-release-bfc8eab ci --workspaces=false
-npm --prefix artifacts/arctalent-release-bfc8eab run build
-npm --prefix artifacts/arctalent-release-bfc8eab run start -- --port 23585
+npm --prefix artifacts/arctalent-release-e8ab8d0 ci --workspaces=false
+npm --prefix artifacts/arctalent-release-e8ab8d0 run build
+npm --prefix artifacts/arctalent-release-e8ab8d0 run start -- --port 23585
 ```
 
-For development, use `npm --prefix artifacts/arctalent-release-bfc8eab run dev -- --port 23585`.
+For development, use `npm --prefix artifacts/arctalent-release-e8ab8d0 run dev -- --port 23585`.
 
 ## Publishing and submission evidence
 
-**[Live ArcTalent demo](https://arc-talent--emmanuelheng.replit.app/)** — verified publicly on 23 October 2026. Replit reports Live, public access, Autoscale and the Asia region. The [current live screenshot](images/career-chat-live.jpg) records the multilingual interface and career guide. Use this URL for the working-prototype field and the team project URL for project-history evidence.
+**[Live ArcTalent demo](https://arc-talent--emmanuelheng.replit.app/)** — verified publicly on 24 October 2026. Replit reports Live, public access, Autoscale and the Asia region. The [current live screenshot](images/settings-live.jpg) records Settings above the multilingual interface. Use this URL for the working-prototype field and the team project URL for project-history evidence.
 
 The original publishing attempt passed build/security/bundling but stayed at Promote for 16 minutes. It was cancelled and retried once. The retry completed promotion after a further delay, without application or launch-configuration changes. The temporary workspace test port was confirmed closed. That original publication used source `2a5b6cf`; the acceptance release is recorded above.
 
