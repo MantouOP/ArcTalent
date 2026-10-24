@@ -1,4 +1,4 @@
-import { ArcTalentApp } from '@/components/arctalent-app';
+import { Introduction } from '@/components/introduction';
 export default function Page() {
-  return <ArcTalentApp />;
+  return <Introduction />;
 }

@@ -1,5 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 /* Orion visual system. Application data and behavior are unchanged. */
+.sidebar-note .introduction-link {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  border-radius: 8px;
+}
+.sidebar-note .introduction-link:hover {
+  color: var(--ink);
+  background: var(--raised);
+}
 :root {
   color-scheme: dark;
   --ink: #ffffff;
@@ -1531,10 +1543,12 @@ input[type='checkbox'] {
 }
 .slot-inputs {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 6px 16px;
 }
 .slot-inputs label {
+  min-width: 0;
+  overflow-wrap: anywhere;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1542,10 +1556,16 @@ input[type='checkbox'] {
   font-size: 11px;
 }
 .slot-inputs input {
+  flex: 0 0 58px;
   width: 58px !important;
   margin: 0 !important;
   padding: 5px 7px !important;
   min-height: 32px !important;
+}
+@media (max-width: 600px) {
+  .slot-inputs {
+    grid-template-columns: 1fr;
+  }
 }
 .training-group {
   display: flex;

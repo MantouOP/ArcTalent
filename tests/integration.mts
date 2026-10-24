@@ -6,7 +6,12 @@ import { rankRoles } from '../src/lib/engine';
 import { buildCustomSnapshot } from '../src/lib/custom-inputs';
 import { goalDraftSchema } from '../src/lib/career-goals';
 import { PDFParse } from 'pdf-parse';
-import { restoreWorkforceSettings } from '../src/lib/workforce-settings';
+import {
+  applyWorkforceGoal,
+  restoreWorkforceSettings,
+} from '../src/lib/workforce-settings';
+import { analyseGoalLocally, careerGoalSchema } from '../src/lib/career-goals';
+import { detailedWorkforcePayload } from './fixtures/workforce-detailed';
 
 const origin = process.env.TEST_BASE_URL || 'http://localhost:3000';
 const post = (path: string, body: unknown) =>
@@ -21,8 +26,21 @@ async function check(name: string, action: () => Promise<void>) {
   checks++;
   console.log(`PASS ${name}`);
 }
-await check('production page renders', async () => {
-  const response = await fetch(origin);
+await check(
+  'introduction opens before the dashboard and links to both workspaces',
+  async () => {
+    const response = await fetch(origin);
+    assert.equal(response.status, 200);
+    const html = await response.text();
+    assert.match(html, /A new direction/);
+    assert.match(html, /href="\/workspace"/);
+    assert.match(html, /href="\/workspace\/team"/);
+    assert.match(html, /Language \/ Bahasa \/ 语言/);
+    assert.doesNotMatch(html, /Career command center|Workforce command center/);
+  },
+);
+await check('production workspace renders', async () => {
+  const response = await fetch(origin + '/workspace');
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /ArcTalent/);
@@ -81,6 +99,63 @@ await check(
   },
 );
 await check(
+  'custom workforce destinations export exact courses and specialist gaps for the selected worker',
+  async () => {
+    const goal = careerGoalSchema.parse(
+      analyseGoalLocally({
+        title: 'Frontend developer',
+        description: 'HTML CSS and JavaScript',
+      }),
+    );
+    const workforce = applyWorkforceGoal(
+      { ...restoreWorkforceSettings(), members: [baseProfile] },
+      baseProfile.id,
+      goal,
+      1,
+    );
+    const response = await post('/api/workforce-export', {
+      profile: baseProfile,
+      workforce,
+      scenario: 'rapid',
+      snapshot: { ...baseline, signals: [] },
+      locale: 'en',
+    });
+    assert.equal(response.status, 200);
+    const bytes = Buffer.from(await response.arrayBuffer());
+    assert.ok(
+      bytes
+        .toString('latin1')
+        .includes(
+          '/URI (https://openclassrooms.com/us/courses/5265446-build-your-first-web-pages-with-html-and-css)',
+        ),
+    );
+    const parser = new PDFParse({ data: new Uint8Array(bytes) });
+    try {
+      const { text } = await parser.getText();
+      assert.match(text, /Frontend developer/);
+      assert.match(text, /Accessibility testing/);
+      assert.match(text, /Specialist skills not covered/);
+    } finally {
+      await parser.destroy();
+    }
+  },
+);
+await check(
+  'a detailed ten-worker custom plan remains inside the bounded PDF request allowance',
+  async () => {
+    const payload = detailedWorkforcePayload();
+    assert.ok(JSON.stringify(payload).length > 128000);
+    const response = await post('/api/workforce-export', payload);
+    assert.equal(response.status, 200);
+    assert.equal(
+      Buffer.from(await response.arrayBuffer())
+        .subarray(0, 5)
+        .toString(),
+      '%PDF-',
+    );
+  },
+);
+await check(
   'an explicitly empty workforce produces a localised PDF without demo workers',
   async () => {
     const response = await post('/api/workforce-export', {
@@ -120,7 +195,7 @@ await check(
       400,
     );
     assert.equal(
-      (await post('/api/workforce-export', { description: 'x'.repeat(64001) }))
+      (await post('/api/workforce-export', { description: 'x'.repeat(512001) }))
         .status,
       413,
     );

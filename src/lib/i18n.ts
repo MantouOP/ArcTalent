@@ -14,6 +14,10 @@ import goalsMs from './messages/goals.ms.json';
 import goalsZh from './messages/goals.zh-CN.json';
 import pdfMs from './messages/pdf.ms.json';
 import pdfZh from './messages/pdf.zh-CN.json';
+import workforceGoalsMs from './messages/workforce-goals.ms.json';
+import workforceGoalsZh from './messages/workforce-goals.zh-CN.json';
+import introductionMs from './messages/introduction.ms.json';
+import introductionZh from './messages/introduction.zh-CN.json';
 
 export const locales = ['en', 'ms', 'zh-CN'] as const;
 export type Locale = (typeof locales)[number];
@@ -44,6 +48,8 @@ export const dictionaries: Record<
     ...inputsMs,
     ...goalsMs,
     ...pdfMs,
+    ...workforceGoalsMs,
+    ...introductionMs,
     ...ms,
   },
   'zh-CN': {
@@ -54,6 +60,8 @@ export const dictionaries: Record<
     ...inputsZh,
     ...goalsZh,
     ...pdfZh,
+    ...workforceGoalsZh,
+    ...introductionZh,
     ...zh,
   },
 };

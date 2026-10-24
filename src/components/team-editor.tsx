@@ -1,7 +1,10 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import type { Profile } from '@/lib/types';
-import type { WorkforceSettings } from '@/lib/workforce-settings';
+import {
+  removeWorkforceMember,
+  type WorkforceSettings,
+} from '@/lib/workforce-settings';
 import { createProfileDraft } from '@/lib/custom-inputs';
 import { profileSchema } from '@/lib/validation';
 import { ProfileFields } from './profile-fields';
@@ -172,16 +175,7 @@ export function TeamEditor({
             <button
               className="primary"
               onClick={() => {
-                const destinations = Object.fromEntries(
-                  Object.entries(workforce.destinations).filter(
-                    ([id]) => id !== remove,
-                  ),
-                );
-                onChange({
-                  ...workforce,
-                  members: team.filter((member) => member.id !== remove),
-                  destinations,
-                });
+                onChange(removeWorkforceMember(workforce, remove, team));
                 focusAddAfterRemove.current = true;
                 setRemove(null);
               }}

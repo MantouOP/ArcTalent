@@ -4,6 +4,10 @@ import { PDFParse } from 'pdf-parse';
 import { baseline, baseProfile, employees } from '../src/lib/catalogue';
 import { restoreWorkforceSettings } from '../src/lib/workforce-settings';
 import { buildWorkforcePlan } from '../src/lib/workforce-plan';
+import { applyWorkforceGoal } from '../src/lib/workforce-settings';
+import { analyseGoalLocally, careerGoalSchema } from '../src/lib/career-goals';
+import { POST } from '../src/app/api/workforce-export/route';
+import { detailedWorkforcePayload } from './fixtures/workforce-detailed';
 import {
   renderWorkforcePdf,
   workforceExportSchema,
@@ -16,6 +20,69 @@ const input = {
   snapshot: baseline,
   locale: 'en',
 };
+
+test('valid escaped ten-worker state exports without exceeding the transport allowance', async () => {
+  const payload = detailedWorkforcePayload();
+  assert.equal(workforceExportSchema.safeParse(payload).success, true);
+  const body = JSON.stringify(payload);
+  assert.ok(body.length > 128000);
+  const response = await POST(
+    new Request('http://localhost/api/workforce-export', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+    }),
+  );
+  assert.equal(response.status, 200);
+  assert.equal(
+    Buffer.from(await response.arrayBuffer())
+      .subarray(0, 5)
+      .toString(),
+    '%PDF-',
+  );
+});
+
+test('PDF includes custom destinations, worker-specific openings, exact course links and specialist gaps', async () => {
+  const goal = careerGoalSchema.parse(
+    analyseGoalLocally({
+      title: 'Frontend developer',
+      description: 'HTML CSS and JavaScript',
+    }),
+  );
+  const workforce = applyWorkforceGoal(
+    { ...input.workforce, members: [employees[1]] },
+    employees[1].id,
+    goal,
+    1,
+  );
+  const pdf = await renderWorkforcePdf(
+    workforceExportSchema.parse({ ...input, workforce }),
+  );
+  const parser = new PDFParse({ data: new Uint8Array(pdf) });
+  try {
+    const { text, pages } = await parser.getText();
+    assert.match(text, /Frontend developer/);
+    assert.match(text, /Daniel.*Frontend developer: 1/);
+    assert.match(text, /Accessibility testing/);
+    assert.match(text, /Specialist skills not covered/);
+    assert.match(text, /editable planning assumptions/);
+    assert.ok(
+      pages
+        .find((page) => page.text.includes('Shared training courses'))
+        ?.text.includes('Develop Your Critical Thinking'),
+      'The shared course heading stays with its first course',
+    );
+    assert.ok(
+      pdf
+        .toString('latin1')
+        .includes(
+          '/URI (https://openclassrooms.com/us/courses/5265446-build-your-first-web-pages-with-html-and-css)',
+        ),
+    );
+  } finally {
+    await parser.destroy();
+  }
+});
 test('PDF export has searchable plan text, exact course URLs and multiple numbered pages', async () => {
   const pdf = await renderWorkforcePdf(
     workforceExportSchema.parse(input),

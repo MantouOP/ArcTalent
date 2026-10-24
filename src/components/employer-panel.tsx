@@ -8,11 +8,12 @@ import {
   Clock3,
   ArrowUpRight,
 } from 'lucide-react';
-import { roles, sdgUrl } from '@/lib/catalogue';
+import { sdgUrl } from '@/lib/catalogue';
 import { buildWorkforcePlan } from '@/lib/workforce-plan';
 import type { Profile, Scenario, Snapshot } from '@/lib/types';
 import type { WorkforceSettings } from '@/lib/workforce-settings';
 import { TeamEditor } from './team-editor';
+import { WorkforceDestination } from './workforce-destination';
 import { CourseLink } from './course-link';
 import { downloadFile, External, Tag } from './ui';
 import { useI18n } from './language-provider';
@@ -34,12 +35,20 @@ export function EmployerPanel({
   const { t, locale } = useI18n();
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState(false);
-  const { destinations, budget, slots } = workforce;
-  const { team, allocations, groups, allocated, hours, learners, shown } =
-    useMemo(
-      () => buildWorkforcePlan(profile, scenario, snapshot, workforce),
-      [profile, scenario, snapshot, workforce],
-    );
+  const { budget, slots } = workforce;
+  const {
+    team,
+    allocations,
+    groups,
+    allocated,
+    hours,
+    learners,
+    shown,
+    openings,
+  } = useMemo(
+    () => buildWorkforcePlan(profile, scenario, snapshot, workforce),
+    [profile, scenario, snapshot, workforce],
+  );
   async function exportPdf() {
     if (exporting) return;
     setExporting(true);
@@ -171,27 +180,13 @@ export function EmployerPanel({
                   <td>
                     <strong>{row.profile.name}</strong>
                     <small>{t(row.profile.currentRole)}</small>
-                    <select
-                      aria-label={t('Destination role for {0}', {
-                        0: row.profile.name,
-                      })}
-                      value={row.role.id}
-                      onChange={(e) =>
-                        onChange({
-                          ...workforce,
-                          destinations: {
-                            ...destinations,
-                            [row.profile.id]: e.target.value,
-                          },
-                        })
-                      }
-                    >
-                      {roles.map((r) => (
-                        <option value={r.id} key={r.id}>
-                          {t(r.title)}
-                        </option>
-                      ))}
-                    </select>
+                    <WorkforceDestination
+                      profile={row.profile}
+                      role={row.role}
+                      snapshot={snapshot}
+                      workforce={workforce}
+                      onChange={onChange}
+                    />
                   </td>
                   {shown.map((s) => {
                     const required = row.role.requirements[s.id],
@@ -270,24 +265,47 @@ export function EmployerPanel({
             )}
           </p>
           <div className="slot-inputs">
-            {roles.map((r) => (
+            {openings.map(({ role: r, count, worker }) => (
               <label key={r.id}>
-                {t(r.shortTitle)}
+                {r.custom ? `${worker} · ${r.title}` : t(r.shortTitle)}
                 <input
                   type="number"
                   min={0}
                   max={10}
-                  value={slots[r.id] ?? 0}
+                  value={count}
                   onChange={(e) =>
                     onChange({
                       ...workforce,
-                      slots: {
-                        ...slots,
-                        [r.id]: Math.max(
-                          0,
-                          Math.min(10, Math.floor(Number(e.target.value))),
-                        ),
-                      },
+                      ...(r.custom
+                        ? {
+                            customDestinations: {
+                              ...workforce.customDestinations,
+                              [r.id.slice('custom:'.length)]: {
+                                ...workforce.customDestinations![
+                                  r.id.slice('custom:'.length)
+                                ],
+                                openings: Math.max(
+                                  0,
+                                  Math.min(
+                                    10,
+                                    Math.floor(Number(e.target.value)),
+                                  ),
+                                ),
+                              },
+                            },
+                          }
+                        : {
+                            slots: {
+                              ...slots,
+                              [r.id]: Math.max(
+                                0,
+                                Math.min(
+                                  10,
+                                  Math.floor(Number(e.target.value)),
+                                ),
+                              ),
+                            },
+                          }),
                     })
                   }
                 />

@@ -29,6 +29,7 @@ import {
   Users,
   Wallet,
   X,
+  Home,
 } from 'lucide-react';
 import { baseline, baseProfile, roles, sdgUrl, updated } from '@/lib/catalogue';
 import {
@@ -82,14 +83,18 @@ const navigation = [
   { id: 'profile' as const, label: 'My skills & profile', icon: UserRound },
 ];
 const defaultRole = rankRoles(baseProfile, 'moderate', baseline)[0].role.id;
-export function ArcTalentApp() {
+export function ArcTalentApp({
+  initialView = 'explore',
+}: {
+  initialView?: View;
+}) {
   const { t, locale } = useI18n();
   const { preferences: displayPreferences } = useDisplayPreferences();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [customGoal, setCustomGoal] = useState<CareerGoal | null>(null);
   const candidates = useMemo(() => goalCandidates(customGoal), [customGoal]);
 
-  const [view, setView] = useState<View>('explore'),
+  const [view, setView] = useState<View>(initialView),
     [profile, setProfile] = useState<Profile>(baseProfile),
     [scenario, setScenario] = useState<Scenario>('moderate'),
     [snapshot, setSnapshot] = useState<Snapshot>(baseline),
@@ -353,6 +358,14 @@ export function ArcTalentApp() {
           ))}
         </nav>
         <div className="sidebar-note">
+          <a
+            href="/"
+            className="introduction-link"
+            title={t('Back to introduction')}
+            aria-label={t('Back to introduction')}
+          >
+            <Home size={20} />
+          </a>
           <button
             type="button"
             onClick={() => setSettingsOpen(true)}
@@ -399,10 +412,14 @@ export function ArcTalentApp() {
       <div className="app-content">
         <header className="topbar">
           <div className="breadcrumb">
-            <span className="topbar-brand">
+            <a
+              className="topbar-brand"
+              href="/"
+              aria-label={t('Back to introduction')}
+            >
               {t('ArcTalent')}
               <span className="product-label"> {t('/ WORKSPACE')}</span>
-            </span>
+            </a>
             <ChevronRight size={13} />
             <strong>{t(navigation.find((n) => n.id === view)?.label)}</strong>
           </div>

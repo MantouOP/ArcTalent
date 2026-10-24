@@ -1,5 +1,6 @@
 import { roles, skills } from './catalogue';
-import { buildPlan, rankRoles } from './engine';
+import { buildPlan, rankRoles, matchRole } from './engine';
+import { goalToRole } from './career-goals';
 import type { Course, Profile, Scenario, Snapshot } from './types';
 import {
   getWorkforceMembers,
@@ -17,20 +18,27 @@ export function buildWorkforcePlan(
   const team = getWorkforceMembers(workforce, profile);
   const rows = team.map((p) => {
     const ranked = rankRoles(p, scenario, snapshot);
-    const role =
-      roles.find((r) => r.id === destinations[p.id]) ?? ranked[0].role;
+    const custom =
+      destinations[p.id] === 'custom-goal'
+        ? workforce.customDestinations?.[p.id]
+        : undefined;
+    const role = custom
+      ? { ...goalToRole(custom.goal), id: `custom:${p.id}` }
+      : (roles.find((r) => r.id === destinations[p.id]) ?? ranked[0].role);
     return {
       profile: p,
       role,
-      match: ranked.find((m) => m.role.id === role.id)!,
+      match: matchRole(p, role, scenario, snapshot),
       plan: buildPlan(p, role),
+      specialistSkills: custom?.goal.otherSkills ?? [],
+      openings: custom?.openings ?? slots[role.id] ?? 0,
     };
   });
   const groups = new Map<string, { course: Course; names: string[] }>();
   let allocated = 0;
   const used: Record<string, number> = {};
   const allocations = rows.map((row) => {
-    const slotOk = (used[row.role.id] ?? 0) < (slots[row.role.id] ?? 0),
+    const slotOk = (used[row.role.id] ?? 0) < row.openings,
       budgetOk = allocated + row.plan.totalCost <= budget;
     if (slotOk && budgetOk) {
       used[row.role.id] = (used[row.role.id] ?? 0) + 1;
@@ -52,7 +60,7 @@ export function buildWorkforcePlan(
         ? 'No internal slot'
         : !budgetOk
           ? 'Over team budget'
-          : row.plan.uncovered.length
+          : row.plan.uncovered.length || row.specialistSkills.length
             ? 'Partial learning route'
             : 'Learning route fits',
     };
@@ -67,5 +75,29 @@ export function buildWorkforcePlan(
   const shown = skills.filter((s) =>
     allocations.some((r) => r.role.requirements[s.id]),
   );
-  return { team, allocations, groups, allocated, hours, learners, shown };
+  const openings = [
+    ...roles.map((role) => ({ role, count: slots[role.id] ?? 0, worker: '' })),
+    ...team.flatMap((member) => {
+      const custom = workforce.customDestinations?.[member.id];
+      return custom
+        ? [
+            {
+              role: { ...goalToRole(custom.goal), id: `custom:${member.id}` },
+              count: custom.openings,
+              worker: member.name,
+            },
+          ]
+        : [];
+    }),
+  ];
+  return {
+    team,
+    allocations,
+    groups,
+    allocated,
+    hours,
+    learners,
+    shown,
+    openings,
+  };
 }

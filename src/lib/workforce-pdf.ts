@@ -5,7 +5,7 @@ import { profileSchema, snapshotSchema } from './validation';
 import { workforceSettingsSchema } from './workforce-settings';
 import { buildWorkforcePlan } from './workforce-plan';
 import { translate, type Locale, type TranslationValues } from './i18n';
-import { roles, skillById } from './catalogue';
+import { skillById } from './catalogue';
 import { MODEL_VERSION } from './engine';
 
 export const workforceExportSchema = z.object({
@@ -215,7 +215,7 @@ export function renderWorkforcePdf(
         text(t('No team members are included in this plan.'), 11);
       for (const row of plan.allocations) {
         const a = `${inline(row.profile.name)}\n${inline(row.profile.currentRole)}`;
-        const b = `${t(row.role.title)}\n${t(row.reason)}`;
+        const b = `${inline(row.role.custom ? row.role.title : t(row.role.title))}\n${t(row.reason)}`;
         const c = `${t('Planned hours')}: ${row.included ? row.plan.totalHours : 0}\nRM ${(row.included ? row.plan.totalCost : 0).toFixed(2)}`;
         const columns = [
           { text: a, x: left, w: 150 },
@@ -243,55 +243,64 @@ export function renderWorkforcePdf(
       );
       section('Proposed internal openings');
       text(
-        Object.entries(input.workforce.slots)
-          .map(([id, count]) => {
-            const role = roles.find((role) => role.id === id);
-            return `${role ? t(role.title) : id}: ${count}`;
+        plan.openings
+          .map(({ role, count, worker }) => {
+            return `${worker ? `${inline(worker)} · ` : ''}${inline(role.custom ? role.title : t(role.title))}: ${count}`;
           })
           .join(' | ') || t('No internal slot'),
         9,
         colors.muted,
       );
 
-      section('Shared training courses');
-      if (!plan.groups.size)
+      if (!plan.groups.size) {
+        section('Shared training courses');
         text(
           t('No training is allocated under the current constraints.'),
           10,
           colors.muted,
         );
+      }
+      let firstCourse = true;
       for (const { course, names } of plan.groups.values()) {
-        block(
-          [
-            { value: course.title, size: 12, color: colors.ink, gap: 5 },
-            {
-              value: `${course.provider} | ${course.hours} ${t('hours')} (${t(course.durationKind)}) | RM ${course.fee.toFixed(2)} ${t('per learner')}`,
-              size: 9,
-              color: colors.muted,
-              gap: 5,
-            },
-            {
-              value: `${t('Learners')}: ${names.map(inline).join(', ')}`,
-              size: 9,
-              color: colors.ink,
-              gap: 5,
-            },
-            {
-              value: course.url,
-              size: 8,
-              color: colors.cyan,
-              gap: 5,
-              link: course.url,
-            },
-            {
-              value: `${t('Source checked')} ${course.checkedAt}`,
-              size: 8,
-              color: colors.muted,
-              gap: 8,
-            },
-          ],
-          14,
-        );
+        const courseLines: Line[] = [
+          { value: course.title, size: 12, color: colors.ink, gap: 5 },
+          {
+            value: `${course.provider} | ${course.hours} ${t('hours')} (${t(course.durationKind)}) | RM ${course.fee.toFixed(2)} ${t('per learner')}`,
+            size: 9,
+            color: colors.muted,
+            gap: 5,
+          },
+          {
+            value: `${t('Learners')}: ${names.map(inline).join(', ')}`,
+            size: 9,
+            color: colors.ink,
+            gap: 5,
+          },
+          {
+            value: course.url,
+            size: 8,
+            color: colors.cyan,
+            gap: 5,
+            link: course.url,
+          },
+          {
+            value: `${t('Source checked')} ${course.checkedAt}`,
+            size: 8,
+            color: colors.muted,
+            gap: 8,
+          },
+        ];
+        if (firstCourse) {
+          ensure(
+            courseLines.reduce(
+              (sum, line) => sum + height(line.value, line.size) + line.gap,
+              height(t('Shared training courses'), 15) + 38,
+            ),
+          );
+          section('Shared training courses');
+          firstCourse = false;
+        }
+        block(courseLines, 14);
         rule();
       }
 
@@ -309,9 +318,14 @@ export function renderWorkforcePdf(
           );
         block(
           [
-            { value: row.profile.name, size: 14, color: colors.purple, gap: 5 },
             {
-              value: `${row.profile.currentRole} -> ${t(row.role.title)}`,
+              value: inline(row.profile.name),
+              size: 14,
+              color: colors.purple,
+              gap: 5,
+            },
+            {
+              value: `${inline(row.profile.currentRole)} -> ${inline(row.role.custom ? row.role.title : t(row.role.title))}`,
               size: 10,
               color: colors.ink,
               gap: 5,
@@ -341,6 +355,30 @@ export function renderWorkforcePdf(
               color: colors.muted,
               gap: 8,
             },
+            ...(row.role.custom
+              ? [
+                  {
+                    value: t(
+                      'Your learning targets are editable planning assumptions, not official role requirements.',
+                    ),
+                    size: 9,
+                    color: colors.muted,
+                    gap: 8,
+                  },
+                ]
+              : []),
+            ...(row.specialistSkills.length
+              ? [
+                  {
+                    value: t('Specialist skills not covered: {0}', {
+                      0: row.specialistSkills.join('; '),
+                    }),
+                    size: 9,
+                    color: colors.muted,
+                    gap: 8,
+                  },
+                ]
+              : []),
           ],
           65,
         );
@@ -354,7 +392,7 @@ export function renderWorkforcePdf(
               pdf.addPage();
               y = 80;
               text(
-                `${row.profile.name} - ${t('Learning schedule (continued)')}`,
+                `${inline(row.profile.name)} - ${t('Learning schedule (continued)')}`,
                 11,
                 colors.purple,
                 10,

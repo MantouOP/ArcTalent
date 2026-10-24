@@ -17,7 +17,7 @@ npm ci
 npm run dev
 ```
 
-Open http://localhost:3000. No API key or database is needed for the core demo.
+Open http://localhost:3000 for the introduction, then choose **Explore my pathway** or **Plan for my team**. The application is at `/workspace`; `/workspace/team` enters SME planning directly. No API key or database is needed for the core demo.
 
 ```sh
 npm run typecheck
@@ -36,7 +36,7 @@ npm run test:integration
 2. Open **My learning pathway**. Moderate adoption leads with Business Intelligence Analyst. The shared foundation is data literacy and critical thinking.
 3. Switch to **Rapid adoption**. Project Management Specialist becomes the leading route; the later courses change while the foundation stays highlighted. Keep “Follow the leading recommendation” checked for this demonstration. Choosing a destination manually pins it.
 4. Open **Evidence lab → Apply newer demo snapshot**. Inspect the dated source fixture and the score differences. This replay is explicitly simulated.
-5. Open **SME workspace** for eight initial synthetic workers, a role-specific gap heatmap, internal capacity controls, grouped training and planned SDG activities. Add, edit or remove fictional team members; the roster supports up to ten people and is saved in this browser.
+5. Open **SME workspace** for eight initial synthetic workers, a role-specific gap heatmap, internal capacity controls, grouped training and planned SDG activities. Add, edit or remove fictional team members; the roster supports up to ten people and is saved in this browser. Type a destination in any worker's heatmap row. Known suggestions can be applied as presets; other titles open **Review goal**, where AI/manual targets, proposed openings and real course previews can be reviewed before applying to that worker. Specialist gaps remain explicit, and PDF export includes the custom destination.
 6. Try **My skills & profile** with the supplied [TXT](public/synthetic-cv.txt) or [PDF](public/synthetic-cv.pdf). The import action explains and focuses the required synthetic-data confirmation. Review every detected skill before using it. **Start a blank profile** creates a draft without inherited skills or interests.
 7. Try **Start the quick check** in the profile. Type a work goal and practice idea, choose the matching categories, and enter a session length from 5 to 180 minutes or use a preset. Review and apply them to the draft, then save. Your original answers and calculated study rhythm appear in the pathway. Reset before repeating the baseline scenario demonstration.
 8. Use the header language selector to switch between **English**, **Bahasa Melayu** and **简体中文**. The browser remembers your choice. Language changes preserve drafts and planning settings; names, CV evidence, original resource titles and exported data remain unchanged.
@@ -60,6 +60,7 @@ See the timed [demo script](docs/DEMO.md), [editable implementation plan](docs/I
 - A floating career and learning guide in all three languages. Replies explain the current selected route and filtered plan, link to catalogue sources and open relevant views. Up to 20 questions stay in memory in the current tab; closing preserves them and clearing removes them. New replies use current data while older replies retain their original context.
 - Multilingual Settings for language, reading text, reduced motion and demo-data controls. The native dialog preserves the active workspace and unsaved profile draft; device reduced motion is respected. No account is required.
 - A workforce heatmap, proposed internal openings, grouped training, PDF export and planned SDG contribution view. **SME workspace -> Export plan (PDF)** downloads a searchable report with current allocations, budgets, grouped course links, individual schedules and gaps. It follows the selected interface language and embeds a licensed font for Simplified Chinese. Exporting does not call AI or fetch external fonts.
+- A calm, translated introduction before the dashboard, with separate personal/SME entry links, a static illustrative route and short usage guidance. Home links preserve saved planning data. Each worker can have an independent typed destination and explicit custom-opening count; custom targets are reviewed planning assumptions, with verified catalogue courses and visible specialist gaps.
 - Dated synthetic replay, editable user-entered simulation snapshots and a real refresh adapter for Arbeitnow job postings and arXiv AI research, with source dates and partial-failure handling.
 - Optional RunPod-hosted model extraction and structured career-goal analysis through the AI SDK. Without a configured model, the app explicitly labels local suggestions and supports manual skill targets. AI can suggest known skill IDs; course titles and URLs always come from the checked catalogue.
 

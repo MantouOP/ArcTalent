@@ -29,6 +29,9 @@ export function CareerGoalPanel({
   funding,
   onApply,
   onClear,
+  workforceMode = false,
+  initialTitle = '',
+  onCancel,
 }: {
   profile: Profile;
   goal: CareerGoal | null;
@@ -36,9 +39,12 @@ export function CareerGoalPanel({
   funding: 'all' | 'free' | 'hrd';
   onApply: (goal: CareerGoal) => void;
   onClear: () => void;
+  workforceMode?: boolean;
+  initialTitle?: string;
+  onCancel?: () => void;
 }) {
   const { t, locale } = useI18n();
-  const [title, setTitle] = useState(goal?.title ?? '');
+  const [title, setTitle] = useState(goal?.title ?? initialTitle);
   const [description, setDescription] = useState(goal?.description ?? '');
   const [draft, setDraft] = useState<GoalDraft | null>(goal);
   const [otherText, setOtherText] = useState(
@@ -47,7 +53,7 @@ export function CareerGoalPanel({
   const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  const [editing, setEditing] = useState(!goal);
+  const [editing, setEditing] = useState(!goal || workforceMode);
   const revision = useRef(0);
   const pending = useRef<AbortController | null>(null);
   const titleField = useRef<HTMLInputElement>(null);
@@ -66,9 +72,9 @@ export function CareerGoalPanel({
       setDescription(goal.description);
       setDraft(goal);
       setOtherText(goal.otherSkills.join('\n'));
-      setEditing(false);
+      setEditing(workforceMode);
     }
-  }, [goal]);
+  }, [goal, workforceMode]);
   useEffect(
     () => () => {
       revision.current++;
@@ -106,11 +112,17 @@ export function CareerGoalPanel({
         ? buildPlan(
             profile,
             goalToRole(reviewed.data),
-            sharedFoundation(profile, snapshot, goalCandidates(reviewed.data)),
+            workforceMode
+              ? []
+              : sharedFoundation(
+                  profile,
+                  snapshot,
+                  goalCandidates(reviewed.data),
+                ),
             funding,
           )
         : null,
-    [reviewed, profile, snapshot, funding],
+    [reviewed, profile, snapshot, funding, workforceMode],
   );
 
   async function analyse() {
@@ -224,7 +236,13 @@ export function CareerGoalPanel({
     >
       <div className="panel-heading">
         <div>
-          <h2 id="career-goal-title">{t('Type your own career goal')}</h2>
+          <h2 id="career-goal-title">
+            {t(
+              workforceMode
+                ? 'Type a destination for this worker'
+                : 'Type your own career goal',
+            )}
+          </h2>
           <p>
             {t(
               'You can describe any destination. Review the suggested skills, then build a plan with real course links.',
@@ -243,6 +261,7 @@ export function CareerGoalPanel({
           {t('Career or learning goal')}
           <input
             ref={titleField}
+            autoFocus={workforceMode}
             value={title}
             minLength={2}
             maxLength={100}
@@ -312,6 +331,10 @@ export function CareerGoalPanel({
               type="button"
               className="text-button"
               onClick={() => {
+                if (onCancel) {
+                  onCancel();
+                  return;
+                }
                 invalidate();
                 setTitle(goal.title);
                 setDescription(goal.description);
@@ -376,9 +399,14 @@ export function CareerGoalPanel({
                 <span>
                   {t(skillById[id as SkillId].label)}
                   <small>
-                    {t('Your current level: {0}', {
-                      0: profile.skills[id as SkillId] ?? 0,
-                    })}
+                    {t(
+                      workforceMode
+                        ? 'Current level: {0}'
+                        : 'Your current level: {0}',
+                      {
+                        0: profile.skills[id as SkillId] ?? 0,
+                      },
+                    )}
                   </small>
                 </span>
                 <select
@@ -490,7 +518,7 @@ export function CareerGoalPanel({
                 if (reviewed.success) onApply(reviewed.data);
               }}
             >
-              {t('Build my pathway')}
+              {t(workforceMode ? 'Apply to this worker' : 'Build my pathway')}
               <ArrowRight size={16} />
             </button>
           </div>

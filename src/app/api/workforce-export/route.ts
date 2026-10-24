@@ -6,7 +6,7 @@ export const runtime = 'nodejs';
 export async function POST(request: Request) {
   let input;
   try {
-    const raw = await readBoundedText(request, 64000, 256000);
+    const raw = await readBoundedText(request, 512000, 2048000);
     if (raw === null)
       return NextResponse.json(
         { error: 'Export request is too large.' },
