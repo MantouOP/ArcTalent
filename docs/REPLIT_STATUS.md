@@ -2,6 +2,16 @@
 
 Verified on **24 October 2026** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
+## Workforce PDF export — live
+
+Canonical app source `59964dbcaaea1f7d6a182306f180e811f529c684` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). The SME workspace's **Export plan (PDF)** button downloads a searchable A4 report with clickable course links, current team constraints, allocations, course schedules, remaining gaps, evidence/scenario details and planned SDG activity. Report labels follow English, Bahasa Melayu or Simplified Chinese. The bundled licensed font is used only on the server. The [source CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40108727214).
+
+Replit imported the source unchanged at `artifacts/arctalent-release-59964db`. Exact Git tree comparisons passed both in Replit and against the downloaded runtime history. Locked installation, **136 unit tests**, the production build, **22 production integration checks** and the existing mandatory real-AI assertion passed before publishing. Shared allocation extraction preserves the displayed worker order, openings, budget and exclusion behavior.
+
+Runtime `8f85091ffe73987afbe5f3279bdc1169218ca579` selects this release and preserves the previous launch configuration. Its verified **13,875,645-byte** incremental bundle requires ancestor `9f5548384530192bea11024e429352c265820c7c` and is pushed to `replit-runtime`; its [runtime CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40108959819). Bounded cleanup removed **844,120 KiB** of untracked, regenerable old dependencies/build output while retaining all tracked sources/history and the complete new release.
+
+Replit reports **Live**. The public PDF route was observed at **2026-10-24 15:56:30 UTC (23:56:30 MYT)**. All **22 public HTTPS integration checks passed**, including real searchable PDF bytes, course-link annotations, translated empty-team reports and invalid/oversized input handling. Public Chrome downloaded English, Malay and Chinese PDFs matching the current seven-person roster, four planned learners, **87 person-hours**, RM 500 budget and rapid scenario. The English seven-page download contained **19 direct course links**. English and Chinese public reports were rendered and inspected; the final browser log check contained no warnings/errors. English was restored without resetting the user's saved team or career goal. The [live export screenshot](images/workforce-pdf-live.png) records the result.
+
 ## Custom AI career goals — live
 
 Canonical app source `339747509e078cd78cb5f50069916881420615dd` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). Its [source CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40104211096). Users can type a career goal and desired work, review structured AI skill suggestions, edit targets and specialist gaps, preview verified courses, then apply a persisted custom destination. Nineteen skills and seventeen checked learning resources are available. Custom targets/exposure remain planning assumptions; courses outside the verified catalogue are not invented.

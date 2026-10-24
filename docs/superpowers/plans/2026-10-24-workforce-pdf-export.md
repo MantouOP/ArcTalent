@@ -14,7 +14,7 @@
 - [x] Extract `src/lib/workforce-plan.ts` and reuse it in `employer-panel.tsx`; implement PDF validation/rendering and `POST /api/workforce-export` with bundled font/license and tracing configuration.
 - [x] Replace CSV action with PDF download, busy/error states and translated copy; preserve current settings and all existing allocation behavior.
 - [x] Run unit/type/format/build and production integration checks. Generate sample PDFs, render with Poppler, inspect pages and verify links/text. Test the actual browser download. Perform independent review and fix findings.
-- [ ] Push, import exact source into Replit, verify and publish. Confirm the public PDF download and preserve release evidence.
+- [x] Push, import exact source into Replit, verify and publish. Confirm the public PDF download and preserve release evidence.
 
 ## Review focus
 
@@ -24,6 +24,8 @@
 - Long names, translated copy and multi-page course lists must wrap without clipping or blank overflow pages; links must remain clickable.
 - Invalid/oversized requests must return a normal error, and download failures must restore the export button.
 
-Verification ledger:136 unit tests, typecheck and formatting pass. PDF pagination regressions were reproduced and fixed (extra footer pages, orphaned course links/headings, multiline-note overlap). Poppler/PDF extraction checks covered English/Malay seven-page reports, a ten-member long-Chinese twelve-page report, and an eighty-line note with all lines inside the reserved body area. Allocation extraction is unchanged; the independent reviewer confirmed parity. Final browser/build/deployment checks remain below.
+Verification ledger: 136 unit tests, typecheck and formatting pass. PDF pagination regressions were reproduced and fixed (extra footer pages, orphaned course links/headings, multiline-note overlap). Poppler/PDF extraction checks covered English/Malay seven-page reports, a ten-member long-Chinese twelve-page report, and an eighty-line note with all lines inside the reserved body area. Allocation extraction is unchanged; the independent reviewer confirmed parity. Final browser/build/deployment checks are recorded below.
 
 Local production verification: build and all 22 integration checks passed. Chrome downloads produced real seven-page PDFs with 23 direct course links. The English export matched the visible eight-person team, five planned learners, 109 person-hours and RM 500 budget. After changing the UI to rapid adoption, RM 250 and Simplified Chinese, the second export contained those current values and translated labels. Test preferences were restored. Independent re-review found no remaining important issues.
+
+Release verification: source `59964db` and runtime `8f85091` are pushed with successful CI. Exact imported-source equality, 136 tests, build, 22 integration checks and the real-AI assertion passed in Replit. The new public route was observed at 2026-10-24 15:56:30 UTC. All 22 public HTTPS checks and actual Chrome PDF downloads in all three languages passed. The public export matched the existing seven-person team, four learners and 87 person-hours; no saved user data was reset. English/Chinese public PDFs were rendered and visually inspected. Runtime details and screenshot are preserved in REPLIT_STATUS.md.

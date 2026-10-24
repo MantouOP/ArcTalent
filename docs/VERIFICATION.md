@@ -1,5 +1,17 @@
 # Verification record
 
+## Workforce PDF export — 24 October 2026
+
+Source `59964db` replaces the SME workspace CSV action with a direct PDF download. The displayed allocation calculation is extracted unchanged and shared with the validated Node export route. The report includes current scenario/evidence, team constraints, allocation statuses, shared courses, individual schedules, remaining gaps and planned SDG counts with their limitations. Course URLs are clickable. A locally bundled, SIL OFL licensed Noto font supports English, Bahasa Melayu and Simplified Chinese without external font or model requests during export.
+
+Type checking, formatting, **136 unit tests**, the production build and **22 production integration checks** passed locally. The [source CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40108727214). Empty teams, excluded workers, completed learning, direct link annotations, long Chinese names, multiline notes, bounded request streaming and invalid inputs are covered. Independent review confirmed allocation parity and identified a multiline-note margin issue; the fix and new regression checks passed re-review.
+
+Poppler-rendered English/Malay seven-page reports, a ten-member long-Chinese twelve-page report and an eighty-line note were visually inspected. Extraction checks found all note lines inside the reserved body area. Pagination fixes keep group URLs with course headings and section headings with their first content, without extra footer-only pages.
+
+Actual Chrome downloads yielded searchable seven-page PDFs with 23 direct links. The English report matched the visible eight-person team, five learners, 109 person-hours and RM 500 budget. Changing to rapid adoption, RM 250 and Simplified Chinese produced those current values and translated headings in the second PDF. Test preferences were restored. Replit independently passed all 136 tests, its build, 22 production checks and the existing real-AI assertion before publication. Public evidence is recorded in [runtime status](REPLIT_STATUS.md).
+
+The public release passed all **22 HTTPS checks**. Chrome downloaded all three report languages with the user's current seven-person team, four learners, 87 person-hours and rapid scenario; the English download contained 19 direct links. English and Chinese public reports were rendered and inspected. English was restored without changing the saved roster/scenario/custom career goal. The final browser log check contained no warnings/errors. The [live export screenshot](images/workforce-pdf-live.png) shows the published button.
+
 ## Custom AI career goals — 24 October 2026
 
 Source `3397475` adds typed destinations, optional desired-work descriptions, editable skill targets, specialist gaps and constrained course previews. Six curated occupations remain; the custom goal participates in matching, both scenarios, evidence differences, chat, exports and browser persistence. Nineteen skills and seventeen checked learning resources are available. AI cannot supply trusted course titles or URLs.
