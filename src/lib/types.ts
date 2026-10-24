@@ -2,7 +2,9 @@ export type Scenario = 'moderate' | 'rapid';
 export type LearningPreferences = {
   focus: 'data' | 'people' | 'operations' | 'sustainability';
   format: 'guided' | 'practice' | 'discussion';
-  sessionMinutes: 15 | 30 | 60;
+  sessionMinutes: number;
+  workAnswer?: string;
+  practiceAnswer?: string;
 };
 export type SkillId =
   | 'excel'

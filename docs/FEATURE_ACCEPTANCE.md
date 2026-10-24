@@ -1,6 +1,6 @@
 # ArcTalent feature acceptance — editable
 
-Reviewed **23 October 2026 (MYT)** against the team's three concept descriptions. This is a prototype acceptance record, not a claim that every proposed feature or career outcome is delivered.
+Reviewed **24 October 2026 (MYT)** against the team's three concept descriptions. This is a prototype acceptance record, not a claim that every proposed feature or career outcome is delivered.
 
 | Requested capability                                    | Actual implementation and evidence                                                                                                                                                                                                               | Status / limit                                                                                          |
 | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
@@ -24,6 +24,8 @@ Reviewed **23 October 2026 (MYT)** against the team's three concept descriptions
 | Replit deployment                                       | Public demo: https://arc-talent--emmanuelheng.replit.app/ . Exact deployed source and checks are tracked in REPLIT_STATUS.md.                                                                                                                    | See runtime record for release status                                                                   |
 
 ## Acceptance revision checks
+
+The 24 October custom-input revision adds blank fictional profiles, typed work/practice answers, 5–180-minute sessions, an editable team roster of up to ten people and dated user-entered simulation snapshots. Existing demo presets remain. CV import now explains its confirmation prerequisite, supports repeat-file selection and displays the selected filename. Applied assumptions are kept distinct from verified public evidence. Current verification and exact deployment provenance are recorded in [VERIFICATION.md](VERIFICATION.md) and [REPLIT_STATUS.md](REPLIT_STATUS.md).
 
 The 23 October career-guide addition explains current selected routes, learning steps, gaps, scenarios, time, budget, funding, evidence and team-planning context in English, Malay and Simplified Chinese. It uses deterministic local topic recognition and existing engine results, not an LLM or unrestricted question answering. No message is sent to an external service. The current funding-filtered personal plan stays authoritative; team allocation is delegated to the existing SME view. Unsupported questions show the supported scope. History is limited to 20 turns in tab memory, with explicit context-change notices.
 

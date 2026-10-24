@@ -7,10 +7,12 @@ import {
   Clock3,
   ArrowUpRight,
 } from 'lucide-react';
-import { employees, roles, skills, skillById, sdgUrl } from '@/lib/catalogue';
+import { roles, skills, skillById, sdgUrl } from '@/lib/catalogue';
 import { buildPlan, rankRoles } from '@/lib/engine';
 import type { Profile, Scenario, Snapshot } from '@/lib/types';
 import type { WorkforceSettings } from '@/lib/workforce-settings';
+import { getWorkforceMembers } from '@/lib/workforce-settings';
+import { TeamEditor } from './team-editor';
 import { downloadFile, External, Tag } from './ui';
 import { useI18n } from './language-provider';
 export function EmployerPanel({
@@ -19,18 +21,20 @@ export function EmployerPanel({
   snapshot,
   workforce,
   onChange,
+  onProfileChange,
 }: {
   profile: Profile;
   scenario: Scenario;
   snapshot: Snapshot;
   workforce: WorkforceSettings;
   onChange: (settings: WorkforceSettings) => void;
+  onProfileChange: (profile: Profile) => void;
 }) {
   const { t } = useI18n();
   const { destinations, budget, slots } = workforce;
   const team = useMemo(
-    () => employees.map((e) => (e.id === profile.id ? profile : e)),
-    [profile],
+    () => getWorkforceMembers(workforce, profile),
+    [workforce, profile],
   );
   const rows = team.map((p) => {
     const ranked = rankRoles(p, scenario, snapshot);
@@ -126,7 +130,9 @@ export function EmployerPanel({
     <>
       <div className="section-title">
         <div>
-          <span className="eyebrow">{t('SYNTHETIC COMPANY · 8 PEOPLE')}</span>
+          <span className="eyebrow">
+            {t('SYNTHETIC COMPANY · {0} PEOPLE', { 0: team.length })}
+          </span>
           <h2>{t('A stronger team starts with shared skills.')}</h2>
           <p className="muted">
             {t(
@@ -139,13 +145,19 @@ export function EmployerPanel({
           {t('Export plan')}
         </button>
       </div>
+      <TeamEditor
+        team={team}
+        workforce={workforce}
+        onChange={onChange}
+        onProfileChange={onProfileChange}
+      />
       <div className="stats-grid three">
         <div className="stat">
           <Users />
           <span>{t('Planned learners')}</span>
           <strong>
             {learners}
-            <small>/ 8</small>
+            <small>/ {team.length}</small>
           </strong>
         </div>
         <div className="stat">
@@ -303,7 +315,7 @@ export function EmployerPanel({
                 <input
                   type="number"
                   min={0}
-                  max={8}
+                  max={10}
                   value={slots[r.id] ?? 0}
                   onChange={(e) =>
                     onChange({
@@ -312,7 +324,7 @@ export function EmployerPanel({
                         ...slots,
                         [r.id]: Math.max(
                           0,
-                          Math.min(8, Math.floor(Number(e.target.value))),
+                          Math.min(10, Math.floor(Number(e.target.value))),
                         ),
                       },
                     })

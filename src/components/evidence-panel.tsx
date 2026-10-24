@@ -13,6 +13,7 @@ import { diffSnapshots, MODEL_VERSION } from '@/lib/engine';
 import type { Profile, Scenario, Snapshot } from '@/lib/types';
 import { External, Tag } from './ui';
 import { useI18n } from './language-provider';
+import { CustomSnapshotForm } from './custom-snapshot-form';
 export function EvidencePanel({
   profile,
   scenario,
@@ -22,6 +23,7 @@ export function EvidencePanel({
   onRefresh,
   onReplay,
   onBaseline,
+  onApply,
 }: {
   profile: Profile;
   scenario: Scenario;
@@ -31,11 +33,14 @@ export function EvidencePanel({
   onRefresh: () => void;
   onReplay: () => void;
   onBaseline: () => void;
+  onApply: (snapshot: Snapshot) => void;
 }) {
   const { t, locale } = useI18n();
   const dateLocale =
     locale === 'en' ? 'en-MY' : locale === 'ms' ? 'ms-MY' : 'zh-CN';
   const [all, setAll] = useState(false);
+  const customNotice =
+    'User-entered planning assumptions, not verified market evidence.';
   const changes = previous
     ? diffSnapshots(profile, scenario, previous, snapshot)
     : [];
@@ -91,6 +96,7 @@ export function EvidencePanel({
           <small>{t('Clearly simulated. No invented market event.')}</small>
         </section>
       </div>
+      <CustomSnapshotForm snapshot={snapshot} onApply={onApply} />
       <section className="panel">
         <div className="panel-heading">
           <div>
@@ -110,7 +116,16 @@ export function EvidencePanel({
             {t(snapshot.kind === 'live' ? 'Public data' : 'Simulation')}
           </Tag>
         </div>
-        <p className="notice">{t(snapshot.note)}</p>
+        <p className="notice">
+          {snapshot.note.startsWith(customNotice) ? (
+            <>
+              {t(customNotice)}{' '}
+              {snapshot.note.slice(customNotice.length).trim()}
+            </>
+          ) : (
+            t(snapshot.note)
+          )}
+        </p>
         <div className="signal-metrics">
           <span>
             <strong>{snapshot.sampleSize}</strong>
@@ -209,15 +224,15 @@ export function EvidencePanel({
                   </small>
                 </span>
                 <span className="score-change">
-                  {c.before.toFixed(1)}
+                  {c.before.toFixed(2)}
                   <ArrowRight size={14} />
-                  <b>{c.after.toFixed(1)}</b>
+                  <b>{c.after.toFixed(2)}</b>
                 </span>
                 <span
                   className={`delta ${c.delta >= 0 ? 'positive' : 'negative'}`}
                 >
                   {c.delta > 0 ? '+' : ''}
-                  {c.delta.toFixed(1)}
+                  {c.delta.toFixed(2)}
                 </span>
               </div>
             ))}

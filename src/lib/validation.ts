@@ -2,7 +2,9 @@ import { z } from 'zod';
 export const learningPreferencesSchema = z.object({
   focus: z.enum(['data', 'people', 'operations', 'sustainability']),
   format: z.enum(['guided', 'practice', 'discussion']),
-  sessionMinutes: z.union([z.literal(15), z.literal(30), z.literal(60)]),
+  sessionMinutes: z.number().int().min(5).max(180),
+  workAnswer: z.string().trim().max(600).optional(),
+  practiceAnswer: z.string().trim().max(600).optional(),
 });
 export const skillIdSchema = z.enum([
   'excel',
@@ -24,7 +26,7 @@ export const skillIdSchema = z.enum([
 ]);
 export const profileSchema = z.object({
   id: z.string().max(60),
-  name: z.string().min(1).max(60),
+  name: z.string().trim().min(1).max(60),
   currentRole: z.string().max(100),
   hours: z.number().int().min(0).max(40),
   budget: z.number().min(0).max(100000),

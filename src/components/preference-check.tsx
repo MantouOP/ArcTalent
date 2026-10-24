@@ -117,7 +117,9 @@ function PreferenceDialog({
       ? !!answers.focus
       : step === 1
         ? !!answers.format
-        : !!answers.sessionMinutes;
+        : learningPreferencesSchema.shape.sessionMinutes.safeParse(
+            answers.sessionMinutes,
+          ).success;
   const parsed = learningPreferencesSchema.safeParse(answers);
   return (
     <Modal title={t('Your learning preferences')} onClose={onClose}>
@@ -160,6 +162,65 @@ function PreferenceDialog({
                     'Review what will change before applying these answers to your profile draft.',
                   )}
         </p>
+        {step === 0 && (
+          <label className="custom-check-answer">
+            {t('Your work goal')}
+            <textarea
+              rows={3}
+              maxLength={600}
+              value={answers.workAnswer ?? ''}
+              placeholder={t('Describe a problem you would like to solve.')}
+              onChange={(event) =>
+                setAnswers({ ...answers, workAnswer: event.target.value })
+              }
+            />
+            <small>
+              {t(
+                'Choose the closest work area below to connect your answer to the career catalogue.',
+              )}
+            </small>
+          </label>
+        )}
+        {step === 1 && (
+          <label className="custom-check-answer">
+            {t('Your practice idea')}
+            <textarea
+              rows={3}
+              maxLength={600}
+              value={answers.practiceAnswer ?? ''}
+              placeholder={t(
+                'Describe how you want to practise or what you want to make.',
+              )}
+              onChange={(event) =>
+                setAnswers({ ...answers, practiceAnswer: event.target.value })
+              }
+            />
+            <small>
+              {t(
+                'Choose a practice style below. Your own words are kept in your plan.',
+              )}
+            </small>
+          </label>
+        )}
+        {step === 2 && (
+          <label className="custom-check-answer">
+            {t('Session length (minutes)')}
+            <input
+              type="number"
+              min={5}
+              max={180}
+              step={1}
+              value={answers.sessionMinutes ?? ''}
+              onChange={(event) =>
+                setAnswers({
+                  ...answers,
+                  sessionMinutes: Number(event.target.value),
+                })
+              }
+            />
+            <small>{t('Enter 5–180 minutes, or choose a preset below.')}</small>
+          </label>
+        )}
         {step < 3 ? (
           <fieldset className="check-options" aria-labelledby="check-question">
             {step === 0 &&
@@ -253,6 +314,22 @@ function PreferenceDialog({
                 <dd>{t('{0} minutes', { 0: answers.sessionMinutes })}</dd>
               </div>
             </dl>
+            {(answers.workAnswer || answers.practiceAnswer) && (
+              <dl className="check-review">
+                {answers.workAnswer && (
+                  <div>
+                    <dt>{t('Your work goal')}</dt>
+                    <dd>{answers.workAnswer}</dd>
+                  </div>
+                )}
+                {answers.practiceAnswer && (
+                  <div>
+                    <dt>{t('Your practice idea')}</dt>
+                    <dd>{answers.practiceAnswer}</dd>
+                  </div>
+                )}
+              </dl>
+            )}
             <p className="check-explanation">
               {t(
                 'Applying replaces your current interest selections with this focus. You can adjust them below before saving. Your skill levels, completed learning, weekly hours and budget stay the same.',

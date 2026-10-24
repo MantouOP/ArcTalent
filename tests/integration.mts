@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { baseline, baseProfile } from '../src/lib/catalogue';
 import { rankRoles } from '../src/lib/engine';
+import { buildCustomSnapshot } from '../src/lib/custom-inputs';
 
 const origin = process.env.TEST_BASE_URL || 'http://localhost:3000';
 const post = (path: string, body: unknown) =>
@@ -63,6 +64,42 @@ await check('invalid skill levels are rejected', async () => {
   });
   assert.equal(response.status, 400);
 });
+await check(
+  'custom profile answers and dated assumptions reach the same analysis engine',
+  async () => {
+    const profile = {
+      ...baseProfile,
+      id: 'custom-api',
+      name: 'Fictional Nadia',
+      learningPreferences: {
+        focus: 'sustainability' as const,
+        format: 'practice' as const,
+        sessionMinutes: 45,
+        workAnswer: 'Reduce warehouse waste.',
+        practiceAnswer: 'Build a fictional stock dashboard.',
+      },
+    };
+    const snapshot = buildCustomSnapshot(
+      {
+        label: 'Custom API planning case',
+        date: '2026-10-24',
+        note: 'Fictional workshop case.',
+        demand: { sustainability: 100, python: 75, excel: 10 },
+      },
+      'custom-api-test',
+      '2026-10-24T02:00:00.000Z',
+    );
+    const response = await post('/api/analyze', {
+      profile,
+      scenario: 'rapid',
+      snapshot,
+    });
+    assert.equal(response.status, 200);
+    const result = await response.json();
+    assert.equal(result.snapshotId, snapshot.id);
+    assert.deepEqual(result.matches, rankRoles(profile, 'rapid', snapshot));
+  },
+);
 await check(
   'preference-bearing profiles retain explicit interests in API matching',
   async () => {

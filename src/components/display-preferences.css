@@ -4,6 +4,10 @@ html[data-reading-size='larger']
   main
   :is(p, li, input, select, textarea),
 html[data-reading-size='larger']
+  .app-shell
+  main
+  input:not([type='checkbox']):not([type='radio']),
+html[data-reading-size='larger']
   .settings-panel
   :is(p, label, input, select, textarea),
 html[data-reading-size='larger'] .career-chat-answer,

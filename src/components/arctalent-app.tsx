@@ -1,6 +1,7 @@
 'use client';
 import './worker-journey.css';
 import './orion.css';
+import './custom-inputs.css';
 import { useI18n, LanguageSelector } from './language-provider';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -63,6 +64,8 @@ import { buildSkillBridge } from '@/lib/skill-bridge';
 import { buildStudyRhythm } from '@/lib/learning-preferences';
 import {
   restoreWorkforceSettings,
+  getWorkforceMembers,
+  updateWorkforceProfile,
   type WorkforceSettings,
 } from '@/lib/workforce-settings';
 type View = 'explore' | 'pathway' | 'team' | 'evidence' | 'profile';
@@ -115,7 +118,12 @@ export function ArcTalentApp() {
         if (roles.some((r) => r.id === saved.selected))
           setSelected(saved.selected);
         if (typeof saved.followTop === 'boolean') setFollowTop(saved.followTop);
-        setWorkforce(restoreWorkforceSettings(saved.workforce));
+        const restoredWorkforce = restoreWorkforceSettings(saved.workforce);
+        setWorkforce(
+          p.success
+            ? updateWorkforceProfile(restoredWorkforce, p.data)
+            : restoredWorkforce,
+        );
       }
     } catch {
       /* Browser storage is optional. */
@@ -231,15 +239,19 @@ export function ArcTalentApp() {
     setToast('Demo reset to Aina’s starting profile.');
   }
   function complete(id: string) {
-    setProfile((p) => ({
-      ...p,
-      completed: p.completed.includes(id)
-        ? p.completed.filter((x) => x !== id)
-        : [...p.completed, id],
-    }));
+    saveProfile({
+      ...profile,
+      completed: profile.completed.includes(id)
+        ? profile.completed.filter((x) => x !== id)
+        : [...profile.completed, id],
+    });
     setToast(
       'Learning activity updated. Skill proficiency stays unchanged until you review it in your profile.',
     );
+  }
+  function saveProfile(next: Profile) {
+    setProfile(next);
+    setWorkforce((current) => updateWorkforceProfile(current, next));
   }
   function exportPlan() {
     downloadFile(
@@ -1112,6 +1124,9 @@ export function ArcTalentApp() {
               snapshot={snapshot}
               workforce={workforce}
               onChange={setWorkforce}
+              onProfileChange={(member) => {
+                if (member.id === profile.id) saveProfile(member);
+              }}
             />
           )}
           {view === 'evidence' && (
@@ -1124,13 +1139,15 @@ export function ArcTalentApp() {
               onRefresh={refresh}
               onReplay={() => useSnapshot(updated)}
               onBaseline={() => useSnapshot(baseline)}
+              onApply={useSnapshot}
             />
           )}
           {view === 'profile' && (
             <ProfilePanel
               profile={profile}
+              profiles={getWorkforceMembers(workforce, profile)}
               onSave={(p) => {
-                setProfile(p);
+                saveProfile(p);
                 setFollowTop(true);
                 setSelected(rankRoles(p, scenario, snapshot)[0].role.id);
                 setToast(

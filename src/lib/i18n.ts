@@ -8,6 +8,8 @@ import chatMs from './messages/chat.ms.json';
 import chatZh from './messages/chat.zh-CN.json';
 import settingsMs from './messages/settings.ms.json';
 import settingsZh from './messages/settings.zh-CN.json';
+import inputsMs from './messages/inputs.ms.json';
+import inputsZh from './messages/inputs.zh-CN.json';
 
 export const locales = ['en', 'ms', 'zh-CN'] as const;
 export type Locale = (typeof locales)[number];
@@ -30,8 +32,15 @@ export const dictionaries: Record<
   Exclude<Locale, 'en'>,
   Record<string, string>
 > = {
-  ms: { ...teamMs, ...workerMs, ...chatMs, ...settingsMs, ...ms },
-  'zh-CN': { ...teamZh, ...workerZh, ...chatZh, ...settingsZh, ...zh },
+  ms: { ...teamMs, ...workerMs, ...chatMs, ...settingsMs, ...inputsMs, ...ms },
+  'zh-CN': {
+    ...teamZh,
+    ...workerZh,
+    ...chatZh,
+    ...settingsZh,
+    ...inputsZh,
+    ...zh,
+  },
 };
 
 /** Display translation only: canonical data, identifiers and source quotes are untouched. */

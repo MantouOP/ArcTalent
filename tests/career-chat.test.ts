@@ -80,6 +80,19 @@ const topics: [string, ChatIntent][] = [
   ['你好', 'greeting'],
 ];
 
+test('team answers count the current custom roster, including an empty team', () => {
+  for (const members of [[], [baseProfile]]) {
+    const reply = answerCareerQuestion(
+      'How does team training work?',
+      context({ workforce: { ...restoreWorkforceSettings(), members } }),
+    );
+    assert.match(
+      text(reply),
+      new RegExp(`covers ${members.length} synthetic workers`),
+    );
+  }
+});
+
 for (const [question, intent] of topics)
   test(`recognizes ${intent}: ${question}`, () => {
     assert.equal(answerCareerQuestion(question, context()).intent, intent);

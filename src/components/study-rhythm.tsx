@@ -71,6 +71,18 @@ export function StudyRhythm({
               )}
             </p>
           </div>
+          {preferences.workAnswer && (
+            <div className="rhythm-practice">
+              <strong>{t('Your work goal')}</strong>
+              <p>{preferences.workAnswer}</p>
+            </div>
+          )}
+          {preferences.practiceAnswer && (
+            <div className="rhythm-practice">
+              <strong>{t('Your practice idea')}</strong>
+              <p>{preferences.practiceAnswer}</p>
+            </div>
+          )}
           <p className="small">
             {t(
               'Your chosen practice style does not change course hours or skill scores.',

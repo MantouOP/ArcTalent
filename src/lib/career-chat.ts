@@ -7,7 +7,8 @@ import type {
   Snapshot,
 } from './types';
 import type { WorkforceSettings } from './workforce-settings';
-import { courses, employees, roles, skillById } from './catalogue';
+import { getWorkforceMembers } from './workforce-settings';
+import { courses, roles, skillById } from './catalogue';
 import { rankRoles } from './engine';
 
 export type ChatView = 'explore' | 'pathway' | 'team' | 'evidence' | 'profile';
@@ -515,7 +516,10 @@ export function answerCareerQuestion(
       action(copy.evidenceViewAction, 'evidence');
       break;
     case 'team':
-      p(copy.team, { 0: employees.length, 1: workforce.budget });
+      p(copy.team, {
+        0: getWorkforceMembers(workforce, profile).length,
+        1: workforce.budget,
+      });
       p(copy.teamRules);
       p(copy.teamLimit);
       action(copy.teamAction, 'team');

@@ -6,18 +6,34 @@ import type { Profile } from '@/lib/types';
 import { profileSchema } from '@/lib/validation';
 import { cvEvidenceReducer, initialCvEvidence } from '@/lib/cv-evidence';
 import { PreferenceCheck } from './preference-check';
+import { ProfileFields } from './profile-fields';
+import { createProfileDraft, validateCvFile } from '@/lib/custom-inputs';
 import { useI18n } from './language-provider';
 export function ProfilePanel({
   profile,
+  profiles = employees,
   onSave,
 }: {
   profile: Profile;
+  profiles?: Profile[];
   onSave: (p: Profile) => void;
 }) {
   const { t, locale } = useI18n();
   const [form, setForm] = useState(profile);
+  const profileOptions = [
+    ...employees.map(
+      (sample) => profiles.find((member) => member.id === sample.id) ?? sample,
+    ),
+    ...profiles.filter(
+      (member) => !employees.some((sample) => sample.id === member.id),
+    ),
+  ];
   const [cv, dispatchCv] = useReducer(cvEvidenceReducer, initialCvEvidence);
   const request = useRef(0);
+  const fileInput = useRef<HTMLInputElement>(null);
+  const confirmation = useRef<HTMLInputElement>(null);
+  const [fileName, setFileName] = useState('');
+  const [formError, setFormError] = useState('');
   const { text, synthetic, message, candidates } = cv;
   const busy = cv.requestId !== null;
   const reviewSuffix =
@@ -79,24 +95,28 @@ export function ProfilePanel({
       setMessage('Confirm synthetic data before importing a file.');
       return;
     }
-    if (file.size > 5 * 1024 * 1024) {
-      setMessage('Choose a file smaller than 5 MB.');
+    const fileError = validateCvFile(file);
+    if (fileError) {
+      setMessage(fileError);
       return;
     }
+    setFileName(file.name);
     const filename = file.name.toLowerCase();
-    if (!filename.endsWith('.txt') && !filename.endsWith('.pdf')) {
-      setMessage('Use a text PDF or .txt file.');
-      return;
-    }
     const requestId = ++request.current;
     dispatchCv({ type: 'start', requestId });
     try {
       if (filename.endsWith('.txt')) {
+        const imported = (await file.text()).trim();
+        if (imported.length < 5)
+          throw new Error('Add at least 5 characters of work experience.');
         dispatchCv({
           type: 'complete',
           requestId,
-          text: (await file.text()).slice(0, 12000),
-          message: 'Text imported. Choose Find skills to review candidates.',
+          text: imported.slice(0, 12000),
+          message:
+            imported.length > 12000
+              ? 'First 12,000 characters imported. Choose Find skills to review candidates.'
+              : 'Text imported. Choose Find skills to review candidates.',
         });
       } else {
         const data = new FormData();
@@ -128,7 +148,19 @@ export function ProfilePanel({
     <div className="profile-flow" lang={locale}>
       <PreferenceCheck profile={form} onChange={setForm} />
       <div className="profile-grid">
-        <section className="panel">
+        <form
+          className="panel"
+          onSubmit={(event) => {
+            event.preventDefault();
+            const parsed = profileSchema.safeParse(form);
+            if (!parsed.success) {
+              setFormError('Check the name and numeric limits before saving.');
+              return;
+            }
+            setFormError('');
+            onSave(parsed.data);
+          }}
+        >
           <div className="panel-heading">
             <div>
               <span className="eyebrow">{t('YOUR STARTING POINT')}</span>
@@ -141,144 +173,53 @@ export function ProfilePanel({
               'Use a fictional profile for this hackathon demo. Confirm every inferred skill.',
             )}
           </p>
+          <button
+            type="button"
+            className="secondary"
+            onClick={() => {
+              setForm(createProfileDraft('custom-' + crypto.randomUUID()));
+              setFormError('');
+              setFileName('');
+              dispatchCv({ type: 'reset' });
+            }}
+          >
+            {t('Start a blank profile')}
+          </button>
           <label>
             {t('Choose a synthetic profile')}
             <select
               value={form.id}
               onChange={(e) => {
                 const p =
-                  employees.find((x) => x.id === e.target.value) ?? baseProfile;
-                setForm({ ...p, skills: { ...p.skills }, completed: [] });
+                  profileOptions.find((x) => x.id === e.target.value) ??
+                  baseProfile;
+                setForm(structuredClone(p));
+                setFileName('');
+                setFormError('');
                 dispatchCv({ type: 'reset' });
               }}
             >
-              {employees.map((p) => (
+              {!profileOptions.some((p) => p.id === form.id) && (
+                <option value={form.id}>{t('My custom profile')}</option>
+              )}
+              {profileOptions.map((p) => (
                 <option value={p.id} key={p.id}>
                   {p.name} · {t(p.currentRole)}
                 </option>
               ))}
             </select>
           </label>
-          <div className="form-row">
-            <label>
-              {t('Display name')}
-              <input
-                maxLength={60}
-                value={form.name}
-                onChange={(e) => update('name', e.target.value)}
-              />
-            </label>
-            <label>
-              {t('Current role')}
-              <input
-                maxLength={100}
-                value={form.currentRole}
-                onChange={(e) => update('currentRole', e.target.value)}
-              />
-            </label>
-          </div>
-          <div className="form-row thirds">
-            <label>
-              {t('Hours / week')}
-              <input
-                type="number"
-                min={0}
-                max={40}
-                value={form.hours}
-                onChange={(e) => update('hours', Number(e.target.value))}
-              />
-            </label>
-            <label>
-              {t('Budget (RM)')}
-              <input
-                type="number"
-                min={0}
-                max={100000}
-                value={form.budget}
-                onChange={(e) => update('budget', Number(e.target.value))}
-              />
-            </label>
-            <label>
-              {t('Plan (weeks)')}
-              <input
-                type="number"
-                min={1}
-                max={52}
-                value={form.weeks}
-                onChange={(e) => update('weeks', Number(e.target.value))}
-              />
-            </label>
-          </div>
-          <fieldset>
-            <legend>{t('What work interests you?')}</legend>
-            <div className="interest-options">
-              {[
-                ['data', 'Data & insights'],
-                ['people', 'People & projects'],
-                ['operations', 'Business operations'],
-                ['sustainability', 'Sustainability'],
-              ].map(([id, title]) => (
-                <label key={id}>
-                  <input
-                    type="checkbox"
-                    checked={form.interests.includes(id)}
-                    onChange={(e) =>
-                      update(
-                        'interests',
-                        e.target.checked
-                          ? [...form.interests, id]
-                          : form.interests.filter((x) => x !== id),
-                      )
-                    }
-                  />
-                  {t(title)}
-                </label>
-              ))}
-            </div>
-          </fieldset>
-          <div className="section-divider" />
-          <h3>{t('Your current skills')}</h3>
-          <p className="muted small">
-            {t(
-              '0 Not yet · 1 Basic · 2 Independent · 3 Advanced. Self-reported levels, not certifications.',
-            )}
-          </p>
-          <div className="skill-edit-grid">
-            {skills.map((s) => (
-              <label key={s.id}>
-                {t(s.label)}
-                <select
-                  value={form.skills[s.id] ?? 0}
-                  onChange={(e) =>
-                    update('skills', {
-                      ...form.skills,
-                      [s.id]: Number(e.target.value),
-                    })
-                  }
-                >
-                  <option value={0}>{t('0 · Not yet')}</option>
-                  <option value={1}>{t('1 · Basic')}</option>
-                  <option value={2}>{t('2 · Independent')}</option>
-                  <option value={3}>{t('3 · Advanced')}</option>
-                </select>
-              </label>
-            ))}
-          </div>
-          <button
-            className="primary full"
-            onClick={() => {
-              const parsed = profileSchema.safeParse(form);
-              if (!parsed.success) {
-                setMessage('Check the name and numeric limits before saving.');
-                return;
-              }
-              onSave(parsed.data);
-            }}
-          >
+          <ProfileFields profile={form} onChange={setForm} />
+          {formError && (
+            <p className="status-text" role="alert">
+              {t(formError)}
+            </p>
+          )}
+          <button type="submit" className="primary full">
             {t('Update my pathways')}
             <ArrowRight size={16} />
           </button>
-        </section>
+        </form>
         <aside className="panel upload-panel">
           <span className="eyebrow">{t('OPTIONAL · SYNTHETIC CV')}</span>
           <h2>{t('Discover your building blocks.')}</h2>
@@ -298,6 +239,7 @@ export function ProfilePanel({
           </p>
           <label className="checkbox-label">
             <input
+              ref={confirmation}
               type="checkbox"
               checked={synthetic}
               onChange={(e) =>
@@ -306,17 +248,51 @@ export function ProfilePanel({
             />
             {t('This is synthetic data, with no real personal information.')}
           </label>
-          <label className="upload-zone">
+          <p id="cv-import-help" className="muted small">
+            {t(
+              synthetic
+                ? 'Choose a PDF or TXT, then review its text and find skills.'
+                : 'First confirm synthetic data above to enable file import.',
+            )}
+          </p>
+          <button
+            type="button"
+            className="upload-zone full"
+            disabled={busy}
+            aria-describedby="cv-import-help"
+            onClick={() => {
+              if (!synthetic) {
+                setMessage('Confirm synthetic data before importing a file.');
+                confirmation.current?.focus();
+                return;
+              }
+              fileInput.current?.click();
+            }}
+          >
             <Upload size={28} />
-            <strong>{t('Import a synthetic CV')}</strong>
+            <strong>
+              {t(busy ? 'Reading your sample…' : 'Import a synthetic CV')}
+            </strong>
             <span>{t('Text PDF or TXT · up to 5 MB')}</span>
-            <input
-              type="file"
-              accept=".pdf,.txt"
-              disabled={!synthetic || busy}
-              onChange={(e) => upload(e.target.files?.[0])}
-            />
-          </label>
+          </button>
+          <input
+            ref={fileInput}
+            type="file"
+            accept=".pdf,.txt,application/pdf,text/plain"
+            hidden
+            aria-label={t('Choose a CV file')}
+            disabled={busy}
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              event.currentTarget.value = '';
+              void upload(file);
+            }}
+          />
+          {fileName && (
+            <p className="muted small">
+              {t('Selected file: {0}', { 0: fileName })}
+            </p>
+          )}
           <textarea
             aria-label={t('Synthetic CV text')}
             rows={8}
@@ -325,9 +301,10 @@ export function ProfilePanel({
               'Example: I prepare reports in Excel, coordinate scheduling and communicate with customers…',
             )}
             value={text}
-            onChange={(e) =>
-              dispatchCv({ type: 'source', text: e.target.value })
-            }
+            onChange={(e) => {
+              setFileName('');
+              dispatchCv({ type: 'source', text: e.target.value });
+            }}
           />
           <button
             className="secondary full"

@@ -21,7 +21,10 @@ test('unsupported preference values are rejected at the profile boundary', () =>
     { focus: 'unknown' },
     { format: 'psychometric' },
     { sessionMinutes: 0 },
-    { sessionMinutes: 45 },
+    { sessionMinutes: 181 },
+    { sessionMinutes: 4 },
+    { sessionMinutes: 15.5 },
+    { workAnswer: 'x'.repeat(601) },
   ]) {
     assert.equal(
       profileSchema.safeParse({
@@ -31,6 +34,23 @@ test('unsupported preference values are rejected at the profile boundary', () =>
       false,
     );
   }
+});
+
+test('typed check-in answers and a custom session duration survive validation', () => {
+  const answers = {
+    ...preferences,
+    sessionMinutes: 45,
+    workAnswer: 'I want to reduce waste in a fictional warehouse.',
+    practiceAnswer:
+      'Build a small stock dashboard and explain it to a partner.',
+  };
+  const parsed = profileSchema.safeParse({
+    ...baseProfile,
+    learningPreferences: answers,
+  });
+  assert.equal(parsed.success, true);
+  if (parsed.success)
+    assert.deepEqual(parsed.data.learningPreferences, answers);
 });
 
 test('study format and session length cannot change career ranking or skill coverage', () => {
