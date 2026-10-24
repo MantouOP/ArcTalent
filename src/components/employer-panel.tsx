@@ -1,17 +1,17 @@
 'use client';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Download,
+  LoaderCircle,
   Users,
   GraduationCap,
   Clock3,
   ArrowUpRight,
 } from 'lucide-react';
-import { roles, skills, skillById, sdgUrl } from '@/lib/catalogue';
-import { buildPlan, rankRoles } from '@/lib/engine';
-import type { Course, Profile, Scenario, Snapshot } from '@/lib/types';
+import { roles, sdgUrl } from '@/lib/catalogue';
+import { buildWorkforcePlan } from '@/lib/workforce-plan';
+import type { Profile, Scenario, Snapshot } from '@/lib/types';
 import type { WorkforceSettings } from '@/lib/workforce-settings';
-import { getWorkforceMembers } from '@/lib/workforce-settings';
 import { TeamEditor } from './team-editor';
 import { CourseLink } from './course-link';
 import { downloadFile, External, Tag } from './ui';
@@ -31,96 +31,47 @@ export function EmployerPanel({
   onChange: (settings: WorkforceSettings) => void;
   onProfileChange: (profile: Profile) => void;
 }) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState(false);
   const { destinations, budget, slots } = workforce;
-  const team = useMemo(
-    () => getWorkforceMembers(workforce, profile),
-    [workforce, profile],
-  );
-  const rows = team.map((p) => {
-    const ranked = rankRoles(p, scenario, snapshot);
-    const role =
-      roles.find((r) => r.id === destinations[p.id]) ?? ranked[0].role;
-    return {
-      profile: p,
-      role,
-      match: ranked.find((m) => m.role.id === role.id)!,
-      plan: buildPlan(p, role),
-    };
-  });
-  const groups = new Map<string, { course: Course; names: string[] }>();
-  let allocated = 0;
-  const used: Record<string, number> = {};
-  const allocations = rows.map((row) => {
-    const slotOk = (used[row.role.id] ?? 0) < (slots[row.role.id] ?? 0),
-      budgetOk = allocated + row.plan.totalCost <= budget;
-    if (slotOk && budgetOk) {
-      used[row.role.id] = (used[row.role.id] ?? 0) + 1;
-      allocated += row.plan.totalCost;
-      row.plan.steps.forEach((step) => {
-        const c = step.course,
-          group = groups.get(c.id) ?? {
-            course: c,
-            names: [],
-          };
-        group.names.push(row.profile.name);
-        groups.set(c.id, group);
-      });
-    }
-    return {
-      ...row,
-      included: slotOk && budgetOk,
-      reason: !slotOk
-        ? 'No internal slot'
-        : !budgetOk
-          ? 'Over team budget'
-          : row.plan.uncovered.length
-            ? 'Partial learning route'
-            : 'Learning route fits',
-    };
-  });
-  const hours = [...groups.values()].reduce(
-      (s, g) => s + g.course.hours * g.names.length,
-      0,
-    ),
-    learners = allocations.filter(
-      (r) => r.included && r.plan.steps.length > 0,
-    ).length;
-  const shown = skills.filter((s) =>
-    allocations.some((r) => r.role.requirements[s.id]),
-  );
-  function exportCsv() {
-    const escape = (s: string) =>
-      `"${s.replace(/^[=+@-]/, "'$&").replace(/"/g, '""')}"`;
-    const csv = [
-      [
-        'Synthetic worker',
-        'Current role',
-        'Proposed role',
-        'Scenario',
-        'Snapshot',
-        'Status',
-        'Planned hours',
-        'Planned cost RM',
-      ],
-      ...allocations.map((r) => [
-        r.profile.name,
-        r.profile.currentRole,
-        r.role.title,
-        scenario,
-        snapshot.id,
-        r.reason,
-        String(r.included ? r.plan.totalHours : 0),
-        String(r.included ? r.plan.totalCost : 0),
-      ]),
-    ]
-      .map((row) => row.map(escape).join(','))
-      .join('\r\n');
-    downloadFile(
-      'ArcTalent-synthetic-training-plan.csv',
-      csv,
-      'text/csv;charset=utf-8',
+  const { team, allocations, groups, allocated, hours, learners, shown } =
+    useMemo(
+      () => buildWorkforcePlan(profile, scenario, snapshot, workforce),
+      [profile, scenario, snapshot, workforce],
     );
+  async function exportPdf() {
+    if (exporting) return;
+    setExporting(true);
+    setExportError(false);
+    try {
+      const response = await fetch('/api/workforce-export', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          profile,
+          workforce,
+          scenario,
+          snapshot: { ...snapshot, signals: [] },
+          locale,
+        }),
+        signal: AbortSignal.timeout(40000),
+      });
+      if (
+        !response.ok ||
+        !response.headers.get('content-type')?.startsWith('application/pdf')
+      )
+        throw new Error('PDF export failed');
+      downloadFile(
+        'ArcTalent-workforce-plan.pdf',
+        await response.blob(),
+        'application/pdf',
+      );
+    } catch {
+      setExportError(true);
+    } finally {
+      setExporting(false);
+    }
   }
   return (
     <>
@@ -136,11 +87,25 @@ export function EmployerPanel({
             )}
           </p>
         </div>
-        <button className="secondary" onClick={exportCsv}>
-          <Download size={16} />
-          {t('Export plan')}
+        <button
+          className="secondary"
+          onClick={exportPdf}
+          disabled={exporting}
+          aria-busy={exporting}
+        >
+          {exporting ? (
+            <LoaderCircle size={16} className="spin" />
+          ) : (
+            <Download size={16} />
+          )}
+          {t(exporting ? 'Preparing PDF…' : 'Export plan (PDF)')}
         </button>
       </div>
+      {exportError && (
+        <p role="alert" className="notice">
+          {t('Could not download the PDF. Please try again.')}
+        </p>
+      )}
       <TeamEditor
         team={team}
         workforce={workforce}

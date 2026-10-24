@@ -59,7 +59,7 @@ See the timed [demo script](docs/DEMO.md), [editable implementation plan](docs/I
 - English, Bahasa Melayu and Simplified Chinese interface options, including skill/role labels, explanations, charts and profile controls. Translation dictionaries run locally without an external service; unknown source text retains its original wording.
 - A floating career and learning guide in all three languages. Replies explain the current selected route and filtered plan, link to catalogue sources and open relevant views. Up to 20 questions stay in memory in the current tab; closing preserves them and clearing removes them. New replies use current data while older replies retain their original context.
 - Multilingual Settings for language, reading text, reduced motion and demo-data controls. The native dialog preserves the active workspace and unsaved profile draft; device reduced motion is respected. No account is required.
-- A workforce heatmap, proposed internal openings, grouped training, CSV export and planned SDG contribution view.
+- A workforce heatmap, proposed internal openings, grouped training, PDF export and planned SDG contribution view. **SME workspace -> Export plan (PDF)** downloads a searchable report with current allocations, budgets, grouped course links, individual schedules and gaps. It follows the selected interface language and embeds a licensed font for Simplified Chinese. Exporting does not call AI or fetch external fonts.
 - Dated synthetic replay, editable user-entered simulation snapshots and a real refresh adapter for Arbeitnow job postings and arXiv AI research, with source dates and partial-failure handling.
 - Optional RunPod-hosted model extraction and structured career-goal analysis through the AI SDK. Without a configured model, the app explicitly labels local suggestions and supports manual skill targets. AI can suggest known skill IDs; course titles and URLs always come from the checked catalogue.
 
@@ -84,14 +84,15 @@ The initial and newer demo snapshots are synthetic fixtures dated 19 and 22 Octo
 
 Next.js App Router, React, TypeScript, CSS and Lucide icons. Route handlers run on Node.js:
 
-| Endpoint                | Purpose                                                                     |
-| ----------------------- | --------------------------------------------------------------------------- |
-| `GET /api/health`       | Model version and actual extraction mode                                    |
-| `POST /api/analyze`     | Validated matching and learning plans                                       |
-| `POST /api/career-goal` | Goal and desired work → editable skill targets, with explicit AI/local mode |
-| `POST /api/extract`     | Confirmed synthetic text → skill candidates                                 |
-| `POST /api/pdf`         | Confirmed synthetic text PDF → text; 5 MB / 10 pages maximum                |
-| `GET /api/signals`      | Fixed public feed adapters, bounded records and five-minute process cache   |
+| Endpoint                     | Purpose                                                                                  |
+| ---------------------------- | ---------------------------------------------------------------------------------------- |
+| `GET /api/health`            | Model version and actual extraction mode                                                 |
+| `POST /api/analyze`          | Validated matching and learning plans                                                    |
+| `POST /api/career-goal`      | Goal and desired work → editable skill targets, with explicit AI/local mode              |
+| `POST /api/workforce-export` | Validated current workforce plan -> downloadable, localised PDF with direct course links |
+| `POST /api/extract`          | Confirmed synthetic text → skill candidates                                              |
+| `POST /api/pdf`              | Confirmed synthetic text PDF → text; 5 MB / 10 pages maximum                             |
+| `GET /api/signals`           | Fixed public feed adapters, bounded records and five-minute process cache                |
 
 Profiles, the custom goal, completed activity and manager planning settings are stored only in this browser's local storage. CV text is not intentionally saved by the app server. A configured RunPod extractor receives the submitted synthetic CV text. Career-goal analysis sends only the goal, desired-work description and interface language, plus the public skill vocabulary. Leave personal or confidential details out of that text. Do not use real CVs in this public hackathon prototype. The app has no accounts, database, production HR controls, OCR, validated psychometric assessment or audited employment-outcome model. PDF import requires readable text.
 

@@ -5,6 +5,8 @@ import type { LearningPlan } from '../src/lib/types';
 import { rankRoles } from '../src/lib/engine';
 import { buildCustomSnapshot } from '../src/lib/custom-inputs';
 import { goalDraftSchema } from '../src/lib/career-goals';
+import { PDFParse } from 'pdf-parse';
+import { restoreWorkforceSettings } from '../src/lib/workforce-settings';
 
 const origin = process.env.TEST_BASE_URL || 'http://localhost:3000';
 const post = (path: string, body: unknown) =>
@@ -40,6 +42,96 @@ await check('health reports actual extraction mode', async () => {
   assert.equal(response.status, 200);
   assert.equal((await response.json()).ok, true);
 });
+await check(
+  'workforce export downloads a searchable PDF with exact course links',
+  async () => {
+    const response = await post('/api/workforce-export', {
+      profile: baseProfile,
+      workforce: restoreWorkforceSettings(),
+      scenario: 'moderate',
+      snapshot: { ...baseline, signals: [] },
+      locale: 'en',
+    });
+    assert.equal(response.status, 200);
+    assert.match(
+      response.headers.get('content-type') ?? '',
+      /^application\/pdf/,
+    );
+    assert.match(
+      response.headers.get('content-disposition') ?? '',
+      /attachment; filename="ArcTalent-workforce-plan.pdf"/,
+    );
+    assert.equal(response.headers.get('cache-control'), 'no-store');
+    const bytes = Buffer.from(await response.arrayBuffer());
+    assert.equal(bytes.subarray(0, 5).toString(), '%PDF-');
+    assert.ok(
+      bytes
+        .toString('latin1')
+        .includes('/URI (https://sqlbolt.com/lesson/introduction)'),
+    );
+    const parser = new PDFParse({ data: new Uint8Array(bytes) });
+    try {
+      const result = await parser.getText();
+      assert.match(result.text, /Aina/);
+      assert.match(result.text, /Workforce learning plan/);
+      assert.ok(result.total >= 2);
+    } finally {
+      await parser.destroy();
+    }
+  },
+);
+await check(
+  'an explicitly empty workforce produces a localised PDF without demo workers',
+  async () => {
+    const response = await post('/api/workforce-export', {
+      profile: baseProfile,
+      workforce: { ...restoreWorkforceSettings(), members: [] },
+      scenario: 'rapid',
+      snapshot: { ...baseline, signals: [] },
+      locale: 'zh-CN',
+    });
+    assert.equal(response.status, 200);
+    const parser = new PDFParse({
+      data: new Uint8Array(await response.arrayBuffer()),
+    });
+    try {
+      const { text } = await parser.getText();
+      assert.match(text, /员工学习计划/);
+      assert.match(text, /此计划中没有团队成员/);
+      assert.doesNotMatch(text, /Aina|Daniel/);
+    } finally {
+      await parser.destroy();
+    }
+  },
+);
+await check(
+  'invalid and oversized workforce exports return ordinary errors',
+  async () => {
+    assert.equal((await post('/api/workforce-export', {})).status, 400);
+    assert.equal(
+      (
+        await post('/api/workforce-export', {
+          profile: baseProfile,
+          workforce: { ...restoreWorkforceSettings(), budget: -1 },
+          scenario: 'moderate',
+          snapshot: baseline,
+        })
+      ).status,
+      400,
+    );
+    assert.equal(
+      (await post('/api/workforce-export', { description: 'x'.repeat(64001) }))
+        .status,
+      413,
+    );
+    const response = await fetch(origin + '/api/workforce-export', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{',
+    });
+    assert.equal(response.status, 400);
+  },
+);
 await check(
   'API and browser engine use identical recommendations',
   async () => {

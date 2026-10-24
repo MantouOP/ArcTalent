@@ -12,6 +12,8 @@ import inputsMs from './messages/inputs.ms.json';
 import inputsZh from './messages/inputs.zh-CN.json';
 import goalsMs from './messages/goals.ms.json';
 import goalsZh from './messages/goals.zh-CN.json';
+import pdfMs from './messages/pdf.ms.json';
+import pdfZh from './messages/pdf.zh-CN.json';
 
 export const locales = ['en', 'ms', 'zh-CN'] as const;
 export type Locale = (typeof locales)[number];
@@ -41,6 +43,7 @@ export const dictionaries: Record<
     ...settingsMs,
     ...inputsMs,
     ...goalsMs,
+    ...pdfMs,
     ...ms,
   },
   'zh-CN': {
@@ -50,6 +53,7 @@ export const dictionaries: Record<
     ...settingsZh,
     ...inputsZh,
     ...goalsZh,
+    ...pdfZh,
     ...zh,
   },
 };

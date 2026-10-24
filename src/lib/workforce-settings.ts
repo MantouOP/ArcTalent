@@ -11,7 +11,7 @@ export type WorkforceSettings = {
 };
 
 const roleIdSchema = z.enum(roles.map((role) => role.id));
-const workforceSettingsSchema = z
+export const workforceSettingsSchema = z
   .object({
     budget: z.number().min(0).max(100000),
     slots: z.record(roleIdSchema, z.number().int().min(0).max(10)),

@@ -243,7 +243,7 @@ export function Radar({ profile }: { profile: Profile }) {
 }
 export function downloadFile(
   name: string,
-  body: string,
+  body: string | Blob,
   type = 'application/json',
 ) {
   const url = URL.createObjectURL(new Blob([body], { type }));
