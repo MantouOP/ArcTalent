@@ -2,6 +2,9 @@
 
 > **Skills that travel with you.** An adaptive, explainable reskilling command center that helps working adults and SME managers navigate evolving labour markets under moderate and rapid AI adoption scenarios.
 
+### 🌟 Quick Links:
+👉 **[📊 Open Canva Pitch Deck Slides](https://canva.link/upnutijay2qn7vn)** · **[🚀 Open Live App Demo](https://arc-talent--emmanuelheng.replit.app/)** · **[📁 View Official Submission PDFs](submission/)**
+
 ---
 
 ## Team Information
@@ -20,24 +23,25 @@
 
 | Resource | Link |
 | :--- | :--- |
-| **GitHub Repository** | [https://github.com/MantouOP/ArcTalent](https://github.com/MantouOP/ArcTalent) |
-| **Live Demo (Replit)** | [https://arc-talent--emmanuelheng.replit.app/](https://arc-talent--emmanuelheng.replit.app/) |
-| **Replit Team Project** | [https://replit.com/@EmmanuelHeng/ArcTalent](https://replit.com/@EmmanuelHeng/ArcTalent) |
-| **Replit Runtime Branch** | [https://github.com/MantouOP/ArcTalent/tree/replit-runtime](https://github.com/MantouOP/ArcTalent/tree/replit-runtime) |
-| **RunPod Endpoint** | `https://api.runpod.ai/v2/` *(Qwen/Qwen2.5-7B-Instruct Serverless vLLM)* |
-| **Slide Deck** | [https://canva.link/upnutijay2qn7vn](https://canva.link/upnutijay2qn7vn) |
-| **Demo Video (YouTube)** | *(Paste your 5–7 min YouTube demo link here)* |
+| **🎨 Pitch Deck Slides (Canva)** | **[👉 View Presentation Slides (Canva)](https://canva.link/upnutijay2qn7vn)** |
+| **🚀 Live Prototype Demo** | [https://arc-talent--emmanuelheng.replit.app/](https://arc-talent--emmanuelheng.replit.app/) |
+| **💻 GitHub Repository** | [https://github.com/MantouOP/ArcTalent](https://github.com/MantouOP/ArcTalent) |
+| **☁️ Replit Team Project** | [https://replit.com/@EmmanuelHeng/ArcTalent](https://replit.com/@EmmanuelHeng/ArcTalent) |
+| **🌿 Replit Runtime Branch** | [https://github.com/MantouOP/ArcTalent/tree/replit-runtime](https://github.com/MantouOP/ArcTalent/tree/replit-runtime) |
+| **⚡ RunPod Serverless Endpoint** | `https://api.runpod.ai/v2/` *(Qwen/Qwen2.5-7B-Instruct vLLM)* |
+| **🎥 Demo Walkthrough Video** | *(Paste your 5–7 min YouTube demo link here)* |
 
 ---
 
 ## Official Submission Documents
 
-All required official submission documents are available in the [`submission/`](submission/) directory:
+All required official submission deliverables are accessible below and archived in the [`submission/`](submission/) directory:
 
-- 📄 **Preliminary Proposal**: [`submission/SDC2026_XenoForce_Preliminary.pdf`](submission/SDC2026_XenoForce_Preliminary.pdf)
-- 📄 **Technical Tools Declaration**: [`submission/SDC2026_XenoForce_TechDeclaration.pdf`](submission/SDC2026_XenoForce_TechDeclaration.pdf)
-- 📄 **Replit Proof of Use (POU)**: [`submission/SDC2026_XenoForce_Replit_POU.pdf`](submission/SDC2026_XenoForce_Replit_POU.pdf)
-- 📄 **RunPod Proof of Use (POU)**: [`submission/SDC2026_XenoForce_Runpod_POU.pdf`](submission/SDC2026_XenoForce_Runpod_POU.pdf)
+- 📊 **Pitch Deck Slides**: **[Open Canva Presentation](https://canva.link/upnutijay2qn7vn)**
+- 📄 **Preliminary Proposal PDF**: [`submission/SDC2026_XenoForce_Preliminary.pdf`](submission/SDC2026_XenoForce_Preliminary.pdf)
+- 📄 **Technical Tools Declaration PDF**: [`submission/SDC2026_XenoForce_TechDeclaration.pdf`](submission/SDC2026_XenoForce_TechDeclaration.pdf)
+- 📄 **Replit Proof of Use (POU) PDF**: [`submission/SDC2026_XenoForce_Replit_POU.pdf`](submission/SDC2026_XenoForce_Replit_POU.pdf)
+- 📄 **RunPod Proof of Use (POU) PDF**: [`submission/SDC2026_XenoForce_Runpod_POU.pdf`](submission/SDC2026_XenoForce_Runpod_POU.pdf)
 
 ---
 
