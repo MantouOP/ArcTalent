@@ -1,0 +1,19 @@
+{
+  "Type a destination for this worker": "Taip destinasi untuk pekerja ini",
+  "Current level: {0}": "Tahap semasa: {0}",
+  "Apply to this worker": "Gunakan untuk pekerja ini",
+  "Destination for {0}": "Destinasi untuk {0}",
+  "Review destination for {0}": "Semak destinasi untuk {0}",
+  "Use preset for {0}": "Gunakan pilihan tersedia untuk {0}",
+  "Review goal for {0}": "Semak matlamat untuk {0}",
+  "Use preset": "Gunakan pilihan tersedia",
+  "Review goal": "Semak matlamat",
+  "Edit applied goal": "Edit matlamat yang digunakan",
+  "Type any career, or choose a suggestion.": "Taip sebarang kerjaya, atau pilih cadangan.",
+  "Not applied yet. Review or use a preset to update the plan.": "Belum digunakan. Semak atau gunakan pilihan tersedia untuk mengemas kini pelan.",
+  "{0} additional specialist skills to review": "{0} kemahiran khusus tambahan untuk disemak",
+  "Course previews use this worker’s current skills, weekly time and budget. Applying updates the company plan only.": "Pratonton kursus menggunakan kemahiran semasa, masa mingguan dan bajet pekerja ini. Penggunaan hanya mengemas kini pelan syarikat.",
+  "Proposed openings for this worker’s custom destination": "Cadangan kekosongan untuk destinasi tersuai pekerja ini",
+  "An employer planning assumption, not an inferred vacancy. Zero openings excludes this worker from allocated training.": "Andaian perancangan majikan, bukan kekosongan yang disimpulkan. Sifar kekosongan mengecualikan pekerja ini daripada peruntukan latihan.",
+  "Specialist skills not covered: {0}": "Kemahiran khusus yang belum diliputi: {0}"
+}

@@ -1,0 +1,360 @@
+.career-chat-widget {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 65;
+  color: #f3f1ff;
+  font-variant-numeric: tabular-nums;
+}
+.career-chat-launcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 46px;
+  padding: 0 17px;
+  border: 1px solid #9170ef80;
+  border-radius: 14px;
+  background: #241551;
+  box-shadow: 0 6px 24px #0005;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: auto;
+}
+.career-chat-launcher:hover {
+  background: #35216b;
+  border-color: #ba9dff;
+}
+.career-chat-launcher:focus-visible,
+.career-chat-widget button:focus-visible,
+.career-chat-widget a:focus-visible {
+  outline: 2px solid #b59bff;
+  outline-offset: 3px;
+}
+.career-chat-panel {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  right: 0;
+  bottom: 60px;
+  width: 400px;
+  height: min(600px, calc(100dvh - 120px));
+  border: 1px solid #8065b85c;
+  border-radius: 17px;
+  background: #0f0d22;
+  box-shadow: 0 18px 60px #0009;
+  overflow: hidden;
+}
+.career-chat-panel[hidden] {
+  display: none;
+}
+.career-chat-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  background: #18112f;
+  border-bottom: 1px solid #759bc11f;
+}
+.career-chat-mark {
+  display: grid;
+  place-items: center;
+  color: #ac8fff;
+}
+.career-chat-header > div {
+  flex: 1;
+  min-width: 0;
+}
+.career-chat-header h2 {
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: -0.25px;
+}
+.career-chat-header p {
+  color: #a5a1bd;
+  margin: 3px 0 0;
+  font-size: 10px;
+  line-height: 1.4;
+}
+.career-chat-header .icon-button {
+  color: #bbb4d4;
+  flex-shrink: 0;
+  width: 30px;
+  height: 32px;
+}
+.career-chat-context {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-shrink: 0;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid #759bc117;
+  font-size: 10px;
+}
+.career-chat-context span {
+  color: #9c9bb5;
+}
+.career-chat-context strong {
+  font-size: 11px;
+  text-align: right;
+  font-weight: 550;
+}
+.career-chat-change {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 9px 16px;
+  color: #dfc789;
+  background: #b78f2a0d;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.career-chat-transcript {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 18px 16px;
+}
+.career-chat-intro h3 {
+  font-size: 17px;
+  line-height: 1.4;
+  letter-spacing: -0.4px;
+  margin: 0 0 9px;
+}
+.career-chat-intro > p {
+  color: #c2bfd3;
+  font-size: 12px;
+  line-height: 1.7;
+  margin: 0 0 11px;
+}
+.career-chat-intro .career-chat-scope {
+  color: #8d8ba6;
+  font-size: 10px;
+}
+.career-chat-question {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 13px 25px;
+}
+.career-chat-question p {
+  margin: 0;
+  padding: 10px 12px;
+  background: #34215f;
+  border: 1px solid #9874cf30;
+  border-radius: 12px 12px 3px 12px;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.career-chat-answer {
+  font-size: 12px;
+  line-height: 1.75;
+  color: #d8d5e5;
+  overflow-wrap: anywhere;
+}
+.career-chat-speaker {
+  display: block;
+  color: #b69bfa;
+  font-size: 10px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+.career-chat-answer p {
+  margin: 0 0 9px;
+}
+.career-chat-answer ul {
+  margin: 4px 0 12px;
+  padding-left: 18px;
+}
+.career-chat-answer li {
+  padding-left: 2px;
+  margin: 5px 0;
+}
+.career-chat-answer li::marker {
+  color: #54cfd5;
+}
+.career-chat-sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 10px;
+  margin: 12px 0;
+  font-size: 10px;
+}
+.career-chat-sources > span {
+  color: #8c8ca8;
+  width: 100%;
+}
+.career-chat-sources a {
+  color: #84d3e4;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  line-height: 1.5;
+}
+.career-chat-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #c7afff;
+  background: #8560ff12;
+  border: 1px solid #8560ff40;
+  border-radius: 7px;
+  padding: 7px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  margin: 2px 0 10px;
+  text-align: left;
+}
+.career-chat-basis {
+  display: block;
+  color: #83809b;
+  font-size: 9px;
+  line-height: 1.5;
+  border-top: 1px solid #759bc115;
+  padding-top: 8px;
+  margin-top: 6px;
+}
+.career-chat-turn + .career-chat-turn {
+  margin-top: 20px;
+}
+.career-chat-prompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 18px;
+}
+.career-chat-prompts button {
+  padding: 7px 10px;
+  color: #b9b4cf;
+  background: #18142e;
+  border: 1px solid #759bc126;
+  border-radius: 8px;
+  font-size: 10px;
+  line-height: 1.45;
+  cursor: pointer;
+  text-align: left;
+}
+.career-chat-prompts button:hover {
+  border-color: #9174dd;
+  color: #fff;
+}
+.career-chat-limit {
+  font-size: 9px;
+  color: #88849f;
+  margin-bottom: 0;
+}
+.career-chat-composer {
+  padding: 12px 14px;
+  flex-shrink: 0;
+  background: #131026;
+  border-top: 1px solid #759bc122;
+}
+.career-chat-input-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+.career-chat-input-row textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  max-height: 100px;
+  resize: vertical;
+  margin: 0;
+  padding: 10px;
+  background: #090918;
+  border: 1px solid #759bc138;
+  border-radius: 9px;
+  color: #f6f3ff;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.career-chat-input-row textarea:focus {
+  border-color: #a283ff;
+  outline: 1px solid #a283ff;
+  box-shadow: none;
+}
+.career-chat-send {
+  width: 38px;
+  height: 40px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid #8860df;
+  background: #5320ca;
+  color: white;
+  border-radius: 9px;
+  cursor: pointer;
+}
+.career-chat-widget button:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+.career-chat-composer > p:not(.career-chat-error),
+.career-chat-composer > small {
+  display: block;
+  margin: 7px 0 0;
+  color: #8d89a5;
+  font-size: 9px;
+  line-height: 1.5;
+}
+.career-chat-composer .career-chat-error {
+  color: #ffb3c2;
+  font-size: 11px;
+  margin: 0 0 8px;
+}
+@media (max-width: 760px) {
+  .career-chat-widget {
+    right: 12px;
+    bottom: 80px;
+  }
+  .career-chat-panel {
+    height: min(600px, calc(100dvh - 218px));
+  }
+}
+@media (max-width: 600px) {
+  .career-chat-launcher {
+    min-height: 44px;
+    font-size: 11px;
+    padding: 0 13px;
+  }
+  .career-chat-panel {
+    position: fixed;
+    right: 12px;
+    left: 12px;
+    bottom: 138px;
+    width: auto;
+    height: min(560px, calc(100dvh - 218px));
+  }
+  .career-chat-header {
+    padding: 12px;
+    gap: 7px;
+  }
+  .career-chat-context {
+    padding: 8px 12px;
+  }
+  .career-chat-transcript {
+    padding: 14px 12px;
+  }
+  .career-chat-input-row textarea {
+    font-size: 16px;
+  }
+  .career-chat-prompts button {
+    min-height: 36px;
+  }
+}
+@media (max-height: 560px) {
+  .career-chat-panel {
+    position: fixed;
+    top: 8px;
+    bottom: 80px;
+    height: auto;
+    max-height: none;
+  }
+}

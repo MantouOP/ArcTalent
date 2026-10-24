@@ -1,0 +1,19 @@
+{
+  "Type a destination for this worker": "输入这位员工的目标职业",
+  "Current level: {0}": "当前水平：{0}",
+  "Apply to this worker": "应用到这位员工",
+  "Destination for {0}": "{0} 的目标职业",
+  "Review destination for {0}": "审核 {0} 的目标职业",
+  "Use preset for {0}": "为 {0} 使用预设",
+  "Review goal for {0}": "审核 {0} 的目标",
+  "Use preset": "使用预设",
+  "Review goal": "审核目标",
+  "Edit applied goal": "编辑已应用的目标",
+  "Type any career, or choose a suggestion.": "输入任意职业，或选择一项建议。",
+  "Not applied yet. Review or use a preset to update the plan.": "尚未应用。请审核目标或使用预设来更新计划。",
+  "{0} additional specialist skills to review": "还有 {0} 项专业技能需要审核",
+  "Course previews use this worker’s current skills, weekly time and budget. Applying updates the company plan only.": "课程预览依据这位员工的当前技能、每周学习时间和预算。应用后仅更新公司计划。",
+  "Proposed openings for this worker’s custom destination": "为这位员工的自定义目标拟定岗位数量",
+  "An employer planning assumption, not an inferred vacancy. Zero openings excludes this worker from allocated training.": "这是雇主的规划假设，并非推断出的职位空缺。岗位数量为零时，不为这位员工分配培训。",
+  "Specialist skills not covered: {0}": "尚未涵盖的专业技能：{0}"
+}

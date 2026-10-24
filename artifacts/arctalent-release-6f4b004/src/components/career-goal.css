@@ -1,0 +1,147 @@
+.career-goal-panel,
+.career-goal-applied {
+  min-width: 0;
+}
+.career-goal-panel .panel-heading h2,
+.career-goal-applied h2 {
+  font-size: 20px;
+}
+.career-goal-panel p,
+.career-goal-applied p {
+  font-size: 14px;
+  line-height: 1.6;
+}
+.career-goal-panel label {
+  display: grid;
+  gap: 7px;
+  margin: 15px 0;
+  font-size: 13px;
+}
+.career-goal-panel input,
+.career-goal-panel textarea,
+.career-goal-panel select {
+  width: 100%;
+  min-width: 0;
+  font-size: 15px;
+}
+.career-goal-panel textarea {
+  resize: vertical;
+}
+.goal-actions,
+.goal-examples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.goal-actions button {
+  min-height: 40px;
+  font-size: 13px;
+}
+.goal-examples {
+  margin: 0 0 14px;
+  gap: 8px;
+}
+.goal-examples button {
+  padding: 5px 9px;
+  color: var(--green);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: transparent;
+  font-size: 12px;
+}
+.goal-review {
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+.goal-review h3 {
+  font-size: 17px;
+  margin-bottom: 8px;
+}
+.goal-targets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 20px;
+}
+.goal-targets label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.goal-targets label > span {
+  min-width: 0;
+}
+.goal-targets small,
+.goal-course-row small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+.goal-targets select {
+  width: 150px;
+  flex: 0 0 150px;
+  font-size: 13px;
+}
+.goal-course-preview {
+  margin: 22px 0;
+}
+.goal-course-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.goal-course-row > div {
+  min-width: 0;
+}
+.goal-course-row strong {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.goal-course-row .course-access {
+  flex-shrink: 0;
+}
+.career-goal-applied {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+.career-goal-applied h2 {
+  overflow-wrap: anywhere;
+}
+.career-goal-applied p {
+  color: var(--muted);
+  margin: 6px 0 0;
+}
+.goal-spinner {
+  animation: goal-spin 1s linear infinite;
+}
+@keyframes goal-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (max-width: 760px) {
+  .goal-targets {
+    grid-template-columns: 1fr;
+  }
+  .career-goal-applied,
+  .goal-course-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .goal-targets select {
+    width: 135px;
+    flex-basis: 135px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .goal-spinner {
+    animation: none;
+  }
+}

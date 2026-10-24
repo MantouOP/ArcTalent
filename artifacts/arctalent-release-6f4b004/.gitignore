@@ -1,0 +1,11 @@
+node_modules/
+.next/
+out/
+.env*
+!.env.example
+*.tsbuildinfo
+*.log
+.DS_Store
+.replit-cache/
+tmp/pdfs/
+tmp/taste-intro/
