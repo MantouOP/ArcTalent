@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { baseline, baseProfile } from '../src/lib/catalogue';
+import { baseline, baseProfile, courses } from '../src/lib/catalogue';
+import type { LearningPlan } from '../src/lib/types';
 import { rankRoles } from '../src/lib/engine';
 import { buildCustomSnapshot } from '../src/lib/custom-inputs';
 
@@ -64,6 +65,32 @@ await check('invalid skill levels are rejected', async () => {
   });
   assert.equal(response.status, 400);
 });
+await check(
+  'all returned pathways retain exact catalogue course titles and direct URLs',
+  async () => {
+    const response = await post('/api/analyze', {
+      profile: { ...baseProfile, hours: 10, weeks: 26 },
+      scenario: 'rapid',
+      snapshot: baseline,
+    });
+    assert.equal(response.status, 200);
+    const result = await response.json();
+    assert.equal(result.plans.length, 6);
+    let checked = 0;
+    for (const plan of result.plans as LearningPlan[]) {
+      for (const { course } of plan.steps) {
+        const canonical = courses.find((entry) => entry.id === course.id);
+        assert.ok(canonical);
+        assert.equal(course.title, canonical.title);
+        assert.equal(course.url, canonical.url);
+        assert.equal(course.provider, canonical.provider);
+        assert.equal(course.checkedAt, '2026-10-24');
+        checked++;
+      }
+    }
+    assert.ok(checked > 0);
+  },
+);
 await check(
   'custom profile answers and dated assumptions reach the same analysis engine',
   async () => {

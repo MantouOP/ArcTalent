@@ -160,6 +160,16 @@ Source `27648ef` is **Live on Replit**, with exact imported-source equality, 112
 
 Public Chrome verified confirmation feedback/focus, actual PDF import, six candidates and re-importing the same PDF after text edits. A fictional Maya profile's original typed answers and four 45-minute sessions within three weekly hours survived reload. A ninth custom SME worker and a dated user-entered snapshot also survived reload. The snapshot displayed 37.12 → 38.76, +1.64, zero measured job/research records and clear simulation provenance. Chinese member-name entry fit a 375px dialog without horizontal overflow. No warning/error entries or canvas elements were captured; test data and temporary viewport were reset to the English/default-display/Aina baseline. The [live importer](images/cv-import-live.jpg), [custom snapshot](images/custom-inputs-live.jpg) and [release provenance](REPLIT_STATUS.md) record the result.
 
+## Direct course links — 24 October 2026
+
+All eleven official provider pages were rechecked for title, direct destination and provider study duration; the [source register](SOURCES.md) records the URLs. SQLBolt now uses **Introduction to SQL** and its direct tutorial page. No scheduling, scoring, API, storage or completion-handler logic changed. Existing resources remain free-content entries, with planning allowances and uncovered skill gaps still labelled.
+
+A reusable course link provides an exact course/provider accessible name, a visible destination domain and safe new-tab navigation in scheduled steps, the overview's next step, completed learning and SME training groups. Chat lists and names every scheduled course source, including plans longer than five courses. Interface copy is available in English, Bahasa Melayu and Simplified Chinese; provider course titles remain canonical.
+
+Three regression tests failed for the expected old identity/date and truncated chat reply, then passed after the changes. **115 unit tests**, formatting, typecheck, production build and **16 local production integration checks passed**. Integration verifies exact course titles, URLs, providers and check dates across all six returned role pathways. Independent code review found no concrete issues.
+
+Chrome verified four baseline course links, the rapid scenario's later project course, the overview link, completed-course access, all six SME training groups, named chat sources and the HRD-only empty state. Clicking SQLBolt opened its actual Introduction to SQL page. Malay and Chinese labels retained course titles. The viewport override did not change the measured browser width; it was reset, and no new narrow-phone browser verification is claimed.
+
 ## External verification still pending
 
 Replit development Preview/workflow, a paid RunPod endpoint, Malaysian vacancy data, HRD programme claimability, worker/employer validation, measured career outcomes and the official submission package. Production publication and the public API/browser checks are verified separately from the development Preview/workflow. Remote CI status must be checked for each new commit.

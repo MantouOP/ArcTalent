@@ -47,6 +47,25 @@ function text(reply: ChatReply): string {
     .join('\n');
 }
 
+test('learning replies name and directly link every scheduled course, including more than five', () => {
+  const ctx = context();
+  ctx.plan.steps = courses.map((course, i) => ({
+    course,
+    startWeek: i + 1,
+    endWeek: i + 1,
+    shared: false,
+  }));
+  const reply = answerCareerQuestion('What should I learn next?', ctx);
+  assert.equal(reply.bullets.length, courses.length);
+  assert.deepEqual(
+    reply.sources.map((source) => ({
+      title: source.courseTitle,
+      url: source.href,
+    })),
+    courses.map((course) => ({ title: course.title, url: course.url })),
+  );
+});
+
 const topics: [string, ChatIntent][] = [
   ['Which career do you recommend?', 'recommendation'],
   ['Apakah kerjaya yang disyorkan?', 'recommendation'],

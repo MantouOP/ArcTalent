@@ -58,6 +58,7 @@ import { StudyRhythm } from './study-rhythm';
 import { RouteSummary, RouteAnalytics } from './command-overview';
 import { CareerChat } from './career-chat';
 import { SettingsPanel } from './settings-panel';
+import { CourseLink } from './course-link';
 import { useDisplayPreferences } from './display-preferences-provider';
 import { shouldReduceMotion } from '@/lib/display-preferences';
 import { buildSkillBridge } from '@/lib/skill-bridge';
@@ -645,6 +646,9 @@ export function ArcTalentApp() {
                             'Try a longer horizon or inspect uncovered skills.',
                           )}
                     </p>
+                    {plan.steps[0] && (
+                      <CourseLink course={plan.steps[0].course} />
+                    )}
                     <button onClick={() => navigate('pathway')}>
                       {t('See the learning plan')} <ArrowRight size={16} />
                     </button>
@@ -908,6 +912,13 @@ export function ArcTalentApp() {
                       </External>
                     </div>
                   )}
+                  {plan.steps.length > 0 && (
+                    <p className="muted small">
+                      {t(
+                        'Each step links to the exact course on its provider’s website. Links open in a new tab.',
+                      )}
+                    </p>
+                  )}
                   {plan.steps.map((step, i) => (
                     <article className="course-card" key={step.course.id}>
                       <div
@@ -948,9 +959,7 @@ export function ArcTalentApp() {
                         </div>
                         <p className="muted small">{t(step.course.note)}</p>
                         <div className="course-bottom">
-                          <External href={step.course.url}>
-                            {t('Open learning resource')}{' '}
-                          </External>
+                          <CourseLink course={step.course} />
                           <button
                             className="text-button"
                             onClick={() => complete(step.course.id)}
@@ -995,10 +1004,14 @@ export function ArcTalentApp() {
                       <h3>{t('Learning you’re keeping')}</h3>
                       {plan.completed.map((c) => (
                         <div key={c.id}>
-                          <span>
-                            <CheckCircle2 size={16} />
-                            {c.title}
-                          </span>
+                          <div className="completed-course">
+                            <span>
+                              <CheckCircle2 size={16} />
+                              {c.title}
+                            </span>
+                            <small>{c.provider}</small>
+                            <CourseLink course={c} />
+                          </div>
                           <button
                             className="text-button"
                             onClick={() => complete(c.id)}

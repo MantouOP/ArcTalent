@@ -1,0 +1,65 @@
+.course-access {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  max-width: 100%;
+  padding: 8px 12px;
+  border: 1px solid rgba(0, 242, 254, 0.22);
+  border-radius: 7px;
+  color: var(--green);
+  background: rgba(0, 242, 254, 0.04);
+  transition:
+    background 200ms ease-out,
+    border-color 200ms ease-out;
+}
+.course-access:hover {
+  background: rgba(0, 242, 254, 0.09);
+  border-color: var(--green);
+  text-decoration: none;
+}
+.course-access > strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.course-access > small {
+  font-size: 10px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.next-step-card .course-access {
+  margin-bottom: 14px;
+}
+.training-course {
+  min-width: 0;
+}
+.training-course .course-access {
+  margin-top: 10px;
+}
+.completed-panel > div {
+  gap: 12px;
+  align-items: flex-start;
+}
+.completed-panel .completed-course {
+  display: grid;
+  justify-items: start;
+  gap: 7px;
+  min-width: 0;
+}
+.completed-course > span {
+  overflow-wrap: anywhere;
+}
+.completed-course > span > svg {
+  flex-shrink: 0;
+}
+.completed-course > small {
+  color: var(--muted);
+}
+@media (prefers-reduced-motion: reduce) {
+  .course-access {
+    transition: none;
+  }
+}

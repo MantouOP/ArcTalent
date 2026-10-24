@@ -9,10 +9,11 @@ import {
 } from 'lucide-react';
 import { roles, skills, skillById, sdgUrl } from '@/lib/catalogue';
 import { buildPlan, rankRoles } from '@/lib/engine';
-import type { Profile, Scenario, Snapshot } from '@/lib/types';
+import type { Course, Profile, Scenario, Snapshot } from '@/lib/types';
 import type { WorkforceSettings } from '@/lib/workforce-settings';
 import { getWorkforceMembers } from '@/lib/workforce-settings';
 import { TeamEditor } from './team-editor';
+import { CourseLink } from './course-link';
 import { downloadFile, External, Tag } from './ui';
 import { useI18n } from './language-provider';
 export function EmployerPanel({
@@ -47,10 +48,7 @@ export function EmployerPanel({
       plan: buildPlan(p, role),
     };
   });
-  const groups = new Map<
-    string,
-    { title: string; names: string[]; hours: number; fee: number }
-  >();
+  const groups = new Map<string, { course: Course; names: string[] }>();
   let allocated = 0;
   const used: Record<string, number> = {};
   const allocations = rows.map((row) => {
@@ -62,10 +60,8 @@ export function EmployerPanel({
       row.plan.steps.forEach((step) => {
         const c = step.course,
           group = groups.get(c.id) ?? {
-            title: c.title,
+            course: c,
             names: [],
-            hours: c.hours,
-            fee: c.fee,
           };
         group.names.push(row.profile.name);
         groups.set(c.id, group);
@@ -84,7 +80,7 @@ export function EmployerPanel({
     };
   });
   const hours = [...groups.values()].reduce(
-      (s, g) => s + g.hours * g.names.length,
+      (s, g) => s + g.course.hours * g.names.length,
       0,
     ),
     learners = allocations.filter(
@@ -351,16 +347,20 @@ export function EmployerPanel({
               <div className="course-icon">
                 <GraduationCap size={18} />
               </div>
-              <div>
-                <h3>{g.title}</h3>
+              <div className="training-course">
+                <h3>{g.course.title}</h3>
+                <small>{g.course.provider}</small>
                 <p>{g.names.join(', ')}</p>
                 <small>
                   {t('{0} learners · {1} hours each · RM {2} each', {
                     0: g.names.length,
-                    1: g.hours,
-                    2: g.fee,
+                    1: g.course.hours,
+                    2: g.course.fee,
                   })}
                 </small>
+                <div>
+                  <CourseLink course={g.course} />
+                </div>
               </div>
             </div>
           ))}

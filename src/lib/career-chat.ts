@@ -39,7 +39,7 @@ export type ChatReply = {
   intent: ChatIntent;
   paragraphs: ChatLine[];
   bullets: ChatLine[];
-  sources: { label: string; href: string }[];
+  sources: { label: string; href: string; courseTitle?: string }[];
   action?: { label: string; view: ChatView };
   basis: { role: string; scenario: Scenario; snapshot: string; asOf: string };
 };
@@ -398,7 +398,7 @@ export function answerCareerQuestion(
           shared.length ? { 0: shared.length } : undefined,
         );
         p(copy.readiness);
-        for (const step of plan.steps.slice(0, 5)) {
+        for (const step of plan.steps) {
           reply.bullets.push(
             line(copy.course, {
               0: step.course.title,
@@ -409,7 +409,11 @@ export function answerCareerQuestion(
           );
           const source = courses.find((course) => course.id === step.course.id);
           if (source)
-            reply.sources.push({ label: copy.courseSource, href: source.url });
+            reply.sources.push({
+              label: copy.courseSource,
+              href: source.url,
+              courseTitle: source.title,
+            });
         }
       }
       action(copy.pathwayAction, 'pathway');

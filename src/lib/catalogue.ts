@@ -192,7 +192,7 @@ export const roles: Role[] = [
   },
 ];
 
-const checkedAt = '2026-10-22';
+const checkedAt = '2026-10-24';
 const course = (
   id: string,
   title: string,
@@ -255,9 +255,9 @@ export const courses: Course[] = [
   ),
   course(
     'sql',
-    'SQLBolt interactive SQL lessons',
+    'Introduction to SQL',
     'SQLBolt',
-    'https://sqlbolt.com/',
+    'https://sqlbolt.com/lesson/introduction',
     8,
     ['sql'],
     ['data'],

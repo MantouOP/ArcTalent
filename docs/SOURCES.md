@@ -1,6 +1,6 @@
 # Sources and evidence register
 
-Provider pages were checked during the assisted build on 22 October 2026. Recheck access, fees, durations, prerequisites and programme eligibility before submission. No course materials are copied into this repository.
+All eleven course pages were rechecked against their official provider pages on **24 October 2026**. Their published titles, destinations and provider durations were confirmed. SQLBolt uses its published tutorial title, “Introduction to SQL”, and the direct tutorial URL. Access, fees and programme eligibility can change. No course materials are copied into this repository.
 
 ## Learning resources
 
@@ -8,17 +8,17 @@ All eleven starter resources offer public learning content. Course fees are reco
 
 | Provider        | Resource                                                                                                                                                                                       | Study hours           | Checked    |
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- | ---------- |
-| OpenLearn       | [Data analysis: visualisations in Excel](https://www.open.edu/openlearn/science-maths-technology/data-analysis-visualisations-excel/)                                                          | 6 (provider)          | 2026-10-22 |
-| OpenClassrooms  | [Develop Your Critical Thinking](https://openclassrooms.com/us/courses/7003486-develop-your-critical-thinking)                                                                                 | 6 (provider)          | 2026-10-22 |
-| OpenLearn       | [Effective communication in the workplace](https://www.open.edu/openlearn/money-business/effective-communication-the-workplace)                                                                | 24 (provider)         | 2026-10-22 |
-| OpenLearn       | [Project management: the start of the project journey](https://www.open.edu/openlearn/money-business/leadership-management/project-management-the-start-the-project-journey/content-section-0) | 35 (provider)         | 2026-10-22 |
-| SQLBolt         | [SQLBolt interactive SQL lessons](https://sqlbolt.com/)                                                                                                                                        | 8 (planning estimate) | 2026-10-22 |
-| Microsoft Learn | [Get started building with Power BI](https://learn.microsoft.com/en-us/training/modules/get-started-with-power-bi/)                                                                            | 2 (planning estimate) | 2026-10-22 |
-| Microsoft Learn | [Embrace responsible AI principles and practices](https://learn.microsoft.com/en-us/training/modules/embrace-responsible-ai-principles-practices/)                                             | 2 (planning estimate) | 2026-10-22 |
-| OpenLearn       | [Extending and developing your thinking skills](https://www.open.edu/openlearn/education-development/extending-and-developing-your-thinking-skills)                                            | 6 (provider)          | 2026-10-22 |
-| OpenClassrooms  | [Manage Your Project Using V-Model Methodology](https://openclassrooms.com/us/courses/8371431-manage-your-project-using-v-model-methodology)                                                   | 10 (provider)         | 2026-10-22 |
-| OpenLearn       | [Introduction to operations management](https://www.open.edu/openlearn/money-business/business-strategy-studies/introduction-operations-management/content-section-0)                          | 6 (provider)          | 2026-10-22 |
-| OpenLearn       | [Environment: treading lightly on the Earth](https://www.open.edu/openlearn/nature-environment/environmental-studies/environment-treading-lightly-on-the-earth/content-section-0)              | 15 (provider)         | 2026-10-22 |
+| OpenLearn       | [Data analysis: visualisations in Excel](https://www.open.edu/openlearn/science-maths-technology/data-analysis-visualisations-excel/)                                                          | 6 (provider)          | 2026-10-24 |
+| OpenClassrooms  | [Develop Your Critical Thinking](https://openclassrooms.com/us/courses/7003486-develop-your-critical-thinking)                                                                                 | 6 (provider)          | 2026-10-24 |
+| OpenLearn       | [Effective communication in the workplace](https://www.open.edu/openlearn/money-business/effective-communication-the-workplace)                                                                | 24 (provider)         | 2026-10-24 |
+| OpenLearn       | [Project management: the start of the project journey](https://www.open.edu/openlearn/money-business/leadership-management/project-management-the-start-the-project-journey/content-section-0) | 35 (provider)         | 2026-10-24 |
+| SQLBolt         | [Introduction to SQL](https://sqlbolt.com/lesson/introduction)                                                                                                                                 | 8 (planning estimate) | 2026-10-24 |
+| Microsoft Learn | [Get started building with Power BI](https://learn.microsoft.com/en-us/training/modules/get-started-with-power-bi/)                                                                            | 2 (planning estimate) | 2026-10-24 |
+| Microsoft Learn | [Embrace responsible AI principles and practices](https://learn.microsoft.com/en-us/training/modules/embrace-responsible-ai-principles-practices/)                                             | 2 (planning estimate) | 2026-10-24 |
+| OpenLearn       | [Extending and developing your thinking skills](https://www.open.edu/openlearn/education-development/extending-and-developing-your-thinking-skills)                                            | 6 (provider)          | 2026-10-24 |
+| OpenClassrooms  | [Manage Your Project Using V-Model Methodology](https://openclassrooms.com/us/courses/8371431-manage-your-project-using-v-model-methodology)                                                   | 10 (provider)         | 2026-10-24 |
+| OpenLearn       | [Introduction to operations management](https://www.open.edu/openlearn/money-business/business-strategy-studies/introduction-operations-management/content-section-0)                          | 6 (provider)          | 2026-10-24 |
+| OpenLearn       | [Environment: treading lightly on the Earth](https://www.open.edu/openlearn/nature-environment/environmental-studies/environment-treading-lightly-on-the-earth/content-section-0)              | 15 (provider)         | 2026-10-24 |
 
 The starter catalogue contains **no programme verified as HRD Corp claimable**. Check programme-specific conditions against [HRD Corp guidance](https://hrdcorp.gov.my/hrdcorp-claimable-courses). Provider registration alone is insufficient evidence. Public learning portals can be investigated for expansion, but are not represented as verified catalogue entries here.
 

@@ -202,7 +202,7 @@ export function CareerChat({
                         target="_blank"
                         rel="noreferrer"
                       >
-                        {t(source.label)}
+                        {source.courseTitle ?? t(source.label)}
                         <ArrowUpRight size={12} />
                       </a>
                     ))}

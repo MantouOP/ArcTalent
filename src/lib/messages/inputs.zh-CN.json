@@ -43,5 +43,8 @@
   "Custom assumptions applied. Individual and team plans recalculated.": "已应用自定义假设，个人和团队计划已重新计算。",
   "Check the label, calendar date and demand values from 0 to 100.": "请检查名称、有效日期以及 0 至 100 的需求值。",
   "User-entered planning assumptions, not verified market evidence.": "用户输入的规划假设，并非已验证的市场证据。",
-  "User-entered simulation": "用户输入的模拟"
+  "User-entered simulation": "用户输入的模拟",
+  "Open course": "打开课程",
+  "Open course: {0} on {1} (opens in a new tab)": "打开课程：{1} 的 {0}（在新标签页中打开）",
+  "Each step links to the exact course on its provider’s website. Links open in a new tab.": "每个学习步骤均直接链接到提供方网站上的对应课程。链接将在新标签页中打开。"
 }

@@ -43,5 +43,8 @@
   "Custom assumptions applied. Individual and team plans recalculated.": "Andaian tersuai digunakan. Pelan individu dan pasukan dikira semula.",
   "Check the label, calendar date and demand values from 0 to 100.": "Semak label, tarikh kalendar dan nilai permintaan antara 0 hingga 100.",
   "User-entered planning assumptions, not verified market evidence.": "Andaian perancangan yang dimasukkan pengguna, bukan bukti pasaran yang disahkan.",
-  "User-entered simulation": "Simulasi yang dimasukkan pengguna"
+  "User-entered simulation": "Simulasi yang dimasukkan pengguna",
+  "Open course": "Buka kursus",
+  "Open course: {0} on {1} (opens in a new tab)": "Buka kursus: {0} di {1} (dibuka dalam tab baharu)",
+  "Each step links to the exact course on its provider’s website. Links open in a new tab.": "Setiap langkah dipautkan terus ke kursus yang tepat di laman penyedia. Pautan dibuka dalam tab baharu."
 }
