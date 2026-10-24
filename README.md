@@ -13,7 +13,7 @@
 | **SDG Track (1–17)** | **SDG 8: Decent Work and Economic Growth** *(also addressing SDG 4: Quality Education & SDG 10: Reduced Inequalities)* |
 | **Team Leader** | **Emmanuel Heng Zi Teng** |
 | **Email & Phone** | **Enuelhzt1524@gmail.com** · **010-271-6363** |
-| **University** | **Universiti Malaya (UM)** |
+| **University Affiliations** | **Universiti Malaya (UM)**, **Universiti Teknologi Malaysia (UTM)**, **Management and Science University (MSU)**, **Swinburne University of Technology** |
 | **Number of Members** | **4** |
 
 ## Links
@@ -128,12 +128,12 @@ $$\text{Suitability} = 55\% \times \text{Skill Coverage} + 15\% \times \text{Int
 
 ## Team — Xeno Force
 
-| Name | Role | University |
-| :--- | :--- | :--- |
-| **Emmanuel Heng Zi Teng** | Team Leader / Full-Stack & System Architecture | Universiti Malaya |
-| *(Member 2)* | Frontend & UI / UX Design | Universiti Malaya |
-| *(Member 3)* | AI Integration & RunPod Infrastructure | Universiti Malaya |
-| *(Member 4)* | Workforce Research & SDG Impact Modeling | Universiti Malaya |
+| Name | Role | University | Email |
+| :--- | :--- | :--- | :--- |
+| **Emmanuel Heng Zi Teng** | Team Leader / Full-Stack & System Architecture | Universiti Malaya | `enuelhzt1524@gmail.com` |
+| **Dihom Chan Dyi Hong** | Frontend & UI / UX Design | Universiti Teknologi Malaysia | `dihomchan1@gmail.com` |
+| **Nicholas Chuah Zheng Yee** | AI Integration & RunPod Infrastructure | Management and Science University | `711niczheng@gmail.com` |
+| **Ghessweynne Liew Thin Hsing** | Workforce Research & SDG Impact Modeling | Swinburne University of Technology | `dino55590@gmail.com` |
 
 ---
 
