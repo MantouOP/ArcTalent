@@ -15,6 +15,7 @@ test('each catalogue course has a distinct official HTTPS destination checked in
     OpenClassrooms: 'openclassrooms.com',
     SQLBolt: 'sqlbolt.com',
     'Microsoft Learn': 'learn.microsoft.com',
+    MDN: 'developer.mozilla.org',
   };
   for (const course of courses) {
     const url = new URL(course.url);

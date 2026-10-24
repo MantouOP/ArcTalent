@@ -23,7 +23,29 @@ export const skillIdSchema = z.enum([
   'teaching',
   'security',
   'python',
+  'htmlcss',
+  'javascript',
+  'marketing',
 ]);
+export const careerGoalInputSchema = z.object({
+  title: z.string().trim().min(2).max(100),
+  description: z.string().trim().max(1200).default(''),
+  locale: z.enum(['en', 'ms', 'zh-CN']).default('en'),
+});
+export const careerGoalSchema = z.object({
+  title: z.string().trim().min(2).max(100),
+  description: z.string().trim().max(1200),
+  family: z.enum(['data', 'people', 'operations', 'sustainability']),
+  requirements: z
+    .partialRecord(skillIdSchema, z.number().int().min(1).max(3))
+    .refine(
+      (value) => Object.keys(value).length > 0,
+      'Choose at least one skill target',
+    ),
+  otherSkills: z.array(z.string().trim().min(1).max(120)).max(8),
+  summary: z.string().trim().max(500),
+  mode: z.enum(['ai', 'local', 'manual']),
+});
 export const profileSchema = z.object({
   id: z.string().max(60),
   name: z.string().trim().min(1).max(60),
@@ -59,7 +81,7 @@ export const snapshotSchema = z.object({
         collectedAt: z.iso.datetime(),
         kind: z.enum(['jobs', 'research', 'simulation']),
         geography: z.string().max(200),
-        skills: z.array(skillIdSchema).max(16),
+        skills: z.array(skillIdSchema).max(skillIdSchema.options.length),
       }),
     )
     .max(200),
@@ -68,4 +90,5 @@ export const analysisSchema = z.object({
   profile: profileSchema,
   scenario: z.enum(['moderate', 'rapid']),
   snapshot: snapshotSchema,
+  customGoal: careerGoalSchema.optional(),
 });

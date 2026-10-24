@@ -22,7 +22,19 @@ export type SkillId =
   | 'sustainability'
   | 'teaching'
   | 'security'
-  | 'python';
+  | 'python'
+  | 'htmlcss'
+  | 'javascript'
+  | 'marketing';
+export type CareerGoal = {
+  title: string;
+  description: string;
+  family: 'data' | 'people' | 'operations' | 'sustainability';
+  requirements: Partial<Record<SkillId, number>>;
+  otherSkills: string[];
+  summary: string;
+  mode: 'ai' | 'local' | 'manual';
+};
 export type Profile = {
   id: string;
   name: string;
@@ -44,6 +56,7 @@ export type Skill = {
   rationale: string;
 };
 export type Role = {
+  custom?: boolean;
   id: string;
   title: string;
   shortTitle: string;

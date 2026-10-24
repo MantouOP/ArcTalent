@@ -61,18 +61,20 @@ export function rankRoles(
   profile: Profile,
   scenario: Scenario,
   snapshot: Snapshot,
+  candidates: Role[] = roles,
 ) {
-  return roles
+  return candidates
     .map((r) => matchRole(profile, r, scenario, snapshot))
     .sort((a, b) => b.score - a.score || a.role.id.localeCompare(b.role.id));
 }
 export function sharedFoundation(
   profile: Profile,
   snapshot: Snapshot,
+  candidates: Role[] = roles,
 ): SkillId[] {
   const compared = [
-    ...rankRoles(profile, 'moderate', snapshot).slice(0, 3),
-    ...rankRoles(profile, 'rapid', snapshot).slice(0, 3),
+    ...rankRoles(profile, 'moderate', snapshot, candidates).slice(0, 3),
+    ...rankRoles(profile, 'rapid', snapshot, candidates).slice(0, 3),
   ];
   return skills
     .filter((s) =>
@@ -197,14 +199,16 @@ export function diffSnapshots(
   scenario: Scenario,
   before: Snapshot,
   after: Snapshot,
+  candidates: Role[] = roles,
 ) {
-  const old = rankRoles(profile, scenario, before),
-    next = rankRoles(profile, scenario, after);
+  const old = rankRoles(profile, scenario, before, candidates),
+    next = rankRoles(profile, scenario, after, candidates);
   return next.map((m, i) => {
     const previous = old.find((o) => o.role.id === m.role.id)!;
     return {
       id: m.role.id,
       title: m.role.title,
+      ...(m.role.custom ? { custom: true } : {}),
       before: previous.score,
       after: m.score,
       delta: round(m.score - previous.score),

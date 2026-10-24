@@ -150,13 +150,17 @@ export function MatchDetails({ match }: { match: Match }) {
       <p className="notice">{t(match.role.entry)}</p>
       <p className="muted">
         {t(
-          'Role requirements and exposure factors are simplified team assumptions informed by occupational tasks. O*NET describes US occupations; Malaysian entry requirements need local validation.',
+          match.role.custom
+            ? 'Custom requirements are reviewed learning targets. The exposure factor of 0.5 is an illustrative scenario assumption, not an occupational forecast.'
+            : 'Role requirements and exposure factors are simplified team assumptions informed by occupational tasks. O*NET describes US occupations; Malaysian entry requirements need local validation.',
         )}
       </p>
       <div className="source-links">
-        <External href={match.role.source}>
-          {t('Occupational source: O*NET')}
-        </External>
+        {match.role.source && (
+          <External href={match.role.source}>
+            {t('Occupational source: O*NET')}
+          </External>
+        )}
         <External href={sdgUrl(match.role.target)}>
           {t('SDG target {0}', { 0: match.role.target })}
         </External>

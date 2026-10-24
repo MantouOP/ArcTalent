@@ -4,6 +4,7 @@ import { baseline, baseProfile, courses } from '../src/lib/catalogue';
 import type { LearningPlan } from '../src/lib/types';
 import { rankRoles } from '../src/lib/engine';
 import { buildCustomSnapshot } from '../src/lib/custom-inputs';
+import { goalDraftSchema } from '../src/lib/career-goals';
 
 const origin = process.env.TEST_BASE_URL || 'http://localhost:3000';
 const post = (path: string, body: unknown) =>
@@ -65,6 +66,88 @@ await check('invalid skill levels are rejected', async () => {
   });
   assert.equal(response.status, 400);
 });
+await check(
+  'a user-defined career participates in analysis and receives verified course links',
+  async () => {
+    const response = await post('/api/analyze', {
+      profile: { ...baseProfile, hours: 10, weeks: 26 },
+      scenario: 'moderate',
+      snapshot: baseline,
+      customGoal: {
+        title: 'My web developer destination',
+        description: 'Create accessible websites.',
+        family: 'data',
+        requirements: { htmlcss: 2, javascript: 2, critical: 2 },
+        otherSkills: ['Accessibility testing'],
+        summary: 'A personal learning target for web development.',
+        mode: 'manual',
+      },
+    });
+    assert.equal(response.status, 200);
+    const result = await response.json();
+    assert.equal(result.matches.length, 7);
+    const custom = result.plans.find(
+      (plan: { roleId: string }) => plan.roleId === 'custom-goal',
+    );
+    assert.ok(custom);
+    assert.ok(
+      custom.steps.some(
+        (step: { course: { id: string } }) => step.course.id === 'htmlcss',
+      ),
+    );
+    assert.ok(
+      custom.steps.some(
+        (step: { course: { id: string } }) => step.course.id === 'javascript',
+      ),
+    );
+  },
+);
+await check(
+  'free-text career analysis returns an honest, editable goal draft',
+  async () => {
+    const response = await post('/api/career-goal', {
+      title: 'Web developer',
+      description: 'Build accessible websites with HTML, CSS and JavaScript.',
+      locale: 'en',
+    });
+    assert.equal(response.status, 200);
+    const result = await response.json();
+    const draft = goalDraftSchema.parse(result.draft);
+    assert.equal(draft.title, 'Web developer');
+    assert.ok(['ai', 'local'].includes(draft.mode));
+    if (draft.mode === 'local') {
+      assert.match(result.notice, /AI/);
+      assert.equal(draft.requirements.htmlcss, 2);
+      assert.equal(draft.requirements.javascript, 2);
+    }
+  },
+);
+await check(
+  'invalid and oversized career analysis inputs are rejected',
+  async () => {
+    assert.equal((await post('/api/career-goal', { title: '' })).status, 400);
+    assert.equal(
+      (
+        await post('/api/career-goal', {
+          title: 'Test goal',
+          description: 'x'.repeat(7000),
+        })
+      ).status,
+      413,
+    );
+    assert.equal(
+      (
+        await post('/api/analyze', {
+          profile: baseProfile,
+          scenario: 'moderate',
+          snapshot: baseline,
+          customGoal: { title: 'Invalid goal', requirements: {} },
+        })
+      ).status,
+      400,
+    );
+  },
+);
 await check(
   'all returned pathways retain exact catalogue course titles and direct URLs',
   async () => {

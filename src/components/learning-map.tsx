@@ -4,6 +4,7 @@ import { useId } from 'react';
 import { skillById } from '@/lib/catalogue';
 import type { Match, Profile, SkillId } from '@/lib/types';
 import { useI18n } from './language-provider';
+import { roleLabel } from '@/lib/role-label';
 export function LearningMap({
   matches,
   shared,
@@ -149,7 +150,7 @@ export function LearningMap({
                 {String.fromCharCode(65 + i)}
               </span>
               <span>
-                <strong>{t(m.role.shortTitle)}</strong>
+                <strong>{roleLabel(m.role, t, true)}</strong>
                 <small>
                   {t('{0} branch-specific gaps', {
                     0: m.gaps.filter((g) => !shared.includes(g.id)).length,

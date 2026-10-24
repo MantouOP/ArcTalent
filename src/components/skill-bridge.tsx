@@ -5,6 +5,7 @@ import { skillById } from '@/lib/catalogue';
 import { buildSkillBridge } from '@/lib/skill-bridge';
 import type { Profile, Role } from '@/lib/types';
 import { useI18n } from './language-provider';
+import { roleLabel } from '@/lib/role-label';
 
 const statuses = {
   ready: { label: 'Meets target', Icon: Check },
@@ -30,7 +31,7 @@ export function SkillBridge({
       <div className="bridge-route">
         <span>{t(profile.currentRole || 'Your starting point')}</span>
         <ArrowRight size={15} />
-        <strong>{t(role.shortTitle)}</strong>
+        <strong>{roleLabel(role, t, true)}</strong>
       </div>
       <div className="bridge-heading">
         <div>

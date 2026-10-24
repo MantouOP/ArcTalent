@@ -48,7 +48,8 @@ See the timed [demo script](docs/DEMO.md), [editable implementation plan](docs/I
 
 ## What is implemented
 
-- Six sourced occupations, sixteen transferable skills, eleven public learning resources, blank custom profiles and a roster of up to ten fictional workers (eight provided initially).
+- Six sourced occupations, nineteen transferable skills, seventeen public learning resources, an editable custom career goal, blank custom profiles and a roster of up to ten fictional workers (eight provided initially).
+- In **My pathway**, type a destination and describe the work you want to do. Analyse the goal, review or edit skill targets, and preview actual courses before applying it. The custom destination persists and participates in both scenarios, Explore, evidence comparisons, chat and JSON exports. Specialist skills outside this starter catalogue remain visible as gaps. Custom requirements and neutral exposure 0.5 are planning assumptions, not verified occupational forecasts.
 - Deterministic, explainable matching and moderate/rapid scenario comparison.
 - An Orion-inspired dark command center with an interactive career constellation, shared learning stops, prerequisites, time and budget limits, weekly schedules and JSON export.
 - Read-only score gauges, skill/scenario comparison bars, a weekly allocation chart and proportional skill-reuse bubbles, all derived from the existing engine output. Snapshot deltas name their comparison; no growth history is invented.
@@ -60,7 +61,7 @@ See the timed [demo script](docs/DEMO.md), [editable implementation plan](docs/I
 - Multilingual Settings for language, reading text, reduced motion and demo-data controls. The native dialog preserves the active workspace and unsaved profile draft; device reduced motion is respected. No account is required.
 - A workforce heatmap, proposed internal openings, grouped training, CSV export and planned SDG contribution view.
 - Dated synthetic replay, editable user-entered simulation snapshots and a real refresh adapter for Arbeitnow job postings and arXiv AI research, with source dates and partial-failure handling.
-- Optional RunPod-hosted model extraction through the AI SDK. The default mode uses local alias matching and labels it clearly.
+- Optional RunPod-hosted model extraction and structured career-goal analysis through the AI SDK. Without a configured model, the app explicitly labels local suggestions and supports manual skill targets. AI can suggest known skill IDs; course titles and URLs always come from the checked catalogue.
 
 ## How the model works
 
@@ -83,15 +84,16 @@ The initial and newer demo snapshots are synthetic fixtures dated 19 and 22 Octo
 
 Next.js App Router, React, TypeScript, CSS and Lucide icons. Route handlers run on Node.js:
 
-| Endpoint            | Purpose                                                                   |
-| ------------------- | ------------------------------------------------------------------------- |
-| `GET /api/health`   | Model version and actual extraction mode                                  |
-| `POST /api/analyze` | Validated matching and learning plans                                     |
-| `POST /api/extract` | Confirmed synthetic text → skill candidates                               |
-| `POST /api/pdf`     | Confirmed synthetic text PDF → text; 5 MB / 10 pages maximum              |
-| `GET /api/signals`  | Fixed public feed adapters, bounded records and five-minute process cache |
+| Endpoint                | Purpose                                                                     |
+| ----------------------- | --------------------------------------------------------------------------- |
+| `GET /api/health`       | Model version and actual extraction mode                                    |
+| `POST /api/analyze`     | Validated matching and learning plans                                       |
+| `POST /api/career-goal` | Goal and desired work → editable skill targets, with explicit AI/local mode |
+| `POST /api/extract`     | Confirmed synthetic text → skill candidates                                 |
+| `POST /api/pdf`         | Confirmed synthetic text PDF → text; 5 MB / 10 pages maximum                |
+| `GET /api/signals`      | Fixed public feed adapters, bounded records and five-minute process cache   |
 
-Profiles, completed activity and manager planning settings are stored only in this browser's local storage. CV text is not intentionally saved by the app server. A configured RunPod extractor receives the submitted synthetic CV text. Do not use real CVs in this public hackathon prototype. The app has no accounts, database, production HR controls, OCR, validated psychometric assessment or audited employment-outcome model. PDF import requires readable text.
+Profiles, the custom goal, completed activity and manager planning settings are stored only in this browser's local storage. CV text is not intentionally saved by the app server. A configured RunPod extractor receives the submitted synthetic CV text. Career-goal analysis sends only the goal, desired-work description and interface language, plus the public skill vocabulary. Leave personal or confidential details out of that text. Do not use real CVs in this public hackathon prototype. The app has no accounts, database, production HR controls, OCR, validated psychometric assessment or audited employment-outcome model. PDF import requires readable text.
 
 Occupational descriptions come from US O*NET context, while learning-resource facts are checked against provider pages. Course-to-skill and SDG mappings are project interpretations. No verified HRD Corp programmes have been added: the HRD filter correctly shows an empty state. Do not claim provider registration establishes programme claimability. [Sources and limitations](docs/SOURCES.md).
 
@@ -101,7 +103,7 @@ Import this GitHub repository into the team's own Replit project. The included `
 
 The [live Replit deployment](https://arc-talent--emmanuelheng.replit.app/) was verified on 23 October 2026. The acceptance revision passed 32 unit tests, a production build, type checking and 14 production API checks inside Replit; all 14 API checks also passed against the final public release without authentication. Browser checks confirmed scenario switching, dated evidence replay, retained SME settings, fresh CV evidence and clean synthetic PDF import. The [replit-runtime branch](https://github.com/MantouOP/ArcTalent/tree/replit-runtime) preserves the workspace launch configuration and recovery history. See the [Replit runtime status](docs/REPLIT_STATUS.md) for the exact release, served-file checksum, CI evidence and Starter hosting expiry.
 
-For optional AI extraction, deploy a compatible model on RunPod, then configure server secrets using `.env.example`:
+For optional AI extraction and career-goal analysis, configure **Replit Secrets** using `.env.example`, then republish. Either set `RUNPOD_BASE_URL` / `RUNPOD_MODEL` below or use `RUNPOD_ENDPOINT_ID` / `RUNPOD_MODEL_NAME` for a Serverless vLLM endpoint. Both formats use `RUNPOD_API_KEY`:
 
 ```dotenv
 RUNPOD_BASE_URL=https://YOUR-POD-ID-YOUR-PORT.proxy.runpod.net/v1
@@ -109,7 +111,7 @@ RUNPOD_API_KEY=YOUR_SERVER_SIDE_KEY
 RUNPOD_MODEL=YOUR_EXACT_SERVED_MODEL_ID
 ```
 
-The HTTPS RunPod proxy endpoint must support OpenAI-compatible chat completions and structured output for the installed AI SDK. Use the actual endpoint and model ID shown by your deployment. This optional integration has not been exercised against a paid GPU instance. Invalid configuration, timeout, unsupported output or the small demo request limit falls back to labelled local matching. No keys belong in GitHub or `NEXT_PUBLIC_*` variables.
+Supported base URLs are HTTPS Pod proxies ending in `.proxy.runpod.net/v1` and Serverless endpoints at `https://api.runpod.ai/v2/ENDPOINT_ID/openai/v1`. See the [official vLLM worker documentation](https://github.com/runpod-workers/worker-vllm). The endpoint must support chat completions and structured output. Use its exact served model ID. Invalid configuration, timeout, unsupported output or the small demo request limit falls back to labelled local matching. No keys belong in GitHub, browser code, chat or `NEXT_PUBLIC_*` variables. `/api/health` reports configuration presence, not successful inference. Verify a connected model by analysing a synthetic goal and checking for `draft.mode: "ai"` with sensible editable targets.
 
 ## Ownership, declaration and license
 

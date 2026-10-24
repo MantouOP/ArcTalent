@@ -47,7 +47,7 @@ export const skills: Skill[] = [
   skill(
     'visual',
     'Data visualisation',
-    ['power bi', 'dashboard', 'visualisation', 'visualization'],
+    ['power bi', 'dashboard', 'dashboards', 'visualisation', 'visualization'],
     ['data'],
   ),
   skill('ai', 'AI literacy', [
@@ -88,6 +88,18 @@ export const skills: Skill[] = [
     'data privacy',
   ]),
   skill('python', 'Python', ['python', 'pandas'], ['data']),
+  skill('htmlcss', 'HTML & CSS', ['html', 'css', 'web page', 'web pages']),
+  skill(
+    'javascript',
+    'JavaScript',
+    ['javascript', 'typescript', 'react'],
+    ['htmlcss'],
+  ),
+  skill('marketing', 'Digital marketing', [
+    'digital marketing',
+    'seo',
+    'social media marketing',
+  ]),
 ];
 export const skillById = Object.fromEntries(
   skills.map((s) => [s.id, s]),
@@ -318,6 +330,59 @@ export const courses: Course[] = [
     'https://www.open.edu/openlearn/nature-environment/environmental-studies/environment-treading-lightly-on-the-earth/content-section-0',
     15,
     ['sustainability'],
+  ),
+  course(
+    'python',
+    'Learn Python Basics for Data Analysis',
+    'OpenClassrooms',
+    'https://openclassrooms.com/us/courses/2304731-learn-python-basics-for-data-analysis',
+    6,
+    ['python'],
+    ['data'],
+  ),
+  course(
+    'ai-basics',
+    'Introduction to AI concepts',
+    'Microsoft Learn',
+    'https://learn.microsoft.com/en-us/training/modules/get-started-ai-fundamentals/',
+    2,
+    ['ai'],
+    [],
+    'planning estimate',
+  ),
+  course(
+    'security',
+    'Introduction to cyber security: stay safe online',
+    'OpenLearn',
+    'https://www.open.edu/openlearn/digital-computing/introduction-cyber-security-stay-safe-online/content-section-0',
+    24,
+    ['security'],
+  ),
+  course(
+    'htmlcss',
+    'Build Your First Web Pages With HTML and CSS',
+    'OpenClassrooms',
+    'https://openclassrooms.com/us/courses/5265446-build-your-first-web-pages-with-html-and-css',
+    10,
+    ['htmlcss'],
+  ),
+  course(
+    'javascript',
+    'Dynamic scripting with JavaScript',
+    'MDN',
+    'https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting',
+    20,
+    ['javascript'],
+    ['htmlcss'],
+    'planning estimate',
+  ),
+  course(
+    'marketing',
+    'Marketing communications in the digital age',
+    'OpenLearn',
+    'https://www.open.edu/openlearn/money-business/marketing/marketing-communications-the-digital-age',
+    12,
+    ['marketing'],
   ),
 ];
 export const baseProfile: Profile = {

@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { skillById, roles } from '@/lib/catalogue';
 import { diffSnapshots, MODEL_VERSION } from '@/lib/engine';
-import type { Profile, Scenario, Snapshot } from '@/lib/types';
+import type { Profile, Role, Scenario, Snapshot } from '@/lib/types';
 import { External, Tag } from './ui';
 import { useI18n } from './language-provider';
 import { CustomSnapshotForm } from './custom-snapshot-form';
@@ -24,6 +24,7 @@ export function EvidencePanel({
   onReplay,
   onBaseline,
   onApply,
+  candidates = roles,
 }: {
   profile: Profile;
   scenario: Scenario;
@@ -34,6 +35,7 @@ export function EvidencePanel({
   onReplay: () => void;
   onBaseline: () => void;
   onApply: (snapshot: Snapshot) => void;
+  candidates?: Role[];
 }) {
   const { t, locale } = useI18n();
   const dateLocale =
@@ -42,7 +44,7 @@ export function EvidencePanel({
   const customNotice =
     'User-entered planning assumptions, not verified market evidence.';
   const changes = previous
-    ? diffSnapshots(profile, scenario, previous, snapshot)
+    ? diffSnapshots(profile, scenario, previous, snapshot, candidates)
     : [];
   return (
     <>
@@ -214,7 +216,7 @@ export function EvidencePanel({
             {changes.map((c) => (
               <div key={c.id}>
                 <span>
-                  <strong>{t(c.title)}</strong>
+                  <strong>{c.custom ? c.title : t(c.title)}</strong>
                   <small>
                     {c.changedSkills.length
                       ? c.changedSkills

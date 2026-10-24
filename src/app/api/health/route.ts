@@ -1,14 +1,12 @@
 import { NextResponse } from 'next/server';
 import { MODEL_VERSION } from '@/lib/engine';
+import { getRunpodConfig } from '@/lib/runpod-config';
 export function GET() {
+  const configured = Boolean(getRunpodConfig());
   return NextResponse.json({
     ok: true,
     engine: MODEL_VERSION,
-    extraction:
-      process.env.RUNPOD_BASE_URL &&
-      process.env.RUNPOD_API_KEY &&
-      process.env.RUNPOD_MODEL
-        ? 'runpod-configured'
-        : 'local-alias-matching',
+    careerAnalysis: configured ? 'runpod-configured' : 'local-goal-matching',
+    extraction: configured ? 'runpod-configured' : 'local-alias-matching',
   });
 }

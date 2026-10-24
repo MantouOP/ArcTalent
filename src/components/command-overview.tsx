@@ -2,6 +2,7 @@ import { useI18n } from './language-provider';
 import { ArrowUpRight, CircleDot, Layers3 } from 'lucide-react';
 import { useId } from 'react';
 import type { LearningPlan, Match, Profile } from '@/lib/types';
+import { roleLabel } from '@/lib/role-label';
 
 /** Read-only presentation of the existing engine output. No ranking or state lives here. */
 export function RouteSummary({
@@ -28,7 +29,7 @@ export function RouteSummary({
         <span>{t('Selected route')}</span>
         <CircleDot size={16} />
       </div>
-      <h2>{t(active.role.shortTitle)}</h2>
+      <h2>{roleLabel(active.role, t, true)}</h2>
       <div className="hero-metric">
         <strong>{Math.round(active.score)}</strong>
         <span>/ 100</span>
@@ -83,7 +84,7 @@ export function RouteSummary({
             className="ranking-row"
           >
             <i className={`data-dot series-${i}`} />
-            <span>{t(match.role.shortTitle)}</span>
+            <span>{roleLabel(match.role, t, true)}</span>
             <strong>{Math.round(match.score)}</strong>
           </button>
         ))}
@@ -153,7 +154,7 @@ export function RouteAnalytics({
               t(
                 '{0}: {1} percent skill coverage, {2} percent scenario suitability',
                 {
-                  0: t(m.role.shortTitle),
+                  0: roleLabel(m.role, t, true),
                   1: Math.round(m.coverage),
                   2: Math.round(m.resilience),
                 },
@@ -172,7 +173,7 @@ export function RouteAnalytics({
                 <i style={{ height: `${m.coverage}%` }} />
                 <i style={{ height: `${m.resilience}%` }} />
               </div>
-              <span>{t(m.role.shortTitle)}</span>
+              <span>{roleLabel(m.role, t, true)}</span>
             </div>
           ))}
         </div>
@@ -274,7 +275,7 @@ export function RouteAnalytics({
                   <b>{m.reused.length}</b>
                 </span>
               </div>
-              <strong>{t(m.role.shortTitle)}</strong>
+              <strong>{roleLabel(m.role, t, true)}</strong>
             </div>
           ))}
         </div>

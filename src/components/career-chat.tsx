@@ -11,6 +11,7 @@ import {
   type ChatView,
 } from '@/lib/career-chat';
 import type { TranslationValues } from '@/lib/i18n';
+import { roleLabel } from '@/lib/role-label';
 import { useI18n } from './language-provider';
 import './career-chat.css';
 
@@ -140,7 +141,7 @@ export function CareerChat({
         </header>
         <div className="career-chat-context">
           <span>{t('Selected worker route')}</span>
-          <strong>{t(context.active.role.shortTitle)}</strong>
+          <strong>{roleLabel(context.active.role, t, true)}</strong>
         </div>
         {hasEarlierContext && (
           <p className="career-chat-change" role="status">
@@ -223,7 +224,9 @@ export function CareerChat({
                 )}
                 <small className="career-chat-basis">
                   {t('Based on {0} · {1} · {2}', {
-                    0: t(turn.reply.basis.role),
+                    0: turn.reply.basis.custom
+                      ? turn.reply.basis.role
+                      : t(turn.reply.basis.role),
                     1: t(turn.reply.basis.scenario),
                     2: t(turn.reply.basis.snapshot),
                   })}

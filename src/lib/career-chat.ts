@@ -5,6 +5,7 @@ import type {
   Scenario,
   SkillId,
   Snapshot,
+  Role,
 } from './types';
 import type { WorkforceSettings } from './workforce-settings';
 import { getWorkforceMembers } from './workforce-settings';
@@ -27,6 +28,7 @@ export type ChatIntent =
 export type ChatValue = string | number | { label: string };
 export type ChatLine = { text: string; values?: Record<string, ChatValue> };
 export type ChatContext = {
+  candidates?: Role[];
   profile: Profile;
   scenario: Scenario;
   snapshot: Snapshot;
@@ -41,7 +43,13 @@ export type ChatReply = {
   bullets: ChatLine[];
   sources: { label: string; href: string; courseTitle?: string }[];
   action?: { label: string; view: ChatView };
-  basis: { role: string; scenario: Scenario; snapshot: string; asOf: string };
+  basis: {
+    role: string;
+    custom?: boolean;
+    scenario: Scenario;
+    snapshot: string;
+    asOf: string;
+  };
 };
 
 // Every display phrase is a whole translation unit. Catalogue course titles stay
@@ -330,6 +338,9 @@ export function answerCareerQuestion(
 ): ChatReply {
   const { profile, active, plan, scenario, snapshot, shared, workforce } =
     context;
+  const candidates = context.candidates ?? roles;
+  const roleValue = (role: Role) =>
+    role.custom ? role.title : { label: role.title };
   const intent = intentFor(question, previousIntent);
   const reply: ChatReply = {
     intent,
@@ -338,6 +349,7 @@ export function answerCareerQuestion(
     sources: [],
     basis: {
       role: active.role.title,
+      ...(active.role.custom ? { custom: true } : {}),
       scenario,
       snapshot: snapshot.id,
       asOf: snapshot.asOf,
@@ -348,7 +360,9 @@ export function answerCareerQuestion(
   const action = (text: string, view: ChatView) => {
     reply.action = { label: text, view };
   };
-  const occupation = roles.find((role) => role.id === active.role.id);
+  const occupation = candidates.find(
+    (role) => role.id === active.role.id && Boolean(role.source),
+  );
   const occupationSource = () => {
     if (occupation)
       reply.sources.push({
@@ -357,7 +371,7 @@ export function answerCareerQuestion(
       });
   };
   const emptyPlan = () => {
-    p(copy.noCourses, { 0: label(active.role.title) });
+    p(copy.noCourses, { 0: roleValue(active.role) });
     p(profile.hours <= 0 || profile.weeks <= 0 ? copy.zeroTime : copy.filters);
   };
   switch (intent) {
@@ -372,13 +386,13 @@ export function answerCareerQuestion(
       break;
     case 'recommendation': {
       p(copy.selected, {
-        0: label(active.role.title),
+        0: roleValue(active.role),
         1: active.score,
         2: active.coverage,
       });
-      const top = rankRoles(profile, scenario, snapshot)[0];
+      const top = rankRoles(profile, scenario, snapshot, candidates)[0];
       if (top.role.id !== active.role.id)
-        p(copy.leading, { 0: label(top.role.title), 1: top.score });
+        p(copy.leading, { 0: roleValue(top.role), 1: top.score });
       p(copy.scoring);
       occupationSource();
       action(copy.exploreAction, 'explore');
@@ -388,7 +402,7 @@ export function answerCareerQuestion(
       if (!plan.steps.length) emptyPlan();
       else {
         p(copy.learning, {
-          0: label(active.role.title),
+          0: roleValue(active.role),
           1: plan.steps.length,
           2: plan.totalHours,
           3: plan.totalCost,
@@ -420,7 +434,7 @@ export function answerCareerQuestion(
       break;
     case 'gaps':
       p(active.gaps.length ? copy.gaps : copy.noGaps, {
-        0: label(active.role.title),
+        0: roleValue(active.role),
         1: active.gaps.length,
       });
       reply.bullets = active.gaps.slice(0, 5).map((gap) =>
@@ -435,8 +449,8 @@ export function answerCareerQuestion(
       action(copy.pathwayAction, 'pathway');
       break;
     case 'scenario': {
-      const moderate = rankRoles(profile, 'moderate', snapshot);
-      const rapid = rankRoles(profile, 'rapid', snapshot);
+      const moderate = rankRoles(profile, 'moderate', snapshot, candidates);
+      const rapid = rankRoles(profile, 'rapid', snapshot, candidates);
       const moderateSelected = moderate.find(
         (match) => match.role.id === active.role.id,
       );
@@ -445,13 +459,13 @@ export function answerCareerQuestion(
       );
       if (moderateSelected && rapidSelected)
         p(copy.scenario, {
-          0: label(active.role.title),
+          0: roleValue(active.role),
           1: moderateSelected.score,
           2: rapidSelected.score,
         });
       p(copy.scenarioLeaders, {
-        0: label(moderate[0].role.title),
-        1: label(rapid[0].role.title),
+        0: roleValue(moderate[0].role),
+        1: roleValue(rapid[0].role),
       });
       p(copy.scenarioLimit);
       occupationSource();
@@ -483,7 +497,7 @@ export function answerCareerQuestion(
         1: verifiedHrd,
       });
       p(copy.learning, {
-        0: label(active.role.title),
+        0: roleValue(active.role),
         1: plan.steps.length,
         2: plan.totalHours,
         3: plan.totalCost,

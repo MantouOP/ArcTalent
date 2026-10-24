@@ -59,6 +59,10 @@ import { RouteSummary, RouteAnalytics } from './command-overview';
 import { CareerChat } from './career-chat';
 import { SettingsPanel } from './settings-panel';
 import { CourseLink } from './course-link';
+import { CareerGoalPanel } from './career-goal-panel';
+import { careerGoalSchema, goalCandidates } from '@/lib/career-goals';
+import { roleLabel } from '@/lib/role-label';
+import type { CareerGoal } from '@/lib/types';
 import { useDisplayPreferences } from './display-preferences-provider';
 import { shouldReduceMotion } from '@/lib/display-preferences';
 import { buildSkillBridge } from '@/lib/skill-bridge';
@@ -82,6 +86,8 @@ export function ArcTalentApp() {
   const { t, locale } = useI18n();
   const { preferences: displayPreferences } = useDisplayPreferences();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [customGoal, setCustomGoal] = useState<CareerGoal | null>(null);
+  const candidates = useMemo(() => goalCandidates(customGoal), [customGoal]);
 
   const [view, setView] = useState<View>('explore'),
     [profile, setProfile] = useState<Profile>(baseProfile),
@@ -116,7 +122,13 @@ export function ArcTalentApp() {
         if (s.success) setSnapshot(s.data);
         if (saved.scenario === 'moderate' || saved.scenario === 'rapid')
           setScenario(saved.scenario);
-        if (roles.some((r) => r.id === saved.selected))
+        const storedGoal = careerGoalSchema.safeParse(saved.customGoal);
+        if (storedGoal.success) setCustomGoal(storedGoal.data);
+        if (
+          goalCandidates(storedGoal.success ? storedGoal.data : null).some(
+            (r) => r.id === saved.selected,
+          )
+        )
           setSelected(saved.selected);
         if (typeof saved.followTop === 'boolean') setFollowTop(saved.followTop);
         const restoredWorkforce = restoreWorkforceSettings(saved.workforce);
@@ -143,24 +155,34 @@ export function ArcTalentApp() {
             selected,
             followTop,
             workforce,
+            customGoal,
           }),
         );
       } catch {
         /* Storage is optional. */
       }
-  }, [ready, profile, scenario, snapshot, selected, followTop, workforce]);
+  }, [
+    ready,
+    profile,
+    scenario,
+    snapshot,
+    selected,
+    followTop,
+    workforce,
+    customGoal,
+  ]);
   useEffect(() => {
     if (!toast) return;
     const timer = setTimeout(() => setToast(''), 7000);
     return () => clearTimeout(timer);
   }, [toast]);
   const matches = useMemo(
-    () => rankRoles(profile, scenario, snapshot),
-    [profile, scenario, snapshot],
+    () => rankRoles(profile, scenario, snapshot, candidates),
+    [profile, scenario, snapshot, candidates],
   );
   const shared = useMemo(
-    () => sharedFoundation(profile, snapshot),
-    [profile, snapshot],
+    () => sharedFoundation(profile, snapshot, candidates),
+    [profile, snapshot, candidates],
   );
   const active = followTop
     ? matches[0]
@@ -170,7 +192,7 @@ export function ArcTalentApp() {
     [profile, active.role, shared, funding],
   );
   const changes = previous
-    ? diffSnapshots(profile, scenario, previous, snapshot).filter(
+    ? diffSnapshots(profile, scenario, previous, snapshot, candidates).filter(
         (c) => c.delta !== 0,
       )
     : [];
@@ -236,6 +258,7 @@ export function ArcTalentApp() {
     setFollowTop(true);
     setWorkforce(restoreWorkforceSettings());
     setFunding('all');
+    setCustomGoal(null);
     setView('explore');
     setToast('Demo reset to Aina’s starting profile.');
   }
@@ -266,6 +289,7 @@ export function ArcTalentApp() {
           scenario,
           snapshot,
           role: active.role,
+          customGoal,
           skillBridge: buildSkillBridge(profile, active.role),
           studyRhythm: profile.learningPreferences
             ? buildStudyRhythm(
@@ -286,7 +310,7 @@ export function ArcTalentApp() {
         title.toLocaleLowerCase().includes(query.toLocaleLowerCase()),
       ),
     )
-    .slice(0, showAll ? 6 : 3);
+    .slice(0, showAll ? matches.length : 3);
   return (
     <div className="app-shell">
       <a href="#main-content" className="skip-link">
@@ -535,8 +559,14 @@ export function ArcTalentApp() {
                   <Compass />
                   <span>{t('Career options')}</span>
                   <strong>
-                    {roles.length}
-                    <small>{t('sourced occupations')}</small>
+                    {matches.length}
+                    <small>
+                      {t(
+                        customGoal
+                          ? 'career routes to compare'
+                          : 'sourced occupations',
+                      )}
+                    </small>
                   </strong>
                 </div>
                 <div className="stat">
@@ -683,7 +713,9 @@ export function ArcTalentApp() {
                       className="text-button"
                       onClick={() => setShowAll(!showAll)}
                     >
-                      {showAll ? t('Show top three') : t('View all six')}
+                      {showAll
+                        ? t('Show top three')
+                        : t('View all {0}', { 0: matches.length })}
                       <ArrowRight size={15} />
                     </button>
                   </div>
@@ -728,15 +760,19 @@ export function ArcTalentApp() {
                           <button
                             className="icon-button"
                             aria-label={t('Explain {0} score', {
-                              0: t(m.role.title),
+                              0: roleLabel(m.role, t),
                             })}
                             onClick={() => setDetails(m)}
                           >
                             <Info size={16} />
                           </button>
                         </div>
-                        <h3>{t(m.role.title)}</h3>
-                        <p>{t(m.role.description)}</p>
+                        <h3>{roleLabel(m.role, t)}</h3>
+                        <p>
+                          {m.role.custom
+                            ? m.role.description
+                            : t(m.role.description)}
+                        </p>
                         <div className="match-score">
                           <strong>
                             {Math.round(m.score)}
@@ -821,6 +857,35 @@ export function ArcTalentApp() {
           )}
           {view === 'pathway' && (
             <>
+              <CareerGoalPanel
+                profile={profile}
+                goal={customGoal}
+                snapshot={snapshot}
+                funding={funding}
+                onApply={(goal) => {
+                  setCustomGoal(goal);
+                  setSelected('custom-goal');
+                  setFollowTop(false);
+                  setToast(
+                    'Your custom goal is ready. Review the courses and any remaining gaps.',
+                  );
+                  requestAnimationFrame(() => {
+                    const heading = document.getElementById('learning-courses');
+                    heading?.focus({ preventScroll: true });
+                    heading?.scrollIntoView({
+                      block: 'start',
+                      behavior: 'auto',
+                    });
+                  });
+                }}
+                onClear={() => {
+                  setCustomGoal(null);
+                  if (selected === 'custom-goal') {
+                    setFollowTop(true);
+                    setSelected(defaultRole);
+                  }
+                }}
+              />
               <div className="pathway-toolbar">
                 <label>
                   {t('Your destination')}{' '}
@@ -830,7 +895,7 @@ export function ArcTalentApp() {
                   >
                     {matches.map((m) => (
                       <option key={m.role.id} value={m.role.id}>
-                        {t(m.role.title)}
+                        {roleLabel(m.role, t)}
                       </option>
                     ))}
                   </select>
@@ -878,7 +943,9 @@ export function ArcTalentApp() {
                   <div className="section-title">
                     <div>
                       <span className="eyebrow">{t('YOUR CHOSEN ROUTE')}</span>
-                      <h2>{t(active.role.title)}</h2>
+                      <h2 id="learning-courses" tabIndex={-1}>
+                        {roleLabel(active.role, t)}
+                      </h2>
                       <p className="muted">
                         {t(
                           '{0} planned hours · RM {1} in course fees · {2}-week horizon',
@@ -902,6 +969,23 @@ export function ArcTalentApp() {
                       {t('Why this route?')} <Info size={15} />
                     </button>
                   </div>
+                  {active.role.custom && customGoal && (
+                    <div className="notice">
+                      <strong>{t('Your custom learning destination')}</strong>
+                      <p>
+                        {t(
+                          'Requirements are your reviewed planning targets. Scenario comparison uses an illustrative exposure of 0.5, not an occupation forecast.',
+                        )}
+                      </p>
+                      {customGoal.otherSkills.length > 0 && (
+                        <p>
+                          {t('Other skills to investigate: {0}', {
+                            0: customGoal.otherSkills.join(', '),
+                          })}
+                        </p>
+                      )}
+                    </div>
+                  )}
                   {funding === 'hrd' && (
                     <div className="notice">
                       {t(
@@ -1105,9 +1189,11 @@ export function ArcTalentApp() {
                     <GraduationCap size={23} />
                     <h3>{t('Keep the destination realistic')}</h3>
                     <p>{t(active.role.entry)}</p>
-                    <External href={active.role.source}>
-                      {t('Explore role requirements')}{' '}
-                    </External>
+                    {active.role.source && (
+                      <External href={active.role.source}>
+                        {t('Explore role requirements')}{' '}
+                      </External>
+                    )}
                   </section>
                   {previous && (
                     <section className="panel">
@@ -1153,6 +1239,7 @@ export function ArcTalentApp() {
               onReplay={() => useSnapshot(updated)}
               onBaseline={() => useSnapshot(baseline)}
               onApply={useSnapshot}
+              candidates={candidates}
             />
           )}
           {view === 'profile' && (
@@ -1161,8 +1248,16 @@ export function ArcTalentApp() {
               profiles={getWorkforceMembers(workforce, profile)}
               onSave={(p) => {
                 saveProfile(p);
-                setFollowTop(true);
-                setSelected(rankRoles(p, scenario, snapshot)[0].role.id);
+                const keepCustom =
+                  selected === 'custom-goal' &&
+                  customGoal !== null &&
+                  !followTop;
+                setFollowTop(!keepCustom);
+                setSelected(
+                  keepCustom
+                    ? 'custom-goal'
+                    : rankRoles(p, scenario, snapshot, candidates)[0].role.id,
+                );
                 setToast(
                   'Profile updated. Your pathways now reflect these skills and constraints.',
                 );
@@ -1205,11 +1300,15 @@ export function ArcTalentApp() {
           plan,
           shared,
           workforce,
+          candidates,
         }}
         onNavigate={navigate}
       />
       {details && (
-        <Modal title={t(details.role.title)} onClose={() => setDetails(null)}>
+        <Modal
+          title={roleLabel(details.role, t)}
+          onClose={() => setDetails(null)}
+        >
           <MatchDetails match={details} />
         </Modal>
       )}

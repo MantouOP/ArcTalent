@@ -213,7 +213,12 @@ test('empty shared foundation is described without claiming common skills', () =
 
 test('funding derives verified free and HRD counts from the catalogue and links the official page', () => {
   const reply = answerCareerQuestion('HRD funding for courses?', context());
-  assert.match(text(reply), /11 free courses/);
+  assert.match(
+    text(reply),
+    new RegExp(
+      `${courses.filter((course) => course.funding === 'free').length} free courses`,
+    ),
+  );
   assert.match(text(reply), /0.*HRD/);
   assert.match(text(reply), /verify|confirm/i);
   assert.ok(

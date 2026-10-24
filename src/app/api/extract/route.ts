@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { generateText, Output } from 'ai';
-import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
+import { createRunpodModel } from '@/lib/runpod-model';
 import { z } from 'zod';
 import { skillIdSchema } from '@/lib/validation';
 import { skills } from '@/lib/catalogue';
 import { extractAliases } from '@/lib/engine';
+import { getRunpodConfig } from '@/lib/runpod-config';
 export const runtime = 'nodejs';
 const inputSchema = z.object({
   text: z.string().min(5).max(12000),
@@ -15,7 +16,7 @@ const outputSchema = z.object({
     .array(
       z.object({ id: skillIdSchema, evidence: z.string().min(1).max(200) }),
     )
-    .max(16),
+    .max(skills.length),
 });
 let recentCalls: number[] = [];
 export async function POST(request: Request) {
@@ -34,23 +35,13 @@ export async function POST(request: Request) {
       );
     const { text } = parsed.data;
     const fallback = extractAliases(text);
-    const baseURL = process.env.RUNPOD_BASE_URL,
-      apiKey = process.env.RUNPOD_API_KEY,
-      model = process.env.RUNPOD_MODEL;
-    if (!baseURL || !apiKey || !model)
+    const config = getRunpodConfig();
+    if (!config)
       return NextResponse.json({
         skills: fallback,
         mode: 'Local skill matching (no LLM configured)',
       });
-    const host = new URL(baseURL);
-    if (
-      host.protocol !== 'https:' ||
-      !host.hostname.endsWith('.proxy.runpod.net')
-    )
-      return NextResponse.json({
-        skills: fallback,
-        mode: 'Local matching — RunPod URL configuration needs review',
-      });
+    const { model } = config;
     recentCalls = recentCalls.filter((time) => Date.now() - time < 60000);
     if (recentCalls.length >= 8)
       return NextResponse.json({
@@ -59,13 +50,8 @@ export async function POST(request: Request) {
       });
     recentCalls.push(Date.now());
     try {
-      const provider = createOpenAICompatible({
-        baseURL,
-        apiKey,
-        name: 'runpod',
-      });
       const result = await generateText({
-        model: provider.chatModel(model),
+        model: createRunpodModel(config),
         output: Output.object({ schema: outputSchema }),
         maxOutputTokens: 1200,
         maxRetries: 0,
