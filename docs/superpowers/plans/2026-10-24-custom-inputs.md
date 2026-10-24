@@ -32,7 +32,7 @@
 - [x] SME: extend `workforce-settings.ts` with validated optional `members` and `getWorkforceMembers(workforce, profile)`. Add editor UI, dynamic counts/export and root synchronization; test old/new saves, duplicate IDs, unknown roles and actual roster counts. Update the guide's team count.
 - [x] Evidence: create `custom-inputs.ts` with `buildCustomSnapshot(input, id, collectedAt): Snapshot`; validate date/label/note/percentages before conversion and application. Add `custom-snapshot-form.tsx` and wire `onApply` into EvidencePanel/root.
 - [x] Translate new copy, format/typecheck/test/build, run integration checks, browser-test all new flows and review the branch. Record results and push verified source.
-- [ ] Import exact source into Replit, verify runtime tests/build/integration, publish and verify public API/browser flows. Save screenshots, push runtime history and release evidence, check CI.
+- [x] Import exact source into Replit, verify runtime tests/build/integration, publish and verify public API/browser flows. Save screenshots, push runtime history and release evidence, check CI.
 
 ## Execution record
 
@@ -43,3 +43,4 @@
 
 - Review corrections: synchronized individual saves and course activity with the roster, seeded legacy saves during hydration and retained saved course activity in profile selection. Both reviewed issues have regression coverage; the focused reviewer found no remaining concrete issues.
 - Browser correction: larger numeric fields were 12px because the existing input selector won specificity; the scoped reading-size rule now measures 16px.
+- Release correction: the first publishing image exceeded Replit's 8 GiB limit. Removed only regenerable output from old releases, preserving sources/history and the complete current runtime. The unchanged app source passed promotion on retry and all 15 public HTTPS checks. Runtime history and cleanup CI passed.

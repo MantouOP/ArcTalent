@@ -2,7 +2,19 @@
 
 Verified on **24 October 2026** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
-## Settings — live
+## Custom inputs and CV import — live
+
+Canonical source `27648ef95d9a5c64f390bd83a984e001bea6b052` repairs the inactive CV import experience and adds blank profiles, typed check-in answers, custom session lengths, editable fictional teams and dated simulation inputs. Its [source CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40069241921). Replit imported it unchanged into `artifacts/arctalent-release-27648ef`; exact Git tree comparisons passed before installation and again after downloading the runtime history. A locked install, **112 unit tests**, production build and all **15 production integration checks** passed inside Replit.
+
+Runtime `6867c111cc71663c9204b98dfc2be89722f16e9e` switches the artifact launch configuration to this release. Its 10,003,561-byte incremental Git bundle requires ancestor `ef59495988dd903d1c816da7d6d133fcac8f16e3`; the bundle verified locally and was pushed to `replit-runtime`. Its [runtime CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40071177542).
+
+The first publishing attempt passed build/security checks but failed at Bundle: Replit reported an image larger than its 8 GiB limit. Disk inspection found retained old release directories of roughly 800 MiB each. A bounded cleanup removed **6,768,328 KiB** of untracked `node_modules`/`.next` output from sixteen directories in eight older releases. All source/history and the complete current release were preserved, with exact current-source equality rechecked. Old dependencies and builds can be regenerated from their locked source. Cleanup record `61def1f9f6f2a9ca98fa4ddc55df5c9899937675` is pushed to `replit-runtime`, preserved in a verified 845-byte incremental bundle based on `6867c11`; its [CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40071692835).
+
+The retry completed build, security, bundling and promotion. Replit reports **Live**. The new public analysis contract was observed at **2026-10-24 06:52:55 UTC (14:52:55 MYT)**, approximately eight minutes after the retry began. All **15 public HTTPS integration checks passed**, including the custom profile/session/snapshot flow, existing API parity and real synthetic PDF parsing.
+
+Public Chrome verified initial-import guidance and checkbox focus, actual PDF import, six supported skill candidates, editing then selecting the same PDF again and stale candidates cleared before re-extraction. A blank fictional Maya profile saved typed work/practice answers and 45-minute sessions; the pathway showed four sessions within three weekly hours and retained the original answers after reload. A ninth fictional SME worker appeared in the editor and heatmap. A dated custom snapshot changed the score from 37.12 to 38.76, displaying +1.64 and explicit simulation provenance; both the snapshot and custom roster survived reload. Chinese text entry in the member editor fit 375 × 812 without document/dialog overflow. No warnings/errors or canvas elements were captured in the final public check. Test data, locale and viewport were restored to Aina's moderate baseline, English, standard text and the normal desktop viewport. The [live importer screenshot](images/cv-import-live.jpg) and [custom assumptions screenshot](images/custom-inputs-live.jpg) record the public interface.
+
+## Previously published Settings
 
 Canonical source `e8ab8d077a58f56d45209adfaf187c678e688d6d` adds language, reading-size, reduced-motion, profile-shortcut and demo-data settings. Its [GitHub CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40050258636). Replit imported it unchanged into `artifacts/arctalent-release-e8ab8d0`; Git tree comparisons before installation and after downloading the runtime history confirmed exact source equality. A locked install, **100 unit tests**, the production build and all **14 production integration checks** passed inside Replit.
 
@@ -81,16 +93,16 @@ The runtime history was exported from Replit, verified with `git bundle verify`,
 From the Replit workspace root:
 
 ```sh
-npm --prefix artifacts/arctalent-release-e8ab8d0 ci --workspaces=false
-npm --prefix artifacts/arctalent-release-e8ab8d0 run build
-npm --prefix artifacts/arctalent-release-e8ab8d0 run start -- --port 23585
+npm --prefix artifacts/arctalent-release-27648ef ci --workspaces=false
+npm --prefix artifacts/arctalent-release-27648ef run build
+npm --prefix artifacts/arctalent-release-27648ef run start -- --port 23585
 ```
 
-For development, use `npm --prefix artifacts/arctalent-release-e8ab8d0 run dev -- --port 23585`.
+For development, use `npm --prefix artifacts/arctalent-release-27648ef run dev -- --port 23585`.
 
 ## Publishing and submission evidence
 
-**[Live ArcTalent demo](https://arc-talent--emmanuelheng.replit.app/)** — verified publicly on 24 October 2026. Replit reports Live, public access, Autoscale and the Asia region. The [current live screenshot](images/settings-live.jpg) records Settings above the multilingual interface. Use this URL for the working-prototype field and the team project URL for project-history evidence.
+**[Live ArcTalent demo](https://arc-talent--emmanuelheng.replit.app/)** — verified publicly on 24 October 2026. Replit reports Live, public access, Autoscale and the Asia region. The [current live screenshot](images/cv-import-live.jpg) records working CV import and editable profile fields. Use this URL for the working-prototype field and the team project URL for project-history evidence.
 
 The original publishing attempt passed build/security/bundling but stayed at Promote for 16 minutes. It was cancelled and retried once. The retry completed promotion after a further delay, without application or launch-configuration changes. The temporary workspace test port was confirmed closed. That original publication used source `2a5b6cf`; the acceptance release is recorded above.
 
