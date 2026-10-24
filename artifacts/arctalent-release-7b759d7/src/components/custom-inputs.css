@@ -1,0 +1,90 @@
+.custom-check-answer {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0;
+}
+.custom-check-answer small {
+  color: var(--muted);
+  line-height: 1.6;
+}
+.custom-check-answer input {
+  max-width: 220px;
+}
+.team-editor,
+.custom-snapshot {
+  margin-bottom: 20px;
+}
+.team-member-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+.team-member-row > span {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.team-member-row small {
+  color: var(--muted);
+}
+.team-member-row strong,
+.team-member-row small,
+.check-review dd,
+.rhythm-practice p,
+.upload-panel > p {
+  overflow-wrap: anywhere;
+}
+.team-member-row .button-row {
+  flex-shrink: 0;
+}
+.member-form > .button-row {
+  position: sticky;
+  bottom: -1px;
+  padding: 16px 0 4px;
+  margin-top: 16px;
+  background: var(--panel, #100e22);
+}
+.member-form .skill-edit-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.custom-snapshot .skill-edit-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.custom-snapshot input[type='date'] {
+  color-scheme: dark;
+}
+.upload-zone {
+  cursor: pointer;
+}
+.upload-zone span {
+  display: block;
+}
+.upload-zone:focus-visible {
+  outline: 2px solid var(--cyan, #00f2fe);
+  outline-offset: 3px;
+}
+@media (max-width: 760px) {
+  .custom-snapshot .skill-edit-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  .team-editor .panel-heading,
+  .custom-snapshot .panel-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .member-form .skill-edit-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .team-member-row {
+    flex-wrap: wrap;
+  }
+  .team-member-row button,
+  .team-editor > .panel-heading button {
+    min-height: 44px;
+  }
+}
