@@ -16,7 +16,7 @@
 - [x] Implement bounded backwards-compatible settings helpers and shared plan resolution; run focused tests.
 - [x] Add row text input/datalist and accessible review modal using the existing AI editor. Reuse current worker constraints for exact course previews; apply/clear must affect only this worker. Add three-language copy and custom-opening controls.
 - [x] Extend PDF and production integration checks for custom destinations, exact course links and specialist-gap disclosure; verify unit/type/format/build. Test actual browser AI/manual/preset/reload/scenario/PDF flows and review independently.
-- [ ] Push, import exact source into Replit, verify build/tests, publish, verify public typed-destination flow and PDF, and record release evidence.
+- [x] Push, import exact source into Replit, verify build/tests, publish, verify public typed-destination flow and PDF, and record release evidence.
 
 ## Review focus
 
@@ -35,3 +35,5 @@ Ruling: increase the PDF request allowance from 64,000 characters/256,000 bytes 
 Review fix: independent review reproduced a valid escaped-string payload larger than 128,000 serialized characters. A new route-level regression first returned 413, then passed after allowing 512,000 characters/2,048,000 bytes. The same escaped ten-worker fixture is used in production integration checks. The streamed size bound remains finite, and the client still omits unused signal records. No other important workforce findings were reported.
 
 Local browser ledger: the real AI editor returned HTML/CSS and JavaScript targets with two exact course links and a 30-hour plan for Daniel. Earlier provider timeouts produced explicitly labelled local suggestions; provider inference subsequently recovered. Zero custom openings excluded the worker; changing to one allocated training. Typed input survived language changes, saved goals survived reload and intro/workspace navigation, and cancelling a changed title preserved the applied goal. The actual eight-page PDF contained the custom title, openings, 26 direct links and specialist disclosures; rendered pages were inspected. 144 unit tests and 25 production integration checks pass. Phone review dialog and team controls fit 320px after a one-column openings adjustment.
+
+Release ledger: source `6f4b004`, runtime `bb3b776`, exact source equality, Replit build/144 tests/25 checks/real inference and both CI runs passed. All 25 public HTTPS checks passed after promotion. A temporary public test worker received real AI targets, exact two-course preview, persisted custom destination across reload/scenarios and an eight-page PDF with matching metrics and 23 links. Preset switching and member cleanup passed; the original seven-person team and planning totals were restored. Actual live screenshots and timestamps are preserved in REPLIT_STATUS.md.

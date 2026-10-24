@@ -11,8 +11,10 @@
 - [x] Add a failing production integration assertion that the root page introduces ArcTalent and links to both workspaces without dashboard content.
 - [x] Implement the introduction, responsive CSS, all three languages and workspace routes; preserve existing app handlers and state.
 - [x] Verify production pages, all unit/type/format/integration checks, browser entry/home links, locale changes, saved state and responsive overflow. Inspect screenshots.
-- [ ] Include with the typed workforce destination release; publish and verify both public journeys.
+- [x] Include with the typed workforce destination release; publish and verify both public journeys.
 
 Review focus: every entry link reaches the intended workspace, home never resets saved data, translated headline/controls fit, keyboard navigation and reduced motion remain usable, and the intro does not import/render dashboard charts or call the model.
 
 Local ledger: 144 unit tests, type/format/build and 25 production integration checks passed. Actual Chrome checks covered both entry links, home links, persisted worker goals, English/Malay/Chinese, 320/375/440px phones, tablet and desktop. A 440px label-spacing suspicion was resolved and checked with real element bounds. The 768px headline wrapped to three lines; a stacked hero at the tablet breakpoint keeps the welcome readable. Temporary viewport overrides are reset. A read-only review found no further confirmed issues. Final public verification is pending below.
+
+Release ledger: source `6f4b004` and runtime `bb3b776` are pushed with successful CI and exact imported-source equality. Replit passed 144 tests, build, 25 integration checks and real inference. The public welcome was observed at 2026-10-24 16:54:30 UTC (25 October 00:54:30 MYT); all 25 HTTPS checks and actual entry/home/language journeys passed. Previous saved state was preserved, temporary test data removed, English/default viewport restored, and the live introduction left open. Screenshots and exact provenance are in REPLIT_STATUS.md.

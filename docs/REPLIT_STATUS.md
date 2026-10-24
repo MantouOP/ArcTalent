@@ -1,6 +1,18 @@
 # Replit runtime and publishing verification
 
-Verified on **24 October 2026** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
+Verified on **25 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
+
+## Introduction and typed workforce destinations — live
+
+Canonical app source `6f4b004dca2f4c1e511e6f937adc86db78d0405f` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). The main URL opens a translated introduction before any dashboard. [Personal planning](https://arc-talent--emmanuelheng.replit.app/workspace) and [SME planning](https://arc-talent--emmanuelheng.replit.app/workspace/team) have separate entry links. Heatmap rows accept typed destinations, AI/manual target review, explicit custom openings and exact verified course previews. Applied worker goals persist and appear in the shared training plan and PDF. The [source CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40112961847).
+
+Replit imported the source unchanged at `artifacts/arctalent-release-6f4b004`. Exact Git tree comparisons passed in Replit and against the downloaded runtime history. The locked install, **144 unit tests**, production build, **25 production integration checks** and a mandatory real-AI assertion passed before publishing. The model returned HTML/CSS and JavaScript targets through the production route. The introduction itself calls no model and imports no dashboard component.
+
+Runtime `bb3b7764d33dffb2c0e9b2e9dc726e778047a86f` selects the release and retains the previous launch configuration. Its verified **23,687,968-byte** incremental bundle requires ancestor `8f85091ffe73987afbe5f3279bdc1169218ca579` and is pushed to `replit-runtime`; the [runtime CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40113336638). Bounded cleanup removed **870,424 KiB** of untracked, regenerable old dependencies/builds while preserving all tracked source/history and the complete new release.
+
+The new public introduction was observed at **2026-10-24 16:54:30 UTC (25 October, 00:54:30 MYT)**. All **25 public HTTPS integration checks passed**, including both workspace routes, custom-worker PDF course links/specialist disclosures, a detailed escaped ten-worker export and existing profile/CV flows. Public Chrome confirmed the new home page and both entry links; the previously saved Aina profile, Cybersecurity analyst goal and rapid scenario remained intact.
+
+Public Chrome then added one temporary fictional worker, typed **Web developer**, obtained real AI targets, previewed two exact HTML/CSS and JavaScript courses, applied the goal and verified it after reload and scenario switching. The actual eight-page PDF matched **117 person-hours**, contained the custom destination and specialist gaps, and exposed **23 direct links**. Switching that worker to a preset also worked. Removing the test worker restored the original seven-person roster and **87 person-hours**; the existing profile/goal/scenario were kept. The introduction was also checked in Malay and Chinese at 375px without document overflow, then English and the normal viewport were restored. No warnings/errors were captured, and Replit reports **Live**. Screenshots: [welcome page](images/introduction-live.png), [typed worker goal](images/workforce-typed-goal-live.png), [Malay phone welcome](images/introduction-mobile-live.png).
 
 ## Workforce PDF export — live
 
