@@ -27,6 +27,8 @@
 - [x] Implement bounded structured AI route and honest fallback; test response validation and no URL generation.
 - [x] Add free-text form, editable skill targets, preview/application, source notice, persistence and integration across individual views/chat. Translate all new display copy.
 - [x] Run formatting/typecheck/unit/build/integration and actual browser flows; perform independent review and fix findings.
-- [ ] Push, import exact source into Replit, verify, publish, check public behavior and record any remaining model-configuration dependency.
+- [x] Push, import exact source into Replit, verify, publish, check public behavior and record any remaining model-configuration dependency.
 
 Review fixes cover the seventh route, preserving curated selection on removal, canonical chat titles, focus and funding-consistent previews. The user supplied an existing Serverless endpoint; validated aliases and SDK structured output were added. Real inference succeeded.
+
+Public release verified at 2026-10-24 22:59:04 MYT: real AI inference, nineteen HTTPS checks, browser persistence/scenario pinning and direct course destinations. Replit runtime and CI evidence are in docs/REPLIT_STATUS.md.

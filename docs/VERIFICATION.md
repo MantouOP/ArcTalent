@@ -1,5 +1,15 @@
 # Verification record
 
+## Custom AI career goals — 24 October 2026
+
+Source `3397475` adds typed destinations, optional desired-work descriptions, editable skill targets, specialist gaps and constrained course previews. Six curated occupations remain; the custom goal participates in matching, both scenarios, evidence differences, chat, exports and browser persistence. Nineteen skills and seventeen checked learning resources are available. AI cannot supply trusted course titles or URLs.
+
+The final local production build passed TypeScript, formatting, **127 unit tests** and **19 integration checks**. Independent review found and fixed the seventh-route cap, removal unpinning another destination and translated user-authored chat titles. Preview now uses the active funding filter; edit/remove restores focus. Real Chrome checks covered AI suggestions and actual course previews, manual targets, application focus, reload persistence, scenario selection, all seven routes, preserving a curated route when removing a custom goal, Malay chat titles/course URLs and Chinese controls with the honest HRD empty state. No desktop document overflow was observed. No new phone viewport claim is made.
+
+The user supplied an existing RunPod Serverless vLLM endpoint. Connection aliases and strict documented URL validation are supported. An actual inference exposed the adapter's structured-output opt-in requirement; the model helper now transmits the JSON schema, covered by a transport regression test. Real goal analysis succeeded in English, Bahasa Melayu and Simplified Chinese through the production app with `mode: ai`, valid known targets and family `data` for the frontend example. A timed-out request returned explicitly labelled local suggestions. Replit separately passed all 127 tests, its build, all 19 production checks and a mandatory real-AI assertion before publishing. Credentials are excluded from Git and browser bundles; only server-side secret names are documented.
+
+See [runtime status](REPLIT_STATUS.md) for exact public release and HTTPS verification evidence.
+
 ## English, Bahasa Melayu and Simplified Chinese — 23 October 2026
 
 Added a header language selector with native names, a separate validated browser preference and document-language/title updates. The interface uses 495 paired translation keys, including role/skill descriptions, accessible chart labels, profile controls, learning preferences, planning explanations and ordinary feed-failure messages. Names, editable text, CV evidence, external resource titles, source data and exports remain canonical. No runtime dependency, service or animation was added.

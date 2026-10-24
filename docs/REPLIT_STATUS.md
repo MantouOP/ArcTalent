@@ -2,6 +2,18 @@
 
 Verified on **24 October 2026** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
+## Custom AI career goals — live
+
+Canonical app source `339747509e078cd78cb5f50069916881420615dd` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). Its [source CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40104211096). Users can type a career goal and desired work, review structured AI skill suggestions, edit targets and specialist gaps, preview verified courses, then apply a persisted custom destination. Nineteen skills and seventeen checked learning resources are available. Custom targets/exposure remain planning assumptions; courses outside the verified catalogue are not invented.
+
+Replit imported the source unchanged at `artifacts/arctalent-release-3397475`. Exact Git tree comparisons passed in Replit and again against the downloaded runtime history. The locked install, **127 unit tests**, production build and **19 production integration checks** passed inside Replit. A separate real-AI assertion confirmed `draft.mode: ai` and HTML/CSS plus JavaScript targets through the production route before publishing. The user-provided RunPod Serverless vLLM endpoint uses Qwen/Qwen2.5-7B-Instruct. Credentials are stored in Replit Secrets and an ignored local environment; no key is committed or included in browser bundles.
+
+Runtime `9f5548384530192bea11024e429352c265820c7c` selects the release and preserves the previous launch configuration. The verified **4,181,717-byte** incremental bundle requires ancestor `a9baef3b8a60082845bb68722646d5aa3dee0261` and is pushed to `replit-runtime`; its [runtime CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40104519492). Bounded cleanup removed **841,176 KiB** of untracked, regenerable old dependencies/builds while retaining all tracked sources/history and the complete new release.
+
+Replit reports **Live**. The new public health mode was observed at **2026-10-24 14:59:04 UTC (22:59:04 MYT)**. A public HTTPS request returned real AI mode, family `data`, HTML/CSS and JavaScript targets, and separate accessibility/UX gaps. All **19 public HTTPS integration checks passed**, including custom destinations with exact catalogue links, extraction and synthetic PDF parsing. Configuration presence alone is not used as evidence of working inference.
+
+Public Chrome also confirmed AI suggestions with the two actual course previews, applying the custom destination, rejecting a stale result after editing the input, persistence through reload, seven destination options and a pinned custom destination across rapid/moderate scenarios. The final browser log check returned no warnings or errors. [AI input](images/custom-career-input-live.jpg), [course preview](images/custom-career-preview-live.jpg) and [scheduled custom pathway](images/custom-career-goal-live.jpg) screenshots record the public flow.
+
 ## Exact course links — live
 
 Canonical app source `7b759d7b89a0767bbe57e87e6e6d80b9e5450939` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). Its [source CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40073826553). All eleven official course pages were rechecked on 24 October; SQLBolt now uses its published **Introduction to SQL** title and direct tutorial URL. Scheduled steps, overview, completed learning and SME groups share accessible direct-course links; chat names and links every scheduled course.
