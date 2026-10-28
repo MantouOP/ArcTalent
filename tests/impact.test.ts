@@ -51,6 +51,44 @@ test('foundation share is unavailable for an empty plan or zero weekly hours', (
   assert.equal(foundationShare(planOf([step(4, true)]), 0).share, null);
 });
 
+test('foundation completion week and order are reported', () => {
+  const early = foundationShare(planOf([step(6, true), step(6, false)]), 4);
+  assert.equal(early.completeWeek, 2);
+  assert.equal(early.first, true);
+  const late = foundationShare(planOf([step(2, false), step(6, true)]), 4);
+  assert.equal(late.completeWeek, 2);
+  assert.equal(late.first, false);
+  assert.equal(foundationShare(planOf([step(2, false)]), 4).completeWeek, null);
+});
+
+test('a foundation shorter than four weeks is reported as finished early, not as met', () => {
+  const aina = assessTopRoute(baseProfile, 'moderate', baseline);
+  assert.ok(aina.foundation.share !== null && aina.foundation.share < 100);
+  assert.equal(aina.foundationStatus, 'early');
+  assert.equal(aina.foundation.completeWeek, 3);
+  const mei = employees.find((e) => e.id === 'mei')!;
+  const meiImpact = assessTopRoute(mei, 'moderate', baseline);
+  assert.equal(meiImpact.foundation.share, 100);
+  assert.equal(meiImpact.foundationStatus, 'met');
+});
+
+test('a foundation that cannot fit the plan stays below target', () => {
+  const mei = employees.find((e) => e.id === 'mei')!;
+  const role = roles.find((r) => r.id === 'bi')!;
+  // 2 h/week × 8 weeks cannot hold the 24-hour communication course.
+  const profile = { ...mei, hours: 2 };
+  const shared = ['communication' as const];
+  const impact = assessPerson(
+    profile,
+    role,
+    'moderate',
+    baseline,
+    shared,
+    buildPlan(profile, role, shared),
+  );
+  assert.equal(impact.foundationStatus, 'below');
+});
+
 test('projected skills never lower an existing level and lift planned skills to working level', () => {
   const profile = {
     ...baseProfile,
@@ -99,7 +137,11 @@ test('the synthetic cohort reaches the 40% average gap reduction target in both 
       (cohort.averageReduction ?? 0) >= IMPACT_TARGETS.distanceReduction,
     );
     assert.ok(cohort.reductionMet <= cohort.reductionMeasured);
-    assert.ok(cohort.foundationMet <= cohort.foundationMeasured);
+    // Every worker either fills weeks 1–4 with foundation or finishes it early.
+    assert.equal(
+      cohort.foundationMet + cohort.foundationEarly,
+      cohort.foundationMeasured,
+    );
   }
 });
 

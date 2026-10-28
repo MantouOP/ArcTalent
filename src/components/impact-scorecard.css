@@ -120,8 +120,16 @@
 .impact-cell.met {
   color: #5ee9a4;
 }
+.impact-cell.early {
+  color: #72ddea;
+}
 .impact-cell.below {
   color: #e9b88e;
+}
+.impact-cell small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
 }
 .impact-cell.not-applicable {
   color: var(--muted);

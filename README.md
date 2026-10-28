@@ -131,7 +131,7 @@ $$\text{Suitability} = 55\% \times \text{Skill Coverage} + 15\% \times \text{Int
 - **Skill Coverage**: Compares self-reported levels (0–3) against role requirements. Pivot distance is $100 - \text{Coverage}$.
 - **Scenario Resilience**: $1 - (\text{Adoption Factor} \times \text{Role Exposure})$. Moderate uses 0.35; Rapid uses 0.75.
 - **Shared Foundation**: Identifies missing skills required by every top-ranked career across **both** scenarios.
-- **Greedy Course Scheduler**: Optimally fills weekly study limits (e.g. 4 hrs/week, RM0 budget) prioritizing shared foundational skills first.
+- **Greedy Course Scheduler**: Fills weekly study limits (e.g. 4 hrs/week, RM0 budget) and always schedules courses that close a shared-foundation gap before role-specific ones.
 
 ---
 

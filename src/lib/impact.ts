@@ -16,7 +16,8 @@ export const IMPACT_TARGETS = {
   foundationWeeks: 4,
 } as const;
 
-export type ImpactStatus = 'met' | 'below' | 'not-applicable';
+/** `early`: the whole foundation is finished inside the window, before any role-specific study. */
+export type ImpactStatus = 'met' | 'early' | 'below' | 'not-applicable';
 
 const round = (n: number) => Math.round(n * 10) / 10;
 
@@ -40,20 +41,32 @@ export function foundationShare(
   const window = Math.max(0, hoursPerWeek) * weeks;
   let cursor = 0,
     total = 0,
-    shared = 0;
+    shared = 0,
+    foundationEnd = 0,
+    roleStart: number | null = null;
   for (const step of plan.steps) {
     const overlap = Math.max(
       0,
       Math.min(cursor + step.course.hours, window) - cursor,
     );
     total += overlap;
-    if (step.shared) shared += overlap;
+    if (step.shared) {
+      shared += overlap;
+      foundationEnd = cursor + step.course.hours;
+    } else roleStart ??= cursor;
     cursor += step.course.hours;
   }
   return {
     totalHours: round(total),
     sharedHours: round(shared),
     share: total > 0 ? round((100 * shared) / total) : null,
+    /** Study week in which the last foundation course ends; null when none is scheduled. */
+    completeWeek:
+      foundationEnd > 0 && hoursPerWeek > 0
+        ? Math.ceil(foundationEnd / hoursPerWeek - 1e-9)
+        : null,
+    /** No role-specific hour is scheduled before the foundation is finished. */
+    first: roleStart === null || roleStart >= foundationEnd,
   };
 }
 
@@ -77,6 +90,7 @@ export function assessPerson(
       ? round((100 * (before.distance - after.distance)) / before.distance)
       : null;
   const foundation = foundationShare(plan, profile.hours);
+  const foundationDone = !plan.uncovered.some((s) => shared.includes(s));
   return {
     profile,
     role,
@@ -91,11 +105,15 @@ export function assessPerson(
         ? 'met'
         : 'below') as ImpactStatus,
     foundation,
-    foundationStatus: (shared.length === 0 || foundation.share === null
+    foundationStatus: (shared.length === 0 ||
+    foundation.share === null ||
+    (foundationDone && foundation.completeWeek === null)
       ? 'not-applicable'
       : foundation.share >= IMPACT_TARGETS.foundationShare
         ? 'met'
-        : 'below') as ImpactStatus,
+        : foundationDone && foundation.first
+          ? 'early'
+          : 'below') as ImpactStatus,
   };
 }
 export type PersonImpact = ReturnType<typeof assessPerson>;
@@ -145,12 +163,7 @@ export function assessCohort(
     averageFoundationShare: average(shares),
     foundationMeasured: shares.length,
     foundationMet: people.filter((p) => p.foundationStatus === 'met').length,
+    foundationEarly: people.filter((p) => p.foundationStatus === 'early')
+      .length,
   };
 }
-
-export const statusFor = (value: number | null, target: number) =>
-  (value === null
-    ? 'not-applicable'
-    : value >= target
-      ? 'met'
-      : 'below') as ImpactStatus;

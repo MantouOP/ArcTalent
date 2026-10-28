@@ -28,6 +28,7 @@ import { useI18n } from './language-provider';
 type CardStatus = ImpactStatus | 'pending' | 'design';
 const statusTag: Record<CardStatus, { tone: string; label: string }> = {
   met: { tone: 'green', label: 'Target met' },
+  early: { tone: 'blue', label: 'Foundation finished early' },
   below: { tone: 'amber', label: 'Below target' },
   'not-applicable': { tone: 'blue', label: 'No gap to close' },
   pending: { tone: 'amber', label: 'Not yet measurable' },
@@ -146,13 +147,21 @@ export function ImpactScorecard({
       detail:
         mine.foundationStatus === 'not-applicable'
           ? t('No shared-foundation gaps remain for this profile.')
-          : t(
-              '{0} of {1} early study hours build skills needed in both AI futures.',
-              {
-                0: mine.foundation.sharedHours,
-                1: mine.foundation.totalHours,
-              },
-            ),
+          : mine.foundationStatus === 'early'
+            ? t(
+                'The whole shared foundation is finished in week {0}, before any role-specific study. The rest of weeks 1–{1} moves on to role skills.',
+                {
+                  0: mine.foundation.completeWeek,
+                  1: IMPACT_TARGETS.foundationWeeks,
+                },
+              )
+            : t(
+                '{0} of {1} early study hours build skills needed in both AI futures.',
+                {
+                  0: mine.foundation.sharedHours,
+                  1: mine.foundation.totalHours,
+                },
+              ),
     },
     {
       icon: Users,
@@ -243,9 +252,14 @@ export function ImpactScorecard({
               </small>
               <strong>{pct(cohorts[s].averageFoundationShare)}</strong>
               <small>
-                {t('average foundation share in weeks 1–{0}', {
-                  0: IMPACT_TARGETS.foundationWeeks,
-                })}
+                {t(
+                  'average foundation share in weeks 1–{0} · {1} at 100%, {2} finished the foundation early',
+                  {
+                    0: IMPACT_TARGETS.foundationWeeks,
+                    1: cohorts[s].foundationMet,
+                    2: cohorts[s].foundationEarly,
+                  },
+                )}
               </small>
             </div>
           ))}
@@ -277,6 +291,13 @@ export function ImpactScorecard({
                   </td>
                   <td className={`impact-cell ${p.foundationStatus}`}>
                     {pct(p.foundation.share)}
+                    {p.foundationStatus === 'early' && (
+                      <small>
+                        {t('done by week {0}', {
+                          0: p.foundation.completeWeek,
+                        })}
+                      </small>
+                    )}
                   </td>
                 </tr>
               ))}
