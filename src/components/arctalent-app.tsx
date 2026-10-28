@@ -25,6 +25,7 @@ import {
   Settings2,
   ShieldCheck,
   Sparkles,
+  Target,
   UserRound,
   Users,
   Wallet,
@@ -54,6 +55,7 @@ import { LearningMap } from './learning-map';
 import { ProfilePanel } from './profile-panel';
 import { EmployerPanel } from './employer-panel';
 import { EvidencePanel } from './evidence-panel';
+import { ImpactScorecard } from './impact-scorecard';
 import { SkillBridge } from './skill-bridge';
 import { StudyRhythm } from './study-rhythm';
 import { RouteSummary, RouteAnalytics } from './command-overview';
@@ -74,11 +76,12 @@ import {
   updateWorkforceProfile,
   type WorkforceSettings,
 } from '@/lib/workforce-settings';
-type View = 'explore' | 'pathway' | 'team' | 'evidence' | 'profile';
+type View = 'explore' | 'pathway' | 'team' | 'impact' | 'evidence' | 'profile';
 const navigation = [
   { id: 'explore' as const, label: 'Career explorer', icon: Compass },
   { id: 'pathway' as const, label: 'My learning pathway', icon: Map },
   { id: 'team' as const, label: 'SME workspace', icon: Users },
+  { id: 'impact' as const, label: 'Impact scorecard', icon: Target },
   { id: 'evidence' as const, label: 'Evidence lab', icon: FlaskConical },
   { id: 'profile' as const, label: 'My skills & profile', icon: UserRound },
 ];
@@ -464,7 +467,9 @@ export function ArcTalentApp({
                   ? t('GROW YOUR PEOPLE, TOGETHER')
                   : view === 'profile'
                     ? t('YOUR EXPERIENCE IS A HEAD START')
-                    : t('A LITTLE CLARITY FOR WHAT COMES NEXT')}
+                    : view === 'impact'
+                      ? t('MEASURED AGAINST OUR COMMITMENTS')
+                      : t('A LITTLE CLARITY FOR WHAT COMES NEXT')}
               </span>
               <h1>
                 {view === 'explore'
@@ -473,9 +478,11 @@ export function ArcTalentApp({
                     ? t('Your learning pathway')
                     : view === 'team'
                       ? t('Workforce command center')
-                      : view === 'evidence'
-                        ? t('Evidence intelligence')
-                        : t('Your skills & profile')}
+                      : view === 'impact'
+                        ? t('Impact scorecard')
+                        : view === 'evidence'
+                          ? t('Evidence intelligence')
+                          : t('Your skills & profile')}
               </h1>
               <p>
                 {view === 'explore'
@@ -491,13 +498,17 @@ export function ArcTalentApp({
                       ? t(
                           'Connect individual growth to a thoughtful workforce learning plan.',
                         )
-                      : view === 'evidence'
+                      : view === 'impact'
                         ? t(
-                            'Every source has a date. Every assumption has an explanation.',
+                            'Live checks of the targets in our proposal, recalculated by the same engine as your pathway.',
                           )
-                        : t(
-                            'Your skills, interests and constraints shape every recommendation.',
-                          )}
+                        : view === 'evidence'
+                          ? t(
+                              'Every source has a date. Every assumption has an explanation.',
+                            )
+                          : t(
+                              'Your skills, interests and constraints shape every recommendation.',
+                            )}
               </p>
             </div>
             {view !== 'profile' && (
@@ -1243,6 +1254,17 @@ export function ArcTalentApp({
               onProfileChange={(member) => {
                 if (member.id === profile.id) saveProfile(member);
               }}
+            />
+          )}
+          {view === 'impact' && (
+            <ImpactScorecard
+              profile={profile}
+              scenario={scenario}
+              snapshot={snapshot}
+              active={active}
+              shared={shared}
+              plan={plan}
+              workforce={workforce}
             />
           )}
           {view === 'evidence' && (
