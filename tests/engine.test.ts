@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   baseProfile,
   baseline,
+  employees,
   updated,
   roles,
   skills,
@@ -133,4 +134,48 @@ test('Alias parser returns known skills with evidence only', () => {
       (x) => skills.some((s) => s.id === x.id) && x.evidence.length > 0,
     ),
   );
+});
+test('Shared-foundation courses are scheduled before role-specific courses', () => {
+  const mei = employees.find((e) => e.id === 'mei')!;
+  const bi = roles.find((r) => r.id === 'bi')!;
+  const plan = buildPlan(mei, bi, sharedFoundation(mei, baseline));
+  // Value per hour alone would put the 2-hour Power BI course first.
+  assert.equal(plan.steps[0].course.id, 'communication');
+  let seed = 11;
+  const random = () =>
+    (seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648;
+  const profiles = [...employees];
+  for (let i = 0; i < 300; i++)
+    profiles.push({
+      ...baseProfile,
+      id: `random-${i}`,
+      hours: 1 + Math.floor(random() * 10),
+      weeks: 4 + Math.floor(random() * 23),
+      skills: Object.fromEntries(
+        skills.flatMap((s) =>
+          random() < 0.5 ? [[s.id, Math.floor(random() * 4)]] : [],
+        ),
+      ),
+    });
+  for (const profile of profiles)
+    for (const role of roles) {
+      const steps = buildPlan(
+        profile,
+        role,
+        sharedFoundation(profile, baseline),
+      ).steps;
+      const firstRole = steps.findIndex((s) => !s.shared);
+      if (firstRole >= 0)
+        assert.ok(
+          steps.slice(firstRole).every((s) => !s.shared),
+          `${profile.id} → ${role.id}`,
+        );
+      const learned = { ...profile.skills };
+      for (const step of steps) {
+        for (const prereq of step.course.prerequisites)
+          assert.ok((learned[prereq] ?? 0) >= 1);
+        for (const id of step.course.skills)
+          learned[id] = Math.max(learned[id] ?? 0, 2);
+      }
+    }
 });

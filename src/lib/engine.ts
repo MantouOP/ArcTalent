@@ -125,6 +125,11 @@ export function buildPlan(
       )
       .map((c) => ({
         course: c,
+        // Courses closing an open shared-foundation gap always come first.
+        foundation: c.skills.some(
+          (s) =>
+            shared.includes(s) && (required.get(s) ?? 0) > (planned[s] ?? 0),
+        ),
         value:
           c.skills.reduce(
             (n, s) =>
@@ -140,6 +145,7 @@ export function buildPlan(
       .filter((o) => o.value > 0)
       .sort(
         (a, b) =>
+          Number(b.foundation) - Number(a.foundation) ||
           b.value - a.value ||
           a.course.fee - b.course.fee ||
           a.course.id.localeCompare(b.course.id),
