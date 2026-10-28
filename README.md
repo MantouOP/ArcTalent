@@ -3,33 +3,34 @@
 > **Skills that travel with you.** An adaptive, explainable reskilling command center that helps working adults and SME managers navigate evolving labour markets under moderate and rapid AI adoption scenarios.
 
 ### 🌟 Quick Links:
+
 👉 **[🎥 Watch YouTube Demo Video](https://youtu.be/PYpaD5IAYpE)** · **[📊 Open Canva Pitch Deck Slides](https://canva.link/upnutijay2qn7vn)** · **[🚀 Open Live App Demo](https://arc-talent--emmanuelheng.replit.app/)** · **[📁 View Official Submission PDFs](submission/)**
 
 ---
 
 ## Team Information
 
-| Field | Details |
-| :--- | :--- |
-| **Team Name** | **Xeno Force** |
-| **Team Domain** | **Domain 1 — The Aiversecity Future-Ready Workforce Domain** |
-| **SDG Track (1–17)** | **SDG 8: Decent Work and Economic Growth** *(also addressing SDG 4: Quality Education & SDG 10: Reduced Inequalities)* |
-| **Team Leader** | **Emmanuel Heng Zi Teng** |
-| **Email & Phone** | **Enuelhzt1524@gmail.com** · **010-271-6363** |
+| Field                       | Details                                                                                                                                                  |
+| :-------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Team Name**               | **Xeno Force**                                                                                                                                           |
+| **Team Domain**             | **Domain 1 — The Aiversecity Future-Ready Workforce Domain**                                                                                             |
+| **SDG Track (1–17)**        | **SDG 8: Decent Work and Economic Growth** _(also addressing SDG 4: Quality Education & SDG 10: Reduced Inequalities)_                                   |
+| **Team Leader**             | **Emmanuel Heng Zi Teng**                                                                                                                                |
+| **Email & Phone**           | **Enuelhzt1524@gmail.com** · **010-271-6363**                                                                                                            |
 | **University Affiliations** | **Universiti Malaya (UM)**, **Universiti Teknologi Malaysia (UTM)**, **Management and Science University (MSU)**, **Swinburne University of Technology** |
-| **Number of Members** | **4** |
+| **Number of Members**       | **4**                                                                                                                                                    |
 
 ## Links
 
-| Resource | Link |
-| :--- | :--- |
-| **🎨 Pitch Deck Slides (Canva)** | **[👉 View Presentation Slides (Canva)](https://canva.link/upnutijay2qn7vn)** |
-| **🚀 Live Prototype Demo** | [https://arc-talent--emmanuelheng.replit.app/](https://arc-talent--emmanuelheng.replit.app/) |
-| **💻 GitHub Repository** | [https://github.com/MantouOP/ArcTalent](https://github.com/MantouOP/ArcTalent) |
-| **☁️ Replit Team Project** | [https://replit.com/@EmmanuelHeng/ArcTalent](https://replit.com/@EmmanuelHeng/ArcTalent) |
-| **🌿 Replit Runtime Branch** | [https://github.com/MantouOP/ArcTalent/tree/replit-runtime](https://github.com/MantouOP/ArcTalent/tree/replit-runtime) |
-| **⚡ RunPod Serverless Endpoint** | `https://api.runpod.ai/v2/` *(Qwen/Qwen2.5-7B-Instruct vLLM)* |
-| **🎥 Demo Walkthrough Video** | **[👉 Watch on YouTube (5–7 min)](https://youtu.be/PYpaD5IAYpE)** |
+| Resource                          | Link                                                                                                                   |
+| :-------------------------------- | :--------------------------------------------------------------------------------------------------------------------- |
+| **🎨 Pitch Deck Slides (Canva)**  | **[👉 View Presentation Slides (Canva)](https://canva.link/upnutijay2qn7vn)**                                          |
+| **🚀 Live Prototype Demo**        | [https://arc-talent--emmanuelheng.replit.app/](https://arc-talent--emmanuelheng.replit.app/)                           |
+| **💻 GitHub Repository**          | [https://github.com/MantouOP/ArcTalent](https://github.com/MantouOP/ArcTalent)                                         |
+| **☁️ Replit Team Project**        | [https://replit.com/@EmmanuelHeng/ArcTalent](https://replit.com/@EmmanuelHeng/ArcTalent)                               |
+| **🌿 Replit Runtime Branch**      | [https://github.com/MantouOP/ArcTalent/tree/replit-runtime](https://github.com/MantouOP/ArcTalent/tree/replit-runtime) |
+| **⚡ RunPod Serverless Endpoint** | `https://api.runpod.ai/v2/` _(Qwen/Qwen2.5-7B-Instruct vLLM)_                                                          |
+| **🎥 Demo Walkthrough Video**     | **[👉 Watch on YouTube (5–7 min)](https://youtu.be/PYpaD5IAYpE)**                                                      |
 
 ---
 
@@ -62,23 +63,24 @@ ArcTalent provides an explainable career reskilling command center that maps cur
 - **Dual-Scenario Adaptability**: Instant toggle between Moderate and Rapid AI futures; preserves foundational learning while updating specialized branches.
 - **Evidence-Backed Skill Extraction**: GenAI extracts CV skills anchored to verbatim source quotes (`Qwen/Qwen2.5-7B-Instruct` on RunPod) with instant local regex fallback.
 - **SME Workforce Redeployment**: 8–10 worker gap heatmap, company budget management, internal seat quotas, grouped training economies, and localized PDF reports.
+- **Impact Scorecard**: Live check of the four Phase 2 targets from our proposal, for your own route and the synthetic team in both AI scenarios. See the reproducible [impact benchmark](docs/IMPACT.md).
 - **Multilingual Support**: Fully accessible in English, Bahasa Melayu, and 简体中文.
 - **Zero-Database Privacy**: All state lives in Browser LocalStorage; no personal resume data is ever stored on the server.
 
 ### Tech Stack
 
-| Layer | Technology |
-| :--- | :--- |
-| **Frontend** | Next.js 16 (App Router), React 19, TypeScript, Lucide Icons, Custom CSS |
-| **Backend & Engine** | Node.js route handlers, deterministic heuristic matching engine (`engine.ts`), Zod validation |
-| **Document Processing** | `pdf-parse` for synthetic text resumes; `@react-pdf/renderer` font embedding for PDF reports |
-| **AI / GPU Compute** | **RunPod** (Serverless `Qwen/Qwen2.5-7B-Instruct` via Vercel AI SDK) |
-| **Cloud Hosting** | **Replit** (Full-stack production Autoscale deployment in Asia region) |
-| **Storage & Privacy** | Browser LocalStorage (Zero cloud database required) |
+| Layer                   | Technology                                                                                    |
+| :---------------------- | :-------------------------------------------------------------------------------------------- |
+| **Frontend**            | Next.js 16 (App Router), React 19, TypeScript, Lucide Icons, Custom CSS                       |
+| **Backend & Engine**    | Node.js route handlers, deterministic heuristic matching engine (`engine.ts`), Zod validation |
+| **Document Processing** | `pdf-parse` for synthetic text resumes; `@react-pdf/renderer` font embedding for PDF reports  |
+| **AI / GPU Compute**    | **RunPod** (Serverless `Qwen/Qwen2.5-7B-Instruct` via Vercel AI SDK)                          |
+| **Cloud Hosting**       | **Replit** (Full-stack production Autoscale deployment in Asia region)                        |
+| **Storage & Privacy**   | Browser LocalStorage (Zero cloud database required)                                           |
 
 ---
 
-## How We Use Replit *(Official Sponsor)*
+## How We Use Replit _(Official Sponsor)_
 
 - **Development & Version Control**: Imported canonical source repository, maintaining continuous verified git histories.
 - **Production Hosting**: Live public deployment on Replit Autoscale (`https://arc-talent--emmanuelheng.replit.app/`) serving web views and API routes.
@@ -86,7 +88,7 @@ ArcTalent provides an explainable career reskilling command center that maps cur
 - **Secrets Management**: RunPod API keys and endpoints are stored in Replit Secrets, never committed to git.
 - 📄 Proof of use: [`submission/SDC2026_XenoForce_Replit_POU.pdf`](submission/SDC2026_XenoForce_Replit_POU.pdf)
 
-## How We Use RunPod *(Official Sponsor)*
+## How We Use RunPod _(Official Sponsor)_
 
 - **Workload**: Cloud GPU container hosting `Qwen/Qwen2.5-7B-Instruct` for structured CV skill extraction and custom career goal analysis.
 - **Integration**: Next.js route handlers communicate with RunPod via the Vercel AI SDK using structured JSON schema decoding (`Output.object`).
@@ -114,6 +116,8 @@ npm run build
 npm run start
 # In another terminal, with the production server running:
 npm run test:integration
+# Print the Phase 2 impact benchmark (docs/IMPACT.md):
+npm run impact
 ```
 
 ---
@@ -133,12 +137,12 @@ $$\text{Suitability} = 55\% \times \text{Skill Coverage} + 15\% \times \text{Int
 
 ## Team — Xeno Force
 
-| Name | Role | University | Email |
-| :--- | :--- | :--- | :--- |
-| **Emmanuel Heng Zi Teng** | Team Leader / Full-Stack & System Architecture | Universiti Malaya | `enuelhzt1524@gmail.com` |
-| **Dihom Chan Dyi Hong** | Frontend & UI / UX Design | Universiti Teknologi Malaysia | `dihomchan1@gmail.com` |
-| **Nicholas Chuah Zheng Yee** | AI Integration & RunPod Infrastructure | Management and Science University | `711niczheng@gmail.com` |
-| **Ghessweynne Liew Thin Hsing** | Workforce Research & SDG Impact Modeling | Swinburne University of Technology | `dino55590@gmail.com` |
+| Name                            | Role                                           | University                         | Email                    |
+| :------------------------------ | :--------------------------------------------- | :--------------------------------- | :----------------------- |
+| **Emmanuel Heng Zi Teng**       | Team Leader / Full-Stack & System Architecture | Universiti Malaya                  | `enuelhzt1524@gmail.com` |
+| **Dihom Chan Dyi Hong**         | Frontend & UI / UX Design                      | Universiti Teknologi Malaysia      | `dihomchan1@gmail.com`   |
+| **Nicholas Chuah Zheng Yee**    | AI Integration & RunPod Infrastructure         | Management and Science University  | `711niczheng@gmail.com`  |
+| **Ghessweynne Liew Thin Hsing** | Workforce Research & SDG Impact Modeling       | Swinburne University of Technology | `dino55590@gmail.com`    |
 
 ---
 

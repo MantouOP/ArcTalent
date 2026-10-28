@@ -11,7 +11,8 @@
     "test": "tsx --test tests/*.test.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test:integration": "tsx tests/integration.mts"
+    "test:integration": "tsx tests/integration.mts",
+    "impact": "tsx scripts/impact-report.ts"
   },
   "engines": {
     "node": ">=22"
