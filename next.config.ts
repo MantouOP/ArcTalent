@@ -4,6 +4,7 @@ const config: NextConfig = {
   serverExternalPackages: ['pdf-parse', 'pdfkit'],
   outputFileTracingIncludes: {
     '/api/workforce-export': ['./assets/fonts/**/*'],
+    '/api/pathway-export': ['./assets/fonts/**/*'],
   },
 };
 export default config;

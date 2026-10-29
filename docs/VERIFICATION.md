@@ -1,5 +1,15 @@
 # Verification record
 
+## Functional audit and personal PDF export — 29 October 2026
+
+The deployed CV-consent release passed all 27 existing HTTPS integration checks. A browser audit additionally exercised scenario reranking with a stable shared foundation, custom dated skill-demand assumptions and their score explanations, public evidence refresh (100 job records and 12 research records), typed questionnaire answers with a custom 25-minute study session, adding a fictional worker, typing and applying an AI-reviewed workforce destination, and the resulting heatmap/allocation changes. The temporary worker was removed from the isolated local test origin. A typed career-guide question returned the selected plan's courses and direct catalogue links. Malay, Chinese, larger text and reduced motion applied and survived reload. Public saved profiles/goals were preserved.
+
+The audit reproduced a real inconsistency: the personal **Export pathway** action downloaded JSON while the SME action already produced PDF. It now uses a bounded, validated server route to recompute the same selected destination, scenario, snapshot, funding filter and shared-foundation plan, exporting a searchable PDF. The PDF includes exact clickable catalogue course links, remaining/specialist gaps, weekly allocations and typed study preferences. Both pathway and Settings actions expose loading and failure states. No raw CV file or CV text is part of the export request.
+
+Four added production integration cases first reproduced the missing endpoint (404), then verified searchable course-linked PDFs, custom specialist gaps and the HRD filter, Chinese with zero study hours, and invalid/oversized requests. An additional assertion first reproduced missing typed preferences, then verified their inclusion. The final local build passed **170 unit tests, all 31 integration checks, TypeScript and formatting**. Actual browser downloads were extracted and rendered: two readable A4 pages with correct course URLs and page numbers. Browser warning/error logs were empty. Independent review found no actionable issues, including maximum-length Chinese notes, a 52-week horizon, and study-session boundary cases.
+
+Nine of 17 catalogue course URLs returned successful official-provider pages. The eight OpenLearn URLs returned Cloudflare bot-protection responses to the automated check; their current availability was not confirmed by that check. No replacement URLs or fresh verification dates were invented. Specialist training outside the catalogue, scanned-PDF OCR, and measured employment/SDG outcomes remain outside the prototype's verified coverage. Deployment verification is recorded in the runtime status document.
+
 ## Real CV import and separate AI consent — 29 October 2026
 
 Reproduced the reported import button stopping at an unchecked fictional-data gate and the static provider-configuration warning. The team explicitly chose to support real CVs with a clear processing notice. The fix starts from the latest finals source and preserves the impact scorecard, cost model and foundation-first scheduler.

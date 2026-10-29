@@ -36,7 +36,6 @@ import { baseline, baseProfile, roles, sdgUrl, updated } from '@/lib/catalogue';
 import {
   buildPlan,
   diffSnapshots,
-  MODEL_VERSION,
   rankRoles,
   sharedFoundation,
 } from '@/lib/engine';
@@ -68,8 +67,6 @@ import { roleLabel } from '@/lib/role-label';
 import type { CareerGoal } from '@/lib/types';
 import { useDisplayPreferences } from './display-preferences-provider';
 import { shouldReduceMotion } from '@/lib/display-preferences';
-import { buildSkillBridge } from '@/lib/skill-bridge';
-import { buildStudyRhythm } from '@/lib/learning-preferences';
 import {
   restoreWorkforceSettings,
   getWorkforceMembers,
@@ -94,6 +91,8 @@ export function ArcTalentApp({
   const { t, locale } = useI18n();
   const { preferences: displayPreferences } = useDisplayPreferences();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState(false);
   const [customGoal, setCustomGoal] = useState<CareerGoal | null>(null);
   const candidates = useMemo(() => goalCandidates(customGoal), [customGoal]);
 
@@ -285,32 +284,40 @@ export function ArcTalentApp({
     setProfile(next);
     setWorkforce((current) => updateWorkforceProfile(current, next));
   }
-  function exportPlan() {
-    downloadFile(
-      'ArcTalent-learning-plan.json',
-      JSON.stringify(
-        {
-          exportedAt: new Date().toISOString(),
-          synthetic: true,
-          modelVersion: MODEL_VERSION,
+  async function exportPlan() {
+    if (exporting) return;
+    setExporting(true);
+    setExportError(false);
+    try {
+      const response = await fetch('/api/pathway-export', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           profile,
           scenario,
-          snapshot,
-          role: active.role,
+          snapshot: { ...snapshot, signals: [] },
+          roleId: active.role.id,
           customGoal,
-          skillBridge: buildSkillBridge(profile, active.role),
-          studyRhythm: profile.learningPreferences
-            ? buildStudyRhythm(
-                profile.hours,
-                profile.learningPreferences.sessionMinutes,
-              )
-            : null,
-          plan,
-        },
-        null,
-        2,
-      ),
-    );
+          funding,
+          locale,
+        }),
+        signal: AbortSignal.timeout(40000),
+      });
+      if (
+        !response.ok ||
+        !response.headers.get('content-type')?.startsWith('application/pdf')
+      )
+        throw new Error('PDF export failed');
+      downloadFile(
+        'ArcTalent-learning-plan.pdf',
+        await response.blob(),
+        'application/pdf',
+      );
+    } catch {
+      setExportError(true);
+    } finally {
+      setExporting(false);
+    }
   }
   const visibleMatches = matches
     .filter((m) =>
@@ -941,11 +948,23 @@ export function ArcTalentApp({
                     <option value="hrd">{t('Verified HRD Corp listed')}</option>
                   </select>
                 </label>
-                <button className="secondary" onClick={exportPlan}>
+                <button
+                  className="secondary"
+                  onClick={exportPlan}
+                  disabled={exporting}
+                  aria-busy={exporting}
+                >
                   <Download size={16} />
-                  {t('Export pathway')}{' '}
+                  {t(
+                    exporting ? 'Preparing PDF…' : 'Export pathway (PDF)',
+                  )}{' '}
                 </button>
               </div>
+              {exportError && (
+                <p role="alert" className="notice">
+                  {t('Could not download the PDF. Please try again.')}
+                </p>
+              )}
               <label className="checkbox-label follow-recommendation">
                 <input
                   type="checkbox"
@@ -1360,6 +1379,8 @@ export function ArcTalentApp({
             navigate('profile');
           }}
           onExport={exportPlan}
+          exporting={exporting}
+          exportError={exportError}
           onReset={reset}
         />
       )}

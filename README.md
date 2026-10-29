@@ -65,6 +65,7 @@ ArcTalent provides an explainable career reskilling command center that maps cur
 - **SME Workforce Redeployment**: 8–10 worker gap heatmap, company budget management, internal seat quotas, grouped training economies, and localized PDF reports.
 - **SME Cost Model**: Prices the team plan as internal cohorts versus individual commercial seats, using HRD Corp's Allowable Cost Matrix and DOSM wage data, with editable assumptions and a break-even seat price.
 - **Impact Scorecard**: Live check of the four Phase 2 targets from our proposal, for your own route and the synthetic team in both AI scenarios. See the reproducible [impact benchmark](docs/IMPACT.md).
+- **PDF learning plans**: Download personal or SME plans as searchable PDFs with direct course links. Personal exports preserve the selected destination, funding filter, specialist gaps and typed study preferences in English, Bahasa Melayu or Simplified Chinese.
 - **Multilingual Support**: Fully accessible in English, Bahasa Melayu, and 简体中文.
 - **CV Privacy Controls**: ArcTalent does not save CV files or raw CV text. PDF conversion processes the file on the application server. AI analysis sends reviewed text to RunPod only when explicitly selected. Reviewed profile skills are saved in this browser, and transient CV text/suggestions have a clear action.
 

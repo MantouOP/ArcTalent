@@ -61,6 +61,140 @@ await check('health reports actual extraction mode', async () => {
   assert.equal((await response.json()).ok, true);
 });
 await check(
+  'personal pathway exports the selected route as a searchable PDF with exact course links',
+  async () => {
+    const response = await post('/api/pathway-export', {
+      profile: {
+        ...baseProfile,
+        learningPreferences: {
+          focus: 'data',
+          format: 'practice',
+          sessionMinutes: 25,
+          workAnswer: 'Build accessible community applications',
+          practiceAnswer: 'Test a contact form with a friend',
+        },
+      },
+      scenario: 'moderate',
+      snapshot: baseline,
+      roleId: 'bi',
+      funding: 'all',
+      locale: 'en',
+    });
+    assert.equal(response.status, 200);
+    assert.match(
+      response.headers.get('content-type') ?? '',
+      /^application\/pdf/,
+    );
+    assert.match(
+      response.headers.get('content-disposition') ?? '',
+      /ArcTalent-learning-plan\.pdf/,
+    );
+    assert.equal(response.headers.get('cache-control'), 'no-store');
+    const bytes = Buffer.from(await response.arrayBuffer());
+    assert.equal(bytes.subarray(0, 5).toString(), '%PDF-');
+    assert.ok(
+      bytes
+        .toString('latin1')
+        .includes('/URI (https://sqlbolt.com/lesson/introduction)'),
+    );
+    const parser = new PDFParse({ data: new Uint8Array(bytes) });
+    try {
+      const { text } = await parser.getText();
+      assert.match(text, /Your learning pathway/);
+      assert.match(text, /Aina/);
+      assert.match(text, /Business Intelligence Analyst/);
+      assert.match(text, /Data analysis: visualisations in Excel/);
+      assert.match(text, /Shared foundation/);
+      assert.match(text, /Build accessible community applications/);
+      assert.match(text, /Test a contact form with a friend/);
+      assert.match(text, /25/);
+    } finally {
+      await parser.destroy();
+    }
+  },
+);
+await check(
+  'personal PDF keeps custom specialist gaps and honours the selected funding filter',
+  async () => {
+    const customGoal = careerGoalSchema.parse(
+      analyseGoalLocally({
+        title: 'Frontend developer',
+        description: 'HTML CSS and JavaScript',
+      }),
+    );
+    const response = await post('/api/pathway-export', {
+      profile: baseProfile,
+      scenario: 'rapid',
+      snapshot: baseline,
+      roleId: 'custom-goal',
+      customGoal,
+      funding: 'hrd',
+      locale: 'en',
+    });
+    assert.equal(response.status, 200);
+    const parser = new PDFParse({
+      data: new Uint8Array(await response.arrayBuffer()),
+    });
+    try {
+      const { text } = await parser.getText();
+      assert.match(text, /Frontend developer/);
+      assert.match(text, /Accessibility testing/);
+      assert.match(text, /Skills still to cover/);
+      assert.match(text, /No new learning is scheduled/);
+      assert.doesNotMatch(text, /5265446-build-your-first-web-pages/);
+    } finally {
+      await parser.destroy();
+    }
+  },
+);
+await check(
+  'personal PDF supports Chinese and zero available learning time',
+  async () => {
+    const response = await post('/api/pathway-export', {
+      profile: { ...baseProfile, name: '测试学习者', hours: 0 },
+      scenario: 'moderate',
+      snapshot: baseline,
+      roleId: 'bi',
+      funding: 'all',
+      locale: 'zh-CN',
+    });
+    assert.equal(response.status, 200);
+    const parser = new PDFParse({
+      data: new Uint8Array(await response.arrayBuffer()),
+    });
+    try {
+      const { text } = await parser.getText();
+      assert.match(text, /你的学习路径/);
+      assert.match(text, /测试学习者/);
+      assert.doesNotMatch(text, /NaN|Infinity/);
+    } finally {
+      await parser.destroy();
+    }
+  },
+);
+await check(
+  'personal PDF rejects malformed, unknown-role and oversized requests',
+  async () => {
+    assert.equal((await post('/api/pathway-export', {})).status, 400);
+    assert.equal(
+      (
+        await post('/api/pathway-export', {
+          profile: baseProfile,
+          scenario: 'moderate',
+          snapshot: baseline,
+          roleId: 'made-up-role',
+        })
+      ).status,
+      400,
+    );
+    assert.equal(
+      (await post('/api/pathway-export', { description: 'x'.repeat(128001) }))
+        .status,
+      413,
+    );
+  },
+);
+await check(
   'workforce export downloads a searchable PDF with exact course links',
   async () => {
     const response = await post('/api/workforce-export', {

@@ -30,5 +30,9 @@
   "Export plan (PDF)": "导出计划（PDF）",
   "Preparing PDF…": "正在生成 PDF…",
   "Could not download the PDF. Please try again.": "无法下载 PDF。请重试。",
-  "Learning schedule (continued)": "学习安排（续）"
+  "Learning schedule (continued)": "学习安排（续）",
+  "Export pathway (PDF)": "导出路径（PDF）",
+  "Download current learning plan (PDF)": "下载当前学习计划（PDF）",
+  "Learning schedule": "学习安排",
+  "Planning assumptions": "规划假设"
 }

@@ -14,12 +14,16 @@ export function SettingsPanel({
   onClose,
   onEditProfile,
   onExport,
+  exporting,
+  exportError,
   onReset,
 }: {
   profile: Profile;
   onClose: () => void;
   onEditProfile: () => void;
   onExport: () => void;
+  exporting: boolean;
+  exportError: boolean;
   onReset: () => void;
 }) {
   const { t, locale, setLocale } = useI18n();
@@ -180,9 +184,15 @@ export function SettingsPanel({
               type="button"
               className="settings-action"
               onClick={onExport}
+              disabled={exporting}
+              aria-busy={exporting}
             >
               <Download size={14} />
-              {t('Download current learning plan')}
+              {t(
+                exporting
+                  ? 'Preparing PDF…'
+                  : 'Download current learning plan (PDF)',
+              )}
             </button>
             {!confirmReset && (
               <button
@@ -199,6 +209,11 @@ export function SettingsPanel({
               </button>
             )}
           </div>
+          {exportError && (
+            <p role="alert" className="notice">
+              {t('Could not download the PDF. Please try again.')}
+            </p>
+          )}
           {confirmReset && (
             <div
               className="settings-confirm"
