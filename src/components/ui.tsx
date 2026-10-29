@@ -86,7 +86,6 @@ export function SkillChip({
       href={sdgUrl(skill.target)}
       target="_blank"
       rel="noreferrer"
-      title={t('SDG {0}: {1}', { 0: skill.target, 1: t(skill.rationale) })}
       aria-label={t('{0} — SDG target {1}. {2}', {
         0: t(skill.label),
         1: skill.target,
