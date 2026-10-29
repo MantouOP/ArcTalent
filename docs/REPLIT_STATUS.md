@@ -2,6 +2,14 @@
 
 Verified on **29 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
+## Companion YouTube videos — live
+
+Canonical source `07ccfcfb58bba73fb218501916551b0f14250877` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). Every catalogue course now shows a **Watch on YouTube** button beside **Open course**, linking one optional companion video ([#6](https://github.com/MantouOP/ArcTalent/pull/6)); titles and channels are recorded in [sources](SOURCES.md#companion-videos). The release keeps the profile-picture, personal PDF and consented CV import changes already live from `8abb08d`.
+
+Replit imported `artifacts/arctalent-release-07ccfcf` unchanged. All **217 tracked files** matched the commit by Git blob hash. Locked installation (73 packages, 0 vulnerabilities), **178 unit tests**, the production build and all **31 integration checks** passed inside Replit before publishing. The previous configuration is kept as `artifact.toml.pre-youtube-videos-backup`; older releases and the server credentials were retained. This runtime history was not exported to the GitHub runtime branch.
+
+The video buttons were first observed publicly at **2026-10-29 14:08:04 UTC (22:08:04 MYT)**. Replit reports **Live**, and all **31 public HTTPS integration checks passed**. The public learning pathway showed the button on all four of Aina's courses, each linking its recorded video.
+
 ## Settings profile pictures — live
 
 Canonical source `8abb08d01aaf64b8a69f420e1a3109ffd1c30a67` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). Settings provides six illustrated avatars, initials and a local JPG/PNG/WebP photo. Choices are stored separately per profile in this browser and displayed in the header, pathway map, skills card and Settings. Photos are locally resized and do not enter career/API/PDF payloads.

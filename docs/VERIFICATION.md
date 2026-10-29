@@ -1,5 +1,11 @@
 # Verification record
 
+## Companion YouTube videos — 29 October 2026
+
+Source `07ccfcf` merges [#6](https://github.com/MantouOP/ArcTalent/pull/6): each of the 17 catalogue courses links one optional YouTube video beside its provider link, in the pathway, the next-step card, the SME learning groups and the custom-goal preview. The pathway states that videos are optional and not counted in planned hours.
+
+Every title and channel was confirmed through YouTube oEmbed on 29 October 2026, then re-checked from the catalogue itself: 17 of 17 matched exactly. Tests cover the canonical watch URL, uniqueness, the checked date and the Malay and Chinese labels. **178 unit tests**, TypeScript, Prettier, the production build and all **31 integration checks** passed locally on the merged `main`, and CI passed on the pull request. Browser checks covered the four places the button appears, 375px layouts without overflow and an empty console. The published release passed all **31 public HTTPS checks** ([runtime status](REPLIT_STATUS.md)).
+
 ## Settings profile pictures — 29 October 2026
 
 Settings now offers initials, six bundled illustrated avatars and a JPG/PNG/WebP upload. Each profile has its own browser preference. Images are decoded, centre-cropped to 256×256 and re-encoded on the device; the image is never added to career profiles or sent to the CV, model or PDF routes. File inputs are bounded at 5 MB and 24 million decoded pixels; stored choices accept only bundled preset IDs or bounded raster data URLs. Invalid uploads preserve the previous picture, and stale results are ignored after another choice or dialog closure.
