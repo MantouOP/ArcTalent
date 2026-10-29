@@ -2,6 +2,14 @@
 
 Verified on **29 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
+## Personal PDF export and functional audit — live
+
+Canonical source `db026cafba77b75ce83fb67f8007d0db7c46987d` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). Personal learning pathways now download as searchable PDFs with exact course links, selected funding/destination, remaining specialist gaps and typed study preferences. The SME PDF flow is preserved.
+
+Replit imported `artifacts/arctalent-release-db026ca` unchanged. All **200 tracked files** matched Git source before and after installation/build. Locked installation, **170 unit tests**, the production build and **31 integration checks** passed inside Replit. Runtime commit `f8e7b2bf2d75e529fc700f0f4e825ad11c9f5456` selects the verified release and saves the previous configuration as `artifact.toml.pre-personal-pdf-backup`. Existing unstaged changes in the older release were preserved. This runtime history was not exported to the GitHub runtime branch.
+
+Replit reports **Live**, and all **31 public HTTPS integration checks passed**. Chrome downloaded the public personal PDF at **29 October 2026, 20:03 MYT** and confirmed its saved custom destination, rapid scenario and specialist gaps. The saved profile/goal/snapshot were preserved, and no browser warnings/errors were captured. A separate live fictional-CV request confirmed actual RunPod/Qwen extraction, rather than relying on configuration presence. See the [functional audit](VERIFICATION.md#functional-audit-and-personal-pdf-export--29-october-2026) for the tested flows and remaining coverage limits.
+
 ## Real CV import and optional AI — live
 
 Canonical source `22a53eed21f93aeef97b4687a83d23c096538198` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). CV import accepts real TXT/text PDFs after a file-specific consent notice, replacing the blocking fictional-data gate. Local matching runs on the device by default; reviewed text goes to RunPod only when AI is selected and analysis is requested. The interface reads runtime configuration status instead of always showing a generic warning. [Source CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40834867663).
