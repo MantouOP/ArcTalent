@@ -179,3 +179,24 @@ test('Shared-foundation courses are scheduled before role-specific courses', () 
       }
     }
 });
+test('Alias evidence quotes the whole-word match, on word boundaries', () => {
+  const text =
+    'Excellent communicator with a strong record. Builds weekly Excel reports for the finance team. Migrated the MySQL server, then wrote SQL queries for monthly summaries.';
+  const result = extractAliases(text);
+  // "Excellent" and "MySQL" contain the letters but are not the matches.
+  assert.match(result.find((x) => x.id === 'excel')!.evidence, /Excel reports/);
+  assert.match(result.find((x) => x.id === 'sql')!.evidence, /SQL queries/);
+  for (const { evidence } of result) {
+    const at = text.indexOf(evidence);
+    assert.ok(at >= 0, evidence);
+    assert.ok(
+      at === 0 || /\s/.test(text[at - 1]),
+      `starts mid-word: ${evidence}`,
+    );
+    const end = at + evidence.length;
+    assert.ok(
+      end === text.length || /\s/.test(text[end]),
+      `ends mid-word: ${evidence}`,
+    );
+  }
+});
