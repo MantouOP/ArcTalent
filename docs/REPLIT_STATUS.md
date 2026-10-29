@@ -1,6 +1,14 @@
 # Replit runtime and publishing verification
 
-Verified on **25 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
+Verified on **29 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
+
+## Finals upgrades — live
+
+Canonical app source `95e676fd3125610f113dcaa757bbae12ef56463a` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). It adds the Impact scorecard, foundation-first course scheduling, the SME cost model with sourced HRD Corp and DOSM defaults, and whole-word CV evidence quotes ([#1](https://github.com/MantouOP/ArcTalent/pull/1)–[#4](https://github.com/MantouOP/ArcTalent/pull/4)). The [source CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40819837020).
+
+Replit imported the source unchanged at `artifacts/arctalent-release-95e676f`; all **193** tracked files matched the commit by Git blob hash. The locked install (73 packages, 0 vulnerabilities), **164 unit tests**, the production build and **25 production integration checks** passed in Replit before publishing. The previous artifact configuration is kept as `artifact.toml.pre-finals-backup`. Production build and run commands keep the established pattern with the new release folder; the development command now starts from the workspace root. The Replit workspace history was not exported to the `replit-runtime` branch for this release.
+
+Replit reports **Live**. The new release was first observed serving at **2026-10-29 05:21:43 UTC (13:21:43 MYT)**. All **25 public HTTPS integration checks passed**. The public Impact scorecard showed Aina's gap distance 41.7 → 0.0, her shared foundation finished by week 3, a **71%** SME saving (RM 4,364 versus RM 15,269) and cohort averages of **79%** (moderate) and **76%** (rapid). Before publishing, the first live CV extraction after an idle period fell back to local matching while RunPod woke; a second request returned `RunPod extraction · Qwen/Qwen2.5-7B-Instruct`. Warm RunPod before demonstrations.
 
 ## Introduction and typed workforce destinations — live
 

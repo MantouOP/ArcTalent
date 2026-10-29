@@ -1,5 +1,13 @@
 # Verification record
 
+## Finals upgrades — 29 October 2026
+
+Source `95e676f` merges four pull requests. [#1](https://github.com/MantouOP/ArcTalent/pull/1) adds an Impact scorecard that checks the four Phase 2 proposal targets with the shared engine, plus a reproducible benchmark (`npm run impact`, [IMPACT.md](IMPACT.md)). [#2](https://github.com/MantouOP/ArcTalent/pull/2) schedules courses that close a shared-foundation gap before role-specific ones, and reports a foundation shorter than four weeks as finished early. [#3](https://github.com/MantouOP/ArcTalent/pull/3) prices the team plan as internal cohorts versus individual commercial seats, using HRD Corp's Allowable Cost Matrix and DOSM wage data ([cost assumptions](SOURCES.md#cost-assumptions)). [#4](https://github.com/MantouOP/ArcTalent/pull/4) quotes the matched CV words on whole-word boundaries and corrects README claims.
+
+**164 unit tests**, TypeScript, Prettier, the production build and **25 production integration checks** passed locally, and CI passed on every pull request and on each merge to `main`. A scheduler comparison over 24,096 plans (8 workers and 2,000 seeded random profiles × 6 roles × 2 funding filters) found 0 prerequisite violations and no role-specific course before the foundation. Weeks 1–4 foundation share rose in 2,272 plans and fell in none. In the 104 plans whose course selection changed, the average gap across all top routes fell from 39.4 to 22.3, while the chosen role's rose from 25.0 to 28.7.
+
+Browser checks covered English, Malay and Chinese, 375px phone layouts without overflow, the scorecard's met, finished-early and below-target states, live cost-assumption edits (a RM40 seat price flips the panel and scorecard to below target), decimal input, the reset to sourced defaults, PDF export with custom costs, and Mei's pathway starting with the communication course. The published release passed all **25 public HTTPS checks** ([runtime status](REPLIT_STATUS.md)).
+
 ## Introduction and typed workforce destinations — 25 October 2026
 
 Source `6f4b004` makes `/` a translated introduction with personal and SME entry links. `/workspace` retains the application and `/workspace/team` starts its team view. Separate home links preserve the existing navigation handlers. The introduction imports no dashboard component, calls no model and uses a static illustrative route. Existing browser storage keys and root providers are retained.
