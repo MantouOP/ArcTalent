@@ -226,23 +226,31 @@ export function diffSnapshots(
     };
   });
 }
+const isSpace = (c: string | undefined) => c !== undefined && /\s/.test(c);
 export function extractAliases(text: string) {
-  const normal = text.toLowerCase();
   return skills.flatMap((skill) => {
-    const alias = skill.aliases.find((a) =>
-      new RegExp(`\\b${a.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(
-        normal,
-      ),
-    );
-    if (!alias) return [];
-    const start = normal.indexOf(alias);
+    // Quote the whole-word match itself, not the first place its letters appear.
+    const match = skill.aliases
+      .map((a) =>
+        new RegExp(
+          `\\b${a.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`,
+          'i',
+        ).exec(text),
+      )
+      .find((m) => m !== null);
+    if (!match) return [];
+    const matchEnd = match.index + match[0].length;
+    let from = Math.max(0, match.index - 35),
+      to = Math.min(text.length, matchEnd + 35);
+    // Start and end the quote on whole words.
+    if (from > 0 && !isSpace(text[from - 1]))
+      while (from < match.index && !isSpace(text[from])) from++;
+    if (to < text.length && !isSpace(text[to]))
+      while (to > matchEnd && !isSpace(text[to - 1])) to--;
     return [
       {
         id: skill.id,
-        evidence: text.slice(
-          Math.max(0, start - 35),
-          Math.min(text.length, start + alias.length + 35),
-        ),
+        evidence: text.slice(from, to).trim(),
         level: 1,
       },
     ];

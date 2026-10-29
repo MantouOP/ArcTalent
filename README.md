@@ -70,14 +70,14 @@ ArcTalent provides an explainable career reskilling command center that maps cur
 
 ### Tech Stack
 
-| Layer                   | Technology                                                                                    |
-| :---------------------- | :-------------------------------------------------------------------------------------------- |
-| **Frontend**            | Next.js 16 (App Router), React 19, TypeScript, Lucide Icons, Custom CSS                       |
-| **Backend & Engine**    | Node.js route handlers, deterministic heuristic matching engine (`engine.ts`), Zod validation |
-| **Document Processing** | `pdf-parse` for synthetic text resumes; `@react-pdf/renderer` font embedding for PDF reports  |
-| **AI / GPU Compute**    | **RunPod** (Serverless `Qwen/Qwen2.5-7B-Instruct` via Vercel AI SDK)                          |
-| **Cloud Hosting**       | **Replit** (Full-stack production Autoscale deployment in Asia region)                        |
-| **Storage & Privacy**   | Browser LocalStorage (Zero cloud database required)                                           |
+| Layer                   | Technology                                                                                                                   |
+| :---------------------- | :--------------------------------------------------------------------------------------------------------------------------- |
+| **Frontend**            | Next.js 16 (App Router), React 19, TypeScript, Lucide Icons, Custom CSS                                                      |
+| **Backend & Engine**    | Node.js route handlers, deterministic heuristic matching engine (`engine.ts`), Zod validation                                |
+| **Document Processing** | `pdf-parse` for synthetic text resumes; PDFKit with an embedded Noto Sans SC font for English, Malay and Chinese PDF reports |
+| **AI / GPU Compute**    | **RunPod** (Serverless `Qwen/Qwen2.5-7B-Instruct` via Vercel AI SDK)                                                         |
+| **Cloud Hosting**       | **Replit** (Full-stack production Autoscale deployment in Asia region)                                                       |
+| **Storage & Privacy**   | Browser LocalStorage (Zero cloud database required)                                                                          |
 
 ---
 
@@ -85,7 +85,7 @@ ArcTalent provides an explainable career reskilling command center that maps cur
 
 - **Development & Version Control**: Imported canonical source repository, maintaining continuous verified git histories.
 - **Production Hosting**: Live public deployment on Replit Autoscale (`https://arc-talent--emmanuelheng.replit.app/`) serving web views and API routes.
-- **Build & CI Verification**: All 32 unit tests and 14 production integration tests pass directly inside Replit.
+- **Build & CI Verification**: The latest published release passed 144 unit tests and 25 production integration checks inside Replit before publishing ([runtime status](docs/REPLIT_STATUS.md)). The current `main` passes 164 unit tests and the same 25 checks in GitHub Actions.
 - **Secrets Management**: RunPod API keys and endpoints are stored in Replit Secrets, never committed to git.
 - 📄 Proof of use: [`submission/SDC2026_XenoForce_Replit_POU.pdf`](submission/SDC2026_XenoForce_Replit_POU.pdf)
 
