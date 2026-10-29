@@ -30,6 +30,21 @@
   color: var(--muted);
   overflow-wrap: anywhere;
 }
+.course-links {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 100%;
+}
+.course-video {
+  color: var(--coral);
+  border-color: rgba(255, 130, 155, 0.25);
+  background: rgba(255, 130, 155, 0.05);
+}
+.course-video:hover {
+  background: rgba(255, 130, 155, 0.1);
+  border-color: var(--coral);
+}
 .next-step-card .course-access {
   margin-bottom: 14px;
 }

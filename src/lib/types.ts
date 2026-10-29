@@ -70,6 +70,13 @@ export type Role = {
   entry: string;
   color: string;
 };
+/** An optional YouTube overview; never counted in planned hours. */
+export type CourseVideo = {
+  title: string;
+  channel: string;
+  url: string;
+  checkedAt: string;
+};
 export type Course = {
   id: string;
   title: string;
@@ -83,6 +90,7 @@ export type Course = {
   prerequisites: SkillId[];
   checkedAt: string;
   note: string;
+  video?: CourseVideo;
 };
 export type Signal = {
   id: string;

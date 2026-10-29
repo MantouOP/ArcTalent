@@ -32,6 +32,30 @@ The MDN JavaScript pathway assumes HTML and basic CSS knowledge; the planner sch
 
 Custom goal titles and specialist notes are user-authored. Model-suggested or manually selected skill targets do not establish official occupational requirements. The custom destination uses neutral exposure **0.5** solely for illustrative scenario comparison; it has no invented O*NET citation. Skills outside this vocabulary remain separate gaps rather than being assigned unrelated courses. Goal analysis never defines trusted course URLs.
 
+## Companion videos
+
+Each course card also links one optional YouTube video for a quick overview. Titles and channels were confirmed through YouTube oEmbed on **29 October 2026**. Videos are not counted in planned hours, are not proficiency evidence and may be removed or changed by their publishers.
+
+| Course                                               | Video                                                                                                                                       | Channel                              |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| Data analysis: visualisations in Excel               | [Excel Charts and Graphs Tutorial](https://www.youtube.com/watch?v=eHtZrIb0oWY)                                                             | Kevin Stratvert                      |
+| Develop Your Critical Thinking                       | [5 tips to improve your critical thinking - Samantha Agoos](https://www.youtube.com/watch?v=dItUGF8GdTw)                                    | TED-Ed                               |
+| Effective communication in the workplace             | [Think Fast, Talk Smart: Communication Techniques](https://www.youtube.com/watch?v=HAnw168huqA)                                             | Stanford Graduate School of Business |
+| Project management: the start of the project journey | [Project Management 101: Basics and Terminology](https://www.youtube.com/watch?v=OyrKGopOGpQ)                                               | Coursera                             |
+| Introduction to SQL                                  | [SQL Tutorial - Full Database Course for Beginners](https://www.youtube.com/watch?v=HXV3zeQKqGY)                                            | freeCodeCamp.org                     |
+| Get started building with Power BI                   | [How to use Microsoft Power BI - Tutorial for Beginners](https://www.youtube.com/watch?v=TmhQCQr_DCA)                                       | Kevin Stratvert                      |
+| Embrace responsible AI principles and practices      | [Introduction to Responsible AI](https://www.youtube.com/watch?v=3-xhMXeYIcg)                                                               | Google Cloud Tech                    |
+| Extending and developing your thinking skills        | [Evaluating Evidence: Crash Course Navigating Digital Information #6](https://www.youtube.com/watch?v=hxhbOvR2TGk)                          | CrashCourse                          |
+| Manage Your Project Using V-Model Methodology        | [V-Model - The 9 steps of the V-Model process](https://www.youtube.com/watch?v=_QPjZF346b4)                                                 | Software Design                      |
+| Introduction to operations management                | [A Brief Introduction to Operations Management](https://www.youtube.com/watch?v=so6WfXNbdS8)                                                | Dr. Harvi Millar                     |
+| Environment: treading lightly on the Earth           | [Ecological footprint: How Many Planets Do We Need in 2026?](https://www.youtube.com/watch?v=g_aguo7V0Q4)                                   | Sustainability Illustrated           |
+| Learn Python Basics for Data Analysis                | [Data Analysis with Python - Full Course for Beginners (Numpy, Pandas, Matplotlib, Seaborn)](https://www.youtube.com/watch?v=r-uOLxNrNk8)   | freeCodeCamp.org                     |
+| Introduction to AI concepts                          | [AI vs Machine Learning](https://www.youtube.com/watch?v=4RixMPF4xis)                                                                       | IBM Technology                       |
+| Introduction to cyber security: stay safe online     | [Cybersecurity for Beginners \| Google Cybersecurity Certificate](https://www.youtube.com/watch?v=_DVVNOGYtmU)                              | Grow with Google                     |
+| Build Your First Web Pages With HTML and CSS         | [Learn HTML & CSS – Full Course for Beginners](https://www.youtube.com/watch?v=a_iQb1lnAEQ)                                                 | freeCodeCamp.org                     |
+| Dynamic scripting with JavaScript                    | [Learn JavaScript - Full Course for Beginners](https://www.youtube.com/watch?v=PkZNo7MFNFg)                                                 | freeCodeCamp.org                     |
+| Marketing communications in the digital age          | [Intro to Digital Marketing & E-commerce \| Google Digital Marketing & E-commerce Certificate](https://www.youtube.com/watch?v=U-X7DG9UY3M) | Grow with Google                     |
+
 ## Occupations and contextual SDG mappings
 
 O*NET pages establish occupational context in the United States. The simplified required skill levels, exposure factors, score weights and entry advice are project assumptions. O*NET does not publish or validate the exposure values shown below. Malaysian entry requirements need local checking.
