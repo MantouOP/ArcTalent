@@ -11,9 +11,13 @@ export async function POST(request: Request) {
   try {
     const data = await request.formData(),
       file = data.get('file');
-    if (data.get('synthetic') !== 'true' || !(file instanceof File))
+    if (
+      (data.get('processingConsent') !== 'true' &&
+        data.get('synthetic') !== 'true') ||
+      !(file instanceof File)
+    )
       return NextResponse.json(
-        { error: 'Confirm synthetic data and choose a PDF' },
+        { error: 'Agree to CV processing and choose a PDF.' },
         { status: 400 },
       );
     if (file.size > 5 * 1024 * 1024)
@@ -31,7 +35,7 @@ export async function POST(request: Request) {
     const info = await parser.getInfo();
     if (info.total > 10)
       return NextResponse.json(
-        { error: 'Use a synthetic CV of 10 pages or fewer' },
+        { error: 'Use a CV of 10 pages or fewer.' },
         { status: 400 },
       );
     const result = await parser.getText();

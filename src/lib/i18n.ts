@@ -18,6 +18,8 @@ import workforceGoalsMs from './messages/workforce-goals.ms.json';
 import workforceGoalsZh from './messages/workforce-goals.zh-CN.json';
 import introductionMs from './messages/introduction.ms.json';
 import introductionZh from './messages/introduction.zh-CN.json';
+import cvMs from './messages/cv.ms.json';
+import cvZh from './messages/cv.zh-CN.json';
 import impactMs from './messages/impact.ms.json';
 import impactZh from './messages/impact.zh-CN.json';
 import costMs from './messages/cost.ms.json';
@@ -54,6 +56,7 @@ export const dictionaries: Record<
     ...pdfMs,
     ...workforceGoalsMs,
     ...introductionMs,
+    ...cvMs,
     ...impactMs,
     ...costMs,
     ...ms,
@@ -68,6 +71,7 @@ export const dictionaries: Record<
     ...pdfZh,
     ...workforceGoalsZh,
     ...introductionZh,
+    ...cvZh,
     ...impactZh,
     ...costZh,
     ...zh,

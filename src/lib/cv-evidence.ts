@@ -4,14 +4,14 @@ type Candidate = { id: SkillId; evidence: string; level: number };
 
 export type CvEvidenceState = {
   text: string;
-  synthetic: boolean;
+  consented: boolean;
   candidates: Candidate[];
   message: string;
   requestId: number | null;
 };
 
 export type CvEvidenceAction =
-  | { type: 'source'; text?: string; synthetic?: boolean }
+  | { type: 'source'; text?: string; consented?: boolean }
   | { type: 'reset' }
   | { type: 'start'; requestId: number }
   | {
@@ -25,7 +25,7 @@ export type CvEvidenceAction =
 
 export const initialCvEvidence: CvEvidenceState = {
   text: '',
-  synthetic: false,
+  consented: false,
   candidates: [],
   message: '',
   requestId: null,
@@ -42,7 +42,7 @@ export function cvEvidenceReducer(
       return {
         ...state,
         text: action.text ?? state.text,
-        synthetic: action.synthetic ?? state.synthetic,
+        consented: action.consented ?? state.consented,
         candidates: [],
         message: '',
         requestId: null,

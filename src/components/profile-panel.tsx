@@ -1,5 +1,5 @@
 'use client';
-import { useReducer, useRef, useState } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import { Upload, Check, ArrowRight, FileText } from 'lucide-react';
 import { skills, baseProfile, employees } from '@/lib/catalogue';
 import type { Profile } from '@/lib/types';
@@ -9,6 +9,8 @@ import { PreferenceCheck } from './preference-check';
 import { ProfileFields } from './profile-fields';
 import { createProfileDraft, validateCvFile } from '@/lib/custom-inputs';
 import { useI18n } from './language-provider';
+import { extractAliases } from '@/lib/engine';
+import { Modal } from './ui';
 export function ProfilePanel({
   profile,
   profiles = employees,
@@ -32,10 +34,55 @@ export function ProfilePanel({
   const request = useRef(0);
   const fileInput = useRef<HTMLInputElement>(null);
   const confirmation = useRef<HTMLInputElement>(null);
+  const operation = useRef<AbortController | null>(null);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
+  const [useAi, setUseAi] = useState(false);
+  const [service, setService] = useState<
+    'checking' | 'ai' | 'local' | 'unknown'
+  >('checking');
   const [fileName, setFileName] = useState('');
   const [formError, setFormError] = useState('');
-  const { text, synthetic, message, candidates } = cv;
+  const { text, consented, message, candidates } = cv;
   const busy = cv.requestId !== null;
+  useEffect(() => {
+    const controller = new AbortController();
+    async function checkService() {
+      try {
+        const response = await fetch('/api/health', {
+          cache: 'no-store',
+          signal: AbortSignal.any([
+            controller.signal,
+            AbortSignal.timeout(6000),
+          ]),
+        });
+        const result = await response.json();
+        if (!response.ok || result.ok !== true)
+          throw new Error('Status unavailable');
+        if (!controller.signal.aborted)
+          setService(
+            result.extraction === 'runpod-configured'
+              ? 'ai'
+              : result.extraction === 'local-alias-matching'
+                ? 'local'
+                : 'unknown',
+          );
+      } catch {
+        if (!controller.signal.aborted) setService('unknown');
+      }
+    }
+    void checkService();
+    return () => {
+      controller.abort();
+      operation.current?.abort();
+    };
+  }, []);
+  function clearCv() {
+    operation.current?.abort();
+    setPendingFile(null);
+    setUseAi(false);
+    setFileName('');
+    dispatchCv({ type: 'reset' });
+  }
   const reviewSuffix =
     '. Review these candidates and set your own skill levels below.';
   let statusMessage = t(message);
@@ -60,17 +107,35 @@ export function ProfilePanel({
   const update = <K extends keyof Profile>(key: K, value: Profile[K]) =>
     setForm((p) => ({ ...p, [key]: value }));
   async function analyze() {
-    if (!synthetic) {
-      setMessage('Confirm that the CV is synthetic first.');
+    if (!consented) {
+      setMessage('Agree to CV processing before finding skills.');
+      confirmation.current?.focus();
       return;
     }
+    if (text.trim().length < 5) {
+      setMessage('Add at least 5 characters of work experience.');
+      return;
+    }
+    operation.current?.abort();
+    const controller = new AbortController();
+    operation.current = controller;
     const requestId = ++request.current;
     dispatchCv({ type: 'start', requestId });
     try {
+      if (!useAi) {
+        dispatchCv({
+          type: 'complete',
+          requestId,
+          candidates: extractAliases(text),
+          message: `Local skill matching (on your device)${reviewSuffix}`,
+        });
+        return;
+      }
       const r = await fetch('/api/extract', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, synthetic: true }),
+        body: JSON.stringify({ text, processingConsent: true, useAi: true }),
+        signal: controller.signal,
       });
       const body = await r.json();
       if (!r.ok) throw new Error(body.error);
@@ -90,16 +155,16 @@ export function ProfilePanel({
   }
   async function upload(file: File | undefined) {
     if (!file) return;
-    dispatchCv({ type: 'source' });
-    if (!synthetic) {
-      setMessage('Confirm synthetic data before importing a file.');
-      return;
-    }
     const fileError = validateCvFile(file);
     if (fileError) {
       setMessage(fileError);
       return;
     }
+    // This function is called only by the explicit Agree and import action.
+    operation.current?.abort();
+    const controller = new AbortController();
+    operation.current = controller;
+    dispatchCv({ type: 'source', text: '', consented: true });
     setFileName(file.name);
     const filename = file.name.toLowerCase();
     const requestId = ++request.current;
@@ -121,8 +186,12 @@ export function ProfilePanel({
       } else {
         const data = new FormData();
         data.set('file', file);
-        data.set('synthetic', 'true');
-        const res = await fetch('/api/pdf', { method: 'POST', body: data });
+        data.set('processingConsent', 'true');
+        const res = await fetch('/api/pdf', {
+          method: 'POST',
+          body: data,
+          signal: controller.signal,
+        });
         const json = await res.json();
         if (!res.ok) throw new Error(json.error);
         dispatchCv({
@@ -170,7 +239,7 @@ export function ProfilePanel({
           </div>
           <p className="muted">
             {t(
-              'Use a fictional profile for this hackathon demo. Confirm every inferred skill.',
+              'Start with a sample or your own profile. Review every suggested skill before saving.',
             )}
           </p>
           <button
@@ -179,8 +248,7 @@ export function ProfilePanel({
             onClick={() => {
               setForm(createProfileDraft('custom-' + crypto.randomUUID()));
               setFormError('');
-              setFileName('');
-              dispatchCv({ type: 'reset' });
+              clearCv();
             }}
           >
             {t('Start a blank profile')}
@@ -194,9 +262,8 @@ export function ProfilePanel({
                   profileOptions.find((x) => x.id === e.target.value) ??
                   baseProfile;
                 setForm(structuredClone(p));
-                setFileName('');
                 setFormError('');
-                dispatchCv({ type: 'reset' });
+                clearCv();
               }}
             >
               {!profileOptions.some((p) => p.id === form.id) && (
@@ -221,11 +288,11 @@ export function ProfilePanel({
           </button>
         </form>
         <aside className="panel upload-panel">
-          <span className="eyebrow">{t('OPTIONAL · SYNTHETIC CV')}</span>
-          <h2>{t('Discover your building blocks.')}</h2>
+          <span className="eyebrow">{t('OPTIONAL · CV IMPORT')}</span>
+          <h2>{t('Import your CV')}</h2>
           <p>
             {t(
-              'Import a fictional CV or paste a short description of work experience.',
+              'Upload your CV or paste work experience. Review the text before finding skills.',
             )}
           </p>
           <p>
@@ -237,22 +304,9 @@ export function ProfilePanel({
               {t('Sample PDF')}
             </a>
           </p>
-          <label className="checkbox-label">
-            <input
-              ref={confirmation}
-              type="checkbox"
-              checked={synthetic}
-              onChange={(e) =>
-                dispatchCv({ type: 'source', synthetic: e.target.checked })
-              }
-            />
-            {t('This is synthetic data, with no real personal information.')}
-          </label>
           <p id="cv-import-help" className="muted small">
             {t(
-              synthetic
-                ? 'Choose a PDF or TXT, then review its text and find skills.'
-                : 'First confirm synthetic data above to enable file import.',
+              'Choose a file first. Review how it is processed before agreeing to import.',
             )}
           </p>
           <button
@@ -260,18 +314,11 @@ export function ProfilePanel({
             className="upload-zone full"
             disabled={busy}
             aria-describedby="cv-import-help"
-            onClick={() => {
-              if (!synthetic) {
-                setMessage('Confirm synthetic data before importing a file.');
-                confirmation.current?.focus();
-                return;
-              }
-              fileInput.current?.click();
-            }}
+            onClick={() => fileInput.current?.click()}
           >
             <Upload size={28} />
             <strong>
-              {t(busy ? 'Reading your sample…' : 'Import a synthetic CV')}
+              {t(busy ? 'Processing your CV…' : 'Choose CV file')}
             </strong>
             <span>{t('Text PDF or TXT · up to 5 MB')}</span>
           </button>
@@ -285,7 +332,10 @@ export function ProfilePanel({
             onChange={(event) => {
               const file = event.target.files?.[0];
               event.currentTarget.value = '';
-              void upload(file);
+              if (!file) return;
+              const error = validateCvFile(file);
+              if (error) setMessage(error);
+              else setPendingFile(file);
             }}
           />
           {fileName && (
@@ -294,7 +344,7 @@ export function ProfilePanel({
             </p>
           )}
           <textarea
-            aria-label={t('Synthetic CV text')}
+            aria-label={t('CV text to review')}
             rows={8}
             maxLength={12000}
             placeholder={t(
@@ -302,16 +352,56 @@ export function ProfilePanel({
             )}
             value={text}
             onChange={(e) => {
+              operation.current?.abort();
               setFileName('');
               dispatchCv({ type: 'source', text: e.target.value });
             }}
           />
+          <div className="cv-processing-options">
+            <label className="checkbox-label">
+              <input
+                ref={confirmation}
+                type="checkbox"
+                checked={consented}
+                onChange={(e) => {
+                  operation.current?.abort();
+                  dispatchCv({ type: 'source', consented: e.target.checked });
+                  if (!e.target.checked) setUseAi(false);
+                }}
+              />
+              {t('I agree to process this CV to suggest skills.')}
+            </label>
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={useAi}
+                disabled={service !== 'ai' || busy}
+                aria-describedby="cv-ai-help"
+                onChange={(e) => {
+                  setUseAi(e.target.checked);
+                  dispatchCv({ type: 'source' });
+                }}
+              />
+              {t('Use AI-assisted skill detection (RunPod)')}
+            </label>
+            <p id="cv-ai-help" className="muted small">
+              {t(
+                service === 'ai'
+                  ? 'AI is configured. Enabling it sends the reviewed CV text to RunPod. Leave it off to match skills on your device.'
+                  : service === 'checking'
+                    ? 'Checking AI availability. Local skill matching is available on your device.'
+                    : service === 'local'
+                      ? 'Local skill matching is available on your device. AI is not configured on this deployment.'
+                      : 'AI status is unavailable. You can still match skills on your device.',
+              )}
+            </p>
+          </div>
           <button
             className="secondary full"
-            disabled={!synthetic || !text.trim() || busy}
+            disabled={!consented || text.trim().length < 5 || busy}
             onClick={analyze}
           >
-            {t(busy ? 'Reading your sample…' : 'Find skills in this sample')}
+            {t(busy ? 'Processing your CV…' : 'Find skills in my CV')}
             <ArrowRight size={15} />
           </button>
           <p className="status-text" role="status">
@@ -337,11 +427,59 @@ export function ProfilePanel({
           ))}
           <p className="muted small">
             {t(
-              'Skill detection uses local word matching unless a RunPod model is configured. AI suggestions always need your confirmation. CV text is processed without being saved on the server.',
+              'ArcTalent does not save your CV file or CV text. Only skills you review and save are added to your profile in this browser.',
             )}
           </p>
+          {(text || fileName) && (
+            <button type="button" className="text-button" onClick={clearCv}>
+              {t('Clear CV text and suggestions')}
+            </button>
+          )}
         </aside>
       </div>
+      {pendingFile && (
+        <Modal
+          title={t('Import this CV?')}
+          onClose={() => setPendingFile(null)}
+        >
+          <p>
+            <strong>{t('Selected file: {0}', { 0: pendingFile.name })}</strong>
+          </p>
+          <p>
+            {t(
+              pendingFile.name.toLowerCase().endsWith('.txt')
+                ? 'TXT files are read on your device.'
+                : 'PDF files are sent to ArcTalent to extract readable text.',
+            )}
+          </p>
+          <p>{t('ArcTalent does not save your CV file or CV text.')}</p>
+          <p>
+            {t(
+              'Importing does not send your CV to the AI provider. AI analysis is a separate option after you review the text.',
+            )}
+          </p>
+          <div className="button-row">
+            <button
+              type="button"
+              className="secondary"
+              onClick={() => setPendingFile(null)}
+            >
+              {t('Cancel')}
+            </button>
+            <button
+              type="button"
+              className="primary"
+              onClick={() => {
+                const file = pendingFile;
+                setPendingFile(null);
+                void upload(file);
+              }}
+            >
+              {t('Agree and import')}
+            </button>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }

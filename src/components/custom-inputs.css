@@ -62,6 +62,21 @@
 .upload-zone span {
   display: block;
 }
+.cv-processing-options {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0;
+}
+.cv-processing-options .checkbox-label {
+  align-items: flex-start;
+}
+.cv-processing-options input[type='checkbox'] {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.cv-processing-options p {
+  margin: 0;
+}
 .upload-zone:focus-visible {
   outline: 2px solid var(--cyan, #00f2fe);
   outline-offset: 3px;

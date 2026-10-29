@@ -14,7 +14,7 @@ const replacementText =
 const original = {
   ...initialCvEvidence,
   text: originalText,
-  synthetic: true,
+  consented: true,
   candidates: extractAliases(originalText),
   message: 'Review these candidates.',
 };
@@ -30,9 +30,9 @@ test('editing CV text immediately discards candidates from the previous sample',
   assert.equal(next.message, '');
 });
 
-test('revoking synthetic confirmation discards evidence and rejects a pending extraction', () => {
+test('revoking processing consent discards evidence and rejects a pending extraction', () => {
   let state = cvEvidenceReducer(original, { type: 'start', requestId: 1 });
-  state = cvEvidenceReducer(state, { type: 'source', synthetic: false });
+  state = cvEvidenceReducer(state, { type: 'source', consented: false });
   state = cvEvidenceReducer(state, {
     type: 'complete',
     requestId: 1,
@@ -40,7 +40,7 @@ test('revoking synthetic confirmation discards evidence and rejects a pending ex
     message: 'Old extraction completed.',
   });
   assert.deepEqual(state.candidates, []);
-  assert.equal(state.synthetic, false);
+  assert.equal(state.consented, false);
   assert.equal(state.requestId, null);
   assert.equal(state.message, '');
 });

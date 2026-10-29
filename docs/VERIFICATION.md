@@ -1,5 +1,15 @@
 # Verification record
 
+## Real CV import and separate AI consent — 29 October 2026
+
+Reproduced the reported import button stopping at an unchecked fictional-data gate and the static provider-configuration warning. The team explicitly chose to support real CVs with a clear processing notice. The fix starts from the latest finals source and preserves the impact scorecard, cost model and foundation-first scheduler.
+
+The picker now opens before consent. A file-specific notice explains local TXT reading or server PDF conversion, and only **Agree and import** starts processing. Cancelling keeps the previous CV unchanged. Raw CV files/text are not saved by ArcTalent. Local matching runs in the browser by default; sending reviewed text to RunPod requires a separate AI checkbox and the analysis action. The configuration caption comes from the runtime health route. Legacy confirmed fictional API requests remain supported.
+
+Three new API regressions failed with `400` before the fix and passed afterwards. **170 unit tests**, TypeScript, Prettier, the production build and **27 production integration checks** passed locally. Unit checks include declined/malformed consent, real-CV consent without claiming synthetic data, PDF consent, and zero provider calls when AI is not selected even with a configured provider. Existing stale-result and consent-revocation tests remain green. An independent read-only review found no actionable issues.
+
+Local Chrome verified PDF selection before consent, cancellation, reselecting the same PDF, agreed PDF extraction, local skill candidates with exact quotes, revoking consent, TXT import and separately selected real RunPod inference. The latter returned `Qwen/Qwen2.5-7B-Instruct` with supported, quoted candidates. Switching English, Malay and Chinese preserved CV text, consent and result mode; Clear removed the text, file label and suggestions and reset both choices. No warnings or errors were captured. Public publication is recorded separately in REPLIT_STATUS.md when verified.
+
 ## Finals upgrades — 29 October 2026
 
 Source `95e676f` merges four pull requests. [#1](https://github.com/MantouOP/ArcTalent/pull/1) adds an Impact scorecard that checks the four Phase 2 proposal targets with the shared engine, plus a reproducible benchmark (`npm run impact`, [IMPACT.md](IMPACT.md)). [#2](https://github.com/MantouOP/ArcTalent/pull/2) schedules courses that close a shared-foundation gap before role-specific ones, and reports a foundation shorter than four weeks as finished early. [#3](https://github.com/MantouOP/ArcTalent/pull/3) prices the team plan as internal cohorts versus individual commercial seats, using HRD Corp's Allowable Cost Matrix and DOSM wage data ([cost assumptions](SOURCES.md#cost-assumptions)). [#4](https://github.com/MantouOP/ArcTalent/pull/4) quotes the matched CV words on whole-word boundaries and corrects README claims.

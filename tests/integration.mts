@@ -453,6 +453,22 @@ await check('synthetic confirmation is enforced', async () => {
   );
 });
 await check(
+  'consented CV analysis works without a fictional-data declaration or AI opt-in',
+  async () => {
+    const response = await post('/api/extract', {
+      text: 'I prepare Excel spreadsheets and SQL reports.',
+      processingConsent: true,
+      useAi: false,
+    });
+    assert.equal(response.status, 200);
+    const result = await response.json();
+    assert.match(result.mode, /local/i);
+    assert.ok(
+      result.skills.some((skill: { id: string }) => skill.id === 'excel'),
+    );
+  },
+);
+await check(
   'skill extraction returns supported candidates and evidence',
   async () => {
     const text =
@@ -515,6 +531,23 @@ await check(
     assert.match(result.text, /Aina/);
     assert.match(result.text, /SQL/);
     assert.equal(result.pages, 1);
+  },
+);
+await check(
+  'PDF processing accepts explicit consent without a synthetic declaration',
+  async () => {
+    const bytes = await readFile(
+      new URL('../public/synthetic-cv.pdf', import.meta.url),
+    );
+    const form = new FormData();
+    form.set('processingConsent', 'true');
+    form.set('file', new Blob([bytes], { type: 'application/pdf' }), 'cv.pdf');
+    const response = await fetch(origin + '/api/pdf', {
+      method: 'POST',
+      body: form,
+    });
+    assert.equal(response.status, 200);
+    assert.match((await response.json()).text, /SQL/);
   },
 );
 console.log(`${checks} production integration checks passed.`);
