@@ -14,6 +14,7 @@ export const IMPACT_TARGETS = {
   distanceReduction: 40,
   foundationShare: 100,
   foundationWeeks: 4,
+  costReduction: 35,
 } as const;
 
 /** `early`: the whole foundation is finished inside the window, before any role-specific study. */

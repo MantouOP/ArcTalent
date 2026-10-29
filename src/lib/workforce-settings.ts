@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { employees, roles } from './catalogue';
 import { careerGoalSchema, profileSchema } from './validation';
+import { COST_DEFAULTS, type CostAssumptions } from './cost-model';
 import type { CareerGoal, Profile } from './types';
 
 export type WorkforceSettings = {
@@ -9,7 +10,17 @@ export type WorkforceSettings = {
   destinations: Partial<Record<string, string>>;
   members?: Profile[];
   customDestinations?: Record<string, { goal: CareerGoal; openings: number }>;
+  costs?: CostAssumptions;
 };
+
+export const costAssumptionsSchema = z.object({
+  seatRate: z.number().min(0).max(5000),
+  trainerRate: z.number().min(0).max(20000),
+  wageRate: z.number().min(0).max(1000),
+});
+
+export const getCostAssumptions = (workforce: WorkforceSettings) =>
+  workforce.costs ?? COST_DEFAULTS;
 
 const roleIdSchema = z.enum(roles.map((role) => role.id));
 export const workforceSettingsSchema = z
@@ -33,6 +44,7 @@ export const workforceSettingsSchema = z
       .array(profileSchema.extend({ id: z.string().min(1).max(60) }))
       .max(10)
       .optional(),
+    costs: costAssumptionsSchema.optional(),
   })
   .superRefine((value, context) => {
     const members = value.members ?? employees;

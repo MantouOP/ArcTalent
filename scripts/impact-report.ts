@@ -1,7 +1,14 @@
 /** Prints the Phase 2 impact benchmark as Markdown: `npm run --silent impact > docs/IMPACT.md`. */
-import { baseline, employees } from '../src/lib/catalogue';
+import { baseProfile, baseline, employees } from '../src/lib/catalogue';
+import {
+  CLASSROOM_SEAT_RATE,
+  COST_DEFAULTS,
+  compareTrainingCosts,
+} from '../src/lib/cost-model';
 import { MODEL_VERSION } from '../src/lib/engine';
 import { IMPACT_TARGETS, assessCohort } from '../src/lib/impact';
+import { buildWorkforcePlan } from '../src/lib/workforce-plan';
+import { restoreWorkforceSettings } from '../src/lib/workforce-settings';
 
 const pct = (v: number | null) => (v === null ? '—' : `${Math.round(v)}%`);
 const lines = [
@@ -36,10 +43,42 @@ for (const scenario of ['moderate', 'rapid'] as const) {
     '',
   );
 }
+const rm = (n: number) => `RM${Math.round(n).toLocaleString('en-MY')}`;
 lines.push(
-  '## Not yet measured',
+  `## SME training cost (target ${IMPACT_TARGETS.costReduction}% lower)`,
   '',
-  '- **SME training cost reduction (target 35%):** every catalogue course is currently free, so there is no spend to reduce. A costed comparison is still to be built.',
+  `The default synthetic company plan is priced two ways: every learner buying an individual commercial seat for every planned hour, or the ArcTalent cohort plan (catalogue fees plus an internal trainer for every hour of each course two or more workers share). Paid study time is counted on both sides. Defaults: seat RM${COST_DEFAULTS.seatRate}/learner-hour (HRD Corp e-learning cap), trainer RM${COST_DEFAULTS.trainerRate}/course-hour prorated below 5 learners (HRD Corp internal trainer allowance), study time RM${COST_DEFAULTS.wageRate}/hour (DOSM 2025 median wage over a 45-hour week). See [cost assumptions](SOURCES.md#cost-assumptions).`,
+  '',
+  '| Scenario | Seat price | Learners | Learner-hours | Individual seats | Cohort plan | Saving | Break-even seat price |',
+  '| :-- | :-- | --: | --: | --: | --: | --: | --: |',
+);
+for (const scenario of ['moderate', 'rapid'] as const) {
+  const plan = buildWorkforcePlan(
+    baseProfile,
+    scenario,
+    baseline,
+    restoreWorkforceSettings(),
+  );
+  for (const [label, seatRate] of [
+    ['e-learning cap', COST_DEFAULTS.seatRate],
+    ['classroom cap', CLASSROOM_SEAT_RATE],
+  ] as const) {
+    const c = compareTrainingCosts(
+      plan.groups.values(),
+      { ...COST_DEFAULTS, seatRate },
+      IMPACT_TARGETS.costReduction,
+    );
+    lines.push(
+      `| ${scenario === 'moderate' ? 'Moderate' : 'Rapid'} | RM${seatRate} (${label}) | ${plan.learners} | ${c.learnerHours} | ${rm(c.individual.total)} | ${rm(c.grouped.total)} | ${pct(c.saving)} | RM${c.breakEvenSeatRate?.toFixed(2)} |`,
+    );
+  }
+}
+lines.push(
+  '',
+  `The break-even column is the individual seat price below which the saving would fall under ${IMPACT_TARGETS.costReduction}%. Prices are HRD Corp maximum claimable amounts, not quotes, and free courses may not include the certificates or support that paid training offers.`,
+  '',
+  '## Enforced by design',
+  '',
   '- **Human-confirmed CV skills (target 100%):** enforced in code rather than measured. Extracted skills change a profile only after the user adds and saves them, and RunPod quotes are kept only when they appear word-for-word in the CV text.',
 );
 console.log(lines.join('\n'));
