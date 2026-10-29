@@ -38,7 +38,19 @@ A foundation shorter than 4 weeks cannot fill weeks 1–4. Those workers are rep
 | Sarah (Office coordinator)          | Sustainability         |   54.5 → 9.1 |       83% |                  100% |    36 |  RM0 |
 | Arun (Operations assistant)         | Logistics              |  25.0 → 16.7 |       33% |                  100% |     6 |  RM0 |
 
-## Not yet measured
+## SME training cost (target 35% lower)
 
-- **SME training cost reduction (target 35%):** every catalogue course is currently free, so there is no spend to reduce. A costed comparison is still to be built.
+The default synthetic company plan is priced two ways: every learner buying an individual commercial seat for every planned hour, or the ArcTalent cohort plan (catalogue fees plus an internal trainer for every hour of each course two or more workers share). Paid study time is counted on both sides. Defaults: seat RM125/learner-hour (HRD Corp e-learning cap), trainer RM200/course-hour prorated below 5 learners (HRD Corp internal trainer allowance), study time RM15.08/hour (DOSM 2025 median wage over a 45-hour week). See [cost assumptions](SOURCES.md#cost-assumptions).
+
+| Scenario | Seat price             | Learners | Learner-hours | Individual seats | Cohort plan | Saving | Break-even seat price |
+| :------- | :--------------------- | -------: | ------------: | ---------------: | ----------: | -----: | --------------------: |
+| Moderate | RM125 (e-learning cap) |        5 |           109 |         RM15,269 |     RM4,364 |    71% |               RM46.51 |
+| Moderate | RM250 (classroom cap)  |        5 |           109 |         RM28,894 |     RM4,364 |    85% |               RM46.51 |
+| Rapid    | RM125 (e-learning cap) |        5 |           109 |         RM15,269 |     RM3,564 |    77% |               RM35.22 |
+| Rapid    | RM250 (classroom cap)  |        5 |           109 |         RM28,894 |     RM3,564 |    88% |               RM35.22 |
+
+The break-even column is the individual seat price below which the saving would fall under 35%. Prices are HRD Corp maximum claimable amounts, not quotes, and free courses may not include the certificates or support that paid training offers.
+
+## Enforced by design
+
 - **Human-confirmed CV skills (target 100%):** enforced in code rather than measured. Extracted skills change a profile only after the user adds and saves them, and RunPod quotes are kept only when they appear word-for-word in the CV text.

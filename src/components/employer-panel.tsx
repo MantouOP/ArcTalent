@@ -15,6 +15,7 @@ import type { WorkforceSettings } from '@/lib/workforce-settings';
 import { TeamEditor } from './team-editor';
 import { WorkforceDestination } from './workforce-destination';
 import { CourseLink } from './course-link';
+import { CostComparison } from './cost-comparison';
 import { downloadFile, External, Tag } from './ui';
 import { useI18n } from './language-provider';
 export function EmployerPanel({
@@ -356,6 +357,11 @@ export function EmployerPanel({
           )}
         </section>
       </div>
+      <CostComparison
+        groups={groups}
+        workforce={workforce}
+        onChange={onChange}
+      />
       <section className="panel impact-panel">
         <div className="panel-heading">
           <div>

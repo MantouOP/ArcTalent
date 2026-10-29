@@ -63,6 +63,7 @@ ArcTalent provides an explainable career reskilling command center that maps cur
 - **Dual-Scenario Adaptability**: Instant toggle between Moderate and Rapid AI futures; preserves foundational learning while updating specialized branches.
 - **Evidence-Backed Skill Extraction**: GenAI extracts CV skills anchored to verbatim source quotes (`Qwen/Qwen2.5-7B-Instruct` on RunPod) with instant local regex fallback.
 - **SME Workforce Redeployment**: 8–10 worker gap heatmap, company budget management, internal seat quotas, grouped training economies, and localized PDF reports.
+- **SME Cost Model**: Prices the team plan as internal cohorts versus individual commercial seats, using HRD Corp's Allowable Cost Matrix and DOSM wage data, with editable assumptions and a break-even seat price.
 - **Impact Scorecard**: Live check of the four Phase 2 targets from our proposal, for your own route and the synthetic team in both AI scenarios. See the reproducible [impact benchmark](docs/IMPACT.md).
 - **Multilingual Support**: Fully accessible in English, Bahasa Melayu, and 简体中文.
 - **Zero-Database Privacy**: All state lives in Browser LocalStorage; no personal resume data is ever stored on the server.

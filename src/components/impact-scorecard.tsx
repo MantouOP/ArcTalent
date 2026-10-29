@@ -8,8 +8,10 @@ import {
   assessPerson,
   type ImpactStatus,
 } from '@/lib/impact';
+import { compareTrainingCosts } from '@/lib/cost-model';
 import { buildWorkforcePlan } from '@/lib/workforce-plan';
 import {
+  getCostAssumptions,
   getWorkforceMembers,
   type WorkforceSettings,
 } from '@/lib/workforce-settings';
@@ -89,13 +91,17 @@ export function ImpactScorecard({
     () => buildWorkforcePlan(profile, scenario, snapshot, workforce),
     [profile, scenario, snapshot, workforce],
   );
-  const enrolments = [...team.groups.values()].reduce(
-    (s, g) => s + g.names.length,
-    0,
+  const cost = useMemo(
+    () =>
+      compareTrainingCosts(
+        team.groups.values(),
+        getCostAssumptions(workforce),
+        IMPACT_TARGETS.costReduction,
+      ),
+    [team, workforce],
   );
-  const sharedRuns = [...team.groups.values()].filter(
-    (g) => g.names.length > 1,
-  ).length;
+  const rm = (n: number) =>
+    `${t('RM')} ${Math.round(n).toLocaleString('en-MY')}`;
   const scenarioName = t(
     scenario === 'moderate' ? 'Moderate adoption' : 'Rapid adoption',
   );
@@ -166,13 +172,28 @@ export function ImpactScorecard({
     {
       icon: Users,
       title: 'SME training cost reduction',
-      target: t('Target: {0}% lower reskilling spend', { 0: 35 }),
-      value: `${t('RM')} ${team.allocated}`,
-      status: 'pending',
-      detail: t(
-        'Every catalogue course is currently free, so there is no spend to reduce yet. {0} enrolments in total; {1} courses are shared by two or more workers.',
-        { 0: enrolments, 1: sharedRuns },
-      ),
+      target: t('Target: {0}% lower reskilling spend', {
+        0: IMPACT_TARGETS.costReduction,
+      }),
+      value: pct(cost.saving),
+      meter: { value: cost.saving, target: IMPACT_TARGETS.costReduction },
+      status:
+        cost.saving === null
+          ? 'pending'
+          : cost.saving >= IMPACT_TARGETS.costReduction
+            ? 'met'
+            : 'below',
+      detail:
+        cost.saving === null || cost.breakEvenSeatRate === null
+          ? t('No planned learning yet, so there is nothing to price.')
+          : t(
+              'Team plan: {0} as internal cohorts versus {1} as individual commercial seats. Holds while a seat costs more than RM {2} per learner-hour.',
+              {
+                0: rm(cost.grouped.total),
+                1: rm(cost.individual.total),
+                2: cost.breakEvenSeatRate.toFixed(2),
+              },
+            ),
     },
     {
       icon: ShieldCheck,
