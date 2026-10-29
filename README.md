@@ -85,7 +85,7 @@ ArcTalent provides an explainable career reskilling command center that maps cur
 
 - **Development & Version Control**: Imported canonical source repository, maintaining continuous verified git histories.
 - **Production Hosting**: Live public deployment on Replit Autoscale (`https://arc-talent--emmanuelheng.replit.app/`) serving web views and API routes.
-- **Build & CI Verification**: The latest published release passed 144 unit tests and 25 production integration checks inside Replit before publishing ([runtime status](docs/REPLIT_STATUS.md)). The current `main` passes 164 unit tests and the same 25 checks in GitHub Actions.
+- **Build & CI Verification**: The published release (`95e676f`, 29 October 2026) passed 164 unit tests and 25 production integration checks inside Replit before publishing, then the same 25 checks against the live site ([runtime status](docs/REPLIT_STATUS.md)). GitHub Actions runs the full suite on every pull request and push to `main`.
 - **Secrets Management**: RunPod API keys and endpoints are stored in Replit Secrets, never committed to git.
 - 📄 Proof of use: [`submission/SDC2026_XenoForce_Replit_POU.pdf`](submission/SDC2026_XenoForce_Replit_POU.pdf)
 
