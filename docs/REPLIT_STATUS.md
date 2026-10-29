@@ -2,6 +2,14 @@
 
 Verified on **29 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
+## SDG skill-tooltip fix — live
+
+Canonical source `c24ac0d54ae087833c381e7d486fe88f550a0c02` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). The oversized native SDG tooltip was removed from the shared skill chips; accessible explanations and UN links remain. The release includes the previously merged YouTube companion-video update.
+
+Replit imported `artifacts/arctalent-release-c24ac0d` unchanged. All **217 tracked files** matched Git source before and after verification. Locked installation, **178 unit tests**, the production build and **31 integration checks** passed in Replit. Runtime commit `400a021408cb422d4d1c1cb34dd9a490dfee0096` selects the release and saves the preceding video-release configuration as `artifact.toml.pre-skill-tooltip-backup`. Existing source and server credentials were preserved. This runtime history was not exported to the GitHub runtime branch.
+
+Promotion waited at “Creating Autoscale service” before completing. Replit reports **Live**. Public Chrome verified the skill links had no native/inherited tooltip titles while retaining their full accessible SDG labels and original destinations. No browser warnings/errors were captured, and all **31 public HTTPS integration checks passed**. Saved learning data and preferences were retained.
+
 ## Companion YouTube videos — live
 
 Canonical source `07ccfcfb58bba73fb218501916551b0f14250877` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). Every catalogue course now shows a **Watch on YouTube** button beside **Open course**, linking one optional companion video ([#6](https://github.com/MantouOP/ArcTalent/pull/6)); titles and channels are recorded in [sources](SOURCES.md#companion-videos). The release keeps the profile-picture, personal PDF and consented CV import changes already live from `8abb08d`.

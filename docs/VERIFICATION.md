@@ -1,5 +1,11 @@
 # Verification record
 
+## Oversized SDG skill tooltip — 29 October 2026
+
+The reported white popup matched the full SDG paragraph in `SkillChip`'s native HTML `title`. Public inspection reproduced that exact text before the fix. The redundant title was removed from the shared component; the full accessible label and official UN destination remain. Local course-card checks confirmed five chips with no native or inherited title, accessible SDG labels, and intact destinations; keyboard navigation and the newly merged companion-video controls also worked.
+
+The one-line fix was rebased onto the already merged YouTube course-video update rather than overwriting it. All **178 unit tests**, TypeScript, formatting and the production build passed. Replit independently matched all **217 tracked files** to Git source before and after its verification build and passed all **31 integration checks**. Following publication, the public career-score panel exposed five accessible skill links with no title or inherited title, and the browser warning/error log was empty. The selected custom goal had no scheduled courses, so public DOM verification used that shared component in the score panel while course-card verification used the local build. All **31 public HTTPS integration checks passed** and Replit reports **Live**. The saved profile, goal and planning preferences were preserved. See [runtime status](REPLIT_STATUS.md).
+
 ## Companion YouTube videos — 29 October 2026
 
 Source `07ccfcf` merges [#6](https://github.com/MantouOP/ArcTalent/pull/6): each of the 17 catalogue courses links one optional YouTube video beside its provider link, in the pathway, the next-step card, the SME learning groups and the custom-goal preview. The pathway states that videos are optional and not counted in planned hours.
