@@ -1,4 +1,12 @@
-import type { Course, Profile, Role, Skill, SkillId, Snapshot } from './types';
+import type {
+  Course,
+  CourseVideo,
+  Profile,
+  Role,
+  Skill,
+  SkillId,
+  Snapshot,
+} from './types';
 
 const skill = (
   id: SkillId,
@@ -205,6 +213,100 @@ export const roles: Role[] = [
 ];
 
 const checkedAt = '2026-10-24';
+/** Companion videos; titles and channels confirmed through YouTube oEmbed. */
+const youtube = (id: string, title: string, channel: string): CourseVideo => ({
+  title,
+  channel,
+  url: `https://www.youtube.com/watch?v=${id}`,
+  checkedAt: '2026-10-29',
+});
+const videos: Record<string, CourseVideo> = {
+  excel: youtube(
+    'eHtZrIb0oWY',
+    'Excel Charts and Graphs Tutorial',
+    'Kevin Stratvert',
+  ),
+  thinking: youtube(
+    'dItUGF8GdTw',
+    '5 tips to improve your critical thinking - Samantha Agoos',
+    'TED-Ed',
+  ),
+  communication: youtube(
+    'HAnw168huqA',
+    'Think Fast, Talk Smart: Communication Techniques',
+    'Stanford Graduate School of Business',
+  ),
+  project: youtube(
+    'OyrKGopOGpQ',
+    'Project Management 101: Basics and Terminology',
+    'Coursera',
+  ),
+  sql: youtube(
+    'HXV3zeQKqGY',
+    'SQL Tutorial - Full Database Course for Beginners',
+    'freeCodeCamp.org',
+  ),
+  powerbi: youtube(
+    'TmhQCQr_DCA',
+    'How to use Microsoft Power BI - Tutorial for Beginners',
+    'Kevin Stratvert',
+  ),
+  responsible: youtube(
+    '3-xhMXeYIcg',
+    'Introduction to Responsible AI',
+    'Google Cloud Tech',
+  ),
+  'thinking-ou': youtube(
+    'hxhbOvR2TGk',
+    'Evaluating Evidence: Crash Course Navigating Digital Information #6',
+    'CrashCourse',
+  ),
+  'project-v': youtube(
+    '_QPjZF346b4',
+    'V-Model - The 9 steps of the V-Model process',
+    'Software Design',
+  ),
+  operations: youtube(
+    'so6WfXNbdS8',
+    'A Brief Introduction to Operations Management',
+    'Dr. Harvi Millar',
+  ),
+  environment: youtube(
+    'g_aguo7V0Q4',
+    'Ecological footprint: How Many Planets Do We Need in 2026?',
+    'Sustainability Illustrated',
+  ),
+  python: youtube(
+    'r-uOLxNrNk8',
+    'Data Analysis with Python - Full Course for Beginners (Numpy, Pandas, Matplotlib, Seaborn)',
+    'freeCodeCamp.org',
+  ),
+  'ai-basics': youtube(
+    '4RixMPF4xis',
+    'AI vs Machine Learning',
+    'IBM Technology',
+  ),
+  security: youtube(
+    '_DVVNOGYtmU',
+    'Cybersecurity for Beginners | Google Cybersecurity Certificate',
+    'Grow with Google',
+  ),
+  htmlcss: youtube(
+    'a_iQb1lnAEQ',
+    'Learn HTML & CSS – Full Course for Beginners',
+    'freeCodeCamp.org',
+  ),
+  javascript: youtube(
+    'PkZNo7MFNFg',
+    'Learn JavaScript - Full Course for Beginners',
+    'freeCodeCamp.org',
+  ),
+  marketing: youtube(
+    'U-X7DG9UY3M',
+    'Intro to Digital Marketing & E-commerce | Google Digital Marketing & E-commerce Certificate',
+    'Grow with Google',
+  ),
+};
 const course = (
   id: string,
   title: string,
@@ -228,6 +330,7 @@ const course = (
   checkedAt,
   fee: 0,
   funding: 'free',
+  ...(videos[id] ? { video: videos[id] } : {}),
 });
 export const courses: Course[] = [
   course(

@@ -1028,6 +1028,9 @@ export function ArcTalentApp({
                     <p className="muted small">
                       {t(
                         'Each step links to the exact course on its provider’s website. Links open in a new tab.',
+                      )}{' '}
+                      {t(
+                        'Optional YouTube videos give a quick overview and are not counted in planned hours.',
                       )}
                     </p>
                   )}
