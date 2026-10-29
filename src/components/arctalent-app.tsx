@@ -60,6 +60,7 @@ import { StudyRhythm } from './study-rhythm';
 import { RouteSummary, RouteAnalytics } from './command-overview';
 import { CareerChat } from './career-chat';
 import { SettingsPanel } from './settings-panel';
+import { ProfileAvatar } from './profile-avatar';
 import { CourseLink } from './course-link';
 import { CareerGoalPanel } from './career-goal-panel';
 import { careerGoalSchema, goalCandidates } from '@/lib/career-goals';
@@ -405,7 +406,7 @@ export function ArcTalentApp({
           className="sidebar-user"
           title={t('{0} · Synthetic demo profile', { 0: profile.name })}
         >
-          <span className="avatar">{profile.name.slice(0, 1)}</span>
+          <ProfileAvatar profile={profile} />
           <div>
             <strong>{profile.name}</strong>
             <small>{t('Synthetic demo profile')}</small>
@@ -458,11 +459,14 @@ export function ArcTalentApp({
               <span className="reset-label">{t('Reset demo')}</span>
             </button>
             <button
-              className="avatar small-avatar"
+              className="avatar small-avatar profile-avatar-button"
               aria-label={t('Open my profile')}
               onClick={() => navigate('profile')}
             >
-              {profile.name.slice(0, 1)}
+              <ProfileAvatar
+                profile={profile}
+                className="profile-avatar-fill"
+              />
             </button>
           </div>
         </header>
@@ -682,7 +686,7 @@ export function ArcTalentApp({
                     </div>
                     <Radar profile={profile} />
                     <div className="profile-card-footer">
-                      <span className="avatar">{profile.name.slice(0, 1)}</span>
+                      <ProfileAvatar profile={profile} />
                       <div>
                         <strong>{profile.name}</strong>
                         <small>{t(profile.currentRole)}</small>

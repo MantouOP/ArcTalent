@@ -7,6 +7,8 @@ import type { Profile } from '@/lib/types';
 import { useI18n } from './language-provider';
 import { useDisplayPreferences } from './display-preferences-provider';
 import { Modal } from './ui';
+import { ProfileAvatar } from './profile-avatar';
+import { ProfilePicturePicker } from './profile-picture-picker';
 import './settings-panel.css';
 
 export function SettingsPanel({
@@ -44,7 +46,7 @@ export function SettingsPanel({
     <Modal title={t('Settings')} onClose={onClose}>
       <div className="settings-panel">
         <div className="settings-identity">
-          <span className="avatar">{profile.name.slice(0, 1)}</span>
+          <ProfileAvatar profile={profile} />
           <div>
             <strong>{profile.name}</strong>
             <p>
@@ -55,6 +57,7 @@ export function SettingsPanel({
         <p className="settings-intro">
           {t('Make ArcTalent easier to read and work with.')}
         </p>
+        <ProfilePicturePicker key={profile.id} profile={profile} />
         <section aria-labelledby={`${id}-interface`}>
           <h3 id={`${id}-interface`}>{t('Language & accessibility')}</h3>
           <div className="settings-row">

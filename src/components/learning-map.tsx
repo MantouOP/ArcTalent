@@ -5,6 +5,7 @@ import { skillById } from '@/lib/catalogue';
 import type { Match, Profile, SkillId } from '@/lib/types';
 import { useI18n } from './language-provider';
 import { roleLabel } from '@/lib/role-label';
+import { ProfileAvatar } from './profile-avatar';
 export function LearningMap({
   matches,
   shared,
@@ -97,7 +98,7 @@ export function LearningMap({
       </div>
       <div className="map-flow">
         <div className="map-start">
-          <span className="map-avatar">{profile.name.slice(0, 1)}</span>
+          <ProfileAvatar profile={profile} className="map-avatar" />
           <strong>{t('You are here')}</strong>
           <small>
             {t('{0} existing skills', {

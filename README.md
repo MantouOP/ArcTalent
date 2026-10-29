@@ -67,6 +67,7 @@ ArcTalent provides an explainable career reskilling command center that maps cur
 - **Impact Scorecard**: Live check of the four Phase 2 targets from our proposal, for your own route and the synthetic team in both AI scenarios. See the reproducible [impact benchmark](docs/IMPACT.md).
 - **PDF learning plans**: Download personal or SME plans as searchable PDFs with direct course links. Personal exports preserve the selected destination, funding filter, specialist gaps and typed study preferences in English, Bahasa Melayu or Simplified Chinese.
 - **Multilingual Support**: Fully accessible in English, Bahasa Melayu, and 简体中文.
+- **Profile pictures**: Settings offers six illustrated avatars, initials or a JPG/PNG/WebP photo. Photos are cropped and resized on the device, saved per profile in browser storage, and displayed consistently in the workspace.
 - **CV Privacy Controls**: ArcTalent does not save CV files or raw CV text. PDF conversion processes the file on the application server. AI analysis sends reviewed text to RunPod only when explicitly selected. Reviewed profile skills are saved in this browser, and transient CV text/suggestions have a clear action.
 
 ### Tech Stack

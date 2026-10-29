@@ -1,5 +1,13 @@
 # Verification record
 
+## Settings profile pictures — 29 October 2026
+
+Settings now offers initials, six bundled illustrated avatars and a JPG/PNG/WebP upload. Each profile has its own browser preference. Images are decoded, centre-cropped to 256×256 and re-encoded on the device; the image is never added to career profiles or sent to the CV, model or PDF routes. File inputs are bounded at 5 MB and 24 million decoded pixels; stored choices accept only bundled preset IDs or bounded raster data URLs. Invalid uploads preserve the previous picture, and stale results are ignored after another choice or dialog closure.
+
+Six new tests cover safe storage restoration, independent per-profile choices and removal, unsafe/oversized URLs, invalid updates, bounded preference maps and supported upload metadata. All **176 unit tests**, TypeScript, formatting, the production build and **31 existing integration checks** passed. Chrome confirmed all six SVGs loaded, preset selection survived closing/reloading, a synthetic 640×320 PNG became a loaded 256×256 WebP of 2,935 data-URL characters, and the photo survived reload. Corrupt, over-5-MB, SVG and 25-million-pixel files were rejected while preserving the current photo. Aina's photo remained available after selecting a different avatar for Daniel. Arrow-key selection, initials reset and Malay/Chinese labels worked. Independent review found no remaining actionable issues. A header padding issue found visually was corrected and verified as a loaded 28×28 image within the original 30px button. Final browser warning/error logs were empty.
+
+Publishing and public verification are recorded in [runtime status](REPLIT_STATUS.md).
+
 ## Functional audit and personal PDF export — 29 October 2026
 
 The deployed CV-consent release passed all 27 existing HTTPS integration checks. A browser audit additionally exercised scenario reranking with a stable shared foundation, custom dated skill-demand assumptions and their score explanations, public evidence refresh (100 job records and 12 research records), typed questionnaire answers with a custom 25-minute study session, adding a fictional worker, typing and applying an AI-reviewed workforce destination, and the resulting heatmap/allocation changes. The temporary worker was removed from the isolated local test origin. A typed career-guide question returned the selected plan's courses and direct catalogue links. Malay, Chinese, larger text and reduced motion applied and survived reload. Public saved profiles/goals were preserved.
