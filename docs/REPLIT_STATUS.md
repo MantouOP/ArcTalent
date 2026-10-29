@@ -2,6 +2,14 @@
 
 Verified on **29 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
+## Real CV import and optional AI — live
+
+Canonical source `22a53eed21f93aeef97b4687a83d23c096538198` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). CV import accepts real TXT/text PDFs after a file-specific consent notice, replacing the blocking fictional-data gate. Local matching runs on the device by default; reviewed text goes to RunPod only when AI is selected and analysis is requested. The interface reads runtime configuration status instead of always showing a generic warning. [Source CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40834867663).
+
+Replit imported `artifacts/arctalent-release-22a53ee` unchanged. All **196 tracked files** matched the Git source both before and after verification. Locked installation, **170 unit tests**, the production build, **27 production integration checks**, and an explicit consented RunPod extraction assertion passed in Replit. Runtime commit `c264a24c98e800bb7dbf8d1502061e6b7a9f6a7f` selects this release and preserves the previous configuration as `artifact.toml.pre-cv-consent-backup`. Old release source and existing credentials were left intact. This runtime history was not exported to the GitHub runtime branch.
+
+The public consented extraction endpoint was observed serving at **2026-10-29 07:37:45 UTC (15:37:45 MYT)**. Replit subsequently reported **Live**, and all **27 public HTTPS integration checks passed**. Public Chrome verified the picker opening before confirmation, the PDF-specific notice, agreed PDF extraction, local matching and separately selected real `Qwen/Qwen2.5-7B-Instruct` extraction with supported source quotes. The test CV was cleared, resetting both consent choices. The existing custom career goal, rapid scenario and dated public snapshot remained available. No warnings/errors were captured. [Consent notice](images/cv-consent-live-detail.png), [full-page evidence](images/cv-consent-live.png).
+
 ## Finals upgrades — live
 
 Canonical app source `95e676fd3125610f113dcaa757bbae12ef56463a` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). It adds the Impact scorecard, foundation-first course scheduling, the SME cost model with sourced HRD Corp and DOSM defaults, and whole-word CV evidence quotes ([#1](https://github.com/MantouOP/ArcTalent/pull/1)–[#4](https://github.com/MantouOP/ArcTalent/pull/4)). The [source CI passed](https://github.com/MantouOP/ArcTalent/actions/runs/40819837020).
