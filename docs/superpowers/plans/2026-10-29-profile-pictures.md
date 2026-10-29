@@ -25,4 +25,4 @@
 - [x] Build the picker, bundled avatars and shared avatar presentation; integrate Settings and workspace instances; translate labels.
 - [x] Verify preset selection and photo upload, reload persistence, initial reset, invalid uploads, keyboard controls and all three languages in Chrome. Inspect the actual Settings layout.
 - [x] Run the complete unit suite, TypeScript, formatting, production build and existing integration suite. Obtain an independent code review.
-- [ ] Push the verified source to GitHub and publish an immutable Replit release. Confirm the public picker and persistence.
+- [x] Push the verified source to GitHub and publish an immutable Replit release. Confirm the public picker and persistence.

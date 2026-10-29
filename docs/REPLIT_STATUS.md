@@ -2,6 +2,14 @@
 
 Verified on **29 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
+## Settings profile pictures — live
+
+Canonical source `8abb08d01aaf64b8a69f420e1a3109ffd1c30a67` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). Settings provides six illustrated avatars, initials and a local JPG/PNG/WebP photo. Choices are stored separately per profile in this browser and displayed in the header, pathway map, skills card and Settings. Photos are locally resized and do not enter career/API/PDF payloads.
+
+Replit imported `artifacts/arctalent-release-8abb08d` unchanged. All **214 tracked files** matched Git source before and after building. Locked installation, **176 unit tests**, the production build, all **31 integration checks** and all **six public avatar assets** passed inside Replit. Runtime commit `517be397d99e8a15aef8562f674aa7a928a4448b` selects the verified release and preserves the previous configuration as `artifact.toml.pre-profile-pictures-backup`. Existing changes in the older release and the server credentials were retained. This runtime history was not exported to the GitHub runtime branch.
+
+New avatar files were first observed publicly at **2026-10-29 13:21:05 UTC (21:21:05 MYT)**. Replit reports **Live**, and all **31 public HTTPS integration checks passed**. Chrome verified a selected avatar surviving reload with a loaded 28×28 header image, a synthetic-photo upload becoming a 256×256 local WebP, and that photo surviving reload. Testing ended with the original initials restored and the existing profile/custom goal/scenario/snapshot preserved. Browser warning/error logs were empty. [Live Settings screenshot](images/profile-picture-settings-live.png).
+
 ## Personal PDF export and functional audit — live
 
 Canonical source `db026cafba77b75ce83fb67f8007d0db7c46987d` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). Personal learning pathways now download as searchable PDFs with exact course links, selected funding/destination, remaining specialist gaps and typed study preferences. The SME PDF flow is preserved.

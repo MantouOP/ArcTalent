@@ -6,7 +6,7 @@ Settings now offers initials, six bundled illustrated avatars and a JPG/PNG/WebP
 
 Six new tests cover safe storage restoration, independent per-profile choices and removal, unsafe/oversized URLs, invalid updates, bounded preference maps and supported upload metadata. All **176 unit tests**, TypeScript, formatting, the production build and **31 existing integration checks** passed. Chrome confirmed all six SVGs loaded, preset selection survived closing/reloading, a synthetic 640×320 PNG became a loaded 256×256 WebP of 2,935 data-URL characters, and the photo survived reload. Corrupt, over-5-MB, SVG and 25-million-pixel files were rejected while preserving the current photo. Aina's photo remained available after selecting a different avatar for Daniel. Arrow-key selection, initials reset and Malay/Chinese labels worked. Independent review found no remaining actionable issues. A header padding issue found visually was corrected and verified as a loaded 28×28 image within the original 30px button. Final browser warning/error logs were empty.
 
-Publishing and public verification are recorded in [runtime status](REPLIT_STATUS.md).
+The release is **Live** and passed all **31 public HTTPS integration checks**. Public Chrome verified all six avatars, selection and reload persistence, the 28×28 header image, a real synthetic-photo upload producing a 256×256 WebP, and photo persistence after reload. The original initials were restored after testing; the saved profile, custom goal, scenario and snapshot were preserved. No browser warnings/errors were captured. [Live Settings proof](images/profile-picture-settings-live.png); publishing details are recorded in [runtime status](REPLIT_STATUS.md).
 
 ## Functional audit and personal PDF export — 29 October 2026
 
