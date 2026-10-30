@@ -72,7 +72,10 @@ export function CareerChat({
   const panelId = useId();
   const headingId = useId();
   const helpId = useId();
-  const contextKey = useMemo(() => careerChatContextKey(context), [context]);
+  const contextKey = useMemo(
+    () => careerChatContextKey(context, { customGoal, funding }),
+    [context, customGoal, funding],
+  );
   const hasEarlierContext = turns.some(
     (turn) => turn.contextKey !== contextKey,
   );

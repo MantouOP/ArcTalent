@@ -9,6 +9,7 @@ import {
 } from '../src/lib/catalogue';
 import { buildPlan, matchRole, sharedFoundation } from '../src/lib/engine';
 import { restoreWorkforceSettings } from '../src/lib/workforce-settings';
+import type { CareerGoal } from '../src/lib/types';
 import {
   answerCareerQuestion,
   careerChatContextKey,
@@ -46,6 +47,34 @@ function text(reply: ChatReply): string {
     )
     .join('\n');
 }
+
+test('changing specialist goals or an empty-plan funding filter invalidates pending AI context', () => {
+  const ctx = context({ profile: { ...baseProfile, hours: 0 } });
+  const goal: CareerGoal = {
+    title: 'Chef',
+    description: '',
+    family: 'operations',
+    requirements: { communication: 2 },
+    otherSkills: ['Culinary arts'],
+    summary: '',
+    mode: 'manual',
+  };
+  const original = careerChatContextKey(ctx, {
+    customGoal: goal,
+    funding: 'all',
+  });
+  assert.notEqual(
+    original,
+    careerChatContextKey(ctx, {
+      customGoal: { ...goal, otherSkills: ['Food safety'] },
+      funding: 'all',
+    }),
+  );
+  assert.notEqual(
+    original,
+    careerChatContextKey(ctx, { customGoal: goal, funding: 'hrd' }),
+  );
+});
 
 test('learning replies name and directly link every scheduled course, including more than five', () => {
   const ctx = context();

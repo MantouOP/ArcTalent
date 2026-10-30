@@ -6,6 +6,7 @@ import type {
   SkillId,
   Snapshot,
   Role,
+  CareerGoal,
 } from './types';
 import type { WorkforceSettings } from './workforce-settings';
 import { getWorkforceMembers } from './workforce-settings';
@@ -558,11 +559,18 @@ function stable(value: unknown): unknown {
 }
 
 /** Includes the supplied plan, so changing funding cannot silently reuse replies. */
-export function careerChatContextKey(context: ChatContext): string {
+export function careerChatContextKey(
+  context: ChatContext,
+  chatOptions?: {
+    customGoal: CareerGoal | null;
+    funding: 'all' | 'free' | 'hrd';
+  },
+): string {
   const { profile, ...planning } = context;
   return JSON.stringify(
     stable({
       ...planning,
+      chatOptions,
       profile: {
         id: profile.id,
         budget: profile.budget,
