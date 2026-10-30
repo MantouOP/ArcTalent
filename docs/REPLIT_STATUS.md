@@ -2,6 +2,14 @@
 
 Verified on **30 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
+## Frosted-glass restyle — live
+
+Canonical application source `ded1be533087b94523b7dc94f0a3c688c23b6bd8` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). Every page now uses a light frosted-glass design: translucent cards on an icy backdrop lit from the top left, Outfit headings, glass tooltips on the icon sidebar and glass folder cards for career options. Behaviour, data and translations are unchanged. The release keeps the finalist panels, tabbed Settings page and interactive introduction already live from `c9be535`.
+
+Replit imported `artifacts/arctalent-release-ded1be5` unchanged. All **240 tracked source files** matched Git blob hashes before and after the build. Locked installation (73 packages, 0 vulnerabilities), **207 unit tests**, the production build and **34 integration checks** passed inside Replit. Runtime commit `4981d70042cb1740bd07c47a054414d43f319e86` selects the release and keeps the preceding configuration as `artifact.toml.pre-glass-backup`. Secrets, older releases and saved data were unchanged. Runtime history was not exported to GitHub.
+
+The glass stylesheet was first observed publicly at **2026-10-30 10:44:58 UTC (18:44:58 MYT)**. Replit reports **Live**, and all **34 public HTTPS integration checks passed**. Headless Chrome loaded the public workspace, the introduction and a 390 × 844 phone view with the glass styles and no page errors. See the [workspace](images/glass-workspace-live.png), [introduction](images/glass-homepage-live.png) and [phone](images/glass-phone-live.png) screenshots.
+
 ## Introduction with interactive pathway demo — live
 
 Canonical application source `c9be53576f21b19874b03f4534e2121a0098f950` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). The welcome page now introduces the product before the dashboard: an example route, a working fictional-profile demo, the planning process, dated-evidence explanation, team introduction and FAQs. The demo uses the real planner and exact catalogue course links; it neither replaces saved profiles nor invokes a model. English, Bahasa Melayu and Simplified Chinese remain supported.

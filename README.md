@@ -60,6 +60,7 @@ ArcTalent provides an explainable career reskilling command center that maps cur
 ### Key Features
 
 - **Interactive Orion Command Center**: Dynamic SVG career constellation, transferable skill bridges, and visual score analytics.
+- **Frosted-Glass Interface**: Translucent glass cards on a soft icy backdrop, lit from the top left, with glass tooltips on the icon sidebar. **Reduce visual effects** in Settings turns off blur, shadows and animation on slower phones.
 - **Dual-Scenario Adaptability**: Instant toggle between Moderate and Rapid AI futures; preserves foundational learning while updating specialized branches.
 - **CV Import and Reviewed Skills**: Import your own TXT or text PDF after a clear consent notice. Local skill matching runs on your device by default. Optional AI analysis (`Qwen/Qwen2.5-7B-Instruct` on RunPod) uses exact source quotes and falls back to labelled local matching. Review every candidate before adding it to your profile.
 - **SME Workforce Redeployment**: 8–10 worker gap heatmap, company budget management, internal seat quotas, grouped training economies, and localized PDF reports.
@@ -81,7 +82,7 @@ ArcTalent provides an explainable career reskilling command center that maps cur
 
 | Layer                   | Technology                                                                                                                |
 | :---------------------- | :------------------------------------------------------------------------------------------------------------------------ |
-| **Frontend**            | Next.js 16 (App Router), React 19, TypeScript, Lucide Icons, Custom CSS                                                   |
+| **Frontend**            | Next.js 16 (App Router), React 19, TypeScript, Lucide Icons, custom CSS with frosted-glass design tokens                  |
 | **Backend & Engine**    | Node.js route handlers, deterministic heuristic matching engine (`engine.ts`), Zod validation                             |
 | **Document Processing** | `pdf-parse` for consented text PDFs; PDFKit with an embedded Noto Sans SC font for English, Malay and Chinese PDF reports |
 | **AI / GPU Compute**    | **RunPod** (Serverless `Qwen/Qwen2.5-7B-Instruct` via Vercel AI SDK)                                                      |
@@ -94,7 +95,7 @@ ArcTalent provides an explainable career reskilling command center that maps cur
 
 - **Development & Version Control**: Imported canonical source repository, maintaining continuous verified git histories.
 - **Production Hosting**: Live public deployment on Replit Autoscale (`https://arc-talent--emmanuelheng.replit.app/`) serving web views and API routes.
-- **Build & CI Verification**: The published release (`07ccfcf`, 29 October 2026) passed 178 unit tests and 31 production integration checks inside Replit before publishing, then the same 31 checks against the live site ([runtime status](docs/REPLIT_STATUS.md)). GitHub Actions runs the full suite on every pull request and push to `main`.
+- **Build & CI Verification**: The published release (`ded1be5`, 30 October 2026) passed 207 unit tests and 34 production integration checks inside Replit before publishing, then the same 34 checks against the live site ([runtime status](docs/REPLIT_STATUS.md)). GitHub Actions runs the full suite on every pull request and push to `main`.
 - **Secrets Management**: RunPod API keys and endpoints are stored in Replit Secrets, never committed to git.
 - 📄 Proof of use: [`submission/SDC2026_XenoForce_Replit_POU.pdf`](submission/SDC2026_XenoForce_Replit_POU.pdf)
 
