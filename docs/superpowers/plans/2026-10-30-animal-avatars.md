@@ -40,3 +40,9 @@ Source design and browser inspection use the supported CUA tools. The standalone
 - At 390 CSS pixels the picker used three columns with no horizontal overflow. Malay and Chinese labels rendered, including capybara and axolotl. English was restored after testing.
 - A fresh read-only source review found no actionable functional, accessibility or compatibility issues. Grouping keeps one radio name, visible native-keyboard focus and old storage IDs.
 - Scope: existing Settings layout and glass styling retained; no new application-wide art direction, dependencies, motion layer or standalone browser inspector was introduced.
+
+## Follow-up Settings controls
+
+The user also requested a Settings gear in place of the sidebar footer arrow and removal of the duplicate top-bar sliders button. The footer now opens Settings with an accessible label; the primary Settings navigation and profile shortcut remain available. Browser inspection confirmed one footer gear, no duplicate top-bar control and a working Settings transition. The teammate's newer companion-video covers (`8d15859`) are preserved in the combined release.
+
+The combined source passed the production build, TypeScript, all 209 unit tests and all 35 local production integration checks before release import.

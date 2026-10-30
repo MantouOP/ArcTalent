@@ -23,6 +23,7 @@ import {
   RefreshCw,
   RotateCcw,
   Search,
+  Settings,
   Settings2,
   ShieldCheck,
   Sparkles,
@@ -427,11 +428,13 @@ export function ArcTalentApp({
             <small>{t('Synthetic demo profile')}</small>
           </div>
           <button
-            onClick={() => openSettings('profile')}
+            type="button"
+            onClick={() => openSettings()}
             className="icon-button"
-            aria-label={t('Edit profile')}
+            title={t('Settings')}
+            aria-label={t('Open settings')}
           >
-            <ChevronRight size={18} />
+            <Settings size={18} aria-hidden="true" />
           </button>
         </div>
       </aside>
@@ -451,15 +454,6 @@ export function ArcTalentApp({
           </div>
           <div className="topbar-actions">
             <LanguageSelector />
-            <button
-              type="button"
-              className="icon-button settings-open-button"
-              onClick={() => openSettings()}
-              title={t('Settings')}
-              aria-label={t('Open settings')}
-            >
-              <Settings2 size={18} />
-            </button>
             <span className="demo-indicator">
               <i />
               {t('Hackathon prototype')}{' '}
