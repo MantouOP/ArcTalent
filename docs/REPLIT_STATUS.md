@@ -1,6 +1,16 @@
 # Replit runtime and publishing verification
 
-Verified on **30 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
+Verified on **31 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
+
+## Shared language selector polish — live
+
+The introduction and workspace now share one soft glass language pill, with a globe, a matching chevron, cleaner spacing and a visible keyboard focus ring. The native select, three language choices, change handler and saved-language logic are retained. The select itself is transparent and borderless, avoiding the previous nested input appearance. Touch height increases on phones.
+
+The selector source `113377981d6efe33532d178fed15eb76c5157fc5` is included in the newer combined release `fb077a7aa41cf87e5ce669d0f909e3418c551a5c`, which also preserves the team's custom work-interest feature. Prepared runtime commit `34737c7578563a05c589848f8e4f5407faea4e20` selects `artifacts/arctalent-release-fb077a7`. All **264 tracked files** matched GitHub before and after fresh **216 unit tests** and **35 production integration checks**, all passing. The preview-generated development references in `next-env.d.ts` were restored to their exact canonical production references before verification.
+
+The first selector publication passed its build but exceeded Replit's **8 GiB deployment-image limit**. When work resumed, the newer prepared release had a reduced workspace of about **3.3 GB**. Its retry passed Replit's production build, bundling and promotion and reached **Live**. The newer runtime configuration was preserved throughout the retry.
+
+Public browser checks confirmed the new globe/chevron and single glass surface, English/Bahasa Melayu/Simplified Chinese switching, Chinese persistence after reload, and English restoration afterward. At 390 CSS pixels, both headers fit without horizontal page overflow; the selector is 170 pixels wide with a touch target above 44 pixels. See the [live phone introduction](images/language-selector-live.png). Temporary viewport overrides were reset after verification.
 
 ## Animal avatars, consolidated Settings controls and video covers — live
 
