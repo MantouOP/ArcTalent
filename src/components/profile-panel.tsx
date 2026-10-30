@@ -22,14 +22,19 @@ export function ProfilePanel({
 }) {
   const { t, locale } = useI18n();
   const [form, setForm] = useState(profile);
-  const profileOptions = [
+  const baseOptions = [
     ...employees.map(
-      (sample) => profiles.find((member) => member.id === sample.id) ?? sample,
+      (sample) =>
+        profiles.find((member) => member.id === sample.id) ??
+        (sample.id === profile.id ? profile : sample),
     ),
     ...profiles.filter(
       (member) => !employees.some((sample) => sample.id === member.id),
     ),
   ];
+  const profileOptions = baseOptions.some((member) => member.id === profile.id)
+    ? baseOptions
+    : [...baseOptions, profile];
   const [cv, dispatchCv] = useReducer(cvEvidenceReducer, initialCvEvidence);
   const request = useRef(0);
   const fileInput = useRef<HTMLInputElement>(null);

@@ -270,8 +270,15 @@ export function CareerGoalPanel({
               'For example: web developer or digital marketing specialist',
             )}
             onChange={(event) => {
-              invalidate();
-              setTitle(event.target.value);
+              const nextTitle = event.target.value;
+              revision.current++;
+              pending.current?.abort();
+              setBusy(false);
+              setError('');
+              setTitle(nextTitle);
+              setDraft((current) =>
+                current ? { ...current, title: nextTitle.trim() } : null,
+              );
             }}
           />
         </label>
@@ -304,8 +311,17 @@ export function CareerGoalPanel({
               'Describe the tasks, tools or skills you want to learn. Leave out personal or confidential information.',
             )}
             onChange={(event) => {
-              invalidate();
-              setDescription(event.target.value);
+              const nextDescription = event.target.value;
+              revision.current++;
+              pending.current?.abort();
+              setBusy(false);
+              setError('');
+              setDescription(nextDescription);
+              setDraft((current) =>
+                current
+                  ? { ...current, description: nextDescription.trim() }
+                  : null,
+              );
             }}
           />
         </label>
@@ -326,6 +342,12 @@ export function CareerGoalPanel({
           >
             {t('Choose skill targets myself')}
           </button>
+          {goal && workforceMode && (
+            <button type="button" className="text-button" onClick={clear}>
+              <Trash2 size={15} />
+              {t('Remove my goal')}
+            </button>
+          )}
           {goal && (
             <button
               type="button"

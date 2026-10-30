@@ -44,7 +44,10 @@ export function ProfileFields({
             max={40}
             step={1}
             value={profile.hours}
-            onChange={(event) => update('hours', Number(event.target.value))}
+            onChange={(event) => {
+              const next = event.target.valueAsNumber;
+              update('hours', Number.isFinite(next) ? next : 0);
+            }}
           />
         </label>
         <label>
@@ -56,7 +59,10 @@ export function ProfileFields({
             max={100000}
             step="any"
             value={profile.budget}
-            onChange={(event) => update('budget', Number(event.target.value))}
+            onChange={(event) => {
+              const next = event.target.valueAsNumber;
+              update('budget', Number.isFinite(next) ? next : 0);
+            }}
           />
         </label>
         <label>
@@ -68,7 +74,10 @@ export function ProfileFields({
             max={52}
             step={1}
             value={profile.weeks}
-            onChange={(event) => update('weeks', Number(event.target.value))}
+            onChange={(event) => {
+              const next = event.target.valueAsNumber;
+              update('weeks', Number.isFinite(next) ? Math.max(1, next) : 1);
+            }}
           />
         </label>
       </div>

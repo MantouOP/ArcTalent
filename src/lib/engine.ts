@@ -128,13 +128,16 @@ export function buildPlan(
         // Courses closing an open shared-foundation gap always come first.
         foundation: c.skills.some(
           (s) =>
-            shared.includes(s) && (required.get(s) ?? 0) > (planned[s] ?? 0),
+            shared.includes(s) &&
+            (required.get(s) ?? 0) > (planned[s] ?? 0) &&
+            (planned[s] ?? 0) < 2,
         ),
         value:
           c.skills.reduce(
             (n, s) =>
               n +
-              ((required.get(s) ?? 0) > (planned[s] ?? 0)
+              ((required.get(s) ?? 0) > (planned[s] ?? 0) &&
+              (planned[s] ?? 0) < 2
                 ? shared.includes(s)
                   ? 4
                   : 1

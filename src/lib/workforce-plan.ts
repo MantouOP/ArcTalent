@@ -78,7 +78,10 @@ export function buildWorkforcePlan(
   const openings = [
     ...roles.map((role) => ({ role, count: slots[role.id] ?? 0, worker: '' })),
     ...team.flatMap((member) => {
-      const custom = workforce.customDestinations?.[member.id];
+      const custom =
+        destinations[member.id] === 'custom-goal'
+          ? workforce.customDestinations?.[member.id]
+          : undefined;
       return custom
         ? [
             {

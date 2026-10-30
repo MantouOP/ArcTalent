@@ -26,6 +26,7 @@ import type {
 } from '@/lib/types';
 import { Tag } from './ui';
 import { useI18n } from './language-provider';
+import { AggregatedSdgAndFairnessPanel } from './finals-widgets';
 
 type CardStatus = ImpactStatus | 'pending' | 'design';
 const statusTag: Record<CardStatus, { tone: string; label: string }> = {
@@ -331,6 +332,14 @@ export function ImpactScorecard({
           )}
         </p>
       </section>
+      <AggregatedSdgAndFairnessPanel
+        profile={profile}
+        activeRole={active.role}
+        plan={plan}
+        scenario={scenario}
+        snapshot={snapshot}
+        workforce={workforce}
+      />
     </div>
   );
 }

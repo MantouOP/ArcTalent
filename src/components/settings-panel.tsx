@@ -9,6 +9,7 @@ import { useDisplayPreferences } from './display-preferences-provider';
 import { Modal } from './ui';
 import { ProfileAvatar } from './profile-avatar';
 import { ProfilePicturePicker } from './profile-picture-picker';
+import { LOW_BANDWIDTH_STORAGE_KEY } from '@/lib/finals-enhancements';
 import './settings-panel.css';
 
 export function SettingsPanel({
@@ -33,6 +34,25 @@ export function SettingsPanel({
     useDisplayPreferences();
   const [confirmReset, setConfirmReset] = useState(false);
   const [message, setMessage] = useState('');
+  const [lowBandwidth, setLowBandwidth] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      return localStorage.getItem(LOW_BANDWIDTH_STORAGE_KEY) === 'true';
+    } catch {
+      return false;
+    }
+  });
+  function toggleLowBandwidth(enabled: boolean) {
+    setLowBandwidth(enabled);
+    if (typeof document !== 'undefined') {
+      document.documentElement.dataset.lowBandwidth = String(enabled);
+    }
+    try {
+      localStorage.setItem(LOW_BANDWIDTH_STORAGE_KEY, String(enabled));
+    } catch {
+      /* Storage is optional. */
+    }
+  }
   const resetTrigger = useRef<HTMLButtonElement>(null);
   const cancelReset = useRef<HTMLButtonElement>(null);
   const resetWasOpen = useRef(false);
@@ -50,7 +70,8 @@ export function SettingsPanel({
           <div>
             <strong>{profile.name}</strong>
             <p>
-              {t(profile.currentRole)} · {t('Synthetic demo profile')}
+              {profile.currentRole ? `${t(profile.currentRole)} · ` : ''}
+              {t('Synthetic demo profile')}
             </p>
           </div>
         </div>
@@ -121,6 +142,27 @@ export function SettingsPanel({
               onChange={(event) =>
                 updatePreferences({ reduceMotion: event.target.checked })
               }
+            />
+          </div>
+          <div className="settings-row">
+            <div>
+              <label htmlFor={`${id}-bandwidth`}>
+                {t('Low-bandwidth mode')}
+              </label>
+              <p id={`${id}-bandwidth-help`}>
+                {t(
+                  'Disable decorative shadows, blurs and transitions for mobile or low-data connections.',
+                )}
+              </p>
+            </div>
+            <input
+              id={`${id}-bandwidth`}
+              className="settings-switch"
+              type="checkbox"
+              role="switch"
+              checked={lowBandwidth}
+              aria-describedby={`${id}-bandwidth-help`}
+              onChange={(event) => toggleLowBandwidth(event.target.checked)}
             />
           </div>
           <div className="settings-save-state">

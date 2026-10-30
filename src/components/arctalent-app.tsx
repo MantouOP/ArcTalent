@@ -2,6 +2,7 @@
 import './worker-journey.css';
 import './orion.css';
 import './custom-inputs.css';
+import './finals-widgets.css';
 import { useI18n, LanguageSelector } from './language-provider';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -74,6 +75,18 @@ import {
   updateWorkforceProfile,
   type WorkforceSettings,
 } from '@/lib/workforce-settings';
+import {
+  applySdgPriority,
+  LOW_BANDWIDTH_STORAGE_KEY,
+  type SdgFocus,
+} from '@/lib/finals-enhancements';
+import {
+  AutoReplanBanner,
+  FutureSkillsRadarPanel,
+  LearnerBadgesPanel,
+  MalaysiaHrdDirectoryPanel,
+  SdgChoiceBar,
+} from './finals-widgets';
 type View = 'explore' | 'pathway' | 'team' | 'impact' | 'evidence' | 'profile';
 const navigation = [
   { id: 'explore' as const, label: 'Career explorer', icon: Compass },
@@ -109,6 +122,7 @@ export function ArcTalentApp({
     [ready, setReady] = useState(false),
     [showAll, setShowAll] = useState(false),
     [funding, setFunding] = useState<'all' | 'free' | 'hrd'>('all'),
+    [sdgFocus, setSdgFocus] = useState<SdgFocus>('all'),
     [query, setQuery] = useState('');
   const revision = useRef(0);
   const [followTop, setFollowTop] = useState(true);
@@ -149,6 +163,13 @@ export function ArcTalentApp({
     } catch {
       /* Browser storage is optional. */
     }
+    try {
+      if (localStorage.getItem(LOW_BANDWIDTH_STORAGE_KEY) === 'true') {
+        document.documentElement.dataset.lowBandwidth = 'true';
+      }
+    } catch {
+      /* Storage is optional. */
+    }
     setReady(true);
   }, []);
   useEffect(() => {
@@ -184,10 +205,15 @@ export function ArcTalentApp({
     const timer = setTimeout(() => setToast(''), 7000);
     return () => clearTimeout(timer);
   }, [toast]);
-  const matches = useMemo(
+  const baseMatches = useMemo(
     () => rankRoles(profile, scenario, snapshot, candidates),
     [profile, scenario, snapshot, candidates],
   );
+  const sdgRanked = useMemo(
+    () => applySdgPriority(baseMatches, sdgFocus),
+    [baseMatches, sdgFocus],
+  );
+  const matches = sdgRanked.matches;
   const shared = useMemo(
     () => sharedFoundation(profile, snapshot, candidates),
     [profile, snapshot, candidates],
@@ -198,6 +224,10 @@ export function ArcTalentApp({
   const plan = useMemo(
     () => buildPlan(profile, active.role, shared, funding),
     [profile, active.role, shared, funding],
+  );
+  const impactPlan = useMemo(
+    () => buildPlan(profile, active.role, shared, 'all'),
+    [profile, active.role, shared],
   );
   const changes = previous
     ? diffSnapshots(profile, scenario, previous, snapshot, candidates).filter(
@@ -636,6 +666,31 @@ export function ArcTalentApp({
                   </strong>
                 </div>
               </div>
+              <AutoReplanBanner
+                profile={profile}
+                scenario={scenario}
+                previous={previous}
+                snapshot={snapshot}
+                candidates={candidates}
+                onInspectEvidence={() => navigate('evidence')}
+              />
+              <SdgChoiceBar
+                focus={sdgFocus}
+                onChange={(next) => {
+                  setSdgFocus(next);
+                  setFollowTop(true);
+                }}
+                shifted={sdgRanked.shifted}
+                defaultTopRole={baseMatches[0]?.role}
+                newTopRole={matches[0]?.role}
+              />
+              <FutureSkillsRadarPanel
+                snapshot={snapshot}
+                previous={previous}
+                onFlipTrend={() =>
+                  useSnapshot(snapshot.id === updated.id ? baseline : updated)
+                }
+              />
               <div className="explorer-grid">
                 <RouteSummary
                   active={active}
@@ -896,6 +951,20 @@ export function ArcTalentApp({
           )}
           {view === 'pathway' && (
             <>
+              <AutoReplanBanner
+                profile={profile}
+                scenario={scenario}
+                previous={previous}
+                snapshot={snapshot}
+                candidates={candidates}
+                onInspectEvidence={() => navigate('evidence')}
+              />
+              <LearnerBadgesPanel
+                profile={profile}
+                plan={plan}
+                shared={shared}
+                role={active.role}
+              />
               <CareerGoalPanel
                 profile={profile}
                 goal={customGoal}
@@ -1177,6 +1246,10 @@ export function ArcTalentApp({
                       </div>
                     </section>
                   )}
+                  <MalaysiaHrdDirectoryPanel
+                    role={active.role}
+                    funding={funding}
+                  />
                 </section>
                 <aside>
                   <section className="panel">
@@ -1286,7 +1359,7 @@ export function ArcTalentApp({
               snapshot={snapshot}
               active={active}
               shared={shared}
-              plan={plan}
+              plan={impactPlan}
               workforce={workforce}
             />
           )}
@@ -1371,7 +1444,24 @@ export function ArcTalentApp({
           title={roleLabel(details.role, t)}
           onClose={() => setDetails(null)}
         >
-          <MatchDetails match={details} />
+          <MatchDetails
+            match={
+              matches.find((m) => m.role.id === details.role.id) ?? details
+            }
+            profile={profile}
+            scenario={scenario}
+            snapshot={snapshot}
+            onBoostSkill={(skillId, targetLevel) => {
+              const nextProfile: Profile = {
+                ...profile,
+                skills: { ...profile.skills, [skillId]: targetLevel },
+              };
+              saveProfile(nextProfile);
+              setToast(
+                'Simulated skill level applied. Match scores and pathways updated.',
+              );
+            }}
+          />
         </Modal>
       )}
       {settingsOpen && (

@@ -2,8 +2,9 @@
 import { useEffect, useRef } from 'react';
 import { ArrowUpRight, X, Check, Circle } from 'lucide-react';
 import { skillById, sdgUrl } from '@/lib/catalogue';
-import type { Match, Profile, SkillId } from '@/lib/types';
+import type { Match, Profile, Scenario, SkillId, Snapshot } from '@/lib/types';
 import { useI18n } from './language-provider';
+import { ScoreBoosterPanel } from './finals-widgets';
 export function External({
   href,
   children,
@@ -97,7 +98,19 @@ export function SkillChip({
     </a>
   );
 }
-export function MatchDetails({ match }: { match: Match }) {
+export function MatchDetails({
+  match,
+  profile,
+  scenario,
+  snapshot,
+  onBoostSkill,
+}: {
+  match: Match;
+  profile?: Profile;
+  scenario?: Scenario;
+  snapshot?: Snapshot;
+  onBoostSkill?: (skillId: SkillId, targetLevel: number) => void;
+}) {
   const { t } = useI18n();
   return (
     <>
@@ -147,6 +160,15 @@ export function MatchDetails({ match }: { match: Match }) {
           </div>
         ))}
       </div>
+      {profile && scenario && snapshot && (
+        <ScoreBoosterPanel
+          profile={profile}
+          role={match.role}
+          scenario={scenario}
+          snapshot={snapshot}
+          onBoostSkill={onBoostSkill}
+        />
+      )}
       <p className="notice">{t(match.role.entry)}</p>
       <p className="muted">
         {t(
