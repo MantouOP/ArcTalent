@@ -6,14 +6,17 @@ import { useI18n } from './language-provider';
 export function ProfileFields({
   profile,
   onChange,
+  part = 'all',
 }: {
   profile: Profile;
   onChange: (profile: Profile) => void;
+  /** Settings edits details and skills on separate tabs. */
+  part?: 'all' | 'details' | 'skills';
 }) {
   const { t } = useI18n();
   const update = <K extends keyof Profile>(key: K, value: Profile[K]) =>
     onChange({ ...profile, [key]: value });
-  return (
+  const details = (
     <>
       <div className="form-row">
         <label>
@@ -101,8 +104,10 @@ export function ProfileFields({
           ))}
         </div>
       </fieldset>
-      <div className="section-divider" />
-      <h3>{t('Your current skills')}</h3>
+    </>
+  );
+  const skillLevels = (
+    <>
       <p className="muted small">
         {t(
           '0 Not yet · 1 Basic · 2 Independent · 3 Advanced. Self-reported levels, not certifications.',
@@ -135,6 +140,16 @@ export function ProfileFields({
           </label>
         ))}
       </div>
+    </>
+  );
+  if (part === 'details') return details;
+  if (part === 'skills') return skillLevels;
+  return (
+    <>
+      {details}
+      <div className="section-divider" />
+      <h3>{t('Your current skills')}</h3>
+      {skillLevels}
     </>
   );
 }

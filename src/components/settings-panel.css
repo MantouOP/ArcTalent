@@ -1,5 +1,53 @@
+.settings-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  width: fit-content;
+  max-width: 100%;
+  margin-bottom: var(--gap);
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #0b0b19;
+}
+.settings-tabs button {
+  gap: 7px;
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 7px;
+  background: transparent;
+  color: #a39fbd;
+  font-size: 12px;
+  font-weight: 600;
+}
+.settings-tabs button:hover {
+  color: #f1eafa;
+}
+.settings-tabs button.selected {
+  background: var(--primary-gradient);
+  color: white;
+  box-shadow:
+    0 2px 10px #29127c66,
+    inset 0 1px 0 #ffffff18;
+}
+.settings-tabs button:focus-visible {
+  outline: 2px solid #b798ff;
+  outline-offset: 2px;
+}
+.settings-tabpanel > .settings-panel {
+  max-width: 760px;
+}
 .settings-panel {
   min-width: 0;
+}
+.settings-panel > h2 {
+  margin: 0;
+  font-size: 17px;
+}
+.profile-unsaved {
+  margin: 14px 0 0;
+  color: #e7c27d;
+  font-size: 12px;
 }
 .settings-identity {
   display: flex;
@@ -9,7 +57,7 @@
 .settings-identity > div {
   min-width: 0;
 }
-.settings-identity strong {
+.settings-identity h2 {
   font-size: 15px;
   overflow-wrap: anywhere;
 }
@@ -23,12 +71,13 @@
   flex-shrink: 0;
 }
 .settings-panel .settings-intro {
-  margin: 16px 0 20px;
+  margin: 6px 0 10px;
   color: #ccc6df;
 }
 .settings-panel section {
+  margin-top: 16px;
   border-top: 1px solid #759bc126;
-  padding: 16px 0 8px;
+  padding: 16px 0 0;
 }
 .settings-panel section h3 {
   margin: 0 0 8px;
@@ -147,12 +196,6 @@
   font-size: 11px;
   text-align: left;
 }
-.settings-learning-row {
-  flex-wrap: wrap;
-}
-.settings-learning-row > div {
-  min-width: 190px;
-}
 .settings-panel .settings-data-copy {
   margin: 9px 0 15px;
 }
@@ -199,6 +242,16 @@
   color: #b5a5d0;
 }
 @media (max-width: 600px) {
+  .settings-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+  .settings-tabs button {
+    min-height: 44px;
+    padding: 8px 10px;
+    text-align: center;
+  }
   .settings-row {
     align-items: flex-start;
     gap: 14px;
