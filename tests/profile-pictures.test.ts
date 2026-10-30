@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { dictionaries } from '../src/lib/i18n';
 import {
   avatarPresets,
   restoreProfilePictures,
@@ -14,6 +16,57 @@ const photo = {
   kind: 'upload' as const,
   dataUrl: 'data:image/webp;base64,UklGRg==',
 };
+
+test('animal avatars survive storage alongside original presets and uploaded photos', () => {
+  const animalIds = [
+    'cat',
+    'puppy',
+    'bunny',
+    'fox',
+    'panda',
+    'bear',
+    'koala',
+    'otter',
+    'capybara',
+    'penguin',
+    'owl',
+    'axolotl',
+  ];
+  for (const id of animalIds) {
+    const saved = restoreProfilePictures({
+      version: 1,
+      pictures: {
+        animal: { kind: 'preset', id },
+        original: { kind: 'preset', id: 'violet' },
+        uploaded: photo,
+      },
+    });
+    assert.deepEqual(saved.pictures.animal, { kind: 'preset', id });
+    assert.deepEqual(saved.pictures.original, { kind: 'preset', id: 'violet' });
+    assert.deepEqual(saved.pictures.uploaded, photo);
+  }
+});
+
+test('every avatar has a local self-contained illustration and translated label', () => {
+  assert.equal(
+    new Set(avatarPresets.map((preset) => preset.id)).size,
+    avatarPresets.length,
+  );
+  for (const preset of avatarPresets) {
+    const source = readFileSync(
+      new URL('../public/avatars/' + preset.id + '.svg', import.meta.url),
+      'utf8',
+    );
+    assert.match(source, /<svg\s/);
+    assert.match(source, /viewBox="0 0 \d+ \d+"/);
+    assert.doesNotMatch(
+      source,
+      /<script\b|<foreignObject\b|\bon\w+=|(?:href|src)="(?:https?:|data:|javascript:)/i,
+    );
+    for (const [locale, messages] of Object.entries(dictionaries))
+      assert.ok(messages[preset.label]?.trim(), locale + ': ' + preset.label);
+  }
+});
 
 test('missing and malformed picture preferences start empty without retaining unrelated data', () => {
   for (const input of [

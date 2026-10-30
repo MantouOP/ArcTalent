@@ -1,10 +1,22 @@
 export const avatarPresets = [
-  { id: 'violet', label: 'Violet avatar' },
-  { id: 'teal', label: 'Teal avatar' },
-  { id: 'coral', label: 'Coral avatar' },
-  { id: 'blue', label: 'Blue avatar' },
-  { id: 'amber', label: 'Amber avatar' },
-  { id: 'rose', label: 'Rose avatar' },
+  { id: 'violet', label: 'Violet avatar', group: 'classic' },
+  { id: 'teal', label: 'Teal avatar', group: 'classic' },
+  { id: 'coral', label: 'Coral avatar', group: 'classic' },
+  { id: 'blue', label: 'Blue avatar', group: 'classic' },
+  { id: 'amber', label: 'Amber avatar', group: 'classic' },
+  { id: 'rose', label: 'Rose avatar', group: 'classic' },
+  { id: 'cat', label: 'Cat avatar', group: 'animals' },
+  { id: 'puppy', label: 'Puppy avatar', group: 'animals' },
+  { id: 'bunny', label: 'Bunny avatar', group: 'animals' },
+  { id: 'fox', label: 'Fox avatar', group: 'animals' },
+  { id: 'panda', label: 'Panda avatar', group: 'animals' },
+  { id: 'bear', label: 'Bear avatar', group: 'animals' },
+  { id: 'koala', label: 'Koala avatar', group: 'animals' },
+  { id: 'otter', label: 'Otter avatar', group: 'animals' },
+  { id: 'capybara', label: 'Capybara avatar', group: 'animals' },
+  { id: 'penguin', label: 'Penguin avatar', group: 'animals' },
+  { id: 'owl', label: 'Owl avatar', group: 'animals' },
+  { id: 'axolotl', label: 'Axolotl avatar', group: 'animals' },
 ] as const;
 export type AvatarPresetId = (typeof avatarPresets)[number]['id'];
 export type ProfilePicture =

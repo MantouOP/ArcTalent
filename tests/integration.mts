@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { baseline, baseProfile, courses } from '../src/lib/catalogue';
+import { avatarPresets } from '../src/lib/profile-pictures';
 import type { LearningPlan } from '../src/lib/types';
 import { rankRoles } from '../src/lib/engine';
 import { buildCustomSnapshot } from '../src/lib/custom-inputs';
@@ -62,6 +63,19 @@ await check('health reports actual extraction mode', async () => {
   assert.equal(health.ok, true);
   assert.ok(
     ['runpod-configured', 'local-planning-guide'].includes(health.careerChat),
+  );
+});
+await check('all avatar choices are served as local SVG assets', async () => {
+  await Promise.all(
+    avatarPresets.map(async ({ id }) => {
+      const response = await fetch(origin + '/avatars/' + id + '.svg');
+      assert.equal(response.status, 200, id);
+      assert.match(
+        response.headers.get('content-type') ?? '',
+        /image\/svg\+xml/,
+      );
+      assert.match(await response.text(), /<svg\s/);
+    }),
   );
 });
 await check(

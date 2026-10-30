@@ -11,6 +11,11 @@ import { AvatarImage, ProfileAvatar } from './profile-avatar';
 import { useProfilePictures } from './profile-pictures-provider';
 import { useI18n } from './language-provider';
 
+const avatarGroups = [
+  { group: 'animals', label: 'Animal friends' },
+  { group: 'classic', label: 'Classic avatars' },
+] as const;
+
 export function ProfilePicturePicker({ profile }: { profile: Profile }) {
   const { t } = useI18n();
   const { pictures, setPicture, storage } = useProfilePictures();
@@ -103,50 +108,71 @@ export function ProfilePicturePicker({ profile }: { profile: Profile }) {
         disabled={storage === 'checking'}
       >
         <legend>{t('Or choose an avatar')}</legend>
-        <div className="picture-options-grid">
-          <label className={`picture-option ${!picture ? 'selected' : ''}`}>
-            <input
-              type="radio"
-              name={`${id}-picture`}
-              checked={!picture}
-              onChange={() => choose(null)}
-            />
-            <AvatarImage name={profile.name} />
-            <span>{t('Use initials')}</span>
-            {!picture && <Check className="picture-selected" size={12} />}
-          </label>
-          {avatarPresets.map((preset) => {
-            const selected =
-              picture?.kind === 'preset' && picture.id === preset.id;
-            return (
-              <label
-                key={preset.id}
-                className={`picture-option ${selected ? 'selected' : ''}`}
-              >
-                <input
-                  type="radio"
-                  name={`${id}-picture`}
-                  checked={selected}
-                  onChange={() => choose(preset.id)}
-                />
-                <AvatarImage
-                  name={profile.name}
-                  picture={{ kind: 'preset', id: preset.id }}
-                />
-                <span>{t(preset.label)}</span>
-                {selected && <Check className="picture-selected" size={12} />}
-              </label>
-            );
-          })}
-          {picture?.kind === 'upload' && (
-            <label className="picture-option selected">
-              <input type="radio" name={`${id}-picture`} checked readOnly />
-              <AvatarImage name={profile.name} picture={picture} />
-              <span>{t('Your photo')}</span>
-              <Check className="picture-selected" size={12} />
-            </label>
-          )}
-        </div>
+        {avatarGroups.map(({ group, label }) => (
+          <div
+            className="picture-options-group"
+            data-avatar-group={group}
+            key={group}
+            role="group"
+            aria-labelledby={`${id}-${group}-heading`}
+          >
+            <h4 id={`${id}-${group}-heading`} className="picture-group-title">
+              {t(label)}
+            </h4>
+            <div className="picture-options-grid">
+              {group === 'classic' && (
+                <label
+                  className={`picture-option ${!picture ? 'selected' : ''}`}
+                >
+                  <input
+                    type="radio"
+                    name={`${id}-picture`}
+                    checked={!picture}
+                    onChange={() => choose(null)}
+                  />
+                  <AvatarImage name={profile.name} />
+                  <span>{t('Use initials')}</span>
+                  {!picture && <Check className="picture-selected" size={12} />}
+                </label>
+              )}
+              {avatarPresets
+                .filter((preset) => preset.group === group)
+                .map((preset) => {
+                  const selected =
+                    picture?.kind === 'preset' && picture.id === preset.id;
+                  return (
+                    <label
+                      key={preset.id}
+                      className={`picture-option ${selected ? 'selected' : ''}`}
+                    >
+                      <input
+                        type="radio"
+                        name={`${id}-picture`}
+                        checked={selected}
+                        onChange={() => choose(preset.id)}
+                      />
+                      <AvatarImage
+                        name={profile.name}
+                        picture={{ kind: 'preset', id: preset.id }}
+                      />
+                      <span>{t(preset.label)}</span>
+                      {selected && (
+                        <Check className="picture-selected" size={12} />
+                      )}
+                    </label>
+                  );
+                })}
+              {group === 'classic' && picture?.kind === 'upload' && (
+                <label className="picture-option selected">
+                  <input type="radio" name={`${id}-picture`} checked readOnly />
+                  <AvatarImage name={profile.name} picture={picture} />
+                  <span>{t('Your photo')}</span>
+                  <Check className="picture-selected" size={12} />
+                </label>
+              )}
+            </div>
+          </div>
+        ))}
       </fieldset>
       {error && (
         <p className="picture-error" role="alert">
