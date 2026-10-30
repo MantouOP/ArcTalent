@@ -58,8 +58,51 @@ await check('production workspace renders', async () => {
 await check('health reports actual extraction mode', async () => {
   const response = await fetch(origin + '/api/health');
   assert.equal(response.status, 200);
-  assert.equal((await response.json()).ok, true);
+  const health = await response.json();
+  assert.equal(health.ok, true);
+  assert.ok(
+    ['runpod-configured', 'local-planning-guide'].includes(health.careerChat),
+  );
 });
+await check(
+  'chat rejects missing consent, malformed input and oversized requests',
+  async () => {
+    for (const input of [
+      { question: 'hello' },
+      { consent: false },
+      { consent: true, question: 'x'.repeat(33000) },
+    ]) {
+      const response = await post('/api/chat', input);
+      assert.ok([400, 413].includes(response.status));
+      assert.equal(response.headers.get('cache-control'), 'no-store');
+    }
+  },
+);
+await check(
+  'chat rejects cross-origin browser requests before invoking the model',
+  async () => {
+    const response = await fetch(origin + '/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Origin: 'https://untrusted.invalid',
+      },
+      body: JSON.stringify({ consent: true, question: 'hello' }),
+    });
+    assert.equal(response.status, 403);
+  },
+);
+await check(
+  'same-origin chat requests reach validation behind a proxy host',
+  async () => {
+    const response = await fetch(origin + '/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Origin: origin },
+      body: JSON.stringify({ consent: false }),
+    });
+    assert.equal(response.status, 400);
+  },
+);
 await check(
   'personal pathway exports the selected route as a searchable PDF with exact course links',
   async () => {

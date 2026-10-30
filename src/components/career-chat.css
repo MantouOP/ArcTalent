@@ -112,6 +112,50 @@
   font-size: 10px;
   line-height: 1.5;
 }
+.career-chat-mode {
+  padding: 10px 16px;
+  background: #17132b;
+  flex-shrink: 0;
+}
+.career-chat-mode label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  cursor: pointer;
+}
+.career-chat-mode input {
+  accent-color: #a283ff;
+}
+.career-chat-mode p {
+  margin: 6px 0 0;
+  color: #aaa5c0;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.career-chat-notice {
+  color: #e9cd8b;
+}
+.career-chat-pending {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #c7b4ff;
+  font-size: 12px;
+}
+.career-chat-pending svg {
+  animation: career-chat-spin 1.5s linear infinite;
+}
+@keyframes career-chat-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .career-chat-pending svg {
+    animation: none;
+  }
+}
 .career-chat-transcript {
   flex: 1;
   min-height: 0;

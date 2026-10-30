@@ -8,5 +8,6 @@ export function GET() {
     engine: MODEL_VERSION,
     careerAnalysis: configured ? 'runpod-configured' : 'local-goal-matching',
     extraction: configured ? 'runpod-configured' : 'local-alias-matching',
+    careerChat: configured ? 'runpod-configured' : 'local-planning-guide',
   });
 }

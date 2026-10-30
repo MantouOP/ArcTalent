@@ -69,6 +69,7 @@ ArcTalent provides an explainable career reskilling command center that maps cur
 - **Multilingual Support**: Fully accessible in English, Bahasa Melayu, and 简体中文.
 - **Profile pictures**: Settings offers six illustrated avatars, initials or a JPG/PNG/WebP photo. Photos are cropped and resized on the device, saved per profile in browser storage, and displayed consistently in the workspace.
 - **CV Privacy Controls**: ArcTalent does not save CV files or raw CV text. PDF conversion processes the file on the application server. AI analysis sends reviewed text to RunPod only when explicitly selected. Reviewed profile skills are saved in this browser, and transient CV text/suggestions have a clear action.
+- **Optional AI Career Guide**: Enable **Use AI answers (RunPod)** in the chat to ask natural career and learning questions in English, Bahasa Melayu or Simplified Chinese. The server recomputes the selected plan and uses catalogue-owned course links. Names, photos, CV text and employee records are not attached. Replies identify the actual model or an explicit local fallback; chat does not modify the plan or persist on ArcTalent's server.
 
 ### Tech Stack
 

@@ -1,7 +1,14 @@
 'use client';
 
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { ArrowUpRight, MessageCircle, Send, Trash2, X } from 'lucide-react';
+import {
+  ArrowUpRight,
+  LoaderCircle,
+  MessageCircle,
+  Send,
+  Trash2,
+  X,
+} from 'lucide-react';
 import {
   answerCareerQuestion,
   careerChatContextKey,
@@ -12,6 +19,9 @@ import {
 } from '@/lib/career-chat';
 import type { TranslationValues } from '@/lib/i18n';
 import { roleLabel } from '@/lib/role-label';
+import { makeChatRequest } from '@/lib/career-chat-request';
+import type { CareerChatAnswer } from '@/lib/career-chat-ai';
+import type { CareerGoal } from '@/lib/types';
 import { useI18n } from './language-provider';
 import './career-chat.css';
 
@@ -20,6 +30,9 @@ type Turn = {
   question: string;
   reply: ChatReply;
   contextKey: string;
+  mode?: 'ai' | 'local';
+  model?: string;
+  notice?: string;
 };
 const prompts = [
   'Why this career?',
@@ -33,15 +46,25 @@ const prompts = [
 export function CareerChat({
   context,
   onNavigate,
+  customGoal,
+  funding,
 }: {
   context: ChatContext;
   onNavigate: (view: ChatView) => void;
+  customGoal: CareerGoal | null;
+  funding: 'all' | 'free' | 'hrd';
 }) {
   const { t, locale } = useI18n();
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState('');
   const [turns, setTurns] = useState<Turn[]>([]);
   const [error, setError] = useState('');
+  const [aiEnabled, setAiEnabled] = useState(false);
+  const [availability, setAvailability] = useState<
+    'checking' | 'configured' | 'local'
+  >('checking');
+  const [pending, setPending] = useState(false);
+  const request = useRef<AbortController | null>(null);
   const nextId = useRef(0);
   const launcher = useRef<HTMLButtonElement>(null);
   const composer = useRef<HTMLTextAreaElement>(null);
@@ -58,29 +81,114 @@ export function CareerChat({
     if (open) composer.current?.focus({ preventScroll: true });
   }, [open]);
   useEffect(() => {
+    if (!open || availability !== 'checking') return;
+    const controller = new AbortController();
+    fetch('/api/health', {
+      signal: AbortSignal.any([controller.signal, AbortSignal.timeout(8000)]),
+      cache: 'no-store',
+    })
+      .then((response) => (response.ok ? response.json() : Promise.reject()))
+      .then((data) =>
+        setAvailability(
+          data.careerChat === 'runpod-configured' ? 'configured' : 'local',
+        ),
+      )
+      .catch(() => {
+        if (!controller.signal.aborted) setAvailability('local');
+      });
+    return () => controller.abort();
+  }, [open, availability]);
+  useEffect(() => {
+    request.current?.abort();
+    request.current = null;
+    setPending(false);
+  }, [contextKey, locale]);
+  useEffect(() => () => request.current?.abort(), []);
+  useEffect(() => {
     if (open && transcript.current)
       transcript.current.scrollTop = transcript.current.scrollHeight;
-  }, [open, turns, locale]);
+  }, [open, turns, locale, pending]);
 
   function close() {
     setOpen(false);
     launcher.current?.focus({ preventScroll: true });
   }
-  function send(question = draft, lookup = question) {
+  async function send(question = draft, lookup = question) {
     const text = question.trim();
-    if (!text || text.length > 600) return;
+    if (!text || text.length > 600 || request.current) return;
+    const controller = new AbortController();
+    request.current = controller;
+    setError('');
+    setPending(aiEnabled);
     try {
-      const reply = answerCareerQuestion(
+      let reply = answerCareerQuestion(
         lookup,
         context,
         turns.at(-1)?.reply.intent,
       );
-      const turn = { id: ++nextId.current, question: text, reply, contextKey };
+      let result: Pick<CareerChatAnswer, 'mode' | 'notice' | 'model'> = {
+        mode: 'local',
+        notice: '',
+      };
+      if (aiEnabled) {
+        try {
+          const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            signal: AbortSignal.any([
+              controller.signal,
+              AbortSignal.timeout(55000),
+            ]),
+            body: JSON.stringify(
+              makeChatRequest(text, locale, context, {
+                customGoal,
+                funding,
+                history: turns
+                  .filter((turn) => turn.contextKey === contextKey)
+                  .slice(-4)
+                  .map((turn) => ({
+                    question: turn.question,
+                    answer: [...turn.reply.paragraphs, ...turn.reply.bullets]
+                      .map(line)
+                      .join('\n')
+                      .slice(0, 1800),
+                  })),
+              }),
+            ),
+          });
+          if (!response.ok) throw new Error('Chat request failed');
+          const data: CareerChatAnswer = await response.json();
+          if (data.mode !== 'ai' && data.mode !== 'local')
+            throw new Error('Invalid chat reply');
+          if (data.mode === 'ai') reply = data.reply;
+          result = { mode: data.mode, notice: data.notice, model: data.model };
+        } catch {
+          if (controller.signal.aborted) return;
+          result = {
+            mode: 'local',
+            notice:
+              'AI is unavailable right now. This reply uses the local planning guide.',
+          };
+        }
+      }
+      if (controller.signal.aborted || request.current !== controller) return;
+      const turn = {
+        id: ++nextId.current,
+        question: text,
+        reply,
+        contextKey,
+        ...result,
+      };
       setTurns((previous) => [...previous.slice(-19), turn]);
       setDraft('');
       setError('');
     } catch {
       setError('Could not prepare a reply. Try a suggested question.');
+    } finally {
+      if (request.current === controller) {
+        request.current = null;
+        setPending(false);
+      }
     }
     composer.current?.focus({ preventScroll: true });
   }
@@ -113,15 +221,24 @@ export function CareerChat({
           </span>
           <div>
             <h2 id={headingId}>{t('ArcTalent Guide')}</h2>
-            <p>{t('Plan-based guide · On this device')}</p>
+            <p>
+              {t(
+                aiEnabled
+                  ? 'AI-assisted guide · RunPod'
+                  : 'Plan-based guide · On this device',
+              )}
+            </p>
           </div>
           <button
             type="button"
             className="icon-button"
             aria-label={t('Clear conversation')}
             title={t('Clear conversation')}
-            disabled={!turns.length && !draft}
+            disabled={!turns.length && !draft && !pending}
             onClick={() => {
+              request.current?.abort();
+              request.current = null;
+              setPending(false);
               setTurns([]);
               setDraft('');
               setError('');
@@ -142,6 +259,31 @@ export function CareerChat({
         <div className="career-chat-context">
           <span>{t('Selected worker route')}</span>
           <strong>{roleLabel(context.active.role, t, true)}</strong>
+        </div>
+        <div className="career-chat-mode">
+          <label>
+            <input
+              type="checkbox"
+              checked={aiEnabled}
+              disabled={availability !== 'configured'}
+              onChange={(event) => {
+                request.current?.abort();
+                request.current = null;
+                setPending(false);
+                setAiEnabled(event.target.checked);
+              }}
+            />
+            {t('Use AI answers (RunPod)')}
+          </label>
+          <p>
+            {t(
+              availability === 'checking'
+                ? 'Checking AI configuration…'
+                : availability === 'configured'
+                  ? 'When enabled, your question, recent same-plan chat, skills, selected goal, time and budget are sent to RunPod. CV text, names, photos and team records are not included. ArcTalent does not save the chat on its server.'
+                  : 'AI is not connected. You can still ask the local planning guide.',
+            )}
+          </p>
         </div>
         {hasEarlierContext && (
           <p className="career-chat-change" role="status">
@@ -168,7 +310,9 @@ export function CareerChat({
               </p>
               <p className="career-chat-scope">
                 {t(
-                  'I explain ArcTalent’s planning model. I do not predict hiring outcomes or answer every general question.',
+                  aiEnabled
+                    ? 'AI answers can be mistaken. Check the course sources and review suggestions before acting.'
+                    : 'I explain ArcTalent’s planning model. I do not predict hiring outcomes or answer every general question.',
                 )}
               </p>
             </div>
@@ -181,8 +325,13 @@ export function CareerChat({
               </div>
               <div className="career-chat-answer">
                 <span className="career-chat-speaker">
-                  {t('ArcTalent Guide')}
+                  {turn.mode === 'ai'
+                    ? `${t('AI answer')} · ${turn.model ?? 'RunPod'}`
+                    : t('Local planning guide')}
                 </span>
+                {turn.notice && (
+                  <p className="career-chat-notice">{t(turn.notice)}</p>
+                )}
                 {turn.reply.paragraphs.map((paragraph, i) => (
                   <p key={i}>{line(paragraph)}</p>
                 ))}
@@ -234,6 +383,12 @@ export function CareerChat({
               </div>
             </article>
           ))}
+          {pending && (
+            <p className="career-chat-pending" role="status">
+              <LoaderCircle size={14} />
+              {t('Preparing an AI answer…')}
+            </p>
+          )}
           <div
             className="career-chat-prompts"
             aria-label={t('Suggested questions')}
@@ -242,6 +397,7 @@ export function CareerChat({
               <button
                 type="button"
                 key={prompt}
+                disabled={pending}
                 onClick={() => send(t(prompt), prompt)}
               >
                 {t(prompt)}
@@ -271,6 +427,7 @@ export function CareerChat({
               ref={composer}
               value={draft}
               maxLength={600}
+              disabled={pending}
               rows={2}
               autoComplete="off"
               enterKeyHint="send"
@@ -293,9 +450,9 @@ export function CareerChat({
               type="submit"
               className="career-chat-send"
               aria-label={t('Send question')}
-              disabled={!draft.trim()}
+              disabled={!draft.trim() || pending}
             >
-              <Send size={17} />
+              {pending ? <LoaderCircle size={17} /> : <Send size={17} />}
             </button>
           </div>
           <p id={helpId}>{t('Enter to send · Shift+Enter for a new line')}</p>

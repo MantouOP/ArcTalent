@@ -1357,6 +1357,8 @@ export function ArcTalentApp({
         </div>
       )}
       <CareerChat
+        customGoal={customGoal}
+        funding={funding}
         context={{
           profile,
           scenario,
