@@ -25,7 +25,7 @@
 - [x] Add failing tests for animal persistence, legacy compatibility, asset availability and translated labels.
 - [x] Create the twelve SVGs, extend the preset registry and group the existing radio choices with restrained styling.
 - [x] Run unit, type, formatting and build checks; inspect all portraits and browser selection, reload, keyboard and phone behavior.
-- [ ] Review, push and publish the verified release to the existing Replit app; verify the public choices and record a screenshot.
+- [x] Review, push and publish the verified release to the existing Replit app; verify the public choices and record a screenshot.
 
 ## Verification ledger
 
@@ -46,3 +46,10 @@ Source design and browser inspection use the supported CUA tools. The standalone
 The user also requested a Settings gear in place of the sidebar footer arrow and removal of the duplicate top-bar sliders button. The footer now opens Settings with an accessible label; the primary Settings navigation and profile shortcut remain available. Browser inspection confirmed one footer gear, no duplicate top-bar control and a working Settings transition. The teammate's newer companion-video covers (`8d15859`) are preserved in the combined release.
 
 The combined source passed the production build, TypeScript, all 209 unit tests and all 35 local production integration checks before release import.
+
+## Live release verification
+
+- Published source `30bd9c6199e7717e4e5faf71b39088852557e4e9`, retaining the team's subsequent text-size and contrast improvements. Replit verified all 258 tracked-file hashes before and after its locked install, 209 unit tests, production build and 35 integration checks.
+- Runtime commit `dfcec52a02e1de07db2341d8c0d384f925496064` selects the immutable release and saves the previous configuration as `artifact.toml.pre-animal-settings-backup`. Older source, secrets and the pre-existing generated type change were preserved.
+- Replit reached Live. All 35 public HTTPS integration checks passed. The public footer gear opens Settings; the top-bar duplicate is absent; every animal asset loads. Cat selection survived reload and updated the header. Original initials were restored afterward.
+- The final combined source was also checked at 390 CSS pixels: three avatar columns, no horizontal overflow and a working primary Settings button. Live proof is saved at `docs/images/animal-avatars-live.png`.
