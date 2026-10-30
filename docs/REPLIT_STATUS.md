@@ -2,6 +2,14 @@
 
 Verified on **30 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
+## Profile Reset control — live
+
+Canonical application source `0451212fa565307787d9aace1f0e3bb2d786ebb2` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/workspace). Settings → Profile now offers **Reset**, translated as **Tetapkan semula** and **重置**. It clears the editable profile fields, interests, skills, completed-course draft and learning preferences, restores the normal 4 h/week, RM 0 and 8-week defaults, and clears transient CV text, suggestions, consent and pending operations. The same profile ID stays selected. The cleared draft is saved only through **Update my pathways**.
+
+Replit verified all **243 tracked source files** before and after the locked install, **207 unit tests**, production build and **34 integration checks**. Runtime commit `b5c341fc7111081f805b841339719f5a5be7bade` selects `artifacts/arctalent-release-0451212`. The prior glass-release configuration is retained in `artifact.toml.pre-profile-reset-backup`. Existing unrelated .replit and old-release generated type changes were left untouched. Runtime history was not exported to GitHub.
+
+Local and public browser checks populated an unsaved profile draft, changed skills and added fictional CV text, then confirmed Reset clears the fields and CV state while keeping the profile selected. Reloading without saving retained the original saved profile. Both translated labels render correctly. All **34 public HTTPS integration checks passed**. See the [cleared profile form](images/profile-reset-live.png).
+
 ## Frosted-glass restyle — live
 
 Canonical application source `ded1be533087b94523b7dc94f0a3c688c23b6bd8` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). Every page now uses a light frosted-glass design: translucent cards on an icy backdrop lit from the top left, Outfit headings, glass tooltips on the icon sidebar and glass folder cards for career options. Behaviour, data and translations are unchanged. The release keeps the finalist panels, tabbed Settings page and interactive introduction already live from `c9be535`.
