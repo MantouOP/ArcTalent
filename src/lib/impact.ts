@@ -107,12 +107,12 @@ export function assessPerson(
         : 'below') as ImpactStatus,
     foundation,
     foundationStatus: (shared.length === 0 ||
-    foundation.share === null ||
     (foundationDone && foundation.completeWeek === null)
       ? 'not-applicable'
-      : foundation.share >= IMPACT_TARGETS.foundationShare
+      : foundation.share !== null &&
+          foundation.share >= IMPACT_TARGETS.foundationShare
         ? 'met'
-        : foundationDone && foundation.first
+        : foundation.share !== null && foundationDone && foundation.first
           ? 'early'
           : 'below') as ImpactStatus,
   };
