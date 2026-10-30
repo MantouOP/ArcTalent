@@ -1,5 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-/* Orion visual system. Application data and behavior are unchanged. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap');
+/* Glass visual system: frosted cards on an icy backdrop, lit from the top left.
+   Application data and behavior are unchanged. */
 .sidebar-note .introduction-link {
   width: 36px;
   height: 36px;
@@ -13,23 +14,42 @@
   background: var(--raised);
 }
 :root {
-  color-scheme: dark;
-  --ink: #ffffff;
-  --muted: #8e9fba;
-  --green: #65dbe8;
-  --line: rgba(117, 155, 193, 0.15);
-  --paper: #030307;
-  --nav: #070711;
-  --accent: #a590ff;
-  --surface: rgba(15, 14, 38, 0.65);
-  --raised: #15152c;
-  --cyan: #00f2fe;
-  --violet: #9a75ff;
-  --success: #00e676;
-  --coral: #ff829b;
-  --primary-gradient: linear-gradient(135deg, #1a17e4 0%, #5320ca 100%);
-  --cyan-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-  --alert-gradient: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
+  color-scheme: light;
+  /* Text: deep grey-blue, never pure black. */
+  --ink: #24364a;
+  --ink-soft: #46596d;
+  --muted: #64778a;
+  --green: #0f7f9c;
+  /* Dividers inside cards; glass edges use --glass-edge. */
+  --line: rgba(42, 59, 76, 0.1);
+  --glass-edge: rgba(255, 255, 255, 0.75);
+  --paper: #e6edf2;
+  --nav: rgba(255, 255, 255, 0.55);
+  --accent: #6b55d6;
+  --surface: rgba(255, 255, 255, 0.56);
+  --raised: rgba(255, 255, 255, 0.8);
+  --cyan: #1689c1;
+  --violet: #7a5ae0;
+  --success: #109b74;
+  --coral: #d9506b;
+  /* Saturated gradients stay small: data, primary actions and focus. */
+  --primary-gradient: linear-gradient(135deg, #5468ff 0%, #7b4fe0 100%);
+  --cyan-gradient: linear-gradient(135deg, #36c3e8 0%, #5a8dff 100%);
+  --alert-gradient: linear-gradient(135deg, #ff5f7e 0%, #ffa26b 100%);
+  --glass-blur: blur(22px) saturate(160%);
+  /* Light falls from the top left: highlight there, soft cool shadow to the bottom right. */
+  --glass-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.9),
+    10px 16px 36px -16px rgba(64, 92, 122, 0.32),
+    2px 4px 12px -6px rgba(64, 92, 122, 0.14);
+  --glass-shadow-hover:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.95),
+    14px 22px 46px -16px rgba(64, 92, 122, 0.38),
+    3px 6px 16px -6px rgba(64, 92, 122, 0.16);
+  --radius-lg: 24px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+  --heading-font: 'Outfit', 'Inter', 'Segoe UI', sans-serif;
   --gap: 18px;
 }
 * {
@@ -38,7 +58,31 @@
 body {
   margin: 0;
   font-family: 'Inter', 'Segoe UI', sans-serif;
-  background: var(--paper);
+  /* Soft, low-saturation light behind the glass so the blur has something to show. */
+  background:
+    radial-gradient(
+      900px 620px at 6% -6%,
+      rgba(192, 200, 248, 0.85),
+      transparent 62%
+    ),
+    radial-gradient(
+      820px 560px at 98% 2%,
+      rgba(188, 224, 244, 0.95),
+      transparent 64%
+    ),
+    radial-gradient(
+      760px 540px at 74% 96%,
+      rgba(224, 206, 245, 0.8),
+      transparent 62%
+    ),
+    radial-gradient(
+      680px 500px at 10% 92%,
+      rgba(194, 231, 223, 0.85),
+      transparent 62%
+    ),
+    linear-gradient(160deg, #e5ecf1 0%, #d4dfe7 50%, #c4d2dd 100%);
+  background-color: var(--paper);
+  background-attachment: fixed;
   color: var(--ink);
   font-size: 14px;
   line-height: 1.6;
@@ -91,7 +135,7 @@ p {
 h1,
 h2,
 h3 {
-  font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+  font-family: var(--heading-font);
 }
 h1 {
   font-size: clamp(30px, 2.8vw, 44px);
@@ -221,7 +265,7 @@ button:active {
 }
 .sidebar nav button:hover {
   background: var(--raised);
-  color: white;
+  color: var(--ink);
 }
 .sidebar nav button.active {
   background: var(--raised);
@@ -419,7 +463,7 @@ main {
 }
 .segmented .selected {
   background: white;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
   color: var(--ink);
   font-weight: 700;
 }
@@ -505,7 +549,7 @@ main {
   margin-bottom: 10px;
 }
 .stat > strong {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--heading-font);
   font-size: 27px;
   letter-spacing: -0.7px;
   line-height: 1.15;
@@ -614,7 +658,7 @@ main {
   background: var(--raised);
   color: var(--muted);
   border: 5px solid var(--line);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 .map-start strong {
   font-size: 9px;
@@ -709,7 +753,7 @@ main {
 }
 .destination.chosen {
   border-color: var(--line);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 .destination:hover {
   background: var(--raised);
@@ -861,7 +905,7 @@ main {
 }
 .career-card.is-selected {
   border-color: var(--line);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 .card-top {
   display: flex;
@@ -1769,7 +1813,7 @@ input[type='checkbox'] {
   color: var(--ink);
   border: 1px solid var(--line);
   border-radius: 10px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
   padding: 16px 20px;
   width: min(680px, calc(100vw - 300px));
   z-index: 100;
@@ -1789,7 +1833,7 @@ dialog {
   width: min(610px, 92vw);
   max-height: 85vh;
   color: var(--ink);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 dialog::backdrop {
   background: var(--raised);

@@ -5,16 +5,16 @@
   gap: 2px;
   max-width: 100%;
   padding: 8px 12px;
-  border: 1px solid rgba(0, 242, 254, 0.22);
+  border: 1px solid rgba(26, 244, 255, 0.25);
   border-radius: 7px;
   color: var(--green);
-  background: rgba(0, 242, 254, 0.04);
+  background: rgba(0, 242, 254, 0.06);
   transition:
     background 200ms ease-out,
     border-color 200ms ease-out;
 }
 .course-access:hover {
-  background: rgba(0, 242, 254, 0.09);
+  background: rgba(0, 242, 254, 0.1);
   border-color: var(--green);
   text-decoration: none;
 }
@@ -38,11 +38,11 @@
 }
 .course-video {
   color: var(--coral);
-  border-color: rgba(255, 130, 155, 0.25);
-  background: rgba(255, 130, 155, 0.05);
+  border-color: rgba(255, 77, 112, 0.25);
+  background: rgba(255, 130, 155, 0.06);
 }
 .course-video:hover {
-  background: rgba(255, 130, 155, 0.1);
+  background: rgba(255, 130, 155, 0.11);
   border-color: var(--coral);
 }
 .next-step-card .course-access {

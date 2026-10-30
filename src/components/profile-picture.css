@@ -33,7 +33,7 @@
   width: 64px;
   height: 64px;
   font-size: 26px;
-  box-shadow: 0 0 0 1px #759bc13d;
+  box-shadow: 0 0 0 1px rgba(117, 155, 193, 0.13);
 }
 .picture-upload {
   min-width: 0;
@@ -57,7 +57,7 @@
 .picture-options legend {
   padding: 0;
   margin-bottom: 10px;
-  color: #a6a2bb;
+  color: var(--ink-soft);
   font-size: 12px;
 }
 .picture-options-grid {
@@ -73,9 +73,9 @@
   justify-content: flex-start;
   gap: 7px;
   padding: 12px 5px 9px;
-  border: 1px solid #759bc126;
+  border: 1px solid rgba(117, 155, 193, 0.25);
   border-radius: 9px;
-  background: #0a0919;
+  background: rgba(233, 232, 247, 0.72);
   cursor: pointer;
   transition:
     border-color 200ms ease-out,
@@ -86,10 +86,10 @@
 }
 .picture-option.selected {
   border-color: #aa83ff;
-  background: #5320ca26;
+  background: rgba(83, 32, 202, 0.16);
 }
 .picture-option:has(input:focus-visible) {
-  outline: 2px solid #b798ff;
+  outline: 2px solid #4614b8;
   outline-offset: 3px;
 }
 .picture-option > input {
@@ -109,17 +109,17 @@
   text-align: center;
   font-size: 10px;
   line-height: 1.35;
-  color: #ccc6df;
+  color: #4e3894;
   overflow-wrap: anywhere;
 }
 .picture-selected {
   position: absolute;
   top: 5px;
   right: 5px;
-  color: #d6c5ff;
+  color: var(--ink);
 }
 .settings-panel .picture-error {
-  color: #ffafb9;
+  color: #b81429;
   margin-top: 10px;
 }
 .settings-panel .picture-storage {

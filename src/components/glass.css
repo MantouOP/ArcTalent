@@ -1,0 +1,387 @@
+/* Glass layer for the workspace: frosted surfaces with white edges, large radii and
+   soft cool shadows. Light falls from the top left. Loaded after every other
+   workspace stylesheet, so it only restyles surfaces; layout stays in orion.css. */
+
+/* Shell */
+.sidebar {
+  background: rgba(255, 255, 255, 0.5);
+  border-right: 1px solid var(--glass-edge);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: 10px 0 34px -22px rgba(64, 92, 122, 0.4);
+}
+.sidebar nav button,
+.sidebar-note button {
+  color: var(--muted);
+  border-radius: 14px;
+}
+.sidebar nav button:hover,
+.sidebar-note button:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: var(--glass-shadow);
+}
+.sidebar nav button.active {
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--glass-shadow);
+}
+.active-dot {
+  background: var(--primary-gradient);
+  box-shadow: 0 0 10px rgba(84, 104, 255, 0.45);
+}
+.topbar {
+  background: rgba(255, 255, 255, 0.42);
+  border-bottom: 1px solid var(--glass-edge);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+
+/* Glass tooltips: the rail's visually hidden labels float out on hover or keyboard focus. */
+@media (hover: hover) and (min-width: 901px) {
+  .sidebar nav button:hover > span:not(.active-dot),
+  .sidebar nav button:focus-visible > span:not(.active-dot) {
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    left: calc(100% + 14px);
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 7px 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid var(--glass-edge);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    box-shadow: var(--glass-shadow-hover);
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.3;
+    pointer-events: none;
+    z-index: 40;
+  }
+}
+
+/* Frosted surfaces */
+.stat,
+.panel,
+.career-card,
+.next-step-card,
+.course-card,
+.preference-banner,
+.update-banner {
+  background: var(--surface);
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius-lg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+  transition:
+    border-color 220ms ease-out,
+    box-shadow 220ms ease-out,
+    transform 220ms ease-out;
+}
+.stat:hover,
+.panel:hover,
+.career-card:hover,
+.next-step-card:hover,
+.course-card:hover,
+.preference-banner:hover,
+.update-banner:hover {
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow: var(--glass-shadow-hover);
+}
+/* Small cards float up a little; large panels stay put. */
+.stat:hover,
+.career-card:hover,
+.next-step-card:hover,
+.course-card:hover {
+  transform: translateY(-3px);
+}
+.stat {
+  border-radius: var(--radius-md);
+}
+.career-card.is-selected {
+  border-color: rgba(107, 85, 214, 0.45);
+  box-shadow:
+    var(--glass-shadow-hover),
+    0 0 0 3px rgba(107, 85, 214, 0.1);
+}
+
+/* Floating papers: each career option is a glass folder with a sheet peeking out,
+   so the cards read as layered rather than flat. */
+.career-cards {
+  padding-top: 18px;
+}
+.career-card {
+  position: relative;
+  overflow: visible;
+}
+.career-card::before,
+.career-card::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  height: 20px;
+  border-radius: 12px 12px 0 0;
+  border: 1px solid var(--glass-edge);
+  border-bottom: 0;
+  pointer-events: none;
+}
+.career-card::before {
+  right: 34px;
+  width: 42%;
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.9);
+}
+.career-card::after {
+  right: 20px;
+  width: 30%;
+  height: 13px;
+  background:
+    linear-gradient(90deg, var(--sheet-a), var(--sheet-b)) 12px 6px / 38% 3px
+      no-repeat,
+    linear-gradient(90deg, var(--sheet-a), var(--sheet-b)) 12px 10px / 22% 3px
+      no-repeat,
+    rgba(255, 255, 255, 0.88);
+}
+.career-card:nth-child(3n + 1) {
+  --sheet-a: #8b7bff;
+  --sheet-b: #5aa9ff;
+}
+.career-card:nth-child(3n + 2) {
+  --sheet-a: #36c3c9;
+  --sheet-b: #5aa9ff;
+}
+.career-card:nth-child(3n) {
+  --sheet-a: #ff5f7e;
+  --sheet-b: #ffa26b;
+}
+
+/* Typography: light geometric headings, thin large numbers. */
+h1 {
+  font-weight: 600;
+  letter-spacing: -0.8px;
+}
+h2 {
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+h3 {
+  font-weight: 500;
+}
+.stat > strong,
+.match-score > strong,
+.score-detail > strong {
+  font-family: var(--heading-font);
+  font-weight: 400;
+  letter-spacing: -0.5px;
+}
+
+/* Buttons */
+.primary {
+  color: #fff;
+  background: var(--primary-gradient);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 14px;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.35),
+    0 10px 22px -10px rgba(84, 104, 255, 0.65);
+}
+.primary:hover {
+  background: linear-gradient(135deg, #4a5ef5 0%, #6f43d6 100%);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.4),
+    0 14px 28px -10px rgba(84, 104, 255, 0.75);
+}
+.secondary {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--glass-edge);
+  border-radius: 14px;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+}
+.secondary:hover {
+  background: rgba(255, 255, 255, 0.86);
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow: var(--glass-shadow-hover);
+}
+.text-button {
+  color: var(--accent);
+}
+.icon-button {
+  border-radius: 12px;
+}
+.icon-button:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Pills: scenario switch, evidence strip, tags and search */
+.segmented {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--glass-edge);
+  border-radius: 999px;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: inset 1px 1px 3px rgba(64, 92, 122, 0.1);
+}
+.segmented button {
+  border-radius: 999px;
+  color: var(--muted);
+}
+.segmented .selected {
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: var(--glass-shadow);
+}
+.evidence-strip,
+.evidence-strip.simulated {
+  color: var(--ink-soft);
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid var(--glass-edge);
+  border-radius: 999px;
+  padding: 9px 18px;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+.evidence-strip button {
+  color: var(--accent);
+}
+.tag {
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-weight: 500;
+}
+.tag.green,
+.positive {
+  background: rgba(16, 155, 116, 0.1);
+  color: #0c7356;
+}
+.tag.blue {
+  background: rgba(22, 137, 193, 0.1);
+  color: #126a96;
+}
+.tag.amber {
+  background: rgba(214, 138, 40, 0.13);
+  color: #8a520e;
+}
+.search-box {
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--glass-edge);
+  border-radius: 999px;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Form fields */
+.app-shell
+  input:is([type='text'], [type='number'], [type='search'], :not([type])),
+.app-shell select,
+.app-shell textarea,
+dialog input:is([type='text'], [type='number'], [type='search'], :not([type])),
+dialog select,
+dialog textarea {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(42, 59, 76, 0.13);
+  border-radius: 12px;
+  box-shadow: inset 1px 1px 2px rgba(64, 92, 122, 0.07);
+}
+.app-shell .search-box input {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.app-shell :is(input, select, textarea):focus,
+dialog :is(input, select, textarea):focus {
+  border-color: rgba(107, 85, 214, 0.55);
+}
+
+/* Floating layers: dialogs and toasts */
+dialog {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid var(--glass-edge);
+  border-radius: 26px;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.9),
+    18px 34px 80px -30px rgba(64, 92, 122, 0.5);
+}
+dialog::backdrop {
+  background: rgba(214, 224, 233, 0.45);
+  backdrop-filter: blur(10px);
+}
+dialog > header {
+  background: transparent;
+  border-bottom: 1px solid var(--line);
+}
+.toast {
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid var(--glass-edge);
+  border-radius: 18px;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow-hover);
+}
+
+/* Cards inside panels: a lighter glass layer with a smaller radius. */
+.sdg-focus-card,
+.momentum-col,
+.replan-box,
+.booster-item,
+.learner-badge-card,
+.malaysia-hrd-card,
+.sdg-aggregate-card,
+.fairness-stat {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius-md);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.9),
+    6px 10px 24px -14px rgba(64, 92, 122, 0.28);
+}
+.sdg-focus-card:hover {
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow: var(--glass-shadow-hover);
+  transform: translateY(-2px);
+}
+.sdg-focus-card.is-active {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(107, 85, 214, 0.5);
+  box-shadow:
+    var(--glass-shadow-hover),
+    0 0 0 3px rgba(107, 85, 214, 0.1);
+}
+.learner-badge-card.is-earned,
+.fairness-stat {
+  background: rgba(225, 246, 240, 0.62);
+  border-color: rgba(16, 155, 116, 0.28);
+}
+.fairness-stat strong {
+  font-family: var(--heading-font);
+  font-weight: 400;
+  color: #0c7356;
+}
+.momentum-row,
+.sdg-metrics-row,
+.score-booster-section,
+.fairness-table th,
+.fairness-table td {
+  border-color: var(--line);
+}
+.badge-progress-bar {
+  background: rgba(42, 59, 76, 0.08);
+}
+.badge-progress-bar > i {
+  background: linear-gradient(90deg, #8b7bff, #5aa9ff);
+}

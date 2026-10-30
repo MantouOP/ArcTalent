@@ -29,15 +29,16 @@ export function LearningMap({
         aria-hidden="true"
       >
         <defs>
-          <radialGradient id={`${orbId}-light`} cx="62%" cy="32%" r="70%">
-            <stop offset="0" stopColor="#3228c9" stopOpacity=".7" />
-            <stop offset=".65" stopColor="#1a1263" stopOpacity=".5" />
-            <stop offset="1" stopColor="#08091c" stopOpacity=".1" />
+          {/* A glass sphere lit from the top left. */}
+          <radialGradient id={`${orbId}-light`} cx="36%" cy="30%" r="72%">
+            <stop offset="0" stopColor="#ffffff" stopOpacity=".9" />
+            <stop offset=".55" stopColor="#cbc4ff" stopOpacity=".45" />
+            <stop offset="1" stopColor="#a6d3f5" stopOpacity=".28" />
           </radialGradient>
           <linearGradient id={`${orbId}-edge`} x1="0" y1="0" x2="1" y2="1">
-            <stop stopColor="#d552ff" />
-            <stop offset=".5" stopColor="#4c42ed" />
-            <stop offset="1" stopColor="#00f2fe" />
+            <stop stopColor="#ffffff" />
+            <stop offset=".5" stopColor="#9d8cff" />
+            <stop offset="1" stopColor="#5fc6f0" />
           </linearGradient>
           <pattern
             id={`${orbId}-dots`}
@@ -45,8 +46,8 @@ export function LearningMap({
             height="10.4"
             patternUnits="userSpaceOnUse"
           >
-            <circle cx="3" cy="3" r="1.8" fill="#7565ea" opacity=".4" />
-            <circle cx="9" cy="8.2" r="1.8" fill="#7565ea" opacity=".4" />
+            <circle cx="3" cy="3" r="1.8" fill="#8a80e6" opacity=".22" />
+            <circle cx="9" cy="8.2" r="1.8" fill="#8a80e6" opacity=".22" />
           </pattern>
           <clipPath id={`${orbId}-clip`}>
             <circle cx="355" cy="210" r="180" />
@@ -79,8 +80,8 @@ export function LearningMap({
           transform="rotate(-26 355 210)"
           className="orb-orbit"
         />
-        <circle cx="136" cy="306" r="4" fill="#00f2fe" />
-        <circle cx="571" cy="111" r="4" fill="#c978ff" />
+        <circle cx="136" cy="306" r="4" fill="#2bb3d6" />
+        <circle cx="571" cy="111" r="4" fill="#a77bf3" />
       </svg>
       <div className="map-legend">
         <span>

@@ -14,8 +14,8 @@
   border-radius: 10px;
 }
 .cost-option.plan {
-  border-color: #a590ff66;
-  background: #5320ca1a;
+  border-color: rgba(110, 77, 255, 0.4);
+  background: rgba(83, 32, 202, 0.11);
 }
 .cost-option > span {
   color: var(--muted);

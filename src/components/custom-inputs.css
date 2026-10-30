@@ -45,7 +45,7 @@
   bottom: -1px;
   padding: 16px 0 4px;
   margin-top: 16px;
-  background: var(--panel, #100e22);
+  background: var(--panel, rgba(235, 233, 246, 0.72));
 }
 .member-form .skill-edit-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -78,7 +78,7 @@
   margin: 0;
 }
 .upload-zone:focus-visible {
-  outline: 2px solid var(--cyan, #00f2fe);
+  outline: 2px solid var(--cyan, #14b0b8);
   outline-offset: 3px;
 }
 @media (max-width: 760px) {

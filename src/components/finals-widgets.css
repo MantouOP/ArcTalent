@@ -23,7 +23,7 @@
   text-align: left;
   padding: 0.85rem 1rem;
   border-radius: 14px;
-  border: 1px solid rgba(116, 130, 168, 0.24);
+  border: 1px solid rgba(116, 130, 168, 0.25);
   background: rgba(255, 255, 255, 0.75);
   cursor: pointer;
   transition:
@@ -33,14 +33,14 @@
 }
 
 .sdg-focus-card:hover {
-  border-color: rgba(83, 32, 202, 0.45);
+  border-color: rgba(107, 57, 224, 0.45);
   transform: translateY(-1px);
 }
 
 .sdg-focus-card.is-active {
   border-color: #5320ca;
-  background: rgba(83, 32, 202, 0.06);
-  box-shadow: 0 4px 14px rgba(83, 32, 202, 0.12);
+  background: rgba(83, 32, 202, 0.07);
+  box-shadow: 0 4px 14px rgba(83, 32, 202, 0.07);
 }
 
 .sdg-focus-badge {
@@ -48,8 +48,8 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #5320ca;
-  background: rgba(83, 32, 202, 0.1);
+  color: #481cb0;
+  background: rgba(83, 32, 202, 0.11);
   padding: 0.18rem 0.5rem;
   border-radius: 999px;
 }
@@ -71,7 +71,7 @@
 .momentum-col {
   padding: 0.9rem 1rem;
   border-radius: 14px;
-  border: 1px solid rgba(116, 130, 168, 0.2);
+  border: 1px solid rgba(116, 130, 168, 0.25);
   background: rgba(255, 255, 255, 0.65);
 }
 
@@ -89,7 +89,7 @@
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0.45rem 0;
-  border-top: 1px solid rgba(116, 130, 168, 0.14);
+  border-top: 1px solid rgba(116, 130, 168, 0.25);
 }
 
 .momentum-row > div {
@@ -107,14 +107,14 @@
 .replan-box {
   padding: 0.85rem 1rem;
   border-radius: 12px;
-  border: 1px solid rgba(83, 32, 202, 0.2);
-  background: rgba(83, 32, 202, 0.04);
+  border: 1px solid rgba(107, 57, 224, 0.25);
+  background: rgba(83, 32, 202, 0.06);
 }
 
 .score-booster-section {
   margin-top: 1.15rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(116, 130, 168, 0.2);
+  border-top: 1px solid rgba(116, 130, 168, 0.25);
 }
 
 .score-booster-section h3 {
@@ -133,7 +133,7 @@
 .booster-item {
   padding: 0.75rem 0.9rem;
   border-radius: 12px;
-  border: 1px solid rgba(116, 130, 168, 0.22);
+  border: 1px solid rgba(116, 130, 168, 0.25);
   background: rgba(255, 255, 255, 0.7);
 }
 
@@ -156,7 +156,7 @@
 .badge-progress-bar {
   height: 8px;
   border-radius: 999px;
-  background: rgba(116, 130, 168, 0.18);
+  background: rgba(116, 130, 168, 0.2);
   overflow: hidden;
   margin: 0.75rem 0 1rem;
 }
@@ -185,13 +185,13 @@
   gap: 0.45rem;
   padding: 0.95rem 1rem;
   border-radius: 14px;
-  border: 1px solid rgba(116, 130, 168, 0.22);
+  border: 1px solid rgba(116, 130, 168, 0.25);
   background: rgba(255, 255, 255, 0.75);
 }
 
 .learner-badge-card.is-earned {
-  border-color: rgba(33, 141, 124, 0.45);
-  background: rgba(33, 141, 124, 0.06);
+  border-color: rgba(69, 211, 189, 0.45);
+  background: rgba(33, 141, 124, 0.07);
 }
 
 .badge-card-top,
@@ -215,7 +215,7 @@
   gap: 0.75rem;
   margin-top: auto;
   padding-top: 0.55rem;
-  border-top: 1px solid rgba(116, 130, 168, 0.16);
+  border-top: 1px solid rgba(116, 130, 168, 0.25);
 }
 
 .sdg-metrics-row > div {
@@ -235,13 +235,13 @@
   flex-direction: column;
   padding: 0.85rem 1rem;
   border-radius: 12px;
-  border: 1px solid rgba(33, 141, 124, 0.25);
-  background: rgba(33, 141, 124, 0.05);
+  border: 1px solid rgba(69, 211, 189, 0.25);
+  background: rgba(33, 141, 124, 0.06);
 }
 
 .fairness-stat strong {
   font-size: 1.45rem;
-  color: #166a5c;
+  color: #23a993;
 }
 
 .fairness-table-wrap {
@@ -259,7 +259,7 @@
 .fairness-table td {
   text-align: left;
   padding: 0.55rem 0.65rem;
-  border-bottom: 1px solid rgba(116, 130, 168, 0.18);
+  border-bottom: 1px solid rgba(116, 130, 168, 0.25);
 }
 
 .match-score > span small.sdg-bonus {

@@ -12,7 +12,7 @@
   padding: 18px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: #ffffff05;
+  background: rgba(255, 255, 255, 0.44);
 }
 .impact-card header {
   display: flex;
@@ -43,7 +43,7 @@
   width: 100%;
   height: 6px;
   border-radius: 3px;
-  background: #ffffff12;
+  background: rgba(255, 255, 255, 0.54);
 }
 .impact-meter-fill {
   position: absolute;
@@ -73,8 +73,8 @@
   border-radius: 10px;
 }
 .impact-summary-item.active {
-  border-color: #a590ff66;
-  background: #5320ca1a;
+  border-color: rgba(110, 77, 255, 0.4);
+  background: rgba(83, 32, 202, 0.11);
 }
 .impact-summary-item > span {
   color: var(--muted);
@@ -118,13 +118,13 @@
   font-weight: 400;
 }
 .impact-cell.met {
-  color: #5ee9a4;
+  color: #19b367;
 }
 .impact-cell.early {
-  color: #72ddea;
+  color: #1aa1b2;
 }
 .impact-cell.below {
-  color: #e9b88e;
+  color: #ab6121;
 }
 .impact-cell small {
   display: block;

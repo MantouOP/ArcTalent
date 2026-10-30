@@ -82,6 +82,8 @@ import {
   MalaysiaHrdDirectoryPanel,
   SdgChoiceBar,
 } from './finals-widgets';
+// Last, so the glass surfaces restyle every component stylesheet above.
+import './glass.css';
 type View = 'explore' | 'pathway' | 'team' | 'impact' | 'evidence' | 'settings';
 const navigation = [
   { id: 'explore' as const, label: 'Career explorer', icon: Compass },
