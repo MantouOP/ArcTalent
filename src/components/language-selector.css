@@ -1,0 +1,80 @@
+/* One glass surface around the native language control, shared by both headers. */
+.language-selector {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: 174px;
+  border: 1px solid rgba(255, 255, 255, 0.88);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.56);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 3px 10px rgba(64, 92, 122, 0.05);
+  transition:
+    background-color 180ms ease-out,
+    border-color 180ms ease-out,
+    box-shadow 180ms ease-out;
+}
+.language-selector:hover {
+  background: rgba(255, 255, 255, 0.82);
+  border-color: rgba(107, 85, 214, 0.22);
+}
+.language-selector > svg {
+  position: absolute;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+.language-selector .language-icon {
+  left: 13px;
+  color: var(--accent);
+  stroke-width: 1.6;
+}
+.language-selector .language-chevron {
+  right: 13px;
+  color: var(--muted);
+  stroke-width: 1.8;
+}
+.language-selector select,
+.app-shell .language-selector select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  margin: 0;
+  padding: 9px 34px 9px 38px;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+}
+.language-selector:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  background: rgba(255, 255, 255, 0.88);
+}
+.language-selector select:focus {
+  outline: none;
+  box-shadow: none;
+}
+.language-selector select option {
+  color: var(--ink);
+  background: #f5f8fb;
+}
+@media (max-width: 600px) {
+  .language-selector {
+    width: 170px;
+  }
+  .language-selector select,
+  .app-shell .language-selector select {
+    min-height: 44px;
+    font-size: 14px;
+  }
+}

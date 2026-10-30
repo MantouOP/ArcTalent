@@ -8,7 +8,8 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { Languages } from 'lucide-react';
+import { ChevronDown, Globe2 } from 'lucide-react';
+import './language-selector.css';
 import {
   languageOptions,
   languageStorageKey,
@@ -79,7 +80,7 @@ export function LanguageSelector() {
   const { locale, setLocale, t } = useI18n();
   return (
     <label className="language-selector">
-      <Languages size={16} aria-hidden="true" />
+      <Globe2 size={17} className="language-icon" aria-hidden="true" />
       <span className="sr-only">{t('Language')}</span>
       <select
         aria-label="Language / Bahasa / 语言"
@@ -92,6 +93,7 @@ export function LanguageSelector() {
           </option>
         ))}
       </select>
+      <ChevronDown size={14} className="language-chevron" aria-hidden="true" />
     </label>
   );
 }

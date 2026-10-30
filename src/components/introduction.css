@@ -82,12 +82,6 @@
   gap: 8px;
   color: var(--ink);
 }
-.intro-header .language-selector {
-  gap: 7px;
-}
-.intro-header .language-selector select {
-  max-width: 145px;
-}
 .intro-hero {
   display: grid;
   grid-template-columns: 1fr 1.02fr;
@@ -1060,14 +1054,6 @@
   }
   .intro-header nav > .intro-nav-action {
     display: none;
-  }
-  .intro-header .language-selector svg {
-    display: none;
-  }
-  .intro-header .language-selector select {
-    max-width: 127px;
-    padding: 7px;
-    font-size: 13px;
   }
   .intro-hero {
     padding-block: 28px 38px;
