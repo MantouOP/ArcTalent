@@ -74,11 +74,7 @@ import {
   type WorkforceSettings,
 } from '@/lib/workforce-settings';
 import type { SettingsSection } from '@/lib/settings-sections';
-import {
-  applySdgPriority,
-  LOW_BANDWIDTH_STORAGE_KEY,
-  type SdgFocus,
-} from '@/lib/finals-enhancements';
+import { applySdgPriority, type SdgFocus } from '@/lib/finals-enhancements';
 import {
   AutoReplanBanner,
   FutureSkillsRadarPanel,
@@ -163,13 +159,6 @@ export function ArcTalentApp({
     } catch {
       /* Browser storage is optional. */
     }
-    try {
-      if (localStorage.getItem(LOW_BANDWIDTH_STORAGE_KEY) === 'true') {
-        document.documentElement.dataset.lowBandwidth = 'true';
-      }
-    } catch {
-      /* Storage is optional. */
-    }
     setReady(true);
   }, []);
   useEffect(() => {
@@ -224,10 +213,6 @@ export function ArcTalentApp({
   const plan = useMemo(
     () => buildPlan(profile, active.role, shared, funding),
     [profile, active.role, shared, funding],
-  );
-  const impactPlan = useMemo(
-    () => buildPlan(profile, active.role, shared, 'all'),
-    [profile, active.role, shared],
   );
   const changes = previous
     ? diffSnapshots(profile, scenario, previous, snapshot, candidates).filter(
@@ -300,6 +285,7 @@ export function ArcTalentApp({
     setFollowTop(true);
     setWorkforce(restoreWorkforceSettings());
     setFunding('all');
+    setSdgFocus('all');
     setCustomGoal(null);
     if (keepView) return;
     setView('explore');
@@ -794,10 +780,15 @@ export function ArcTalentApp({
                     <div>
                       <h2>{t('Where your skills could take you')}</h2>
                       <p className="muted">
-                        {t(
-                          'Ranked for your profile and the {0} adoption scenario.',
-                          { 0: t(scenario) },
-                        )}{' '}
+                        {sdgFocus === 'all'
+                          ? t(
+                              'Ranked for your profile and the {0} adoption scenario.',
+                              { 0: t(scenario) },
+                            )
+                          : t(
+                              'Ranked for your profile, the {0} adoption scenario and your SDG priority.',
+                              { 0: t(scenario) },
+                            )}{' '}
                       </p>
                     </div>
                     <button
@@ -876,6 +867,13 @@ export function ArcTalentApp({
                                 0: Math.round(m.coverage),
                               })}
                             </small>
+                            {m.sdgBonus > 0 && (
+                              <small className="sdg-bonus">
+                                {t('+{0} SDG priority points', {
+                                  0: m.sdgBonus,
+                                })}
+                              </small>
+                            )}
                           </span>
                           <svg viewBox="0 0 40 40" aria-hidden="true">
                             <circle cx="20" cy="20" r="16" />
@@ -1359,7 +1357,7 @@ export function ArcTalentApp({
               snapshot={snapshot}
               active={active}
               shared={shared}
-              plan={impactPlan}
+              plan={plan}
               workforce={workforce}
             />
           )}
@@ -1461,16 +1459,6 @@ export function ArcTalentApp({
             profile={profile}
             scenario={scenario}
             snapshot={snapshot}
-            onBoostSkill={(skillId, targetLevel) => {
-              const nextProfile: Profile = {
-                ...profile,
-                skills: { ...profile.skills, [skillId]: targetLevel },
-              };
-              saveProfile(nextProfile);
-              setToast(
-                'Simulated skill level applied. Match scores and pathways updated.',
-              );
-            }}
           />
         </Modal>
       )}

@@ -102,13 +102,11 @@ export function MatchDetails({
   profile,
   scenario,
   snapshot,
-  onBoostSkill,
 }: {
   match: Match;
   profile?: Profile;
   scenario?: Scenario;
   snapshot?: Snapshot;
-  onBoostSkill?: (skillId: SkillId, targetLevel: number) => void;
 }) {
   const { t } = useI18n();
   return (
@@ -165,7 +163,6 @@ export function MatchDetails({
           role={match.role}
           scenario={scenario}
           snapshot={snapshot}
-          onBoostSkill={onBoostSkill}
         />
       )}
       <p className="notice">{t(match.role.entry)}</p>

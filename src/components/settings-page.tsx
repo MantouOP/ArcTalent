@@ -17,7 +17,6 @@ import {
   type SettingsSection,
 } from '@/lib/settings-sections';
 import type { Profile } from '@/lib/types';
-import { LOW_BANDWIDTH_STORAGE_KEY } from '@/lib/finals-enhancements';
 import { useI18n } from './language-provider';
 import { useDisplayPreferences } from './display-preferences-provider';
 import { ProfilePanel } from './profile-panel';
@@ -135,25 +134,6 @@ function DisplaySettings() {
   const { preferences, updatePreferences, resetPreferences, storage } =
     useDisplayPreferences();
   const [message, setMessage] = useState('');
-  const [lowBandwidth, setLowBandwidth] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    try {
-      return localStorage.getItem(LOW_BANDWIDTH_STORAGE_KEY) === 'true';
-    } catch {
-      return false;
-    }
-  });
-  function toggleLowBandwidth(enabled: boolean) {
-    setLowBandwidth(enabled);
-    if (typeof document !== 'undefined') {
-      document.documentElement.dataset.lowBandwidth = String(enabled);
-    }
-    try {
-      localStorage.setItem(LOW_BANDWIDTH_STORAGE_KEY, String(enabled));
-    } catch {
-      /* Storage is optional. */
-    }
-  }
   const id = useId();
   return (
     <section className="panel settings-panel" aria-labelledby={`${id}-heading`}>
@@ -219,21 +199,23 @@ function DisplaySettings() {
       </div>
       <div className="settings-row">
         <div>
-          <label htmlFor={`${id}-bandwidth`}>{t('Low-bandwidth mode')}</label>
-          <p id={`${id}-bandwidth-help`}>
+          <label htmlFor={`${id}-effects`}>{t('Reduce visual effects')}</label>
+          <p id={`${id}-effects-help`}>
             {t(
-              'Disable decorative shadows, blurs and transitions for mobile or low-data connections.',
+              'Turn off shadows, blur and animation. This can help on older or slower phones; it does not reduce data use.',
             )}
           </p>
         </div>
         <input
-          id={`${id}-bandwidth`}
+          id={`${id}-effects`}
           className="settings-switch"
           type="checkbox"
           role="switch"
-          checked={lowBandwidth}
-          aria-describedby={`${id}-bandwidth-help`}
-          onChange={(event) => toggleLowBandwidth(event.target.checked)}
+          checked={preferences.reduceEffects}
+          aria-describedby={`${id}-effects-help`}
+          onChange={(event) =>
+            updatePreferences({ reduceEffects: event.target.checked })
+          }
         />
       </div>
       <div className="settings-save-state">

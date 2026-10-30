@@ -8,6 +8,18 @@ import type {
   Snapshot,
 } from './types';
 
+const skillRationale: Record<string, string> = {
+  '4.3':
+    'Helps colleagues access technical and vocational learning at work. This is a contextual mapping, not a measured SDG outcome.',
+  '4.4':
+    'Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome.',
+  '8.2':
+    'Can support productivity improvements at work. This is a contextual mapping, not a measured SDG outcome.',
+  '9.4':
+    'Can support more resource-efficient operations. This is a contextual mapping, not a measured SDG outcome.',
+  '10.3':
+    'Supports fair, accountable use of AI at work. This is a contextual mapping, not a measured SDG outcome.',
+};
 const skill = (
   id: SkillId,
   label: string,
@@ -20,8 +32,7 @@ const skill = (
   aliases,
   prerequisites,
   target,
-  rationale:
-    'Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome.',
+  rationale: skillRationale[target],
 });
 export const skills: Skill[] = [
   skill('excel', 'Spreadsheets', ['excel', 'spreadsheet', 'sheets']),

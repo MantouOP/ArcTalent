@@ -1,6 +1,8 @@
 export type DisplayPreferences = {
   textSize: 'standard' | 'larger';
   reduceMotion: boolean;
+  /** Turns off shadows, blur and animation for slower devices. */
+  reduceEffects: boolean;
 };
 export const displayPreferencesStorageKey = 'arctalent-display-v1';
 export function restoreDisplayPreferences(value?: unknown): DisplayPreferences {
@@ -11,6 +13,7 @@ export function restoreDisplayPreferences(value?: unknown): DisplayPreferences {
   return {
     textSize: saved.textSize === 'larger' ? 'larger' : 'standard',
     reduceMotion: saved.reduceMotion === true,
+    reduceEffects: saved.reduceEffects === true,
   };
 }
 export function shouldReduceMotion(

@@ -13,7 +13,6 @@ import {
   Zap,
 } from 'lucide-react';
 import { roleLabel } from '@/lib/role-label';
-import { skillById } from '@/lib/catalogue';
 import {
   aggregateSdgContributions,
   buildFutureSkillsRadar,
@@ -24,10 +23,10 @@ import {
   runFairnessAudit,
   SDG_FOCUS_OPTIONS,
   type SdgFocus,
+  type SkillMomentumItem,
 } from '@/lib/finals-enhancements';
 import type {
   LearningPlan,
-  Match,
   Profile,
   Role,
   Scenario,
@@ -60,9 +59,7 @@ export function SdgChoiceBar({
     >
       <div className="panel-heading">
         <div>
-          <span className="eyebrow">
-            {t('MEANINGFUL SDG ALIGNMENT · RUBRIC SDG TEST')}
-          </span>
+          <span className="eyebrow">{t('SDG PRIORITY LENS')}</span>
           <h2>{t('Choose an SDG priority lens')}</h2>
           <p className="muted small">
             {t(
@@ -108,17 +105,13 @@ export function SdgChoiceBar({
                     0: roleLabel(defaultTopRole, t),
                     1: roleLabel(newTopRole, t),
                   })
-                : t(
-                    'SDG {0} priority active: {1} remains #1 with an SDG alignment boost.',
-                    {
-                      0: focus,
-                      1: roleLabel(newTopRole, t),
-                    },
-                  )}
+                : t('With this lens, {0} is still your #1 match.', {
+                    0: roleLabel(newTopRole, t),
+                  })}
             </strong>
             <p className="muted small">
               {t(
-                'Removing or changing this SDG lens directly alters role suitability scores and ranking order.',
+                'Lens points: +10 when a role’s own SDG target matches, plus up to +10 for the share of its required skills mapped to that target. Suitability scores stay the same; only the order changes.',
               )}
             </p>
           </div>
@@ -138,10 +131,28 @@ export function FutureSkillsRadarPanel({
   onFlipTrend: () => void;
 }) {
   const { t } = useI18n();
-  const items = buildFutureSkillsRadar(snapshot, previous ?? undefined);
-  const rising = items.filter((i) => i.trend === 'rising').slice(0, 4);
-  const declining = items.filter((i) => i.trend === 'declining').slice(0, 4);
-  const topSteady = items.filter((i) => i.trend === 'steady').slice(0, 4);
+  const comparing = previous !== null && previous.id !== snapshot.id;
+  const items = buildFutureSkillsRadar(snapshot, previous);
+  const byDemand = [...items].sort((a, b) => b.currentDemand - a.currentDemand);
+  const rising = comparing
+    ? items.filter((i) => i.trend === 'rising').slice(0, 4)
+    : byDemand.slice(0, 4);
+  const cooling = comparing
+    ? items.filter((i) => i.trend === 'declining').slice(0, 4)
+    : byDemand.slice(4).slice(-4).reverse();
+  const row = (item: SkillMomentumItem, tone: 'green' | 'amber') => (
+    <div className="momentum-row" key={item.skillId}>
+      <div>
+        <strong>{t(item.label)}</strong>
+        <small>SDG {item.sdgTarget}</small>
+      </div>
+      <Tag tone={tone}>
+        {item.beforeDemand === null
+          ? `${item.currentDemand}%`
+          : `${item.beforeDemand}% → ${item.currentDemand}%`}
+      </Tag>
+    </div>
+  );
 
   return (
     <section
@@ -150,63 +161,58 @@ export function FutureSkillsRadarPanel({
     >
       <div className="panel-heading">
         <div>
-          <span className="eyebrow">{t('STAGE 2 · FUTURE SKILLS RADAR')}</span>
-          <h2>{t('Rising & declining skill signals')}</h2>
+          <span className="eyebrow">{t('FUTURE SKILLS RADAR')}</span>
+          <h2>
+            {comparing
+              ? t('Rising & declining skill signals')
+              : t('Skill demand in this snapshot')}
+          </h2>
           <p className="muted small">
             {t('Source: {0} · Snapshot date: {1}', {
               0: t(snapshot.label),
               1: snapshot.asOf.slice(0, 10),
-            })}
+            })}{' '}
+            {comparing
+              ? t('Compared with {0} ({1}).', {
+                  0: t(previous.label),
+                  1: previous.asOf.slice(0, 10),
+                })
+              : t('Switch the demo snapshot to see which skills rise or cool.')}
           </p>
         </div>
         <button type="button" className="secondary" onClick={onFlipTrend}>
           <RefreshCw size={15} />
-          {t('Switch trend snapshot (Live test)')}
+          {t('Switch demo snapshot')}
         </button>
       </div>
       <div className="radar-momentum-grid">
         <div className="momentum-col rising">
           <h3>
             <TrendingUp size={16} />
-            {t('Rising demand skills')}
+            {comparing ? t('Rising demand') : t('Highest demand now')}
           </h3>
-          {(rising.length > 0 ? rising : topSteady).map((item) => (
-            <div className="momentum-row" key={item.skillId}>
-              <div>
-                <strong>{t(item.label)}</strong>
-                <small>SDG {item.sdgTarget}</small>
-              </div>
-              <Tag tone="green">
-                {item.deltaPercent >= 0
-                  ? `+${item.deltaPercent}%`
-                  : `${item.deltaPercent}%`}{' '}
-                ({item.currentDemand}%)
-              </Tag>
-            </div>
-          ))}
+          {rising.length > 0 ? (
+            rising.map((item) => row(item, 'green'))
+          ) : (
+            <p className="muted small">
+              {comparing
+                ? t('No skill rose by 8 points or more.')
+                : t('This snapshot has no skill demand values.')}
+            </p>
+          )}
         </div>
         <div className="momentum-col declining">
           <h3>
             <TrendingDown size={16} />
-            {t('Cooling or routine skills')}
+            {comparing ? t('Cooling demand') : t('Lowest demand now')}
           </h3>
-          {declining.length > 0 ? (
-            declining.map((item) => (
-              <div className="momentum-row" key={item.skillId}>
-                <div>
-                  <strong>{t(item.label)}</strong>
-                  <small>SDG {item.sdgTarget}</small>
-                </div>
-                <Tag tone="amber">
-                  {item.deltaPercent}% ({item.currentDemand}%)
-                </Tag>
-              </div>
-            ))
+          {cooling.length > 0 ? (
+            cooling.map((item) => row(item, 'amber'))
           ) : (
             <p className="muted small">
-              {t(
-                'Click "Switch trend snapshot (Live test)" to simulate a shift away from routine spreadsheet/SQL reporting toward stakeholder and sustainability skills.',
-              )}
+              {comparing
+                ? t('No skill fell by 8 points or more.')
+                : t('This snapshot has no skill demand values.')}
             </p>
           )}
         </div>
@@ -247,9 +253,7 @@ export function AutoReplanBanner({
     >
       <div className="panel-heading">
         <div>
-          <span className="eyebrow">
-            {t('AUTOMATIC RE-PLANNING · LIVE CHANGE TEST')}
-          </span>
+          <span className="eyebrow">{t('AUTOMATIC RE-PLANNING')}</span>
           <h2>
             {diff.topRoleChanged
               ? t('Trend update shifted #1 role: {0} → {1}', {
@@ -279,11 +283,11 @@ export function AutoReplanBanner({
       </div>
       <div className="replan-diff-grid">
         <div className="replan-box">
-          <strong>{t('Shared foundation preserved')}</strong>
+          <strong>{t('Courses kept')}</strong>
           <p className="muted small">
             {diff.keptCourses.length > 0
               ? diff.keptCourses.map((c) => c.title).join(' · ')
-              : t('Core transferable skills remain valid across snapshots.')}
+              : t('No course carried over from the earlier plan.')}
           </p>
         </div>
         <div className="replan-box">
@@ -312,13 +316,11 @@ export function ScoreBoosterPanel({
   role,
   scenario,
   snapshot,
-  onBoostSkill,
 }: {
   profile: Profile;
   role: Role;
   scenario: Scenario;
   snapshot: Snapshot;
-  onBoostSkill?: (skillId: SkillId, targetLevel: number) => void;
 }) {
   const { t } = useI18n();
   const boosters = calculateScoreBoosters(profile, role, scenario, snapshot);
@@ -367,29 +369,26 @@ export function ScoreBoosterPanel({
                 {Math.round(item.scoreAfter)})
               </Tag>
             </div>
-            {item.recommendedCourse && (
+            {item.recommendedCourse ? (
+              <>
+                <p className="muted small">
+                  {t('Shortest course for this skill: {0} ({1}h · {2})', {
+                    0: item.recommendedCourse.title,
+                    1: item.recommendedCourse.hours,
+                    2: item.recommendedCourse.provider,
+                  })}
+                </p>
+                <div className="booster-actions">
+                  <CourseLink course={item.recommendedCourse} />
+                </div>
+              </>
+            ) : (
               <p className="muted small">
-                {t('Fastest verified course: {0} ({1}h · {2})', {
-                  0: item.recommendedCourse.title,
-                  1: item.recommendedCourse.hours,
-                  2: item.recommendedCourse.provider,
-                })}
+                {t(
+                  'Level 3 needs advanced study or work experience beyond these courses.',
+                )}
               </p>
             )}
-            <div className="booster-actions">
-              {item.recommendedCourse && (
-                <CourseLink course={item.recommendedCourse} />
-              )}
-              {onBoostSkill && (
-                <button
-                  type="button"
-                  className="text-button"
-                  onClick={() => onBoostSkill(item.skillId, item.targetLevel)}
-                >
-                  {t('Simulate Level {0}', { 0: item.targetLevel })}
-                </button>
-              )}
-            </div>
           </div>
         ))}
       </div>
@@ -456,7 +455,9 @@ export function LearnerBadgesPanel({
             </div>
             <h3>{t(badge.title)}</h3>
             <p className="muted small">{t(badge.description)}</p>
-            <small className="badge-status-text">{t(badge.progressText)}</small>
+            <small className="badge-status-text">
+              {t(badge.progressText, badge.progressValues)}
+            </small>
           </article>
         ))}
       </div>
@@ -476,43 +477,49 @@ export function MalaysiaHrdDirectoryPanel({
   return (
     <section
       className="panel malaysia-hrd-panel"
-      aria-label={t('Malaysia HRD Corp & national reskilling directory')}
+      aria-label={t('Malaysian training portals')}
     >
       <div className="panel-heading">
         <div>
           <span className="eyebrow">
             {t('MALAYSIA PUBLIC & HRD CORP ECOSYSTEM')}
           </span>
-          <h2>{t('Local low-cost & HRD Corp reskilling channels')}</h2>
+          <h2>{t('Malaysian training portals for this role')}</h2>
           <p className="muted small">
             {funding === 'hrd'
               ? t(
-                  'Individual HRD Corp claimability depends on employer SBL-Khas registration. Below are official Malaysian national platforms mapped to this role’s skills.',
+                  'HRD Corp funding is claimed by registered employers, not by individual learners. Ask your employer before you enrol.',
                 )
               : t(
-                  'Complement your self-paced open courses with official Malaysian public and employer-levy training portals.',
+                  'Official Malaysian portals to search for courses on these skills. Check each course’s fee and funding before you enrol.',
                 )}
           </p>
         </div>
         <Compass size={20} />
       </div>
       <div className="malaysia-hrd-grid">
-        {options.map((item) => (
-          <article className="malaysia-hrd-card" key={item.id}>
-            <Tag tone="blue">{t(item.fundingType)}</Tag>
-            <h3>{item.title}</h3>
-            <p className="muted small">{item.agency}</p>
-            <p className="small">{t(item.summary)}</p>
-            <div className="chips">
-              {item.skills
-                .filter((s) => role.requirements[s])
-                .map((s) => (
-                  <SkillChip key={s} id={s} />
-                ))}
-            </div>
-            <External href={item.url}>{t('Open official portal')}</External>
-          </article>
-        ))}
+        {options.map((item) => {
+          const relevant = item.skills.filter((s) => role.requirements[s]);
+          return (
+            <article className="malaysia-hrd-card" key={item.id}>
+              <Tag tone="blue">{t(item.fundingType)}</Tag>
+              <h3>{item.title}</h3>
+              <p className="muted small">{item.agency}</p>
+              <p className="small">{t(item.summary)}</p>
+              {relevant.length > 0 && (
+                <>
+                  <p className="muted small">{t('Skills to search for')}</p>
+                  <div className="chips">
+                    {relevant.map((s) => (
+                      <SkillChip key={s} id={s} />
+                    ))}
+                  </div>
+                </>
+              )}
+              <External href={item.url}>{t('Open official portal')}</External>
+            </article>
+          );
+        })}
       </div>
     </section>
   );
@@ -573,13 +580,14 @@ export function AggregatedSdgAndFairnessPanel({
               [
                 ['person', '1. Individual learner'],
                 ['company', '2. SME company team'],
-                ['region', '3. Regional cohort (1,000 learners)'],
+                ['region', '3. Regional projection (1,000 learners)'],
               ] as const
             ).map(([id, label]) => (
               <button
                 type="button"
                 key={id}
                 className={scope === id ? 'primary' : 'secondary'}
+                aria-pressed={scope === id}
                 onClick={() => setScope(id)}
               >
                 {t(label)}
@@ -587,6 +595,14 @@ export function AggregatedSdgAndFairnessPanel({
             ))}
           </div>
         </div>
+        {scope === 'region' && (
+          <p className="notice small">
+            {t(
+              'Projection, not a measurement: the {0}-person SME team’s plans scaled to 1,000 learners.',
+              { 0: sdgAgg.teamSize },
+            )}
+          </p>
+        )}
         <div className="sdg-aggregate-grid">
           {activeSdgList.map((item) => (
             <article className="sdg-aggregate-card" key={item.target}>
@@ -613,50 +629,49 @@ export function AggregatedSdgAndFairnessPanel({
 
       <section
         className="panel fairness-audit-panel"
-        aria-label={t('Fairness and demographic bias check')}
+        aria-label={t('Fairness check')}
       >
         <div className="panel-heading">
           <div>
-            <span className="eyebrow">
-              {t('SDG 5 & SDG 10 · COUNTERFACTUAL FAIRNESS CHECK')}
-            </span>
-            <h2>{t('Algorithmic fairness & demographic bias verification')}</h2>
+            <span className="eyebrow">{t('FAIRNESS CHECK')}</span>
+            <h2>{t('Recommendations ignore personal identity')}</h2>
             <p className="muted small">
               {t(
-                'Verifies that recommendations depend strictly on skills, study time, budget and work interests—never on age, gender, ethnicity or background.',
+                'Matching reads only skills, interests, study time, budget and completed courses. There are no fields for age, gender, ethnicity or religion. This check re-runs matching with six different names and job titles to confirm the results stay the same.',
               )}
             </p>
           </div>
           <Tag tone={fairness.passed ? 'green' : 'amber'}>
             {fairness.passed
-              ? t('Verified: 0.0% demographic drift')
-              : t('Review required')}
+              ? t('Same results for all {0}', { 0: fairness.personasTested })
+              : t('Results changed: review')}
           </Tag>
         </div>
         <div className="fairness-summary-grid">
           <div className="fairness-stat">
             <strong>{fairness.personasTested}</strong>
-            <span>{t('counterfactual personas tested live')}</span>
+            <span>{t('name and job-title swaps')}</span>
           </div>
           <div className="fairness-stat">
-            <strong>{fairness.maxScoreVariance}%</strong>
-            <span>{t('score variance across age, gender & ethnicity')}</span>
+            <strong>{fairness.maxScoreChange}</strong>
+            <span>{t('largest score change (points)')}</span>
           </div>
           <div className="fairness-stat">
-            <strong>0</strong>
-            <span>{t('course pathway deviations')}</span>
+            <strong>{fairness.pathwayChanges}</strong>
+            <span>{t('learning pathways that changed')}</span>
           </div>
         </div>
         <div className="fairness-actions">
           <button
             type="button"
             className="secondary"
+            aria-expanded={showPersonas}
             onClick={() => setShowPersonas(!showPersonas)}
           >
             <ShieldCheck size={16} />
             {showPersonas
-              ? t('Hide counterfactual persona table')
-              : t('Inspect 6 counterfactual persona checks')}
+              ? t('Hide the checks')
+              : t('Show all {0} checks', { 0: fairness.personasTested })}
           </button>
         </div>
         {showPersonas && (
@@ -664,24 +679,28 @@ export function AggregatedSdgAndFairnessPanel({
             <table className="fairness-table">
               <thead>
                 <tr>
-                  <th>{t('Counterfactual persona')}</th>
-                  <th>{t('Demographic variation')}</th>
+                  <th>{t('Name used')}</th>
+                  <th>{t('Job title used')}</th>
                   <th>{t('Top matched role')}</th>
                   <th>{t('Suitability score')}</th>
-                  <th>{t('Score drift')}</th>
+                  <th>{t('Score change')}</th>
                 </tr>
               </thead>
               <tbody>
                 {fairness.results.map((r) => (
                   <tr key={r.id}>
                     <td>
-                      <strong>{r.personaLabel}</strong>
+                      <strong>{t(r.name)}</strong>
                     </td>
-                    <td>{t(r.demographicNote)}</td>
+                    <td>
+                      {r.currentRole ? t(r.currentRole) : t('No job title')}
+                    </td>
                     <td>{t(r.topRoleTitle)}</td>
                     <td>{Math.round(r.topScore)}/100</td>
                     <td>
-                      <Tag tone="green">{r.scoreVariance}%</Tag>
+                      <Tag tone={r.scoreChange === 0 ? 'green' : 'amber'}>
+                        {r.scoreChange}
+                      </Tag>
                     </td>
                   </tr>
                 ))}

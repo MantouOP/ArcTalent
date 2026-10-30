@@ -52,5 +52,7 @@
   "This image could not be read. Try a different JPG, PNG or WebP file.": "无法读取此图片。请尝试其他 JPG、PNG 或 WebP 文件。",
   "Profile picture saved in this browser.": "个人头像已保存在此浏览器中。",
   "Browser storage is unavailable. Your picture applies for this visit only.": "浏览器存储不可用，头像仅在本次访问中有效。",
-  "Preparing profile picture…": "正在加载个人头像…"
+  "Preparing profile picture…": "正在加载个人头像…",
+  "Reduce visual effects": "减少视觉效果",
+  "Turn off shadows, blur and animation. This can help on older or slower phones; it does not reduce data use.": "关闭阴影、模糊和动画效果。这在较旧或较慢的手机上可能有帮助，但不会减少数据用量。"
 }

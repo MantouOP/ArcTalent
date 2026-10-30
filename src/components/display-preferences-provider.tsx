@@ -52,6 +52,9 @@ export function DisplayPreferencesProvider({
     document.documentElement.dataset.reduceMotion = String(
       preferences.reduceMotion,
     );
+    document.documentElement.dataset.reduceEffects = String(
+      preferences.reduceEffects,
+    );
     if (!ready) return;
     try {
       localStorage.setItem(

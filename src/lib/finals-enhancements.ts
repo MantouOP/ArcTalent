@@ -1,12 +1,6 @@
-import {
-  baseline,
-  courses,
-  roles,
-  sdgUrl,
-  skillById,
-  skills,
-} from './catalogue';
+import { courses, roles, sdgUrl, skillById, skills } from './catalogue';
 import { buildPlan, matchRole, rankRoles, sharedFoundation } from './engine';
+import type { TranslationValues } from './i18n';
 import type {
   Course,
   LearningPlan,
@@ -20,13 +14,15 @@ import type {
 import type { WorkforceSettings } from './workforce-settings';
 import { buildWorkforcePlan } from './workforce-plan';
 
-export type SdgFocus = 'all' | '4.4' | '8.2' | '9.4' | '10.3';
+export type SdgFocus = 'all' | '4.4' | '8.2' | '9.4';
 
 export interface SdgFocusOption {
   id: SdgFocus;
   badge: string;
   title: string;
   description: string;
+  /** SDG targets whose roles and skills this lens moves up the ranking. */
+  targets: string[];
 }
 
 export const SDG_FOCUS_OPTIONS: SdgFocusOption[] = [
@@ -36,6 +32,7 @@ export const SDG_FOCUS_OPTIONS: SdgFocusOption[] = [
     title: 'Balanced match (default)',
     description:
       'Ranks roles purely by skill readiness, market signal, resilience and interest.',
+    targets: [],
   },
   {
     id: '4.4',
@@ -43,13 +40,15 @@ export const SDG_FOCUS_OPTIONS: SdgFocusOption[] = [
     title: 'Quality TVET & Digital Skills',
     description:
       'Prioritises roles and courses that build transferable technical, digital and learning-design capabilities.',
+    targets: ['4.3', '4.4'],
   },
   {
     id: '8.2',
-    badge: 'SDG 8.2 & 8.5',
+    badge: 'SDG 8.2',
     title: 'Decent Work & Productivity',
     description:
       'Prioritises high-productivity operational, analytical and project coordination transitions.',
+    targets: ['8.2'],
   },
   {
     id: '9.4',
@@ -57,78 +56,51 @@ export const SDG_FOCUS_OPTIONS: SdgFocusOption[] = [
     title: 'Green & Sustainable Industry',
     description:
       'Prioritises resource-efficient operations, sustainability literacy and low-carbon transition roles.',
-  },
-  {
-    id: '10.3',
-    badge: 'SDG 5 & 10.3',
-    title: 'Inclusive & Responsible AI',
-    description:
-      'Prioritises human-centred AI governance, fair workforce coaching and accessible career bridges.',
+    targets: ['9.4'],
   },
 ];
 
 const round = (n: number) => Math.round(n * 10) / 10;
 
 /**
- * Computes how strongly a role and its required skills align with a chosen SDG priority,
- * and re-ranks role matches so SDG links actively shape user choices (passing the Rubric SDG Test).
+ * SDG priority points for a role under a lens: 10 when the role's own SDG
+ * target is in focus, plus up to 10 for the share of its required skill
+ * levels mapped to a focused target.
  */
-export function applySdgPriority(
-  matches: Match[],
-  focus: SdgFocus,
-): {
-  matches: (Match & { sdgBonus: number; baseScore: number })[];
-  shifted: boolean;
-  defaultTopId: string;
-  newTopId: string;
-} {
-  const defaultTopId = matches[0]?.role.id ?? '';
-  const scored = matches.map((m) => {
-    if (focus === 'all') {
-      return { ...m, sdgBonus: 0, baseScore: m.score };
-    }
-    const reqIds = Object.keys(m.role.requirements) as SkillId[];
-    const matchingSkills = reqIds.filter((id) => {
-      const target = skillById[id]?.target ?? '4.4';
-      if (focus === '4.4') return target === '4.4' || target === '4.3';
-      return target === focus;
-    });
-    let bonus = 0;
-    if (focus === '4.4') {
-      if (m.role.target === '4.4' || m.role.target === '4.3') bonus += 8;
-      bonus += Math.min(4, matchingSkills.length);
-    } else if (focus === '8.2') {
-      if (m.role.target === '8.2') bonus += 7;
-      bonus += Math.min(5, matchingSkills.length * 2.5);
-    } else if (focus === '9.4') {
-      if (m.role.target === '9.4' || m.role.family === 'sustainability')
-        bonus += 12;
-      bonus += Math.min(6, matchingSkills.length * 3);
-    } else if (focus === '10.3') {
-      if (m.role.family === 'people' || m.role.target === '4.4') bonus += 8;
-      if (reqIds.includes('ethics') || reqIds.includes('teaching')) bonus += 5;
-      bonus += Math.min(4, matchingSkills.length * 2);
-    }
-    const sdgBonus = round(bonus);
-    return {
-      ...m,
-      baseScore: m.score,
-      sdgBonus,
-      score: round(Math.min(100, m.score + sdgBonus)),
-    };
-  });
-  const sorted =
-    focus === 'all'
-      ? scored
-      : [...scored].sort(
-          (a, b) => b.score - a.score || b.coverage - a.coverage,
-        );
-  const newTopId = sorted[0]?.role.id ?? '';
+export function sdgPriorityBonus(role: Role, targets: string[]) {
+  if (!targets.length) return 0;
+  const requirements = Object.entries(role.requirements) as [SkillId, number][];
+  const total = requirements.reduce((sum, [, level]) => sum + level, 0);
+  const aligned = requirements
+    .filter(([id]) => targets.includes(skillById[id].target))
+    .reduce((sum, [, level]) => sum + level, 0);
+  return round(
+    (targets.includes(role.target) ? 10 : 0) +
+      (total > 0 ? (10 * aligned) / total : 0),
+  );
+}
+
+/**
+ * Re-ranks role matches by suitability plus SDG priority points, so an SDG
+ * lens changes the order without changing any suitability score.
+ */
+export function applySdgPriority(matches: Match[], focus: SdgFocus) {
+  const targets =
+    SDG_FOCUS_OPTIONS.find((option) => option.id === focus)?.targets ?? [];
+  const ranked = matches.map((m) => ({
+    ...m,
+    sdgBonus: sdgPriorityBonus(m.role, targets),
+  }));
+  if (targets.length)
+    ranked.sort(
+      (a, b) =>
+        b.score + b.sdgBonus - (a.score + a.sdgBonus) ||
+        b.score - a.score ||
+        a.role.id.localeCompare(b.role.id),
+    );
   return {
-    matches: sorted,
-    shifted: focus !== 'all' && defaultTopId !== newTopId,
-    defaultTopId,
-    newTopId,
+    matches: ranked,
+    shifted: ranked[0]?.role.id !== matches[0]?.role.id,
   };
 }
 
@@ -138,7 +110,6 @@ export interface SdgTargetSummary {
   title: string;
   rationale: string;
   url: string;
-  skillCount: number;
   hours: number;
   learnersCount: number;
 }
@@ -174,11 +145,21 @@ const SDG_TARGET_METADATA: Record<
   },
 };
 
+/** Planned hours counted toward an SDG target: every course when the destination role maps to it, otherwise courses teaching a skill mapped to it. */
+function alignedHours(plan: LearningPlan, role: Role, target: string) {
+  return plan.steps
+    .filter(
+      (step) =>
+        role.target === target ||
+        step.course.skills.some((id) => skillById[id].target === target),
+    )
+    .reduce((sum, step) => sum + step.course.hours, 0);
+}
+
 /**
- * Aggregates SDG contributions across three levels:
- * 1. Individual learner (`person`)
- * 2. SME company cohort (`company`)
- * 3. Regional TVET / Career Centre projection (`region`, scaled to 1,000 learners)
+ * Contextual SDG contributions for one learner, the SME team, and a
+ * projection of that team to 1,000 learners. A learner counts toward a target
+ * only when their plan schedules hours for it.
  */
 export function aggregateSdgContributions(
   profile: Profile,
@@ -190,81 +171,41 @@ export function aggregateSdgContributions(
 ) {
   const wfPlan = buildWorkforcePlan(profile, scenario, snapshot, workforce);
   const targets = ['4.4', '8.2', '9.4', '4.3', '10.3'];
-
-  const person: SdgTargetSummary[] = targets.map((target) => {
-    const meta = SDG_TARGET_METADATA[target];
-    const matchingSteps = plan.steps.filter(
-      (s) =>
-        s.course.skills.some(
-          (id) => (skillById[id]?.target ?? '4.4') === target,
-        ) ||
-        (activeRole.target === target && !s.shared),
-    );
-    const matchingSkills = (
-      Object.keys(activeRole.requirements) as SkillId[]
-    ).filter(
-      (id) =>
-        (skillById[id]?.target ?? '4.4') === target ||
-        (target === activeRole.target && activeRole.requirements[id]),
-    );
-    return {
-      target,
-      goalNumber: target.split('.')[0],
-      title: meta.title,
-      rationale: meta.rationale,
-      url: sdgUrl(target),
-      skillCount: matchingSkills.length,
-      hours: round(matchingSteps.reduce((sum, s) => sum + s.course.hours, 0)),
-      learnersCount: matchingSkills.length > 0 ? 1 : 0,
-    };
+  const summary = (
+    target: string,
+    hours: number,
+    learnersCount: number,
+  ): SdgTargetSummary => ({
+    target,
+    goalNumber: target.split('.')[0],
+    title: SDG_TARGET_METADATA[target].title,
+    rationale: SDG_TARGET_METADATA[target].rationale,
+    url: sdgUrl(target),
+    hours: round(hours),
+    learnersCount,
   });
-
-  const company: SdgTargetSummary[] = targets.map((target) => {
-    const meta = SDG_TARGET_METADATA[target];
-    let hours = 0;
-    let learnersCount = 0;
-    const skillSet = new Set<SkillId>();
-    for (const row of wfPlan.allocations) {
-      const reqs = Object.keys(row.role.requirements) as SkillId[];
-      const roleMatches =
-        row.role.target === target ||
-        reqs.some((id) => (skillById[id]?.target ?? '4.4') === target);
-      if (roleMatches) learnersCount++;
-      reqs.forEach((id) => {
-        if ((skillById[id]?.target ?? '4.4') === target) skillSet.add(id);
-      });
-      for (const step of row.plan.steps) {
-        if (
-          step.course.skills.some(
-            (id) => (skillById[id]?.target ?? '4.4') === target,
-          ) ||
-          row.role.target === target
-        ) {
-          hours += step.course.hours;
-        }
-      }
-    }
-    return {
-      target,
-      goalNumber: target.split('.')[0],
-      title: meta.title,
-      rationale: meta.rationale,
-      url: sdgUrl(target),
-      skillCount: skillSet.size,
-      hours: round(hours),
-      learnersCount,
-    };
+  const person = targets.map((target) => {
+    const hours = alignedHours(plan, activeRole, target);
+    return summary(target, hours, hours > 0 ? 1 : 0);
   });
-
+  const company = targets.map((target) => {
+    const hours = wfPlan.allocations.map((row) =>
+      alignedHours(row.plan, row.role, target),
+    );
+    return summary(
+      target,
+      hours.reduce((sum, h) => sum + h, 0),
+      hours.filter((h) => h > 0).length,
+    );
+  });
   const teamSize = Math.max(1, wfPlan.team.length);
-  const regionalMultiplier = Math.round(1000 / teamSize);
-  const region: SdgTargetSummary[] = company.map((item) => ({
+  const regionScale = 1000 / teamSize;
+  const region = company.map((item) => ({
     ...item,
-    hours: Math.round(item.hours * regionalMultiplier),
-    learnersCount: Math.min(1000, item.learnersCount * regionalMultiplier),
+    hours: Math.round(item.hours * regionScale),
+    learnersCount: Math.round(item.learnersCount * regionScale),
   }));
-
-  return { person, company, region };
+  return { person, company, region, teamSize };
 }
 
 export interface ScoreBoosterItem {
@@ -302,10 +243,13 @@ export function calculateScoreBoosters(
         scenario,
         snapshot,
       );
+      // Catalogue courses lift a skill to Level 2 at most, so Level 3 gaps get none.
       const recommendedCourse =
-        courses
-          .filter((c) => c.skills.includes(gap.id))
-          .sort((a, b) => a.hours - b.hours)[0] ?? null;
+        gap.required <= 2
+          ? (courses
+              .filter((c) => c.skills.includes(gap.id))
+              .sort((a, b) => a.hours - b.hours)[0] ?? null)
+          : null;
       return {
         skillId: gap.id,
         skillLabel: skillById[gap.id].label,
@@ -324,46 +268,54 @@ export function calculateScoreBoosters(
 export interface SkillMomentumItem {
   skillId: SkillId;
   label: string;
-  beforeDemand: number;
+  /** Demand in the comparison snapshot, or null when there is none. */
+  beforeDemand: number | null;
   currentDemand: number;
-  deltaPercent: number;
+  deltaPercent: number | null;
   trend: 'rising' | 'declining' | 'steady';
   sdgTarget: string;
 }
 
 /**
- * Builds the Future Skills Radar data showing rising vs. declining skills
- * between a reference snapshot and the active snapshot.
+ * Builds the Future Skills Radar: skill demand in the active snapshot and,
+ * when an earlier snapshot is given, how it moved. Skills without a demand
+ * value are left out rather than given an assumed one.
  */
 export function buildFutureSkillsRadar(
   snapshot: Snapshot,
-  reference: Snapshot = baseline,
+  reference?: Snapshot | null,
 ): SkillMomentumItem[] {
+  const compare = reference && reference.id !== snapshot.id ? reference : null;
   return skills
-    .map((s) => {
-      const currentDemand = snapshot.market[s.id] ?? 0.5;
-      const beforeDemand =
-        snapshot.id === reference.id ? 0.5 : (reference.market[s.id] ?? 0.5);
-      const deltaPercent = Math.round((currentDemand - beforeDemand) * 100);
+    .flatMap((s) => {
+      const current = snapshot.market[s.id];
+      if (current === undefined) return [];
+      const before = compare?.market[s.id];
+      const deltaPercent =
+        before === undefined ? null : Math.round((current - before) * 100);
       const trend: SkillMomentumItem['trend'] =
-        deltaPercent >= 8
-          ? 'rising'
-          : deltaPercent <= -8
-            ? 'declining'
-            : 'steady';
-      return {
-        skillId: s.id,
-        label: s.label,
-        beforeDemand: Math.round(beforeDemand * 100),
-        currentDemand: Math.round(currentDemand * 100),
-        deltaPercent,
-        trend,
-        sdgTarget: s.target,
-      };
+        deltaPercent === null
+          ? 'steady'
+          : deltaPercent >= 8
+            ? 'rising'
+            : deltaPercent <= -8
+              ? 'declining'
+              : 'steady';
+      return [
+        {
+          skillId: s.id,
+          label: s.label,
+          beforeDemand: before === undefined ? null : Math.round(before * 100),
+          currentDemand: Math.round(current * 100),
+          deltaPercent,
+          trend,
+          sdgTarget: s.target,
+        },
+      ];
     })
     .sort(
       (a, b) =>
-        Math.abs(b.deltaPercent) - Math.abs(a.deltaPercent) ||
+        Math.abs(b.deltaPercent ?? 0) - Math.abs(a.deltaPercent ?? 0) ||
         b.currentDemand - a.currentDemand,
     );
 }
@@ -414,21 +366,51 @@ export function computeReplanDiff(
   };
 }
 
-export interface FairnessPersonaResult {
+/** Synthetic names and job titles. Neither is a matching input. */
+export const FAIRNESS_SWAPS = [
+  {
+    id: 'fairness-1',
+    name: 'Nurul Aisyah',
+    currentRole: 'Senior clerical officer',
+  },
+  {
+    id: 'fairness-2',
+    name: 'Tan Boon Keat',
+    currentRole: 'Career returner, admin support',
+  },
+  {
+    id: 'fairness-3',
+    name: 'Kavitha Subramaniam',
+    currentRole: 'Regional operations clerk',
+  },
+  {
+    id: 'fairness-4',
+    name: 'Awangku Fazrul',
+    currentRole: 'Retail supervisor',
+  },
+  {
+    id: 'fairness-5',
+    name: 'Alex Lim',
+    currentRole: 'Fresh TVET diploma graduate',
+  },
+  { id: 'fairness-6', name: 'Anonymised candidate', currentRole: '' },
+];
+
+export interface FairnessCheckResult {
   id: string;
-  personaLabel: string;
-  demographicNote: string;
+  name: string;
+  currentRole: string;
   topRoleId: string;
   topRoleTitle: string;
   topScore: number;
-  scoreVariance: number;
-  plannedCourseIds: string[];
+  scoreChange: number;
   pathwayIdentical: boolean;
 }
 
 /**
- * Runs a live counterfactual fairness audit across 6 demographic personas
- * (varying gender, age group, ethnicity/name and background label while holding skills & constraints constant).
+ * Re-runs matching and planning with different names and job titles. The
+ * engine reads only skills, interests, study time, budget and completed
+ * courses, so any change here would reveal an unintended input.
  */
 export function runFairnessAudit(
   profile: Profile,
@@ -436,101 +418,38 @@ export function runFairnessAudit(
   snapshot: Snapshot,
   candidates: Role[] = roles,
 ) {
-  const baseMatches = rankRoles(profile, scenario, snapshot, candidates);
-  const baseTop = baseMatches[0];
-  const baseShared = sharedFoundation(profile, snapshot, candidates);
-  const basePlan = buildPlan(profile, baseTop.role, baseShared);
-  const baseCourseIds = basePlan.steps.map((s) => s.course.id);
-
-  const personas = [
-    {
-      id: 'persona-female-malay-grad',
-      name: 'Nurul Aisyah (22, Female)',
-      currentRole: 'Fresh TVET Diploma Graduate',
-      note: 'Young female TVET graduate entry profile',
-    },
-    {
-      id: 'persona-male-chinese-senior',
-      name: 'Tan Boon Keat (54, Male)',
-      currentRole: 'Senior Clerical Officer (Mid-career)',
-      note: 'Older male worker at risk of routine job displacement',
-    },
-    {
-      id: 'persona-female-indian-returner',
-      name: 'KavithaSubramaniam (38, Female)',
-      currentRole: 'Career Returner · Admin Support',
-      note: 'Workforce returner after caregiving break',
-    },
-    {
-      id: 'persona-east-malaysia-youth',
-      name: 'Awangku Fazrul (26, Sarawak)',
-      currentRole: 'Regional Operations Clerk',
-      note: 'East Malaysia regional workforce profile',
-    },
-    {
-      id: 'persona-nonbinary-switcher',
-      name: 'Alex Lim (31, Career Switcher)',
-      currentRole: 'Retail Supervisor',
-      note: 'Cross-sector career switcher profile',
-    },
-    {
-      id: 'persona-anonymised-id',
-      name: 'Candidate #MY-8842 (Redacted PII)',
-      currentRole: '',
-      note: 'Fully anonymised PDPA profile with empty role title',
-    },
-  ];
-
-  const results: FairnessPersonaResult[] = personas.map((p) => {
-    const testProfile: Profile = {
-      ...profile,
-      id: p.id,
-      name: p.name,
-      currentRole: p.currentRole,
-    };
-    const matches = rankRoles(testProfile, scenario, snapshot, candidates);
-    const top = matches[0];
-    const shared = sharedFoundation(testProfile, snapshot, candidates);
-    const plan = buildPlan(testProfile, top.role, shared);
-    const courseIds = plan.steps.map((s) => s.course.id);
-    const scoreVariance = round(Math.abs(top.score - baseTop.score));
-    const pathwayIdentical =
-      courseIds.length === baseCourseIds.length &&
-      courseIds.every((id, idx) => id === baseCourseIds[idx]);
+  const outcome = (p: Profile) => {
+    const top = rankRoles(p, scenario, snapshot, candidates)[0];
+    const plan = buildPlan(
+      p,
+      top.role,
+      sharedFoundation(p, snapshot, candidates),
+    );
+    return { top, courseIds: plan.steps.map((s) => s.course.id).join() };
+  };
+  const base = outcome(profile);
+  const results: FairnessCheckResult[] = FAIRNESS_SWAPS.map((swap) => {
+    const { top, courseIds } = outcome({ ...profile, ...swap });
     return {
-      id: p.id,
-      personaLabel: p.name,
-      demographicNote: p.note,
+      ...swap,
       topRoleId: top.role.id,
       topRoleTitle: top.role.title,
       topScore: top.score,
-      scoreVariance,
-      plannedCourseIds: courseIds,
-      pathwayIdentical,
+      scoreChange: round(Math.abs(top.score - base.top.score)),
+      pathwayIdentical: courseIds === base.courseIds,
     };
   });
-
-  const maxScoreVariance = Math.max(0, ...results.map((r) => r.scoreVariance));
-  const allIdentical = results.every(
-    (r) =>
-      r.topRoleId === baseTop.role.id &&
-      r.scoreVariance === 0 &&
-      r.pathwayIdentical,
-  );
-
+  const maxScoreChange = Math.max(0, ...results.map((r) => r.scoreChange));
+  const pathwayChanges = results.filter((r) => !r.pathwayIdentical).length;
   return {
-    passed: allIdentical,
-    maxScoreVariance,
+    passed:
+      maxScoreChange === 0 &&
+      pathwayChanges === 0 &&
+      results.every((r) => r.topRoleId === base.top.role.id),
+    maxScoreChange,
+    pathwayChanges,
     personasTested: results.length,
     results,
-    excludedAttributes: [
-      'Full name & honorifics',
-      'Gender & pronouns',
-      'Age & graduation year',
-      'Ethnicity, religion & nationality',
-      'Current job title string',
-      'Marital & caregiving status',
-    ],
   };
 }
 
@@ -540,57 +459,60 @@ export interface MalaysiaProgrammeReference {
   agency: string;
   fundingType: string;
   url: string;
+  /** Skills worth searching the portal for; empty when it suits any role. */
   skills: SkillId[];
   summary: string;
 }
 
+/** Official Malaysian portals, checked 2026-10-30. ArcTalent does not claim specific courses or tracks on them. */
 export const MALAYSIA_RESKILLING_DIRECTORY: MalaysiaProgrammeReference[] = [
   {
-    id: 'my-elatih-data',
-    title: 'HRD Corp e-LATiH: Data Analytics & Business Intelligence Track',
-    agency: 'HRD Corp (Ministry of Human Resources Malaysia)',
-    fundingType: 'Free for Malaysians / HRD Corp ecosystem',
+    id: 'my-elatih',
+    title: 'e-LATiH',
+    agency: 'HRD Corp',
+    fundingType: 'Free and paid courses',
     url: 'https://elatih.hrdcorp.gov.my',
-    skills: ['excel', 'data', 'sql', 'visual'],
+    skills: [
+      'excel',
+      'data',
+      'sql',
+      'visual',
+      'critical',
+      'communication',
+      'project',
+      'stakeholder',
+      'process',
+      'logistics',
+    ],
     summary:
-      'National open learning hub offering short modules in spreadsheets, data literacy and dashboard reporting.',
+      'HRD Corp’s online learning hub, with free and paid short courses in digital, leadership, quality and personal-development topics.',
   },
   {
-    id: 'my-elatih-pm',
-    title: 'HRD Corp e-LATiH: Project Coordination & Operations Excellence',
-    agency: 'HRD Corp (Ministry of Human Resources Malaysia)',
-    fundingType: 'Free for Malaysians / HRD Corp ecosystem',
-    url: 'https://elatih.hrdcorp.gov.my',
-    skills: ['project', 'process', 'stakeholder', 'communication', 'logistics'],
+    id: 'my-mymahir',
+    title: 'MyMahir',
+    agency: 'TalentCorp Malaysia',
+    fundingType: 'Skills and roles explorer',
+    url: 'https://mymahir.my',
+    skills: [],
     summary:
-      'Workplace coordination, process improvement and stakeholder communication courses for Malaysian SMEs.',
-  },
-  {
-    id: 'my-mdec-ai',
-    title: 'MDEC SayaDigital & AI Readiness Micro-Credentials',
-    agency: 'Malaysia Digital Economy Corporation (MDEC)',
-    fundingType: 'Public / Subsidised Digital Directory',
-    url: 'https://mdec.my/sayadigital',
-    skills: ['ai', 'ethics', 'security', 'python', 'javascript', 'htmlcss'],
-    summary:
-      'National digital inclusion and AI literacy pathways for working adults, graduates and SME teams.',
+      'TalentCorp’s platform to explore skills and roles, find training options and take a workforce readiness assessment.',
   },
   {
     id: 'my-hrdcorp-claimable',
-    title: 'HRD Corp Claimable Courses (SBL-Khas Employer Levy Scheme)',
-    agency: 'Human Resource Development Corporation',
-    fundingType: 'Employer HRD Levy Claimable',
+    title: 'HRD Corp Claimable Courses',
+    agency: 'HRD Corp',
+    fundingType: 'Employer levy claim',
     url: 'https://hrdcorp.gov.my/hrdcorp-claimable-courses',
-    skills: ['sustainability', 'teaching', 'critical', 'marketing'],
+    skills: [],
     summary:
-      'Official employer guidance for claiming registered training fees and allowances against the SME HRD levy.',
+      'Employers registered with HRD Corp apply through e-TRiS before training starts and claim approved course costs from their levy.',
   },
 ];
 
 export function getMalaysiaReskillingOptions(role: Role) {
-  const reqSkills = new Set(Object.keys(role.requirements) as SkillId[]);
-  return MALAYSIA_RESKILLING_DIRECTORY.filter((item) =>
-    item.skills.some((s) => reqSkills.has(s)),
+  return MALAYSIA_RESKILLING_DIRECTORY.filter(
+    (item) =>
+      !item.skills.length || item.skills.some((id) => role.requirements[id]),
   );
 }
 
@@ -600,6 +522,7 @@ export interface LearnerBadge {
   description: string;
   earned: boolean;
   progressText: string;
+  progressValues?: TranslationValues;
   sdgTarget: string;
 }
 
@@ -639,6 +562,7 @@ export function computeLearnerBadges(
     (profile.skills.sustainability ?? 0) >= 2 ||
     plan.completed.some((c) => c.skills.includes('sustainability'));
 
+  // A completed course counts as Level 2, as it does in the planner.
   const reqEntries = Object.entries(role.requirements) as [SkillId, number][];
   const metReqs = reqEntries.filter(
     ([id, lvl]) =>
@@ -688,7 +612,8 @@ export function computeLearnerBadges(
       description:
         'Covered all target skill requirements for your selected career destination.',
       earned: routeComplete,
-      progressText: `${metReqs.length}/${reqEntries.length} destination skills covered`,
+      progressText: '{0}/{1} destination skills covered',
+      progressValues: { 0: metReqs.length, 1: reqEntries.length },
       sdgTarget: role.target,
     },
   ];
@@ -700,5 +625,3 @@ export function computeLearnerBadges(
     progressPercent,
   };
 }
-
-export const LOW_BANDWIDTH_STORAGE_KEY = 'arctalent-low-bandwidth-v1';

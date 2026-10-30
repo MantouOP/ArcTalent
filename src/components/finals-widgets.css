@@ -262,11 +262,6 @@
   border-bottom: 1px solid rgba(116, 130, 168, 0.18);
 }
 
-html[data-low-bandwidth='true'] *,
-html[data-low-bandwidth='true'] *::before,
-html[data-low-bandwidth='true'] *::after {
-  animation: none !important;
-  transition: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
+.match-score > span small.sdg-bonus {
+  color: var(--green);
 }
