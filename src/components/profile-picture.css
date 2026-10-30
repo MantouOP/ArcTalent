@@ -46,7 +46,7 @@
 .settings-panel .picture-upload p {
   margin-top: 8px;
   max-width: 340px;
-  font-size: 11px;
+  font-size: 12.5px;
 }
 .picture-options {
   border: 0;
@@ -58,7 +58,7 @@
   padding: 0;
   margin-bottom: 10px;
   color: var(--ink-soft);
-  font-size: 12px;
+  font-size: 13px;
 }
 .picture-options-grid {
   display: grid;
@@ -71,7 +71,7 @@
 .picture-group-title {
   margin: 0 0 10px;
   color: var(--ink);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
 }
 .picture-options-group[data-avatar-group='animals'] .picture-option > .avatar {
@@ -120,7 +120,7 @@
 }
 .picture-option > span:last-of-type {
   text-align: center;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.35;
   color: #4e3894;
   overflow-wrap: anywhere;
@@ -137,7 +137,7 @@
 }
 .settings-panel .picture-storage {
   margin-top: 12px;
-  font-size: 11px;
+  font-size: 12.5px;
 }
 .picture-options:disabled .picture-option {
   opacity: 0.6;

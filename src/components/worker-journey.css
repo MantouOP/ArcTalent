@@ -32,7 +32,7 @@
   margin-top: 12px;
 }
 .preference-banner .preference-footnote {
-  font-size: 12px;
+  font-size: 13px;
   margin-top: 10px;
 }
 .preference-actions {
@@ -54,7 +54,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: 13px;
 }
 .check-progress b {
   display: flex;
@@ -64,7 +64,7 @@
   height: 22px;
   border-radius: 50%;
   border: 1px solid var(--line);
-  font-size: 11px;
+  font-size: 12.5px;
   flex-shrink: 0;
 }
 .check-progress .reached b {
@@ -129,7 +129,7 @@
 }
 .check-option small {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 400;
   line-height: 1.6;
   display: block;
@@ -150,7 +150,7 @@
 }
 .check-footnote {
   margin-top: 12px;
-  font-size: 12px;
+  font-size: 13px;
 }
 .check-review {
   margin: 20px 0;
@@ -177,7 +177,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
   margin-bottom: 18px;
 }
@@ -200,7 +200,7 @@
   line-height: 1.4;
 }
 .bridge-heading p {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
 }
 .bridge-coverage {
@@ -219,7 +219,7 @@
   font-size: 15px;
 }
 .bridge-coverage > span {
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--muted);
 }
 .bridge-track {
@@ -248,7 +248,7 @@
   border-left: 0;
 }
 .bridge-counts dt {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
 }
 .bridge-counts dd {
@@ -257,7 +257,7 @@
   font-variant-numeric: tabular-nums;
 }
 .bridge-counts dd small {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
   margin-left: 6px;
 }
@@ -279,14 +279,14 @@
 .bridge-table caption {
   text-align: left;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12.5px;
   caption-side: bottom;
   padding-top: 12px;
 }
 .bridge-table th,
 .bridge-table td {
   padding: 12px 5px;
-  font-size: 12px;
+  font-size: 13px;
 }
 .bridge-table th:first-child {
   padding-left: 0;
@@ -315,7 +315,7 @@
   align-items: center;
   gap: 5px;
   white-space: nowrap;
-  font-size: 11px;
+  font-size: 12.5px;
 }
 .bridge-status.ready {
   color: var(--ink);
@@ -325,7 +325,7 @@
 }
 .bridge-note {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12.5px;
   margin-top: 16px;
 }
 .study-rhythm h3 {
@@ -333,7 +333,7 @@
   margin: 0 0 14px;
 }
 .study-rhythm p {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
   margin-bottom: 12px;
 }
@@ -356,7 +356,7 @@
   margin-bottom: 6px;
 }
 .study-rhythm .small {
-  font-size: 11px;
+  font-size: 12.5px;
 }
 .sr-only {
   position: absolute;
@@ -391,7 +391,7 @@
   }
   .check-progress > span {
     gap: 4px;
-    font-size: 11px;
+    font-size: 12.5px;
   }
   .check-progress b {
     width: 18px;
@@ -420,7 +420,7 @@
     padding: 0 9px;
   }
   .bridge-counts dt {
-    font-size: 11px;
+    font-size: 12.5px;
   }
   .bridge-counts dd small {
     display: block;
@@ -429,7 +429,7 @@
   .bridge-table th,
   .bridge-table td {
     padding: 12px 3px;
-    font-size: 11px;
+    font-size: 12.5px;
   }
   .bridge-table th:nth-child(2),
   .bridge-table td:nth-child(2) {

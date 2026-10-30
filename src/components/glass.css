@@ -27,8 +27,7 @@
   box-shadow: var(--glass-shadow);
 }
 .active-dot {
-  background: var(--primary-gradient);
-  box-shadow: 0 0 10px rgba(84, 104, 255, 0.45);
+  background: var(--primary);
 }
 .topbar {
   background: rgba(255, 255, 255, 0.42);
@@ -56,7 +55,7 @@
     -webkit-backdrop-filter: var(--glass-blur);
     box-shadow: var(--glass-shadow-hover);
     color: var(--ink);
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
     line-height: 1.3;
     pointer-events: none;
@@ -183,18 +182,14 @@ h3 {
 /* Buttons */
 .primary {
   color: #fff;
-  background: var(--primary-gradient);
+  background: var(--primary);
   border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 14px;
-  box-shadow:
-    inset 1px 1px 0 rgba(255, 255, 255, 0.35),
-    0 10px 22px -10px rgba(84, 104, 255, 0.65);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.35);
 }
 .primary:hover {
-  background: linear-gradient(135deg, #4a5ef5 0%, #6f43d6 100%);
-  box-shadow:
-    inset 1px 1px 0 rgba(255, 255, 255, 0.4),
-    0 14px 28px -10px rgba(84, 104, 255, 0.75);
+  background: var(--primary-hover);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.4);
 }
 .secondary {
   color: var(--ink);

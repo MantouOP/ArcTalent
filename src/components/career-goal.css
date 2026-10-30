@@ -48,7 +48,7 @@
   border: 1px solid var(--line);
   border-radius: 5px;
   background: transparent;
-  font-size: 12px;
+  font-size: 13px;
 }
 .goal-review {
   margin-top: 22px;
@@ -77,7 +77,7 @@
 .goal-course-row small {
   display: block;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 .goal-targets select {
   width: 150px;

@@ -175,12 +175,12 @@
   justify-content: space-between;
   gap: 12px;
   align-items: center;
-  font-size: 12px;
+  font-size: 13px;
   color: #4f3894;
 }
 .intro-demo-tag {
   color: #4f3894;
-  font-size: 12px;
+  font-size: 13px;
 }
 .intro-preview-person {
   display: flex;
@@ -208,7 +208,7 @@
   min-width: 0;
 }
 .intro-preview-person p {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-soft);
 }
 .intro-preview-time {
@@ -217,7 +217,7 @@
   margin-left: auto;
   text-align: right;
   color: var(--ink-soft);
-  font-size: 12px;
+  font-size: 13px;
   font-variant-numeric: tabular-nums;
 }
 .intro-route-drawing {
@@ -241,15 +241,15 @@
 .intro-route-foundation > span,
 .intro-route-destinations span {
   display: block;
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--ink-soft);
 }
 .intro-route-foundation strong {
-  color: #22a6aa;
+  color: #13706f;
   font-size: 14px;
 }
 .intro-route-foundation p {
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--ink-soft);
   margin-top: 4px;
 }
@@ -275,11 +275,11 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #387e94;
-  font-size: 12px;
+  color: #2c6b80;
+  font-size: 13px;
 }
 .intro-route-preview figcaption svg {
-  color: #22a6aa;
+  color: #13706f;
 }
 .intro-principles {
   display: grid;
@@ -298,7 +298,7 @@
 }
 .intro-principles span {
   color: var(--ink-soft);
-  font-size: 14px;
+  font-size: 16px;
 }
 .intro-demo-section {
   padding-block: 64px;
@@ -343,7 +343,7 @@
   color: var(--ink);
   margin-top: 10px;
   padding: 10px 7px;
-  font-size: 12px;
+  font-size: 13px;
 }
 .intro-hours > span:first-child {
   display: flex;
@@ -365,7 +365,7 @@
   display: flex;
   justify-content: space-between;
   color: var(--ink-soft);
-  font-size: 11px;
+  font-size: 12.5px;
 }
 .intro-scenario {
   border: 0;
@@ -389,7 +389,7 @@
   border-radius: 4px;
   background: transparent;
   color: var(--ink-soft);
-  font-size: 12px;
+  font-size: 13px;
 }
 .intro-scenario button[aria-pressed='true'] {
   color: white;
@@ -414,11 +414,11 @@
 .intro-snapshot small {
   display: block;
   color: var(--ink-soft);
-  font-size: 12px;
+  font-size: 13px;
   margin-top: 4px;
 }
 .intro-small {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-soft);
 }
 .intro-demo-results {
@@ -430,7 +430,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-soft);
   flex-wrap: wrap;
 }
@@ -471,7 +471,7 @@
   color: #593894;
 }
 .intro-demo-ranks small {
-  font-size: 10px;
+  font-size: 12px;
   margin-left: 3px;
   color: var(--muted);
 }
@@ -499,7 +499,7 @@
   border-radius: 12px 12px 40px 12px;
 }
 .intro-demo-foundation > svg {
-  color: #22a6aa;
+  color: #13706f;
   margin-bottom: 8px;
 }
 .intro-demo-foundation h3 {
@@ -507,7 +507,7 @@
 }
 .intro-demo-foundation p {
   color: var(--ink-soft);
-  font-size: 12px;
+  font-size: 13px;
   margin-top: 6px;
 }
 .intro-skill-chips {
@@ -517,8 +517,8 @@
   margin-top: 13px;
 }
 .intro-skill-chips > span {
-  font-size: 11px;
-  color: #309c96;
+  font-size: 12.5px;
+  color: #13706f;
   background: rgba(236, 243, 243, 0.72);
   display: inline-flex;
   align-items: center;
@@ -538,7 +538,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-soft);
 }
 .intro-demo-courses {
@@ -557,11 +557,12 @@
   border-radius: 6px;
 }
 .intro-course-week {
-  flex: 0 0 65px;
-  font-size: 11px;
+  flex: 0 0 72px;
+  font-size: 12.5px;
   color: #563894;
   padding-top: 2px;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 .intro-demo-courses a {
   display: inline;
@@ -579,17 +580,17 @@
 }
 .intro-demo-courses p {
   color: var(--ink-soft);
-  font-size: 11px;
+  font-size: 12.5px;
   margin-top: 4px;
 }
 .intro-course-shared {
-  color: #389491;
-  font-size: 10px;
+  color: #13706f;
+  font-size: 12px;
   margin-left: auto;
   white-space: nowrap;
 }
 .intro-demo-limit {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-soft);
   margin-top: 16px;
 }
@@ -636,7 +637,7 @@
 .intro-process p {
   color: var(--intro-text);
   margin-top: 8px;
-  font-size: 15px;
+  font-size: 16px;
 }
 .intro-evidence,
 .intro-team {
@@ -692,7 +693,7 @@
 }
 .intro-change-row > div span {
   display: block;
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--ink-soft);
   margin-top: 3px;
 }
@@ -713,7 +714,7 @@
   padding: 16px;
   border-radius: 8px;
   color: #5c3894;
-  font-size: 12px;
+  font-size: 13px;
   margin-top: 24px;
 }
 .intro-team-rows {
@@ -733,7 +734,7 @@
   font-size: 13px;
 }
 .intro-team-rows strong {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.4;
 }
 .intro-team-rows > div > div {
@@ -742,7 +743,7 @@
 }
 .intro-team-rows > div > div > span {
   color: var(--ink-soft);
-  font-size: 11px;
+  font-size: 12.5px;
 }
 .intro-team-rows svg {
   color: var(--muted);
@@ -751,8 +752,8 @@
   display: flex;
   align-items: start;
   gap: 8px;
-  color: #389490;
-  font-size: 12px;
+  color: #13706f;
+  font-size: 13px;
   margin-top: 28px;
 }
 .intro-faq {
@@ -800,7 +801,7 @@
 }
 .intro-questions details p {
   color: var(--ink-soft);
-  font-size: 14px;
+  font-size: 16px;
   padding-bottom: 22px;
 }
 .intro-questions summary:hover {
@@ -831,7 +832,7 @@
   justify-content: space-between;
   gap: 25px;
   color: var(--ink-soft);
-  font-size: 12px;
+  font-size: 13px;
 }
 .intro-footer > .intro-brand {
   font-size: 27px;
@@ -926,7 +927,7 @@
     max-width: 42%;
   }
   .intro-route-destinations strong {
-    font-size: 12px;
+    font-size: 13px;
   }
   .intro-route-destinations {
     width: 47%;
@@ -982,14 +983,14 @@
     font-size: 14px;
   }
   .intro-principles span {
-    font-size: 12px;
+    font-size: 16px;
   }
   .intro-section-heading {
     gap: 30px;
   }
   .intro-section-heading > p {
     max-width: 330px;
-    font-size: 14px;
+    font-size: 16px;
   }
   .intro-demo {
     grid-template-columns: 1fr;
@@ -1006,7 +1007,7 @@
     gap: 35px;
   }
   .intro-process p {
-    font-size: 14px;
+    font-size: 16px;
   }
   .intro-evidence,
   .intro-team {
@@ -1066,7 +1067,7 @@
   .intro-header .language-selector select {
     max-width: 127px;
     padding: 7px;
-    font-size: 12px;
+    font-size: 13px;
   }
   .intro-hero {
     padding-block: 28px 38px;
@@ -1092,7 +1093,7 @@
     padding-inline: 19px;
   }
   .intro-footnote {
-    font-size: 12px;
+    font-size: 13px;
     margin-top: 18px;
   }
   .intro-route-preview {
@@ -1100,10 +1101,10 @@
     border-radius: 16px 16px 55px 16px;
   }
   .intro-preview-top {
-    font-size: 10px;
+    font-size: 12px;
   }
   .intro-demo-tag {
-    font-size: 10px;
+    font-size: 12px;
   }
   .intro-preview-person {
     margin-top: 22px;
@@ -1118,23 +1119,23 @@
     padding: 7px;
   }
   .intro-route-foundation strong {
-    font-size: 12px;
+    font-size: 13px;
   }
   .intro-route-foundation p {
-    font-size: 10px;
+    font-size: 12px;
   }
   .intro-route-destinations strong {
-    font-size: 11px;
+    font-size: 12.5px;
   }
   .intro-route-destinations span {
-    font-size: 10px;
+    font-size: 12px;
   }
   .intro-route-destinations {
     width: 47%;
     top: 2%;
   }
   .intro-route-preview figcaption {
-    font-size: 11px;
+    font-size: 12.5px;
   }
   .intro-principles {
     grid-template-columns: 1fr;
@@ -1148,7 +1149,7 @@
     font-size: 15px;
   }
   .intro-principles span {
-    font-size: 13px;
+    font-size: 16px;
   }
   .intro-demo-section {
     padding-block: 38px;
@@ -1162,7 +1163,7 @@
     letter-spacing: -1.3px;
   }
   .intro-section-heading > p {
-    font-size: 15px;
+    font-size: 16px;
     margin-top: 16px;
     max-width: none;
   }
@@ -1172,7 +1173,7 @@
   }
   .intro-demo-controls label,
   .intro-demo-controls legend {
-    font-size: 12px;
+    font-size: 13px;
   }
   .intro-demo-controls > label:first-child {
     grid-column: 1/-1;
@@ -1212,14 +1213,14 @@
     padding: 12px;
   }
   .intro-course-week {
-    flex-basis: 50px;
-    font-size: 10px;
+    flex-basis: 64px;
+    font-size: 12px;
   }
   .intro-demo-courses a {
-    font-size: 12px;
+    font-size: 13px;
   }
   .intro-demo-results > .intro-secondary {
-    font-size: 12px;
+    font-size: 13px;
   }
   .intro-how,
   .intro-evidence,
@@ -1237,14 +1238,14 @@
     gap: 26px;
   }
   .intro-process p {
-    font-size: 15px;
+    font-size: 16px;
   }
   .intro-evidence .intro-section-copy {
     grid-row: 1;
   }
   .intro-section-copy > p {
     margin-top: 16px;
-    font-size: 15px;
+    font-size: 16px;
   }
   .intro-evidence-fragment,
   .intro-team-fragment {
@@ -1262,7 +1263,7 @@
   }
   .intro-faq > div > p {
     max-width: none;
-    font-size: 15px;
+    font-size: 16px;
     margin-top: 16px;
   }
   .intro-questions details {
@@ -1283,7 +1284,7 @@
   }
   .intro-closing p {
     margin-top: 18px;
-    font-size: 15px;
+    font-size: 16px;
   }
   .intro-footer {
     align-items: start;
@@ -1338,13 +1339,11 @@
 }
 .intro-primary {
   color: #fff;
-  background: var(--primary-gradient);
-  box-shadow:
-    inset 1px 1px 0 rgba(255, 255, 255, 0.35),
-    0 12px 24px -12px rgba(84, 104, 255, 0.7);
+  background: var(--primary);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.35);
 }
 .intro-primary:hover {
-  background: linear-gradient(135deg, #4a5ef5 0%, #6f43d6 100%);
+  background: var(--primary-hover);
 }
 .intro-scenario > div {
   background: rgba(255, 255, 255, 0.45);

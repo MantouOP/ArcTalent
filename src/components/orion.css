@@ -71,13 +71,13 @@ h3 {
   color: var(--muted);
 }
 .eyebrow {
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 1.3px;
   color: #533894;
   font-weight: 550;
 }
 .small {
-  font-size: 12px;
+  font-size: 13px;
 }
 .app-shell {
   min-height: 100dvh;
@@ -231,13 +231,13 @@ h3 {
 }
 .product-label {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 1.4px;
   font-weight: 450;
   margin-left: 12px;
 }
 .breadcrumb {
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--muted);
   gap: 15px;
 }
@@ -250,7 +250,7 @@ h3 {
 }
 .demo-indicator {
   color: var(--ink-soft);
-  font-size: 10px;
+  font-size: 12px;
 }
 .demo-indicator i {
   width: 5px;
@@ -278,19 +278,19 @@ main {
 }
 .page-intro .eyebrow {
   margin-bottom: 6px;
-  font-size: 9px;
+  font-size: 11px;
 }
 .page-intro p {
   margin-top: 5px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   max-width: 620px;
 }
 .scenario-box {
   padding: 0;
 }
 .scenario-box > label {
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 1px;
   color: var(--ink-soft);
   margin: 0 0 7px;
@@ -303,12 +303,12 @@ main {
 }
 .segmented button {
   color: var(--ink-soft);
-  font-size: 10px;
+  font-size: 12px;
   padding: 8px 12px;
   border-radius: 5px;
 }
 .segmented .selected {
-  background: var(--primary-gradient);
+  background: var(--primary);
   color: white;
   box-shadow:
     0 2px 10px rgba(41, 18, 124, 0.22),
@@ -316,7 +316,7 @@ main {
 }
 .scenario-box > small,
 .scenario-box > small button {
-  font-size: 9px;
+  font-size: 11px;
   color: var(--ink-soft);
 }
 .scenario-box > small {
@@ -331,10 +331,10 @@ main {
   border-color: var(--line);
   color: var(--ink-soft);
   border-radius: 7px;
-  font-size: 10px;
+  font-size: 12px;
 }
 .evidence-strip button {
-  font-size: 10px;
+  font-size: 12px;
   color: #461eae;
 }
 .strip-dot {
@@ -382,7 +382,7 @@ main {
 }
 .stat > span {
   color: #385694;
-  font-size: 11px;
+  font-size: 12.5px;
   margin-bottom: 6px;
 }
 .stat > strong {
@@ -393,7 +393,7 @@ main {
 .stat small {
   display: inline;
   color: var(--ink-soft);
-  font-size: 10px;
+  font-size: 12px;
   margin-left: 8px;
   font-family: inherit;
 }
@@ -414,11 +414,11 @@ main {
   font-size: 15px;
 }
 .panel-heading p {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
 }
 .panel-heading .eyebrow {
-  font-size: 9px;
+  font-size: 11px;
 }
 .explorer-grid {
   display: grid;
@@ -477,18 +477,18 @@ main {
 .profile-card-footer .avatar {
   width: 28px;
   height: 28px;
-  font-size: 11px;
+  font-size: 12.5px;
 }
 .profile-card-footer strong {
-  font-size: 11px;
+  font-size: 12.5px;
 }
 .profile-card-footer small {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
 }
 .profile-card > p {
   margin: 7px 6px 0;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
 }
 .radar-grid {
@@ -521,7 +521,7 @@ main {
   );
 }
 .next-step-card .eyebrow {
-  font-size: 9px;
+  font-size: 11px;
   color: #54309c;
   margin: 0;
 }
@@ -531,13 +531,13 @@ main {
   margin-top: 8px;
 }
 .next-step-card p {
-  font-size: 10px;
+  font-size: 12px;
   color: #583894;
   margin: 8px 0 14px;
 }
 .next-step-card button {
   border-color: var(--line);
-  font-size: 10px;
+  font-size: 12px;
   color: #4914b8;
   padding-top: 10px;
   margin-top: auto;
@@ -582,7 +582,7 @@ main {
   margin: 3px 0 12px;
   gap: 16px;
   color: var(--ink-soft);
-  font-size: 9px;
+  font-size: 11px;
 }
 .map-legend span {
   gap: 5px;
@@ -618,12 +618,12 @@ main {
   font-size: 15px;
 }
 .map-start strong {
-  font-size: 9px;
+  font-size: 11px;
   color: var(--ink);
 }
 .map-start small {
   color: #386c94;
-  font-size: 9px;
+  font-size: 11px;
 }
 .map-connector {
   color: #1495b8;
@@ -640,7 +640,7 @@ main {
     inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 .foundation > .eyebrow {
-  font-size: 8px;
+  font-size: 11px;
   letter-spacing: 0.6px;
   white-space: normal;
   line-height: 1.5;
@@ -648,12 +648,12 @@ main {
   gap: 4px;
 }
 .foundation h3 {
-  font-size: 12px;
+  font-size: 13px;
   margin: 3px 0 12px;
 }
 .foundation-stop {
   color: var(--ink);
-  font-size: 11px;
+  font-size: 12.5px;
   margin: 10px 0;
   gap: 7px;
 }
@@ -665,13 +665,13 @@ main {
   box-shadow: 0 0 8px rgba(154, 117, 255, 0.29);
 }
 .foundation > small {
-  font-size: 9px;
+  font-size: 11px;
   color: #5c3894;
   line-height: 1.6;
   margin-top: 12px;
 }
 .foundation p {
-  font-size: 11px;
+  font-size: 12.5px;
   color: #5c3894;
 }
 .map-fork {
@@ -710,12 +710,12 @@ main {
   background: rgba(236, 232, 247, 0.72);
 }
 .destination strong {
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.5;
 }
 .destination small {
   color: var(--ink-soft);
-  font-size: 9px;
+  font-size: 11px;
 }
 .destination > svg {
   color: #411ab2;
@@ -724,22 +724,19 @@ main {
 .route-letter {
   width: 24px;
   height: 28px;
-  background: var(--primary-gradient);
+  background: var(--primary);
   border: 1px solid rgba(142, 99, 221, 0.4);
-  color: var(--ink);
+  color: #fff;
   border-radius: 6px;
-  font-size: 10px;
-  box-shadow: 0 0 12px rgba(83, 32, 202, 0.11);
+  font-size: 12px;
 }
 .destination:nth-child(2) .route-letter {
-  background: linear-gradient(135deg, rgba(229, 248, 250, 0.72), #197bbb);
+  background: #1a6fa8;
   border-color: rgba(26, 230, 255, 0.33);
-  color: var(--ink);
 }
 .destination:nth-child(3) .route-letter {
-  background: linear-gradient(135deg, #a32568, #dc536c);
+  background: #b1305f;
   border-color: rgba(255, 77, 112, 0.33);
-  color: var(--ink);
 }
 .destination-score {
   font-size: 16px;
@@ -749,7 +746,7 @@ main {
 }
 .destination-score small {
   display: block;
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 400;
   margin-top: 3px;
 }
@@ -761,10 +758,10 @@ main {
 }
 .map-caption p {
   color: var(--ink-soft);
-  font-size: 9px;
+  font-size: 11px;
 }
 .map-caption .tag {
-  font-size: 8px;
+  font-size: 11px;
 }
 .widget-heading {
   display: flex;
@@ -773,7 +770,7 @@ main {
   gap: 10px;
   margin-bottom: 13px;
   color: var(--ink-soft);
-  font-size: 11px;
+  font-size: 12.5px;
 }
 .widget-heading h2 {
   font-size: 14px;
@@ -803,7 +800,7 @@ main {
   font-weight: 700;
 }
 .hero-metric > span {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-soft);
 }
 .metric-ring {
@@ -825,12 +822,12 @@ main {
 }
 .metric-caption {
   color: var(--ink-soft);
-  font-size: 10px;
+  font-size: 12px;
   margin-top: 5px;
 }
 .metric-delta {
   display: inline-block;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--ink-soft);
   margin-top: 9px;
   padding: 3px 5px;
@@ -840,7 +837,7 @@ main {
 .summary-coverage {
   display: flex;
   justify-content: space-between;
-  font-size: 10px;
+  font-size: 12px;
   margin-top: 20px;
   color: var(--ink-soft);
 }
@@ -879,7 +876,7 @@ main {
 .ranking-label {
   display: flex;
   justify-content: space-between;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--muted);
   padding-bottom: 5px;
 }
@@ -891,7 +888,7 @@ main {
   background: transparent;
   color: #4f3894;
   text-align: left;
-  font-size: 10px;
+  font-size: 12px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.72);
   border-radius: 0;
 }
@@ -899,7 +896,7 @@ main {
   flex: 1;
 }
 .ranking-row > strong {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink);
   font-weight: 500;
 }
@@ -910,7 +907,7 @@ main {
 }
 .summary-action {
   margin-top: 15px;
-  font-size: 10px;
+  font-size: 12px;
   width: 100%;
   justify-content: space-between;
 }
@@ -937,12 +934,12 @@ main {
 }
 .chart-note {
   color: var(--ink-soft);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.6;
   margin-top: 12px;
 }
 .route-summary .chart-note {
-  font-size: 9px;
+  font-size: 11px;
   margin-top: 10px;
 }
 .analytics-grid {
@@ -960,7 +957,7 @@ main {
 .chart-legend {
   display: flex;
   gap: 15px;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-soft);
 }
 .chart-legend span {
@@ -979,7 +976,7 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--ink-soft);
   line-height: 1;
   padding-top: 0;
@@ -1013,7 +1010,7 @@ main {
 }
 .pill-series > span {
   display: block;
-  font-size: 9px;
+  font-size: 11px;
   color: #573894;
   margin-top: 10px;
   line-height: 1.4;
@@ -1030,13 +1027,13 @@ main {
   letter-spacing: -1px;
 }
 .widget-metric small {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-soft);
   letter-spacing: 0;
   font-weight: 400;
 }
 .widget-metric > span {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-soft);
 }
 .pace-chart {
@@ -1114,7 +1111,7 @@ main {
 .bubble-item > strong {
   display: block;
   color: #573894;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 400;
   line-height: 1.4;
 }
@@ -1125,7 +1122,7 @@ main {
   font-size: 17px;
 }
 .section-title p {
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--muted);
 }
 .career-cards {
@@ -1160,7 +1157,7 @@ main {
   color: #b81450 !important;
 }
 .rank {
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.8px;
   color: #593894;
 }
@@ -1170,7 +1167,7 @@ main {
   margin-bottom: 5px;
 }
 .career-card > p {
-  font-size: 11px;
+  font-size: 12.5px;
   min-height: 37px;
   color: var(--ink-soft);
 }
@@ -1182,16 +1179,16 @@ main {
   font-size: 30px;
 }
 .match-score > span {
-  font-size: 10px;
+  font-size: 12px;
   color: #593894;
 }
 .match-score > span small {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-soft);
 }
 .match-score strong small {
   color: var(--ink-soft);
-  font-size: 11px;
+  font-size: 12.5px;
 }
 .match-score svg {
   width: 34px;
@@ -1204,18 +1201,18 @@ main {
   filter: drop-shadow(0 0 3px rgba(123, 92, 240, 0.25));
 }
 .career-meta {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-soft);
   border-color: var(--line);
   padding: 10px 0 12px;
 }
 .career-card .full {
-  font-size: 11px;
+  font-size: 12.5px;
   padding: 10px 12px;
 }
 .primary {
   color: white;
-  background: var(--primary-gradient);
+  background: var(--primary);
   border-color: #7050c0;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
@@ -1248,7 +1245,7 @@ main {
 }
 .tag {
   border-radius: 5px;
-  font-size: 10px;
+  font-size: 12px;
 }
 .tag.green,
 .positive {
@@ -1277,7 +1274,7 @@ main {
   background: rgba(238, 235, 245, 0.72);
   border-color: rgba(136, 114, 167, 0.33);
   color: #5c3894;
-  font-size: 10px;
+  font-size: 12px;
 }
 .skill-chip.existing {
   background: rgba(0, 230, 118, 0.06);
@@ -1302,7 +1299,7 @@ main {
   font-size: 14px;
 }
 .update-banner p {
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--ink-soft);
 }
 .update-banner .eyebrow {
@@ -1312,12 +1309,12 @@ main {
   margin-top: 24px;
   padding: 18px 0;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 label,
 legend {
   color: var(--ink-soft);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
 }
 input:not([type='checkbox']):not([type='file']):not([type='radio']),
@@ -1327,7 +1324,7 @@ textarea {
   border-color: rgba(42, 59, 76, 0.1);
   color: var(--ink);
   border-radius: 7px;
-  font-size: 12px;
+  font-size: 13px;
 }
 input::placeholder,
 textarea::placeholder {
@@ -1419,11 +1416,11 @@ input[type='file']::file-selector-button {
 .verification,
 .verification a {
   color: #603894;
-  font-size: 10px;
+  font-size: 12px;
 }
 .weekly-chart > div {
   color: #5f3894;
-  font-size: 11px;
+  font-size: 12.5px;
 }
 .bar,
 .bridge-track {
@@ -1453,11 +1450,11 @@ input[type='file']::file-selector-button {
 }
 .heatmap th {
   color: var(--ink-soft);
-  font-size: 10px;
+  font-size: 12px;
 }
 .heatmap td:first-child small {
   color: var(--ink-soft);
-  font-size: 10px;
+  font-size: 12px;
 }
 .heat-cell {
   border: 1px solid transparent;
@@ -1483,7 +1480,7 @@ input[type='file']::file-selector-button {
 }
 .heatmap-legend {
   color: var(--ink-soft);
-  font-size: 10px;
+  font-size: 12px;
 }
 .course-icon {
   background: rgba(83, 32, 202, 0.15);
@@ -1653,10 +1650,10 @@ dialog > header {
     gap: 5px;
   }
   .destination strong {
-    font-size: 9px;
+    font-size: 11px;
   }
   .destination small {
-    font-size: 8px;
+    font-size: 11px;
   }
   .destination-score {
     font-size: 14px;
@@ -1672,13 +1669,13 @@ dialog > header {
     padding: 12px 10px;
   }
   .foundation h3 {
-    font-size: 11px;
+    font-size: 12.5px;
   }
   .foundation-stop {
-    font-size: 10px;
+    font-size: 12px;
   }
   .foundation > .eyebrow {
-    font-size: 7px;
+    font-size: 11px;
   }
 }
 @media (max-width: 1180px) {
@@ -1777,7 +1774,7 @@ dialog > header {
     padding: 14px;
   }
   .stat > span {
-    font-size: 10px;
+    font-size: 12px;
   }
   .stat > svg {
     display: none;
@@ -1850,19 +1847,19 @@ dialog > header {
     min-height: 288px;
   }
   .foundation > .eyebrow {
-    font-size: 8px;
+    font-size: 11px;
   }
   .foundation h3 {
     font-size: 13px;
   }
   .foundation-stop {
-    font-size: 12px;
+    font-size: 13px;
   }
   .destination strong {
-    font-size: 11px;
+    font-size: 12.5px;
   }
   .destination small {
-    font-size: 9px;
+    font-size: 11px;
   }
   .destination > svg {
     display: block;
@@ -1947,7 +1944,7 @@ dialog > header {
     width: auto;
     height: auto;
     clip-path: none;
-    font-size: 8px;
+    font-size: 11px;
     letter-spacing: -0.2px;
     line-height: 1.2;
     white-space: normal;
@@ -1984,7 +1981,7 @@ dialog > header {
     gap: 13px;
   }
   .topbar .text-button {
-    font-size: 10px;
+    font-size: 12px;
     min-height: 40px;
   }
   main {
@@ -1999,30 +1996,30 @@ dialog > header {
     letter-spacing: -0.8px;
   }
   .page-intro .eyebrow {
-    font-size: 8px;
+    font-size: 11px;
     letter-spacing: 1px;
   }
   .page-intro p {
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1.7;
   }
   .scenario-box {
     width: 100%;
   }
   .segmented button {
-    font-size: 11px;
+    font-size: 12.5px;
     min-height: 40px;
   }
   .scenario-box > label {
-    font-size: 9px;
+    font-size: 11px;
   }
   .scenario-box > small,
   .scenario-box > small button {
-    font-size: 9px;
+    font-size: 11px;
   }
   .evidence-strip,
   .evidence-strip.simulated {
-    font-size: 9px;
+    font-size: 11px;
     padding: 10px;
     gap: 10px;
     margin-bottom: 14px;
@@ -2039,7 +2036,7 @@ dialog > header {
     flex-wrap: wrap;
   }
   .evidence-strip button {
-    font-size: 9px;
+    font-size: 11px;
     flex-shrink: 0;
     min-height: 30px;
   }
@@ -2053,13 +2050,13 @@ dialog > header {
     min-height: 91px;
   }
   .stat > span {
-    font-size: 10px;
+    font-size: 12px;
   }
   .stat > strong {
     font-size: 27px;
   }
   .stat small {
-    font-size: 10px;
+    font-size: 12px;
   }
   .stats-grid.three {
     grid-template-columns: 1fr;
@@ -2071,7 +2068,7 @@ dialog > header {
   .stats-grid.three .stat small {
     display: inline;
     margin-left: 8px;
-    font-size: 11px;
+    font-size: 12.5px;
   }
   .panel {
     padding: 18px;
@@ -2097,26 +2094,26 @@ dialog > header {
   }
   .ranking-row {
     min-height: 44px;
-    font-size: 12px;
+    font-size: 13px;
   }
   .ranking-row > strong {
     font-size: 14px;
   }
   .ranking-label {
-    font-size: 10px;
+    font-size: 12px;
   }
   .route-summary .summary-action {
     min-height: 40px;
     margin-top: 10px;
-    font-size: 12px;
+    font-size: 13px;
   }
   .summary-coverage {
-    font-size: 11px;
+    font-size: 12.5px;
   }
   .metric-caption,
   .metric-delta,
   .route-summary .chart-note {
-    font-size: 11px;
+    font-size: 12.5px;
   }
   .explorer-grid > .map-panel {
     padding: 18px 14px 14px;
@@ -2136,7 +2133,7 @@ dialog > header {
     gap: 10px;
     margin-bottom: 20px;
     flex-wrap: wrap;
-    font-size: 9px;
+    font-size: 11px;
   }
   .map-flow {
     grid-template-columns: 58px 18px minmax(0, 1fr);
@@ -2150,7 +2147,7 @@ dialog > header {
   }
   .map-start strong,
   .map-start small {
-    font-size: 10px;
+    font-size: 12px;
   }
   .map-connector {
     grid-column: 2;
@@ -2162,13 +2159,13 @@ dialog > header {
     padding: 14px;
   }
   .foundation > .eyebrow {
-    font-size: 8px;
+    font-size: 11px;
   }
   .foundation h3 {
     font-size: 13px;
   }
   .foundation > small {
-    font-size: 10px;
+    font-size: 12px;
   }
   .map-fork {
     display: none;
@@ -2187,21 +2184,21 @@ dialog > header {
     padding: 11px;
   }
   .destination strong {
-    font-size: 12px;
+    font-size: 13px;
   }
   .destination small {
-    font-size: 10px;
+    font-size: 12px;
   }
   .destination-score {
     font-size: 19px;
   }
   .destination-score small {
-    font-size: 9px;
+    font-size: 11px;
   }
   .route-letter {
     width: 27px;
     height: 30px;
-    font-size: 11px;
+    font-size: 12.5px;
   }
   .map-caption {
     align-items: flex-start;
@@ -2209,10 +2206,10 @@ dialog > header {
     gap: 8px;
   }
   .map-caption p {
-    font-size: 11px;
+    font-size: 12.5px;
   }
   .map-caption .tag {
-    font-size: 10px;
+    font-size: 12px;
   }
   .explorer-aside {
     grid-template-columns: 1fr;
@@ -2231,7 +2228,7 @@ dialog > header {
   }
   .profile-card-footer small,
   .profile-card > p {
-    font-size: 11px;
+    font-size: 12.5px;
   }
   .next-step-card {
     padding: 20px;
@@ -2241,7 +2238,7 @@ dialog > header {
   }
   .next-step-card p,
   .next-step-card button {
-    font-size: 12px;
+    font-size: 13px;
   }
   .next-step-card button {
     min-height: 44px;
@@ -2253,7 +2250,7 @@ dialog > header {
     font-size: 17px;
   }
   .section-title > .text-button {
-    font-size: 10px;
+    font-size: 12px;
     min-height: 35px;
   }
   .career-card {
@@ -2263,14 +2260,14 @@ dialog > header {
     font-size: 17px;
   }
   .career-card > p {
-    font-size: 12px;
+    font-size: 13px;
   }
   .career-meta {
-    font-size: 11px;
+    font-size: 12.5px;
   }
   .career-card .full {
     min-height: 44px;
-    font-size: 12px;
+    font-size: 13px;
   }
   .analytics-grid {
     grid-template-columns: 1fr;
@@ -2288,19 +2285,19 @@ dialog > header {
   }
   .chart-legend,
   .chart-note {
-    font-size: 11px;
+    font-size: 12.5px;
   }
   .pill-chart {
     margin-top: 20px;
   }
   .pill-series > span {
-    font-size: 10px;
+    font-size: 12px;
   }
   .pace-chart {
     height: 150px;
   }
   .bubble-item > strong {
-    font-size: 10px;
+    font-size: 12px;
   }
   .update-banner {
     padding: 18px;
@@ -2316,7 +2313,7 @@ dialog > header {
     min-height: 44px;
   }
   .app-footer {
-    font-size: 10px;
+    font-size: 12px;
   }
   .pathway-grid,
   .pathway-grid aside,
@@ -2344,14 +2341,14 @@ dialog > header {
     font-size: 15px;
   }
   .course-content > p {
-    font-size: 12px;
+    font-size: 13px;
   }
   .course-bottom {
     flex-wrap: wrap;
   }
   .verification {
     flex-wrap: wrap;
-    font-size: 10px;
+    font-size: 12px;
   }
   .form-row,
   .thirds {
@@ -2392,7 +2389,7 @@ dialog > header {
     left: 50%;
     bottom: 80px;
     padding: 14px;
-    font-size: 11px;
+    font-size: 12.5px;
   }
   dialog {
     max-height: 85dvh;
@@ -2445,7 +2442,7 @@ dialog > header {
   background-color: transparent;
   color: var(--ink);
   font: inherit;
-  font-size: 12px;
+  font-size: 13px;
   cursor: pointer;
 }
 .language-selector:focus-within {
@@ -2489,7 +2486,7 @@ dialog > header {
   .language-selector select {
     min-width: 96px;
     min-height: 36px;
-    font-size: 11px;
+    font-size: 12.5px;
   }
 }
 @media (max-width: 360px) {
