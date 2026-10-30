@@ -2,13 +2,15 @@
 
 Verified on **30 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
-## Animal avatars and consolidated Settings controls — live
+## Animal avatars, consolidated Settings controls and video covers — live
 
-Canonical application source `30bd9c6199e7717e4e5faf71b39088852557e4e9` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/workspace). Settings → Profile now offers twelve animal friends alongside the six existing avatars, initials and uploaded photos. The sidebar footer uses a Settings gear, and the duplicate top-bar sliders button is removed. This combined release also preserves the team's companion-video covers and newer text-size/contrast improvements.
+Canonical application source `30bd9c6199e7717e4e5faf71b39088852557e4e9` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/workspace). Settings → Profile now offers twelve animal friends alongside the six existing avatars, initials and uploaded photos. The sidebar footer uses a Settings gear, and the duplicate top-bar sliders button is removed. The same release turns each optional companion video into a compact card with the video's own YouTube cover, its length, title and channel; covers load from YouTube's image server. It also raises small text with darker muted colours and frosts pinned dialog headers so scrolled rows no longer show through.
 
 All **258 tracked source files** matched Git blob hashes before and after verification inside Replit. Locked installation, **209 unit tests**, the production build and **35 integration checks** passed. Runtime commit `dfcec52a02e1de07db2341d8c0d384f925496064` selects `artifacts/arctalent-release-30bd9c6`; the previous configuration is retained byte-for-byte as `artifact.toml.pre-animal-settings-backup`. The pre-existing generated type change in the older release was left untouched. Runtime history was not exported to GitHub.
 
 Replit reports **Live**, and all **35 public HTTPS integration checks passed**, including requests for every bundled avatar SVG. The public browser confirmed a working footer gear, no duplicate top-bar control, twelve loaded animal choices and a Cat selection surviving reload in the picker and header. Testing ended with the original initials restored. At 390 CSS pixels, the combined release retains three avatar columns without horizontal overflow and accessible Settings navigation. See the [live avatar picker](images/animal-avatars-live.png).
+
+The video cover styles were first observed publicly at **2026-10-30 15:53:03 UTC (23:53:03 MYT)**. Headless Chrome then loaded every YouTube cover in the career explorer (1), learning plan (4) and SME workspace (7) at 390 and 1440 CSS pixels, with no horizontal overflow. See the [video cover cards](images/video-covers-live.png) and the [phone view](images/video-covers-phone-live.png).
 
 ## Profile Reset control — live
 

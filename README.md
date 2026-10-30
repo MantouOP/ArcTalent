@@ -75,7 +75,7 @@ ArcTalent provides an explainable career reskilling command center that maps cur
 - **Companion Video Cards**: Each course step offers an optional YouTube video as a compact card with the video's original cover, length, title and channel. Covers load from YouTube's image server; videos open on YouTube and are not counted in planned hours.
 - **Multilingual Support**: Fully accessible in English, Bahasa Melayu, and 简体中文.
 - **One Settings page**: Profile, Skills (with CV import), Language & accessibility and Demo data are tabs of one Settings page. Profile and skill edits form one draft and update your pathways together. Language & accessibility also offers larger text, reduced motion and reduced visual effects for slower phones.
-- **Profile pictures**: Settings → Profile offers six illustrated avatars, initials or a JPG/PNG/WebP photo. Photos are cropped and resized on the device, saved per profile in browser storage, and displayed consistently in the workspace.
+- **Profile pictures**: Settings → Profile offers six classic and twelve animal avatars, initials or a JPG/PNG/WebP photo. Photos are cropped and resized on the device, saved per profile in browser storage, and displayed consistently in the workspace.
 - **CV Privacy Controls**: ArcTalent does not save CV files or raw CV text. PDF conversion processes the file on the application server. AI analysis sends reviewed text to RunPod only when explicitly selected. Reviewed profile skills are saved in this browser, and transient CV text/suggestions have a clear action.
 - **Optional AI Career Guide**: Enable **Use AI answers (RunPod)** in the chat to ask natural career and learning questions in English, Bahasa Melayu or Simplified Chinese. The server recomputes the selected plan and uses catalogue-owned course links. Names, photos, CV text and employee records are not attached. Replies identify the actual model or an explicit local fallback; chat does not modify the plan or persist on ArcTalent's server.
 
@@ -96,7 +96,7 @@ ArcTalent provides an explainable career reskilling command center that maps cur
 
 - **Development & Version Control**: Imported canonical source repository, maintaining continuous verified git histories.
 - **Production Hosting**: Live public deployment on Replit Autoscale (`https://arc-talent--emmanuelheng.replit.app/`) serving web views and API routes.
-- **Build & CI Verification**: The published release (`ded1be5`, 30 October 2026) passed 207 unit tests and 34 production integration checks inside Replit before publishing, then the same 34 checks against the live site ([runtime status](docs/REPLIT_STATUS.md)). GitHub Actions runs the full suite on every pull request and push to `main`.
+- **Build & CI Verification**: The published release (`30bd9c6`, 30 October 2026) passed 209 unit tests and 35 production integration checks inside Replit before publishing, then the same 35 checks against the live site ([runtime status](docs/REPLIT_STATUS.md)). GitHub Actions runs the full suite on every pull request and push to `main`.
 - **Secrets Management**: RunPod API keys and endpoints are stored in Replit Secrets, never committed to git.
 - 📄 Proof of use: [`submission/SDC2026_XenoForce_Replit_POU.pdf`](submission/SDC2026_XenoForce_Replit_POU.pdf)
 
