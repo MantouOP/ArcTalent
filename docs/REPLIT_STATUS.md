@@ -2,6 +2,14 @@
 
 Verified on **30 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
+## Introduction with interactive pathway demo — live
+
+Canonical application source `c9be53576f21b19874b03f4534e2121a0098f950` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/). The welcome page now introduces the product before the dashboard: an example route, a working fictional-profile demo, the planning process, dated-evidence explanation, team introduction and FAQs. The demo uses the real planner and exact catalogue course links; it neither replaces saved profiles nor invokes a model. English, Bahasa Melayu and Simplified Chinese remain supported.
+
+The release preserves the team’s newer finalist and Settings changes merged from GitHub. All **236 tracked source files** matched Git blob hashes before and after the Replit build. Locked installation, **207 unit tests**, production build and **34 integration checks** passed inside Replit. Runtime commit `0907bf6e92ae5a383f98eb43c4bfb77d81708537` selects `artifacts/arctalent-release-c9be535`. The preceding live configuration is retained in `artifact.toml.pre-homepage-demo-backup`. Runtime history was not exported to GitHub.
+
+Replit reports **Live**, and all **34 public HTTPS integration checks passed**. Public Chrome verified the demo controls, all three languages, keyboard FAQ access, both workspace links and the retained custom career goal. The 390 CSS-pixel layout had no horizontal overflow. See the [desktop introduction](images/homepage-demo-live.png), [interactive demo](images/homepage-interactive-demo-live.png) and [phone introduction](images/homepage-mobile-live.png).
+
 ## RunPod career chat — live
 
 Canonical source `577b9865e8842596d9f4057c3fdb3445c6c59fc1` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/workspace). The guide retains its local mode and adds an explicit **Use AI answers (RunPod)** choice. The existing `Qwen/Qwen2.5-7B-Instruct` configuration is reused. The server recomputes the selected plan; decoding and validation accept only its scheduled course IDs, with zero IDs allowed for an empty plan.
