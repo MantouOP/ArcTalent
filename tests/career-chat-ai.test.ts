@@ -11,6 +11,7 @@ import {
 import {
   answerWithCareerModel,
   prepareChatFacts,
+  chatModelOutputSchemaForPlan,
 } from '../src/lib/career-chat-ai';
 
 function request() {
@@ -140,6 +141,43 @@ test('model cannot link a valid catalogue course outside the selected plan', asy
   }));
   assert.equal(answer.mode, 'local');
   assert.equal(answer.reply.sources.length, 0);
+});
+
+test('the model output schema permits only scheduled course IDs and forces an empty list for an empty plan', () => {
+  const facts = prepareChatFacts(request());
+  const ids = facts.plan.courses.map((course) => course.id);
+  const schema = chatModelOutputSchemaForPlan(ids);
+  assert.equal(
+    schema.safeParse({
+      paragraphs: ['Start with the first scheduled course.'],
+      courseIds: [ids[0]],
+    }).success,
+    true,
+  );
+  assert.equal(
+    schema.safeParse({
+      paragraphs: ['Practice a recipe.'],
+      courseIds: ['communication'],
+    }).success,
+    false,
+  );
+  const empty = chatModelOutputSchemaForPlan([]);
+  assert.equal(
+    empty.safeParse({
+      paragraphs: [
+        'No verified courses are scheduled. Practise a small task this weekend.',
+      ],
+      courseIds: [],
+    }).success,
+    true,
+  );
+  assert.equal(
+    empty.safeParse({
+      paragraphs: ['Practice a recipe.'],
+      courseIds: ['communication'],
+    }).success,
+    false,
+  );
 });
 
 test('history and locale are bounded and a successful answer cannot change the plan', async () => {

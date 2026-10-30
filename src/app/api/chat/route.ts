@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import {
   answerWithCareerModel,
   careerChatInstructions,
-  chatModelOutputSchema,
+  chatModelOutputSchemaForPlan,
 } from '@/lib/career-chat-ai';
 import { chatRequestSchema } from '@/lib/career-chat-request';
 import { getRunpodConfig } from '@/lib/runpod-config';
@@ -60,7 +60,11 @@ export async function POST(request: Request) {
       ? async (data) => {
           const generated = await generateText({
             model: createRunpodModel(config),
-            output: Output.object({ schema: chatModelOutputSchema }),
+            output: Output.object({
+              schema: chatModelOutputSchemaForPlan(
+                data.facts.plan.courses.map((course) => course.id),
+              ),
+            }),
             maxOutputTokens: 900,
             maxRetries: 0,
             abortSignal: AbortSignal.any([
