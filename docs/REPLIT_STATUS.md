@@ -1,6 +1,16 @@
 # Replit runtime and publishing verification
 
-Verified on **29 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
+Verified on **30 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
+
+## RunPod career chat — live
+
+Canonical source `577b9865e8842596d9f4057c3fdb3445c6c59fc1` is **Live** at [ArcTalent](https://arc-talent--emmanuelheng.replit.app/workspace). The guide retains its local mode and adds an explicit **Use AI answers (RunPod)** choice. The existing `Qwen/Qwen2.5-7B-Instruct` configuration is reused. The server recomputes the selected plan; decoding and validation accept only its scheduled course IDs, with zero IDs allowed for an empty plan.
+
+Immutable directory `artifacts/arctalent-release-577b986` matched all **222 tracked source files** to GitHub before and after build. Locked installation, **188 unit tests**, production build and **34 integration checks** passed in Replit. Runtime commit `c2d3411a249a95cef358e418ee3c2ef699102b5c` selects this release and preserves the preceding configuration in `artifact.toml.pre-runpod-chat-empty-plan-backup`. Runtime history was not exported to the GitHub runtime branch.
+
+Two initial publications failed during deployment container creation after successful builds. About 6 GB of inactive generated caches were archived outside the project before another publish; the source and active/rollback releases were kept. The two caches of the never-published initial chat release were also archived before the final schema repair. Archive locations and integrity checks are recorded in [verification](VERIFICATION.md). Later publishing passed bundling; promotion waited at **Creating Autoscale service** before completing.
+
+Replit reports **Live**. The final public browser successfully answered the original weekend-chef question in actual Qwen mode with no fallback notice. A separate synthetic public web-development plan returned AI guidance with exact canonical OpenClassrooms course links. All **34 public HTTPS checks passed**, and browser warning/error entries were empty. Saved profile and planning data were retained. The [432 × 690 screenshot](images/runpod-chat-live.png) records the public answer.
 
 ## SDG skill-tooltip fix — live
 
