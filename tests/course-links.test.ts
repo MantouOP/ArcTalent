@@ -42,8 +42,12 @@ test('every course has a unique, checked YouTube companion video', () => {
     assert.equal(url.pathname, '/watch');
     assert.match(url.searchParams.get('v') ?? '', /^[\w-]{11}$/);
     assert.equal([...url.searchParams.keys()].join(), 'v');
+    // The ID also names the cover image, so it must be the linked video.
+    assert.equal(video.id, url.searchParams.get('v'), course.id);
+    // Lengths use YouTube's own format: m:ss, or h:mm:ss from an hour.
+    assert.match(video.duration, /^(?:[1-9]\d*:[0-5]\d|[1-5]?\d):[0-5]\d$/);
     assert.ok(video.title.trim().length > 0 && video.channel.trim().length > 0);
-    assert.equal(video.checkedAt, '2026-10-29');
+    assert.equal(video.checkedAt, '2026-10-30');
     assert.ok(!urls.has(video.url), course.id);
     urls.add(video.url);
   }

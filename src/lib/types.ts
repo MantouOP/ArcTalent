@@ -72,9 +72,13 @@ export type Role = {
 };
 /** An optional YouTube overview; never counted in planned hours. */
 export type CourseVideo = {
+  /** YouTube video ID; also names the video's cover image. */
+  id: string;
   title: string;
   channel: string;
   url: string;
+  /** Length as YouTube displays it, e.g. 4:30 or 1:14:33. */
+  duration: string;
   checkedAt: string;
 };
 export type Course = {

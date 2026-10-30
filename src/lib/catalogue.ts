@@ -232,98 +232,122 @@ export const roles: Role[] = [
 ];
 
 const checkedAt = '2026-10-24';
-/** Companion videos; titles and channels confirmed through YouTube oEmbed. */
-const youtube = (id: string, title: string, channel: string): CourseVideo => ({
+/** Companion videos; titles and channels confirmed through YouTube oEmbed, lengths as YouTube displays them. */
+const youtube = (
+  id: string,
+  title: string,
+  channel: string,
+  duration: string,
+): CourseVideo => ({
+  id,
   title,
   channel,
   url: `https://www.youtube.com/watch?v=${id}`,
-  checkedAt: '2026-10-29',
+  duration,
+  checkedAt: '2026-10-30',
 });
 const videos: Record<string, CourseVideo> = {
   excel: youtube(
     'eHtZrIb0oWY',
     'Excel Charts and Graphs Tutorial',
     'Kevin Stratvert',
+    '24:31',
   ),
   thinking: youtube(
     'dItUGF8GdTw',
     '5 tips to improve your critical thinking - Samantha Agoos',
     'TED-Ed',
+    '4:30',
   ),
   communication: youtube(
     'HAnw168huqA',
     'Think Fast, Talk Smart: Communication Techniques',
     'Stanford Graduate School of Business',
+    '58:20',
   ),
   project: youtube(
     'OyrKGopOGpQ',
     'Project Management 101: Basics and Terminology',
     'Coursera',
+    '3:40',
   ),
   sql: youtube(
     'HXV3zeQKqGY',
     'SQL Tutorial - Full Database Course for Beginners',
     'freeCodeCamp.org',
+    '4:20:39',
   ),
   powerbi: youtube(
     'TmhQCQr_DCA',
     'How to use Microsoft Power BI - Tutorial for Beginners',
     'Kevin Stratvert',
+    '27:53',
   ),
   responsible: youtube(
     '3-xhMXeYIcg',
     'Introduction to Responsible AI',
     'Google Cloud Tech',
+    '9:16',
   ),
   'thinking-ou': youtube(
     'hxhbOvR2TGk',
     'Evaluating Evidence: Crash Course Navigating Digital Information #6',
     'CrashCourse',
+    '13:21',
   ),
   'project-v': youtube(
     '_QPjZF346b4',
     'V-Model - The 9 steps of the V-Model process',
     'Software Design',
+    '8:02',
   ),
   operations: youtube(
     'so6WfXNbdS8',
     'A Brief Introduction to Operations Management',
     'Dr. Harvi Millar',
+    '28:40',
   ),
   environment: youtube(
     'g_aguo7V0Q4',
     'Ecological footprint: How Many Planets Do We Need in 2026?',
     'Sustainability Illustrated',
+    '6:14',
   ),
   python: youtube(
     'r-uOLxNrNk8',
     'Data Analysis with Python - Full Course for Beginners (Numpy, Pandas, Matplotlib, Seaborn)',
     'freeCodeCamp.org',
+    '4:22:13',
   ),
   'ai-basics': youtube(
     '4RixMPF4xis',
     'AI vs Machine Learning',
     'IBM Technology',
+    '5:49',
   ),
   security: youtube(
     '_DVVNOGYtmU',
     'Cybersecurity for Beginners | Google Cybersecurity Certificate',
     'Grow with Google',
+    '1:14:33',
   ),
   htmlcss: youtube(
     'a_iQb1lnAEQ',
     'Learn HTML & CSS – Full Course for Beginners',
     'freeCodeCamp.org',
+    '5:21:44',
   ),
   javascript: youtube(
     'PkZNo7MFNFg',
     'Learn JavaScript - Full Course for Beginners',
     'freeCodeCamp.org',
+    '3:26:43',
   ),
   marketing: youtube(
     'U-X7DG9UY3M',
     'Intro to Digital Marketing & E-commerce | Google Digital Marketing & E-commerce Certificate',
     'Grow with Google',
+    '19:58',
   ),
 };
 const course = (

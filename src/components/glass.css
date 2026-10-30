@@ -321,8 +321,11 @@ dialog::backdrop {
   background: rgba(214, 224, 233, 0.45);
   backdrop-filter: blur(10px);
 }
+/* The header stays pinned while the body scrolls, so it needs its own frost. */
 dialog > header {
-  background: transparent;
+  background: rgba(250, 252, 254, 0.9);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   border-bottom: 1px solid var(--line);
 }
 .toast {
