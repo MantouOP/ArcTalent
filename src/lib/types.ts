@@ -43,6 +43,8 @@ export type Profile = {
   budget: number;
   weeks: number;
   interests: string[];
+  /** Interests in the person's own words; matching ones count towards work areas. */
+  customInterests?: string[];
   skills: Partial<Record<SkillId, number>>;
   completed: string[];
   learningPreferences?: LearningPreferences;

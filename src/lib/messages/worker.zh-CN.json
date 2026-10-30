@@ -139,5 +139,12 @@
   "Next step": "下一步",
   "to": "至",
   "No skill requirements have been mapped for this role.": "尚未为此岗位设置对应的技能要求。",
-  "Coverage compares your self-reported levels with the team’s simplified role requirements. It is not a qualification or a chance of getting hired.": "覆盖率将您自评的技能水平与团队简化的岗位要求进行比较。它不代表资格认证，也不代表获聘概率。"
+  "Coverage compares your self-reported levels with the team’s simplified role requirements. It is not a qualification or a chance of getting hired.": "覆盖率将您自评的技能水平与团队简化的岗位要求进行比较。它不代表资格认证，也不代表获聘概率。",
+  "Add your own interest": "添加您自己的兴趣",
+  "For example: graphic design, healthcare": "例如：平面设计、医疗保健",
+  "Add": "添加",
+  "Counts as {0}": "计为{0}",
+  "Not linked to a scored work area": "未关联到计分的工作领域",
+  "You can add up to {0} interests.": "您最多可以添加 {0} 项兴趣。",
+  "Type any interest in your own words. If it matches a work area above, it counts towards your route scores. Every interest you add also appears as a goal idea under “Type your own career goal”.": "用您自己的话输入任何兴趣。如果它与上方的工作领域相符，就会计入您的路线分数。您添加的每项兴趣也会在“输入你自己的职业目标”下显示为目标灵感。"
 }

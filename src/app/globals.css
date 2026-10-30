@@ -1212,6 +1212,68 @@ legend {
   font-size: 12.5px;
   margin: 0;
 }
+.custom-interests {
+  display: grid;
+  gap: 8px;
+  margin-top: 6px;
+}
+.custom-interests > label {
+  margin-bottom: 0;
+}
+.custom-interest-entry {
+  display: flex;
+  gap: 8px;
+}
+.custom-interest-entry input {
+  flex: 1;
+  min-width: 0;
+}
+.custom-interest-entry button {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+}
+.custom-interest-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.custom-interest-list li {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  padding: 5px 4px 5px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.6);
+}
+.custom-interest-list li > span {
+  display: grid;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.custom-interest-list small {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.custom-interest-list .icon-button {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+}
+.custom-interests > p {
+  margin: 0;
+}
 input[type='checkbox'] {
   accent-color: var(--green);
   width: 15px;

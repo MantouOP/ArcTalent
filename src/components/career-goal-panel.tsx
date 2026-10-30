@@ -301,6 +301,27 @@ export function CareerGoalPanel({
             </button>
           ))}
         </div>
+        {!!profile.customInterests?.length && (
+          <div
+            className="goal-examples goal-interest-ideas"
+            aria-label={t('From your interests')}
+          >
+            <span aria-hidden="true">{t('From your interests')}</span>
+            {profile.customInterests.map((interest) => (
+              <button
+                type="button"
+                key={interest}
+                onClick={() => {
+                  invalidate();
+                  setTitle(interest);
+                  titleField.current?.focus();
+                }}
+              >
+                {interest}
+              </button>
+            ))}
+          </div>
+        )}
         <label>
           {t('What work do you want to do? (optional)')}
           <textarea

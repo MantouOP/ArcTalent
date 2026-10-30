@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { careerGoalSchema, profileSchema, snapshotSchema } from './validation';
 import { goalCandidates } from './career-goals';
+import { effectiveInterests } from './interests';
 import type { ChatContext } from './career-chat';
 import type { CareerGoal } from './types';
 import type { Locale } from './i18n';
@@ -69,7 +70,11 @@ export function makeChatRequest(
     consent: true,
     question,
     locale,
-    profile: anonymousProfileSchema.parse(context.profile),
+    // Typed interests stay on the device; only the work areas they match are sent.
+    profile: anonymousProfileSchema.parse({
+      ...context.profile,
+      interests: effectiveInterests(context.profile),
+    }),
     scenario: context.scenario,
     snapshot: evidenceSummarySchema.parse(context.snapshot),
     roleId: context.active.role.id,

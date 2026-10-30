@@ -1,4 +1,5 @@
 import { courses, roles, skillById, skills } from './catalogue';
+import { effectiveInterests } from './interests';
 import type {
   LearningPlan,
   Match,
@@ -38,7 +39,7 @@ export function matchRole(
     ) / requirements.reduce((s, [, r]) => s + r, 0);
   const resilience =
     1 - (scenario === 'moderate' ? 0.35 : 0.75) * role.exposure;
-  const interest = profile.interests.includes(role.family) ? 1 : 0.4;
+  const interest = effectiveInterests(profile).includes(role.family) ? 1 : 0.4;
   const score = round(
     100 *
       (0.55 * coverage + 0.15 * interest + 0.15 * market + 0.15 * resilience),

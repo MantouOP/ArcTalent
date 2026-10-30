@@ -12,6 +12,7 @@ import type { WorkforceSettings } from './workforce-settings';
 import { getWorkforceMembers } from './workforce-settings';
 import { courses, roles, skillById } from './catalogue';
 import { rankRoles } from './engine';
+import { effectiveInterests } from './interests';
 
 export type ChatView = 'explore' | 'pathway' | 'team' | 'evidence' | 'profile';
 export type ChatIntent =
@@ -576,7 +577,7 @@ export function careerChatContextKey(
         budget: profile.budget,
         hours: profile.hours,
         weeks: profile.weeks,
-        interests: [...profile.interests].sort(),
+        interests: effectiveInterests(profile),
         skills: profile.skills,
         completed: [...profile.completed].sort(),
         learningPreferences: profile.learningPreferences,
