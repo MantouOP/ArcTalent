@@ -32,7 +32,7 @@ await check(
     const response = await fetch(origin);
     assert.equal(response.status, 200);
     const html = await response.text();
-    assert.match(html, /A new direction/);
+    assert.match(html, /Your next career/);
     assert.match(html, /href="\/workspace"/);
     assert.match(html, /href="\/workspace\/team"/);
     assert.match(html, /Language \/ Bahasa \/ 语言/);
