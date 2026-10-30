@@ -265,12 +265,12 @@ export function ProfilePanel({
                 type="button"
                 className="secondary"
                 onClick={() => {
-                  setForm(createProfileDraft('custom-' + crypto.randomUUID()));
+                  setForm(createProfileDraft(form.id));
                   setFormError('');
                   clearCv();
                 }}
               >
-                {t('Start a blank profile')}
+                {t('Reset')}
               </button>
               <label>
                 {t('Choose a synthetic profile')}
