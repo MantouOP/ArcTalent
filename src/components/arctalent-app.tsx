@@ -2,6 +2,7 @@
 import './worker-journey.css';
 import './orion.css';
 import './custom-inputs.css';
+import './finals-widgets.css';
 import { useI18n, LanguageSelector } from './language-provider';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -26,7 +27,6 @@ import {
   ShieldCheck,
   Sparkles,
   Target,
-  UserRound,
   Users,
   Wallet,
   X,
@@ -51,7 +51,6 @@ import {
   Tag,
 } from './ui';
 import { LearningMap } from './learning-map';
-import { ProfilePanel } from './profile-panel';
 import { EmployerPanel } from './employer-panel';
 import { EvidencePanel } from './evidence-panel';
 import { ImpactScorecard } from './impact-scorecard';
@@ -59,7 +58,7 @@ import { SkillBridge } from './skill-bridge';
 import { StudyRhythm } from './study-rhythm';
 import { RouteSummary, RouteAnalytics } from './command-overview';
 import { CareerChat } from './career-chat';
-import { SettingsPanel } from './settings-panel';
+import { SettingsPage } from './settings-page';
 import { ProfileAvatar } from './profile-avatar';
 import { CourseLink } from './course-link';
 import { CareerGoalPanel } from './career-goal-panel';
@@ -74,14 +73,23 @@ import {
   updateWorkforceProfile,
   type WorkforceSettings,
 } from '@/lib/workforce-settings';
-type View = 'explore' | 'pathway' | 'team' | 'impact' | 'evidence' | 'profile';
+import type { SettingsSection } from '@/lib/settings-sections';
+import { applySdgPriority, type SdgFocus } from '@/lib/finals-enhancements';
+import {
+  AutoReplanBanner,
+  FutureSkillsRadarPanel,
+  LearnerBadgesPanel,
+  MalaysiaHrdDirectoryPanel,
+  SdgChoiceBar,
+} from './finals-widgets';
+type View = 'explore' | 'pathway' | 'team' | 'impact' | 'evidence' | 'settings';
 const navigation = [
   { id: 'explore' as const, label: 'Career explorer', icon: Compass },
   { id: 'pathway' as const, label: 'My learning pathway', icon: Map },
   { id: 'team' as const, label: 'SME workspace', icon: Users },
   { id: 'impact' as const, label: 'Impact scorecard', icon: Target },
   { id: 'evidence' as const, label: 'Evidence lab', icon: FlaskConical },
-  { id: 'profile' as const, label: 'My skills & profile', icon: UserRound },
+  { id: 'settings' as const, label: 'Settings', icon: Settings2 },
 ];
 const defaultRole = rankRoles(baseProfile, 'moderate', baseline)[0].role.id;
 export function ArcTalentApp({
@@ -91,7 +99,8 @@ export function ArcTalentApp({
 }) {
   const { t, locale } = useI18n();
   const { preferences: displayPreferences } = useDisplayPreferences();
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settingsSection, setSettingsSection] =
+    useState<SettingsSection>('profile');
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState(false);
   const [customGoal, setCustomGoal] = useState<CareerGoal | null>(null);
@@ -109,6 +118,7 @@ export function ArcTalentApp({
     [ready, setReady] = useState(false),
     [showAll, setShowAll] = useState(false),
     [funding, setFunding] = useState<'all' | 'free' | 'hrd'>('all'),
+    [sdgFocus, setSdgFocus] = useState<SdgFocus>('all'),
     [query, setQuery] = useState('');
   const revision = useRef(0);
   const [followTop, setFollowTop] = useState(true);
@@ -184,10 +194,15 @@ export function ArcTalentApp({
     const timer = setTimeout(() => setToast(''), 7000);
     return () => clearTimeout(timer);
   }, [toast]);
-  const matches = useMemo(
+  const baseMatches = useMemo(
     () => rankRoles(profile, scenario, snapshot, candidates),
     [profile, scenario, snapshot, candidates],
   );
+  const sdgRanked = useMemo(
+    () => applySdgPriority(baseMatches, sdgFocus),
+    [baseMatches, sdgFocus],
+  );
+  const matches = sdgRanked.matches;
   const shared = useMemo(
     () => sharedFoundation(profile, snapshot, candidates),
     [profile, snapshot, candidates],
@@ -215,6 +230,10 @@ export function ArcTalentApp({
         ? 'auto'
         : 'smooth',
     });
+  }
+  function openSettings(section?: SettingsSection) {
+    if (section) setSettingsSection(section);
+    navigate('settings');
   }
   function useSnapshot(next: Snapshot) {
     revision.current++;
@@ -251,7 +270,7 @@ export function ArcTalentApp({
       if (request === revision.current) setBusy(false);
     }
   }
-  function reset() {
+  function reset({ keepView = false } = {}) {
     revision.current++;
     setBusy(false);
     setProfile({
@@ -266,7 +285,9 @@ export function ArcTalentApp({
     setFollowTop(true);
     setWorkforce(restoreWorkforceSettings());
     setFunding('all');
+    setSdgFocus('all');
     setCustomGoal(null);
+    if (keepView) return;
     setView('explore');
     setToast('Demo reset to Aina’s starting profile.');
   }
@@ -378,14 +399,6 @@ export function ArcTalentApp({
             <Home size={20} />
           </a>
           <button
-            type="button"
-            onClick={() => setSettingsOpen(true)}
-            title={t('Settings')}
-            aria-label={t('Open settings')}
-          >
-            <Settings2 size={20} />
-          </button>
-          <button
             onClick={() => navigate('pathway')}
             title={t('Explore your pathway')}
             aria-label={t('Explore your pathway')}
@@ -412,7 +425,7 @@ export function ArcTalentApp({
             <small>{t('Synthetic demo profile')}</small>
           </div>
           <button
-            onClick={() => navigate('profile')}
+            onClick={() => openSettings('profile')}
             className="icon-button"
             aria-label={t('Edit profile')}
           >
@@ -439,7 +452,7 @@ export function ArcTalentApp({
             <button
               type="button"
               className="icon-button settings-open-button"
-              onClick={() => setSettingsOpen(true)}
+              onClick={() => openSettings()}
               title={t('Settings')}
               aria-label={t('Open settings')}
             >
@@ -451,7 +464,7 @@ export function ArcTalentApp({
             </span>
             <button
               className="text-button reset-demo"
-              onClick={reset}
+              onClick={() => reset()}
               aria-label={t('Reset demo')}
               title={t('Reset demo')}
             >
@@ -461,7 +474,7 @@ export function ArcTalentApp({
             <button
               className="avatar small-avatar profile-avatar-button"
               aria-label={t('Open my profile')}
-              onClick={() => navigate('profile')}
+              onClick={() => openSettings('profile')}
             >
               <ProfileAvatar
                 profile={profile}
@@ -476,8 +489,8 @@ export function ArcTalentApp({
               <span className="eyebrow">
                 {view === 'team'
                   ? t('GROW YOUR PEOPLE, TOGETHER')
-                  : view === 'profile'
-                    ? t('YOUR EXPERIENCE IS A HEAD START')
+                  : view === 'settings'
+                    ? t('MAKE ARCTALENT YOURS')
                     : view === 'impact'
                       ? t('MEASURED AGAINST OUR COMMITMENTS')
                       : t('A LITTLE CLARITY FOR WHAT COMES NEXT')}
@@ -493,7 +506,7 @@ export function ArcTalentApp({
                         ? t('Impact scorecard')
                         : view === 'evidence'
                           ? t('Evidence intelligence')
-                          : t('Your skills & profile')}
+                          : t('Settings')}
               </h1>
               <p>
                 {view === 'explore'
@@ -518,11 +531,11 @@ export function ArcTalentApp({
                               'Every source has a date. Every assumption has an explanation.',
                             )
                           : t(
-                              'Your skills, interests and constraints shape every recommendation.',
+                              'Your profile and skills shape every recommendation. Language, display and demo data settings are here too.',
                             )}
               </p>
             </div>
-            {view !== 'profile' && (
+            {view !== 'settings' && (
               <div className="scenario-box">
                 <label id="scenario-label">
                   {t('EXPLORE AN AI FUTURE')} <Info size={13} />
@@ -557,7 +570,7 @@ export function ArcTalentApp({
               </div>
             )}
           </div>
-          {view !== 'profile' && (
+          {view !== 'settings' && (
             <div
               className={`evidence-strip ${snapshot.kind === 'simulation' ? 'simulated' : ''}`}
             >
@@ -636,6 +649,31 @@ export function ArcTalentApp({
                   </strong>
                 </div>
               </div>
+              <AutoReplanBanner
+                profile={profile}
+                scenario={scenario}
+                previous={previous}
+                snapshot={snapshot}
+                candidates={candidates}
+                onInspectEvidence={() => navigate('evidence')}
+              />
+              <SdgChoiceBar
+                focus={sdgFocus}
+                onChange={(next) => {
+                  setSdgFocus(next);
+                  setFollowTop(true);
+                }}
+                shifted={sdgRanked.shifted}
+                defaultTopRole={baseMatches[0]?.role}
+                newTopRole={matches[0]?.role}
+              />
+              <FutureSkillsRadarPanel
+                snapshot={snapshot}
+                previous={previous}
+                onFlipTrend={() =>
+                  useSnapshot(snapshot.id === updated.id ? baseline : updated)
+                }
+              />
               <div className="explorer-grid">
                 <RouteSummary
                   active={active}
@@ -679,7 +717,7 @@ export function ArcTalentApp({
                       <h2>{t('Your skills radar')}</h2>
                       <button
                         className="text-button"
-                        onClick={() => navigate('profile')}
+                        onClick={() => openSettings('skills')}
                       >
                         {t('Edit')} <ArrowUpRight size={13} />
                       </button>
@@ -742,10 +780,15 @@ export function ArcTalentApp({
                     <div>
                       <h2>{t('Where your skills could take you')}</h2>
                       <p className="muted">
-                        {t(
-                          'Ranked for your profile and the {0} adoption scenario.',
-                          { 0: t(scenario) },
-                        )}{' '}
+                        {sdgFocus === 'all'
+                          ? t(
+                              'Ranked for your profile and the {0} adoption scenario.',
+                              { 0: t(scenario) },
+                            )
+                          : t(
+                              'Ranked for your profile, the {0} adoption scenario and your SDG priority.',
+                              { 0: t(scenario) },
+                            )}{' '}
                       </p>
                     </div>
                     <button
@@ -824,6 +867,13 @@ export function ArcTalentApp({
                                 0: Math.round(m.coverage),
                               })}
                             </small>
+                            {m.sdgBonus > 0 && (
+                              <small className="sdg-bonus">
+                                {t('+{0} SDG priority points', {
+                                  0: m.sdgBonus,
+                                })}
+                              </small>
+                            )}
                           </span>
                           <svg viewBox="0 0 40 40" aria-hidden="true">
                             <circle cx="20" cy="20" r="16" />
@@ -896,6 +946,20 @@ export function ArcTalentApp({
           )}
           {view === 'pathway' && (
             <>
+              <AutoReplanBanner
+                profile={profile}
+                scenario={scenario}
+                previous={previous}
+                snapshot={snapshot}
+                candidates={candidates}
+                onInspectEvidence={() => navigate('evidence')}
+              />
+              <LearnerBadgesPanel
+                profile={profile}
+                plan={plan}
+                shared={shared}
+                role={active.role}
+              />
               <CareerGoalPanel
                 profile={profile}
                 goal={customGoal}
@@ -1131,7 +1195,7 @@ export function ArcTalentApp({
                       </p>
                       <button
                         className="secondary"
-                        onClick={() => navigate('profile')}
+                        onClick={() => openSettings('profile')}
                       >
                         {t('Edit constraints')}{' '}
                       </button>
@@ -1180,6 +1244,10 @@ export function ArcTalentApp({
                       </div>
                     </section>
                   )}
+                  <MalaysiaHrdDirectoryPanel
+                    role={active.role}
+                    funding={funding}
+                  />
                 </section>
                 <aside>
                   <section className="panel">
@@ -1237,7 +1305,7 @@ export function ArcTalentApp({
                   </section>
                   <StudyRhythm
                     profile={profile}
-                    onEdit={() => navigate('profile')}
+                    onEdit={() => openSettings('profile')}
                   />
                   <section className="panel qualification-panel">
                     <GraduationCap size={23} />
@@ -1307,11 +1375,17 @@ export function ArcTalentApp({
               candidates={candidates}
             />
           )}
-          {view === 'profile' && (
-            <ProfilePanel
+          {view === 'settings' && (
+            <SettingsPage
               profile={profile}
               profiles={getWorkforceMembers(workforce, profile)}
-              onSave={(p) => {
+              section={settingsSection}
+              onSectionChange={setSettingsSection}
+              onExport={exportPlan}
+              exporting={exporting}
+              exportError={exportError}
+              onReset={() => reset({ keepView: true })}
+              onSaveProfile={(p) => {
                 saveProfile(p);
                 const keepCustom =
                   selected === 'custom-goal' &&
@@ -1369,29 +1443,24 @@ export function ArcTalentApp({
           workforce,
           candidates,
         }}
-        onNavigate={navigate}
+        onNavigate={(next) =>
+          next === 'profile' ? openSettings('profile') : navigate(next)
+        }
       />
       {details && (
         <Modal
           title={roleLabel(details.role, t)}
           onClose={() => setDetails(null)}
         >
-          <MatchDetails match={details} />
+          <MatchDetails
+            match={
+              matches.find((m) => m.role.id === details.role.id) ?? details
+            }
+            profile={profile}
+            scenario={scenario}
+            snapshot={snapshot}
+          />
         </Modal>
-      )}
-      {settingsOpen && (
-        <SettingsPanel
-          profile={profile}
-          onClose={() => setSettingsOpen(false)}
-          onEditProfile={() => {
-            setSettingsOpen(false);
-            navigate('profile');
-          }}
-          onExport={exportPlan}
-          exporting={exporting}
-          exportError={exportError}
-          onReset={reset}
-        />
       )}
     </div>
   );

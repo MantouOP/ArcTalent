@@ -1,0 +1,267 @@
+.sdg-choice-panel,
+.future-radar-panel,
+.auto-replan-banner,
+.learner-badges-panel,
+.malaysia-hrd-panel,
+.sdg-aggregate-panel,
+.fairness-audit-panel {
+  margin-bottom: 1.25rem;
+}
+
+.sdg-focus-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+}
+
+.sdg-focus-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  text-align: left;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(116, 130, 168, 0.24);
+  background: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+.sdg-focus-card:hover {
+  border-color: rgba(83, 32, 202, 0.45);
+  transform: translateY(-1px);
+}
+
+.sdg-focus-card.is-active {
+  border-color: #5320ca;
+  background: rgba(83, 32, 202, 0.06);
+  box-shadow: 0 4px 14px rgba(83, 32, 202, 0.12);
+}
+
+.sdg-focus-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #5320ca;
+  background: rgba(83, 32, 202, 0.1);
+  padding: 0.18rem 0.5rem;
+  border-radius: 999px;
+}
+
+.sdg-shift-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin-top: 0.85rem;
+}
+
+.radar-momentum-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-top: 0.85rem;
+}
+
+.momentum-col {
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(116, 130, 168, 0.2);
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.momentum-col h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.95rem;
+  margin: 0 0 0.75rem;
+}
+
+.momentum-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.45rem 0;
+  border-top: 1px solid rgba(116, 130, 168, 0.14);
+}
+
+.momentum-row > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.replan-diff-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+  margin-top: 0.85rem;
+}
+
+.replan-box {
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(83, 32, 202, 0.2);
+  background: rgba(83, 32, 202, 0.04);
+}
+
+.score-booster-section {
+  margin-top: 1.15rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(116, 130, 168, 0.2);
+}
+
+.score-booster-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.booster-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-top: 0.65rem;
+}
+
+.booster-item {
+  padding: 0.75rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid rgba(116, 130, 168, 0.22);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.booster-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.booster-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.badge-progress-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(116, 130, 168, 0.18);
+  overflow: hidden;
+  margin: 0.75rem 0 1rem;
+}
+
+.badge-progress-bar > i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #5320ca, #218d7c);
+}
+
+.badges-grid,
+.malaysia-hrd-grid,
+.sdg-aggregate-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+  margin-top: 0.75rem;
+}
+
+.learner-badge-card,
+.malaysia-hrd-card,
+.sdg-aggregate-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.95rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(116, 130, 168, 0.22);
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.learner-badge-card.is-earned {
+  border-color: rgba(33, 141, 124, 0.45);
+  background: rgba(33, 141, 124, 0.06);
+}
+
+.badge-card-top,
+.sdg-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.sdg-scope-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.sdg-metrics-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(116, 130, 168, 0.16);
+}
+
+.sdg-metrics-row > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.fairness-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.85rem;
+  margin: 0.85rem 0;
+}
+
+.fairness-stat {
+  display: flex;
+  flex-direction: column;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(33, 141, 124, 0.25);
+  background: rgba(33, 141, 124, 0.05);
+}
+
+.fairness-stat strong {
+  font-size: 1.45rem;
+  color: #166a5c;
+}
+
+.fairness-table-wrap {
+  overflow-x: auto;
+  margin-top: 0.85rem;
+}
+
+.fairness-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.fairness-table th,
+.fairness-table td {
+  text-align: left;
+  padding: 0.55rem 0.65rem;
+  border-bottom: 1px solid rgba(116, 130, 168, 0.18);
+}
+
+.match-score > span small.sdg-bonus {
+  color: var(--green);
+}

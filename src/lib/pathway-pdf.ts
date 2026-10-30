@@ -119,7 +119,12 @@ export function renderPathwayPdf(
       const skillNames = (ids: (keyof typeof skillById)[]) =>
         ids.map((id) => t(skillById[id].label)).join(', ');
       text(t('Your learning pathway'), 23);
-      text(`${input.profile.name} | ${input.profile.currentRole}`, 12);
+      text(
+        input.profile.currentRole
+          ? `${input.profile.name} | ${input.profile.currentRole}`
+          : input.profile.name,
+        12,
+      );
       text(
         match.role.custom ? match.role.title : t(match.role.title),
         17,

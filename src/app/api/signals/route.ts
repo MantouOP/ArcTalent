@@ -28,7 +28,9 @@ export async function GET() {
       };
       cached = { at: Date.now(), data: result };
       return result;
-    })();
+    })().finally(() => {
+      pending = null;
+    });
     return NextResponse.json(await pending);
   } catch {
     return NextResponse.json(
@@ -38,7 +40,5 @@ export async function GET() {
       },
       { status: 502 },
     );
-  } finally {
-    pending = null;
   }
 }

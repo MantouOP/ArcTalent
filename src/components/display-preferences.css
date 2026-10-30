@@ -25,3 +25,12 @@ html[data-reduce-motion='true'] *::after {
   transition: none !important;
   scroll-behavior: auto !important;
 }
+/* Lighter rendering for slower devices; it does not reduce data use. */
+html[data-reduce-effects='true'] *,
+html[data-reduce-effects='true'] *::before,
+html[data-reduce-effects='true'] *::after {
+  animation: none !important;
+  transition: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}

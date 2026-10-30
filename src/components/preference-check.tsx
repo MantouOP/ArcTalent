@@ -214,7 +214,10 @@ function PreferenceDialog({
               onChange={(event) =>
                 setAnswers({
                   ...answers,
-                  sessionMinutes: Number(event.target.value),
+                  sessionMinutes:
+                    event.target.value === ''
+                      ? undefined
+                      : Number(event.target.value),
                 })
               }
             />

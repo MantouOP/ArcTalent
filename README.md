@@ -65,9 +65,15 @@ ArcTalent provides an explainable career reskilling command center that maps cur
 - **SME Workforce Redeployment**: 8–10 worker gap heatmap, company budget management, internal seat quotas, grouped training economies, and localized PDF reports.
 - **SME Cost Model**: Prices the team plan as internal cohorts versus individual commercial seats, using HRD Corp's Allowable Cost Matrix and DOSM wage data, with editable assumptions and a break-even seat price.
 - **Impact Scorecard**: Live check of the four Phase 2 targets from our proposal, for your own route and the synthetic team in both AI scenarios. See the reproducible [impact benchmark](docs/IMPACT.md).
+- **SDG Priority Lens**: Choose SDG 4.3 & 4.4, 8.2 or 9.4 to re-rank career options toward that goal. Each option shows its SDG priority points next to an unchanged suitability score.
+- **Future Skills Radar and Re-planning**: Compares skill demand between snapshots, then shows which courses the plan kept, added or dropped after a trend update.
+- **What Would Raise This Score?**: Each skill gap shows the exact score gain from closing it and the shortest catalogue course that teaches it.
+- **Badges and Malaysian Training Portals**: Progress badges on the learning pathway, plus official links to HRD Corp e-LATiH, TalentCorp MyMahir and HRD Corp Claimable Courses.
+- **SDG Totals and Fairness Check**: SDG-aligned study hours for one learner, the SME team and a labelled 1,000-learner projection. A fairness check re-runs matching with six different names and job titles and shows the results are identical, because matching never reads them.
 - **PDF learning plans**: Download personal or SME plans as searchable PDFs with direct course links. Personal exports preserve the selected destination, funding filter, specialist gaps and typed study preferences in English, Bahasa Melayu or Simplified Chinese.
 - **Multilingual Support**: Fully accessible in English, Bahasa Melayu, and 简体中文.
-- **Profile pictures**: Settings offers six illustrated avatars, initials or a JPG/PNG/WebP photo. Photos are cropped and resized on the device, saved per profile in browser storage, and displayed consistently in the workspace.
+- **One Settings page**: Profile, Skills (with CV import), Language & accessibility and Demo data are tabs of one Settings page. Profile and skill edits form one draft and update your pathways together. Language & accessibility also offers larger text, reduced motion and reduced visual effects for slower phones.
+- **Profile pictures**: Settings → Profile offers six illustrated avatars, initials or a JPG/PNG/WebP photo. Photos are cropped and resized on the device, saved per profile in browser storage, and displayed consistently in the workspace.
 - **CV Privacy Controls**: ArcTalent does not save CV files or raw CV text. PDF conversion processes the file on the application server. AI analysis sends reviewed text to RunPod only when explicitly selected. Reviewed profile skills are saved in this browser, and transient CV text/suggestions have a clear action.
 - **Optional AI Career Guide**: Enable **Use AI answers (RunPod)** in the chat to ask natural career and learning questions in English, Bahasa Melayu or Simplified Chinese. The server recomputes the selected plan and uses catalogue-owned course links. Names, photos, CV text and employee records are not attached. Replies identify the actual model or an explicit local fallback; chat does not modify the plan or persist on ArcTalent's server.
 
@@ -136,6 +142,7 @@ $$\text{Suitability} = 55\% \times \text{Skill Coverage} + 15\% \times \text{Int
 - **Scenario Resilience**: $1 - (\text{Adoption Factor} \times \text{Role Exposure})$. Moderate uses 0.35; Rapid uses 0.75.
 - **Shared Foundation**: Identifies missing skills required by every top-ranked career across **both** scenarios.
 - **Greedy Course Scheduler**: Fills weekly study limits (e.g. 4 hrs/week, RM0 budget) and always schedules courses that close a shared-foundation gap before role-specific ones.
+- **SDG Priority Lens** (optional): Ranks by suitability plus up to 20 priority points: 10 when the role's own SDG target is in the lens, plus 10 × the share of its required skill levels mapped to a lens target. Suitability itself is unchanged.
 
 ---
 

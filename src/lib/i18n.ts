@@ -26,6 +26,8 @@ import costMs from './messages/cost.ms.json';
 import costZh from './messages/cost.zh-CN.json';
 import videoMs from './messages/video.ms.json';
 import videoZh from './messages/video.zh-CN.json';
+import finalsMs from './messages/finals.ms.json';
+import finalsZh from './messages/finals.zh-CN.json';
 
 export const locales = ['en', 'ms', 'zh-CN'] as const;
 export type Locale = (typeof locales)[number];
@@ -62,6 +64,7 @@ export const dictionaries: Record<
     ...impactMs,
     ...costMs,
     ...videoMs,
+    ...finalsMs,
     ...ms,
   },
   'zh-CN': {
@@ -78,6 +81,7 @@ export const dictionaries: Record<
     ...impactZh,
     ...costZh,
     ...videoZh,
+    ...finalsZh,
     ...zh,
   },
 };

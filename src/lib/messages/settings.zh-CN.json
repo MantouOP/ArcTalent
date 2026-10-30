@@ -1,6 +1,12 @@
 {
   "Settings": "设置",
   "Open settings": "打开设置",
+  "Settings categories": "设置类别",
+  "Profile": "个人资料",
+  "Skills": "技能",
+  "MAKE ARCTALENT YOURS": "让 ArcTalent 更贴合你",
+  "Your profile and skills shape every recommendation. Language, display and demo data settings are here too.": "你的个人资料和技能决定每一项推荐。语言、显示和演示数据设置也在这里。",
+  "Unsaved changes. Profile and skill edits are saved together.": "有未保存的更改。个人资料和技能的修改会一起保存。",
   "Make ArcTalent easier to read and work with.": "让 ArcTalent 更易阅读和使用。",
   "Language & accessibility": "语言与无障碍",
   "Interface language": "界面语言",
@@ -16,10 +22,6 @@
   "Preparing display preferences…": "正在准备显示偏好…",
   "Display defaults restored. Your learning data is unchanged.": "已恢复默认显示，您的学习数据保持不变。",
   "Restore display defaults": "恢复默认显示",
-  "Learning preferences": "学习偏好",
-  "Time, budget & interests": "时间、预算与兴趣",
-  "{0} h/week · RM {1} course budget · {2}-week horizon": "每周 {0} 小时 · 课程预算 RM {1} · {2} 周规划周期",
-  "Edit learning preferences": "编辑学习偏好",
   "Demo data": "演示数据",
   "Worker and company plans use this browser’s storage. Career-guide messages stay in tab memory. No account is connected.": "个人和公司计划使用此浏览器的存储空间，职业指南消息仅保留在标签页内存中。当前未连接账户。",
   "Download current learning plan": "下载当前学习计划",
@@ -50,5 +52,7 @@
   "This image could not be read. Try a different JPG, PNG or WebP file.": "无法读取此图片。请尝试其他 JPG、PNG 或 WebP 文件。",
   "Profile picture saved in this browser.": "个人头像已保存在此浏览器中。",
   "Browser storage is unavailable. Your picture applies for this visit only.": "浏览器存储不可用，头像仅在本次访问中有效。",
-  "Preparing profile picture…": "正在加载个人头像…"
+  "Preparing profile picture…": "正在加载个人头像…",
+  "Reduce visual effects": "减少视觉效果",
+  "Turn off shadows, blur and animation. This can help on older or slower phones; it does not reduce data use.": "关闭阴影、模糊和动画效果。这在较旧或较慢的手机上可能有帮助，但不会减少数据用量。"
 }
