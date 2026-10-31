@@ -89,7 +89,8 @@ export async function POST(request: Request) {
       );
       return NextResponse.json({
         skills: valid.map((s) => ({ ...s, level: 1 })),
-        mode: `${provider} extraction · ${model} · human confirmation required`,
+        // When the label already is the model, say "AI" rather than repeat it.
+        mode: `${provider === model ? 'AI' : provider} extraction · ${model} · human confirmation required`,
       });
     } catch {
       return NextResponse.json({

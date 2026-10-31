@@ -138,7 +138,7 @@ npm run impact
 Without AI settings, ArcTalent uses local skill matching and the local planning guide. To turn on AI answers, set **one** of these in Replit Secrets or an untracked `.env.local` (see [`.env.example`](.env.example)):
 
 - **RunPod**: `RUNPOD_API_KEY`, plus `RUNPOD_ENDPOINT_ID` or `RUNPOD_BASE_URL`, plus `RUNPOD_MODEL`.
-- **Any OpenAI-compatible gateway** (for example LiteLLM): `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`, and optionally `AI_PROVIDER_NAME`, the name people see before they send data.
+- **Any OpenAI-compatible gateway** (for example LiteLLM): `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`, and optionally `AI_PROVIDER_NAME`, the name people see before they send data (by default, the model name).
 
 When both are complete, the `AI_*` settings are used. The interface always names the provider that receives the data.
 

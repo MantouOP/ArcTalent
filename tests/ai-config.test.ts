@@ -13,9 +13,9 @@ const gateway = {
   AI_API_KEY: 'test-gateway-key',
 };
 
-test('an OpenAI-compatible gateway is accepted and named by its host by default', () => {
+test('an OpenAI-compatible gateway is accepted and named by its model by default', () => {
   assert.deepEqual(getOpenAICompatibleConfig(gateway), {
-    provider: 'litellm.example.test',
+    provider: 'gpt-5.4-mini',
     baseURL: 'https://litellm.example.test/v1',
     model: 'gpt-5.4-mini',
     apiKey: 'test-gateway-key',
@@ -25,11 +25,11 @@ test('an OpenAI-compatible gateway is accepted and named by its host by default'
       ?.provider,
     'XMUM LiteLLM',
   );
-  // A name that could carry markup falls back to the host.
+  // A name that could carry markup falls back to the model.
   assert.equal(
     getOpenAICompatibleConfig({ ...gateway, AI_PROVIDER_NAME: '<b>x</b>' })
       ?.provider,
-    'litellm.example.test',
+    'gpt-5.4-mini',
   );
 });
 

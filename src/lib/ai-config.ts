@@ -29,7 +29,7 @@ export function getOpenAICompatibleConfig(env: AiEnv = process.env) {
     const name = env.AI_PROVIDER_NAME?.trim() ?? '';
     const provider = /^[\p{L}\p{N} ._-]{1,40}$/u.test(name)
       ? name
-      : url.hostname;
+      : model.slice(0, 60);
     return { provider, baseURL: baseURL.replace(/\/$/, ''), model, apiKey };
   } catch {
     return null;
