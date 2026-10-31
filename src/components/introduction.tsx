@@ -6,6 +6,7 @@ import { baseline, skillById, updated } from '@/lib/catalogue';
 import { diffSnapshots } from '@/lib/engine';
 import { introductionDemo, introductionPeople } from '@/lib/introduction-demo';
 import { IntroductionDemo } from './introduction-demo';
+import PathwayPreviewCard from './pathway-preview-card';
 import { LanguageSelector, useI18n } from './language-provider';
 import './introduction.css';
 
@@ -102,78 +103,7 @@ export function Introduction() {
               )}
             </p>
           </div>
-          <figure
-            className="intro-route-preview"
-            data-ui
-            aria-label={t(
-              'An example route from existing skills to career options',
-            )}
-          >
-            <div className="intro-preview-top">
-              <span>ArcTalent / {t('Pathway preview')}</span>
-              <span className="intro-demo-tag">{t('Fictional example')}</span>
-            </div>
-            <div className="intro-preview-person">
-              <span className="intro-avatar" aria-hidden="true">
-                A
-              </span>
-              <div>
-                <strong>Aina</strong>
-                <p>{t('Administrative assistant')}</p>
-              </div>
-              <span className="intro-preview-time">
-                {t('{hours} h/week', { hours: 4 })}
-                <br />
-                RM 0
-              </span>
-            </div>
-            <div className="intro-route-drawing">
-              <svg
-                viewBox="0 0 520 320"
-                fill="none"
-                aria-hidden="true"
-                preserveAspectRatio="none"
-              >
-                <path
-                  d="M38 16V110Q38 138 70 138H210Q248 138 248 96V68Q248 42 285 42H490M248 138H490M248 138V211Q248 240 285 240H490"
-                  stroke="#625984"
-                  strokeWidth="2"
-                />
-                <path
-                  className="intro-route-ink"
-                  d="M38 16V110Q38 138 70 138H210"
-                  stroke="#76dde6"
-                  strokeWidth="3"
-                />
-                <circle cx="38" cy="16" r="5" fill="#76dde6" />
-                <circle cx="210" cy="138" r="7" fill="#76dde6" />
-                {[42, 138, 240].map((y) => (
-                  <circle key={y} cx="490" cy={y} r="5" fill="#b5a6ed" />
-                ))}
-              </svg>
-              <div className="intro-route-foundation">
-                <span>{t('Learn first')}</span>
-                <strong>{t('Shared foundation')}</strong>
-                <p>
-                  {example.shared
-                    .map((id) => t(skillById[id].label))
-                    .join(' + ')}
-                </p>
-              </div>
-              <div className="intro-route-destinations">
-                {example.ranking.slice(0, 3).map((match) => (
-                  <div key={match.role.id}>
-                    <span>{t('Then explore')}</span>
-                    <strong>{t(match.role.shortTitle)}</strong>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <figcaption>
-              <Check size={15} aria-hidden="true" />
-              {t('Build a foundation. Keep your options open.')}
-            </figcaption>
-          </figure>
+          <PathwayPreviewCard />
         </section>
 
         <section

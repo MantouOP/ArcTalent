@@ -1,0 +1,246 @@
+/* Styling for PathwayPreviewCard ensuring exact design rendering without needing full Tailwind build */
+
+.pathway-preview-card {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  border-radius: 28px 28px 64px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background: linear-gradient(135deg, #f3f5f9 0%, #eff2f9 50%, #e9ecf5 100%);
+  padding: 28px;
+  box-shadow: 0 20px 50px rgba(30, 41, 59, 0.08);
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.pathway-preview-card * {
+  box-sizing: border-box;
+}
+
+/* Utilities matching the provided JSX */
+.pathway-preview-card .relative {
+  position: relative;
+}
+.pathway-preview-card .absolute {
+  position: absolute;
+}
+.pathway-preview-card .w-full {
+  width: 100%;
+}
+.pathway-preview-card .max-w-\[640px\] {
+  max-width: 640px;
+}
+.pathway-preview-card .rounded-\[28px\] {
+  border-radius: 28px;
+}
+.pathway-preview-card .rounded-br-\[64px\] {
+  border-bottom-right-radius: 64px;
+}
+.pathway-preview-card .border-white\/80 {
+  border-color: rgba(255, 255, 255, 0.8);
+}
+.pathway-preview-card .p-7 {
+  padding: 28px;
+}
+.pathway-preview-card .flex {
+  display: flex;
+}
+.pathway-preview-card .items-center {
+  align-items: center;
+}
+.pathway-preview-card .justify-between {
+  justify-content: space-between;
+}
+.pathway-preview-card .justify-center {
+  justify-content: center;
+}
+.pathway-preview-card .text-xs {
+  font-size: 12px;
+  line-height: 16px;
+}
+.pathway-preview-card .text-sm {
+  font-size: 14px;
+  line-height: 20px;
+}
+.pathway-preview-card .text-lg {
+  font-size: 18px;
+  line-height: 28px;
+}
+.pathway-preview-card .text-xl {
+  font-size: 20px;
+  line-height: 28px;
+}
+.pathway-preview-card .text-\[15px\] {
+  font-size: 15px;
+}
+.pathway-preview-card .text-\[16px\] {
+  font-size: 16px;
+}
+.pathway-preview-card .font-medium {
+  font-weight: 500;
+}
+.pathway-preview-card .font-bold {
+  font-weight: 700;
+}
+.pathway-preview-card .text-\[\#534B8C\] {
+  color: #534b8c;
+}
+.pathway-preview-card .text-\[\#1E293B\] {
+  color: #1e293b;
+}
+.pathway-preview-card .text-\[\#475569\] {
+  color: #475569;
+}
+.pathway-preview-card .text-\[\#526071\] {
+  color: #526071;
+}
+.pathway-preview-card .text-\[\#285961\] {
+  color: #285961;
+}
+.pathway-preview-card .mt-6 {
+  margin-top: 24px;
+}
+.pathway-preview-card .mt-4 {
+  margin-top: 16px;
+}
+.pathway-preview-card .mt-1\.5 {
+  margin-top: 6px;
+}
+.pathway-preview-card .mt-1 {
+  margin-top: 4px;
+}
+.pathway-preview-card .mt-0\.5 {
+  margin-top: 2px;
+}
+.pathway-preview-card .gap-4 {
+  gap: 16px;
+}
+.pathway-preview-card .gap-2\.5 {
+  gap: 10px;
+}
+.pathway-preview-card .h-12 {
+  height: 48px;
+}
+.pathway-preview-card .w-12 {
+  width: 48px;
+}
+.pathway-preview-card .rounded-full {
+  border-radius: 9999px;
+}
+.pathway-preview-card .bg-\[\#EAE8F2\] {
+  background-color: #eae8f2;
+}
+.pathway-preview-card .bg-\[\#F7F6FA\] {
+  background-color: #f7f6fa;
+}
+.pathway-preview-card .bg-\[\#DCD6F0\] {
+  background-color: #dcd6f0;
+}
+.pathway-preview-card .text-right {
+  text-align: right;
+}
+.pathway-preview-card .h-\[290px\] {
+  height: 290px;
+}
+.pathway-preview-card .pointer-events-none {
+  pointer-events: none;
+}
+.pathway-preview-card .inset-0 {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.pathway-preview-card .h-full {
+  height: 100%;
+}
+.pathway-preview-card .left-\[64px\] {
+  left: 64px;
+}
+.pathway-preview-card .top-\[88px\] {
+  top: 88px;
+}
+.pathway-preview-card .z-10 {
+  z-index: 10;
+}
+.pathway-preview-card .w-\[204px\] {
+  width: 204px;
+}
+.pathway-preview-card .rounded-xl {
+  border-radius: 12px;
+}
+.pathway-preview-card .border {
+  border-width: 1px;
+  border-style: solid;
+}
+.pathway-preview-card .border-\[\#D5D1E4\] {
+  border-color: #d5d1e4;
+}
+.pathway-preview-card .border-\[\#D8D4E7\] {
+  border-color: #d8d4e7;
+}
+.pathway-preview-card .p-3\.5 {
+  padding: 14px;
+}
+.pathway-preview-card .px-4 {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+.pathway-preview-card .py-3 {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.pathway-preview-card .shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+.pathway-preview-card .leading-snug {
+  line-height: 1.375;
+}
+.pathway-preview-card .leading-relaxed {
+  line-height: 1.625;
+}
+.pathway-preview-card .left-\[340px\] {
+  left: 340px;
+}
+.pathway-preview-card .top-\[14px\] {
+  top: 14px;
+}
+.pathway-preview-card .top-\[115px\] {
+  top: 115px;
+}
+.pathway-preview-card .top-\[216px\] {
+  top: 216px;
+}
+.pathway-preview-card .w-\[235px\] {
+  width: 235px;
+}
+.pathway-preview-card .h-2\.5 {
+  height: 10px;
+}
+.pathway-preview-card .w-2\.5 {
+  width: 10px;
+}
+.pathway-preview-card .shrink-0 {
+  flex-shrink: 0;
+}
+.pathway-preview-card .h-4 {
+  height: 16px;
+}
+.pathway-preview-card .w-4 {
+  width: 16px;
+}
+
+@media (max-width: 640px) {
+  .pathway-preview-card {
+    padding: 20px 16px;
+    border-radius: 20px 20px 48px 20px;
+  }
+  .pathway-preview-diagram-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+  }
+  .pathway-preview-diagram-wrap > div {
+    min-width: 580px;
+  }
+}
