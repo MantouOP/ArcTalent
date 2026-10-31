@@ -122,27 +122,28 @@
 .career-card::after {
   content: '';
   position: absolute;
-  bottom: 100%;
-  height: 20px;
+  bottom: calc(100% + 1px);
+  height: 18px;
   border-radius: 12px 12px 0 0;
   border: 1px solid var(--glass-edge);
   border-bottom: 0;
   pointer-events: none;
 }
 .career-card::before {
-  right: 34px;
-  width: 42%;
+  right: 24px;
+  width: 44%;
   background: rgba(255, 255, 255, 0.5);
   box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.9);
 }
 .career-card::after {
-  right: 20px;
-  width: 30%;
-  height: 13px;
+  right: 31px;
+  width: calc(44% - 14px);
+  height: 12px;
+  border-radius: 9px 9px 0 0;
   background:
-    linear-gradient(90deg, var(--sheet-a), var(--sheet-b)) 12px 6px / 38% 3px
+    linear-gradient(90deg, var(--sheet-a), var(--sheet-b)) 12px 5px / 38% 2.5px
       no-repeat,
-    linear-gradient(90deg, var(--sheet-a), var(--sheet-b)) 12px 10px / 22% 3px
+    linear-gradient(90deg, var(--sheet-a), var(--sheet-b)) 12px 9px / 22% 2.5px
       no-repeat,
     rgba(255, 255, 255, 0.88);
 }

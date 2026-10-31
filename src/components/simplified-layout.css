@@ -73,15 +73,24 @@
 }
 
 /* Explorer: the decision first */
+.career-section {
+  margin-bottom: 28px;
+}
 .explorer-primary {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--gap);
-  margin-bottom: 24px;
+  gap: 22px;
+  margin-top: 28px;
+  margin-bottom: 26px;
 }
 .explorer-primary > .route-summary,
 .explorer-primary > .next-step-card {
   margin: 0;
+  padding: 22px 24px;
+}
+.explorer-primary > .route-summary > h2 {
+  max-width: none;
+  min-height: 0;
 }
 
 /* Disclosures */
