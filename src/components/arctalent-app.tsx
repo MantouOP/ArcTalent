@@ -9,6 +9,7 @@ import {
   ArrowRight,
   ArrowUpRight,
   BookOpen,
+  Check,
   CheckCircle2,
   ChevronRight,
   Clock3,
@@ -19,7 +20,9 @@ import {
   GraduationCap,
   Info,
   Leaf,
+  LoaderCircle,
   Map,
+  Pencil,
   RotateCcw,
   Search,
   Settings,
@@ -70,7 +73,12 @@ import {
 import { ProfileAvatar } from './profile-avatar';
 import { CourseLink } from './course-link';
 import { CareerGoalPanel } from './career-goal-panel';
-import { careerGoalSchema, goalCandidates } from '@/lib/career-goals';
+import {
+  analyseGoalLocally,
+  careerGoalSchema,
+  goalCandidates,
+  goalDraftSchema,
+} from '@/lib/career-goals';
 import { roleLabel } from '@/lib/role-label';
 import type { CareerGoal } from '@/lib/types';
 import { useDisplayPreferences } from './display-preferences-provider';
@@ -136,6 +144,12 @@ export function ArcTalentApp({
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState(false);
   const [customGoal, setCustomGoal] = useState<CareerGoal | null>(null);
+  const [customizingGoal, setCustomizingGoal] = useState(false);
+  const [directGoalInput, setDirectGoalInput] = useState('');
+  const [directGoalBusy, setDirectGoalBusy] = useState(false);
+  const [pendingManualGoalTitle, setPendingManualGoalTitle] = useState('');
+  const directGoalInputRef = useRef<HTMLInputElement>(null);
+  const directGoalRequest = useRef<AbortController | null>(null);
   const candidates = useMemo(() => goalCandidates(customGoal), [customGoal]);
 
   const [view, setView] = useState<View>(initialView),
@@ -260,6 +274,13 @@ export function ArcTalentApp({
     trackRecordsByProfile,
   ]);
   useEffect(() => () => exportRequest.current?.abort(), []);
+  useEffect(() => () => directGoalRequest.current?.abort(), []);
+  useEffect(() => {
+    if (customizingGoal) {
+      directGoalInputRef.current?.focus();
+      directGoalInputRef.current?.select();
+    }
+  }, [customizingGoal]);
   useEffect(() => {
     if (!toast) return;
     const timer = setTimeout(() => setToast(''), 7000);
@@ -393,6 +414,11 @@ export function ArcTalentApp({
     setTrackRecordsByProfile({});
     setFunding('all');
     setSdgFocus('all');
+    directGoalRequest.current?.abort();
+    directGoalRequest.current = null;
+    setDirectGoalBusy(false);
+    setCustomizingGoal(false);
+    setPendingManualGoalTitle('');
     setCustomGoal(null);
     if (keepView) return;
     setView('explore');
@@ -403,6 +429,11 @@ export function ArcTalentApp({
     revision.current++;
     exportRequest.current?.abort();
     exportRequest.current = null;
+    directGoalRequest.current?.abort();
+    directGoalRequest.current = null;
+    setDirectGoalBusy(false);
+    setCustomizingGoal(false);
+    setPendingManualGoalTitle('');
     setExporting(false);
     setExportError(false);
     setBusy(false);
@@ -482,16 +513,93 @@ export function ArcTalentApp({
       return copy;
     });
   }
+  async function submitDirectGoal(rawTitle: string) {
+    const trimmed = rawTitle.trim();
+    if (trimmed.length < 2 || directGoalBusy) return;
+
+    const knownPreset = roles.find((option) =>
+      [option.title, t(option.title)].some(
+        (candidate) =>
+          candidate.toLocaleLowerCase() === trimmed.toLocaleLowerCase(),
+      ),
+    );
+    if (knownPreset) {
+      chooseRole(knownPreset.id);
+      setCustomizingGoal(false);
+      setPendingManualGoalTitle('');
+      return;
+    }
+
+    if (
+      customGoal &&
+      customGoal.title.toLocaleLowerCase() === trimmed.toLocaleLowerCase()
+    ) {
+      chooseRole('custom-goal');
+      setCustomizingGoal(false);
+      setPendingManualGoalTitle('');
+      return;
+    }
+
+    directGoalRequest.current?.abort();
+    const controller = new AbortController();
+    directGoalRequest.current = controller;
+    setDirectGoalBusy(true);
+    let draft = null;
+    try {
+      const response = await fetch('/api/career-goal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: trimmed, description: '', locale }),
+        signal: AbortSignal.any([
+          controller.signal,
+          AbortSignal.timeout(30000),
+        ]),
+      });
+      if (response.ok) {
+        const payload = await response.json();
+        const parsed = goalDraftSchema.safeParse(payload.draft);
+        if (parsed.success) draft = parsed.data;
+      }
+    } catch {
+      /* Fall back to deterministic local goal analysis unless cancelled. */
+    }
+    if (controller.signal.aborted) return;
+    if (directGoalRequest.current === controller) {
+      directGoalRequest.current = null;
+      setDirectGoalBusy(false);
+    }
+    const resolvedDraft =
+      draft ?? analyseGoalLocally({ title: trimmed, description: '', locale });
+    const parsedGoal = careerGoalSchema.safeParse(resolvedDraft);
+    setCustomizingGoal(false);
+    if (parsedGoal.success) {
+      setCustomGoal(parsedGoal.data);
+      setSelected('custom-goal');
+      setFollowTop(false);
+      setPendingManualGoalTitle('');
+      setToast(
+        'Your custom goal is ready. Review the courses and any remaining gaps.',
+      );
+    } else {
+      setPendingManualGoalTitle(trimmed);
+      setToast(
+        'Choose at least one catalogue skill target to apply your custom destination.',
+      );
+    }
+  }
   const careerGoalPanel = (
     <CareerGoalPanel
+      key={pendingManualGoalTitle || 'goal-panel'}
       profile={profile}
       goal={customGoal}
       snapshot={snapshot}
       funding={funding}
+      initialTitle={pendingManualGoalTitle}
       onApply={(goal) => {
         setCustomGoal(goal);
         setSelected('custom-goal');
         setFollowTop(false);
+        setPendingManualGoalTitle('');
         setToast(
           'Your custom goal is ready. Review the courses and any remaining gaps.',
         );
@@ -506,6 +614,7 @@ export function ArcTalentApp({
       }}
       onClear={() => {
         setCustomGoal(null);
+        setPendingManualGoalTitle('');
         if (selected === 'custom-goal') {
           setFollowTop(true);
           setSelected(defaultRole);
@@ -1196,19 +1305,119 @@ export function ArcTalentApp({
                 onInspectEvidence={() => navigate('evidence')}
               />
               <div className="pathway-toolbar">
-                <label>
-                  {t('Your destination')}{' '}
-                  <select
-                    value={active.role.id}
-                    onChange={(e) => chooseRole(e.target.value)}
-                  >
-                    {matches.map((m) => (
-                      <option key={m.role.id} value={m.role.id}>
-                        {roleLabel(m.role, t)}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                <div className="pathway-destination-field">
+                  <label htmlFor="pathway-destination">
+                    {t('Your destination')}
+                  </label>
+                  {customizingGoal ? (
+                    <form
+                      className="pathway-destination-row"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        void submitDirectGoal(directGoalInput);
+                      }}
+                    >
+                      <input
+                        id="pathway-destination"
+                        ref={directGoalInputRef}
+                        placeholder={t('Type any role (e.g. Web developer)…')}
+                        value={directGoalInput}
+                        minLength={2}
+                        maxLength={100}
+                        disabled={directGoalBusy}
+                        required
+                        onChange={(e) => setDirectGoalInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Escape') {
+                            e.preventDefault();
+                            directGoalRequest.current?.abort();
+                            setDirectGoalBusy(false);
+                            setCustomizingGoal(false);
+                          }
+                        }}
+                      />
+                      <button
+                        type="submit"
+                        className="text-button pathway-destination-submit"
+                        disabled={
+                          directGoalBusy || directGoalInput.trim().length < 2
+                        }
+                      >
+                        {directGoalBusy ? (
+                          <LoaderCircle
+                            size={14}
+                            className="workforce-destination-spin"
+                          />
+                        ) : (
+                          <Check size={14} />
+                        )}
+                        {directGoalBusy ? t('Applying…') : t('Apply')}
+                      </button>
+                      <button
+                        type="button"
+                        className="icon-button"
+                        title={t('Cancel custom destination')}
+                        aria-label={t('Cancel custom destination')}
+                        onClick={() => {
+                          directGoalRequest.current?.abort();
+                          setDirectGoalBusy(false);
+                          setCustomizingGoal(false);
+                        }}
+                      >
+                        <X size={15} />
+                      </button>
+                    </form>
+                  ) : (
+                    <div className="pathway-destination-row">
+                      <select
+                        id="pathway-destination"
+                        value={active.role.id}
+                        onChange={(e) => {
+                          if (e.target.value === '__custom__') {
+                            directGoalRequest.current?.abort();
+                            setDirectGoalBusy(false);
+                            setDirectGoalInput(
+                              active.role.custom && customGoal
+                                ? customGoal.title
+                                : '',
+                            );
+                            setCustomizingGoal(true);
+                            return;
+                          }
+                          setPendingManualGoalTitle('');
+                          chooseRole(e.target.value);
+                        }}
+                      >
+                        {matches.map((m) => (
+                          <option key={m.role.id} value={m.role.id}>
+                            {roleLabel(m.role, t)}
+                          </option>
+                        ))}
+                        <option value="__custom__">
+                          {t('+ Custom destination…')}
+                        </option>
+                      </select>
+                      <button
+                        type="button"
+                        className="icon-button"
+                        title={t('Type custom destination')}
+                        aria-label={t('Type custom destination')}
+                        onClick={() => {
+                          directGoalRequest.current?.abort();
+                          setDirectGoalBusy(false);
+                          setDirectGoalInput(
+                            active.role.custom && customGoal
+                              ? customGoal.title
+                              : '',
+                          );
+                          setCustomizingGoal(true);
+                        }}
+                      >
+                        <Pencil size={15} />
+                      </button>
+                    </div>
+                  )}
+                </div>
                 <label>
                   {t('Course funding')}{' '}
                   <select
@@ -1272,7 +1481,9 @@ export function ArcTalentApp({
                   setToast('Skill proficiency updated in your profile.');
                 }}
               />
-              {customGoal && active.role.custom && careerGoalPanel}
+              {((customGoal && active.role.custom) ||
+                Boolean(pendingManualGoalTitle)) &&
+                careerGoalPanel}
               <section className="pathway-courses">
                 <div className="section-title">
                   <div>
@@ -1478,7 +1689,10 @@ export function ArcTalentApp({
                 )}
               </section>
               <div className="pathway-drawers">
-                {!(customGoal && active.role.custom) && (
+                {!(
+                  (customGoal && active.role.custom) ||
+                  Boolean(pendingManualGoalTitle)
+                ) && (
                   <details className="panel disclosure">
                     <summary>
                       <span>{t('Set your own career goal')}</span>

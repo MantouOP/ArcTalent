@@ -66,6 +66,42 @@ export const workforceSettingsSchema = z
     }
   });
 
+export type DirectWorkforceGoalResult =
+  | { kind: 'applied'; settings: WorkforceSettings }
+  | { kind: 'needs-review'; title: string; openings: number };
+
+export function applyDirectWorkforceDraft(
+  workforce: WorkforceSettings,
+  workerId: string,
+  title: string,
+  draft: unknown,
+  presetId?: string,
+): DirectWorkforceGoalResult {
+  const trimmed = title.trim();
+  if (presetId && roles.some((role) => role.id === presetId)) {
+    return {
+      kind: 'applied',
+      settings: workforceSettingsSchema.parse({
+        ...workforce,
+        destinations: { ...workforce.destinations, [workerId]: presetId },
+      }),
+    };
+  }
+  const openings = workforce.customDestinations?.[workerId]?.openings ?? 1;
+  const parsed = careerGoalSchema.safeParse(draft);
+  if (parsed.success) {
+    return {
+      kind: 'applied',
+      settings: applyWorkforceGoal(workforce, workerId, parsed.data, openings),
+    };
+  }
+  return {
+    kind: 'needs-review',
+    title: trimmed,
+    openings,
+  };
+}
+
 export function applyWorkforceGoal(
   workforce: WorkforceSettings,
   workerId: string,

@@ -1,8 +1,17 @@
 'use client';
 
-import { useEffect, useId, useRef, useState } from 'react';
-import { roles } from '@/lib/catalogue';
+import { useEffect, useRef, useState } from 'react';
 import {
+  Check,
+  LoaderCircle,
+  Pencil,
+  SlidersHorizontal,
+  X,
+} from 'lucide-react';
+import { roles } from '@/lib/catalogue';
+import { analyseGoalLocally, goalDraftSchema } from '@/lib/career-goals';
+import {
+  applyDirectWorkforceDraft,
   applyWorkforceGoal,
   clearWorkforceGoal,
   type WorkforceSettings,
@@ -27,93 +36,247 @@ export function WorkforceDestination({
   workforce: WorkforceSettings;
   onChange: (settings: WorkforceSettings) => void;
 }) {
-  const { t } = useI18n();
-  const id = useId();
+  const { t, locale } = useI18n();
   const saved = workforce.customDestinations?.[profile.id];
-  const displayTitle = role.custom ? role.title : t(role.title);
-  const [value, setValue] = useState(displayTitle);
+  const [editingCustom, setEditingCustom] = useState(false);
+  const [draftTitle, setDraftTitle] = useState('');
+  const [busy, setBusy] = useState(false);
   const [review, setReview] = useState<{
     title: string;
     goal: CareerGoal | null;
     openings: number;
   } | null>(null);
-  const previousTitle = useRef(displayTitle);
-  useEffect(() => {
-    const previous = previousTitle.current;
-    previousTitle.current = displayTitle;
-    setValue((current) => (current === previous ? displayTitle : current));
-  }, [displayTitle]);
-  const known = roles.find((option) =>
-    [option.title, t(option.title)].some(
-      (title) => title.toLocaleLowerCase() === value.trim().toLocaleLowerCase(),
-    ),
+  const customInputRef = useRef<HTMLInputElement>(null);
+  const pendingRef = useRef<AbortController | null>(null);
+
+  useEffect(
+    () => () => {
+      pendingRef.current?.abort();
+    },
+    [],
   );
+
+  useEffect(() => {
+    if (editingCustom) {
+      customInputRef.current?.focus();
+      customInputRef.current?.select();
+    }
+  }, [editingCustom]);
+
+  function openCustomEditor(initial = '') {
+    pendingRef.current?.abort();
+    setBusy(false);
+    setDraftTitle(initial);
+    setEditingCustom(true);
+  }
+
+  function cancelCustomEditor() {
+    pendingRef.current?.abort();
+    setBusy(false);
+    setEditingCustom(false);
+  }
+
+  async function submitCustomDestination(rawTitle: string) {
+    const trimmed = rawTitle.trim();
+    if (trimmed.length < 2 || busy) return;
+
+    const knownPreset = roles.find((option) =>
+      [option.title, t(option.title)].some(
+        (candidate) =>
+          candidate.toLocaleLowerCase() === trimmed.toLocaleLowerCase(),
+      ),
+    );
+    if (knownPreset) {
+      const result = applyDirectWorkforceDraft(
+        workforce,
+        profile.id,
+        trimmed,
+        null,
+        knownPreset.id,
+      );
+      if (result.kind === 'applied') onChange(result.settings);
+      setEditingCustom(false);
+      return;
+    }
+
+    if (
+      saved &&
+      saved.goal.title.toLocaleLowerCase() === trimmed.toLocaleLowerCase()
+    ) {
+      onChange({
+        ...workforce,
+        destinations: {
+          ...workforce.destinations,
+          [profile.id]: 'custom-goal',
+        },
+      });
+      setEditingCustom(false);
+      return;
+    }
+
+    pendingRef.current?.abort();
+    const controller = new AbortController();
+    pendingRef.current = controller;
+    setBusy(true);
+    let draft = null;
+    try {
+      const response = await fetch('/api/career-goal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: trimmed, description: '', locale }),
+        signal: AbortSignal.any([
+          controller.signal,
+          AbortSignal.timeout(30000),
+        ]),
+      });
+      if (response.ok) {
+        const payload = await response.json();
+        const parsed = goalDraftSchema.safeParse(payload.draft);
+        if (parsed.success) draft = parsed.data;
+      }
+    } catch {
+      /* Fall back to deterministic local goal analysis unless cancelled. */
+    }
+    if (controller.signal.aborted) return;
+    if (pendingRef.current === controller) {
+      pendingRef.current = null;
+      setBusy(false);
+    }
+    const resolvedDraft =
+      draft ?? analyseGoalLocally({ title: trimmed, description: '', locale });
+    const outcome = applyDirectWorkforceDraft(
+      workforce,
+      profile.id,
+      trimmed,
+      resolvedDraft,
+    );
+    setEditingCustom(false);
+    if (outcome.kind === 'applied') {
+      onChange(outcome.settings);
+    } else {
+      setReview({
+        title: outcome.title,
+        goal: null,
+        openings: outcome.openings,
+      });
+    }
+  }
+
+  const selectValue = role.custom && saved ? 'custom-goal' : role.id;
+
   return (
     <>
       <div className="workforce-destination">
-        <form
-          className="workforce-destination-form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            if (known) {
-              onChange({
-                ...workforce,
-                destinations: {
-                  ...workforce.destinations,
-                  [profile.id]: known.id,
-                },
-              });
-              setValue(t(known.title));
-            } else {
-              const existing =
-                saved?.goal.title === value.trim() ? saved : undefined;
-              setReview({
-                title: value.trim(),
-                goal: existing?.goal ?? null,
-                openings: saved?.openings ?? 1,
-              });
-            }
-          }}
-        >
-          <div className="workforce-destination-row">
-            <input
-              className="workforce-destination-input"
-              aria-label={t('Destination for {0}', { 0: profile.name })}
-              list={id}
-              value={value}
-              minLength={2}
-              maxLength={100}
-              required
-              onChange={(event) => setValue(event.target.value)}
-            />
-            <button
-              type="submit"
-              className="text-button workforce-destination-submit"
-              aria-label={t(
-                known ? 'Use preset for {0}' : 'Review goal for {0}',
-                {
+        {editingCustom ? (
+          <form
+            className="workforce-destination-form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              void submitCustomDestination(draftTitle);
+            }}
+          >
+            <div className="workforce-destination-row">
+              <input
+                ref={customInputRef}
+                className="workforce-destination-input"
+                aria-label={t('Custom destination for {0}', {
                   0: profile.name,
-                },
-              )}
+                })}
+                placeholder={t('Type any role (e.g. Web developer)…')}
+                value={draftTitle}
+                minLength={2}
+                maxLength={100}
+                disabled={busy}
+                required
+                onChange={(event) => setDraftTitle(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Escape') {
+                    event.preventDefault();
+                    cancelCustomEditor();
+                  }
+                }}
+              />
+              <button
+                type="submit"
+                className="text-button workforce-destination-submit"
+                disabled={busy || draftTitle.trim().length < 2}
+                aria-label={t('Apply custom destination for {0}', {
+                  0: profile.name,
+                })}
+              >
+                {busy ? (
+                  <LoaderCircle
+                    size={13}
+                    className="workforce-destination-spin"
+                  />
+                ) : (
+                  <Check size={13} />
+                )}
+                {busy ? t('Applying…') : t('Apply')}
+              </button>
+              <button
+                type="button"
+                className="icon-button workforce-destination-icon"
+                onClick={cancelCustomEditor}
+                title={t('Cancel custom destination')}
+                aria-label={t('Cancel custom destination')}
+              >
+                <X size={14} />
+              </button>
+            </div>
+          </form>
+        ) : (
+          <div className="workforce-destination-row">
+            <select
+              className="workforce-destination-select"
+              aria-label={t('Destination for {0}', { 0: profile.name })}
+              value={selectValue}
+              onChange={(event) => {
+                const next = event.target.value;
+                if (next === '__custom__') {
+                  openCustomEditor(
+                    role.custom && saved ? saved.goal.title : '',
+                  );
+                  return;
+                }
+                onChange({
+                  ...workforce,
+                  destinations: {
+                    ...workforce.destinations,
+                    [profile.id]: next,
+                  },
+                });
+              }}
             >
-              {t(known ? 'Use preset' : 'Review goal')}
+              {roles.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {t(option.title)}
+                </option>
+              ))}
+              {saved && <option value="custom-goal">{saved.goal.title}</option>}
+              <option value="__custom__">{t('+ Custom destination…')}</option>
+            </select>
+            <button
+              type="button"
+              className="icon-button workforce-destination-icon"
+              title={t('Type custom destination')}
+              aria-label={t('Customize destination for {0}', {
+                0: profile.name,
+              })}
+              onClick={() =>
+                openCustomEditor(role.custom && saved ? saved.goal.title : '')
+              }
+            >
+              <Pencil size={14} />
             </button>
           </div>
-          <datalist id={id}>
-            {roles.map((option) => (
-              <option value={t(option.title)} key={option.id} />
-            ))}
-            {saved &&
-              !roles.some(
-                (option) =>
-                  option.title === saved.goal.title ||
-                  t(option.title) === saved.goal.title,
-              ) && <option value={saved.goal.title} />}
-          </datalist>
-          {known && role.custom && saved && (
+        )}
+        {!editingCustom && role.custom && saved && (
+          <div className="workforce-destination-actions">
             <button
               type="button"
               className="text-button workforce-destination-edit"
+              aria-label={t('Review goal for {0}', { 0: profile.name })}
               onClick={() =>
                 setReview({
                   title: saved.goal.title,
@@ -122,17 +285,10 @@ export function WorkforceDestination({
                 })
               }
             >
-              {t('Edit applied goal')}
+              <SlidersHorizontal size={12} />
+              {t('Skills & slots')}
             </button>
-          )}
-        </form>
-        <small className="workforce-destination-hint">
-          {t('Type any career, or choose a suggestion.')}
-        </small>
-        {value.trim() !== displayTitle && (
-          <small className="workforce-destination-pending" role="status">
-            {t('Not applied yet. Review or use a preset to update the plan.')}
-          </small>
+          </div>
         )}
         {role.custom &&
           saved &&
@@ -233,7 +389,6 @@ export function WorkforceDestination({
                     review.openings,
                   ),
                 );
-                setValue(goal.title);
                 setReview(null);
               }}
               onClear={() => {

@@ -96,6 +96,115 @@ const goalPatterns: {
       'Accessibility testing',
     ],
   },
+  {
+    pattern:
+      /data analy|business analy|reporting analy|penganalisis data|penganalisis perniagaan|数据分析|商业分析/i,
+    family: 'data',
+    requirements: { excel: 2, data: 2, sql: 2, visual: 2, critical: 2 },
+    otherSkills: ['Business stakeholder reporting'],
+  },
+  {
+    pattern: /full.?stack|back.?end|全栈|后端开发/i,
+    family: 'data',
+    requirements: {
+      htmlcss: 2,
+      javascript: 2,
+      python: 2,
+      sql: 2,
+      security: 1,
+    },
+    otherSkills: ['API design and deployment', 'Version control and testing'],
+  },
+  {
+    pattern:
+      /\bai\b|prompt engineer|generative ai|artificial intelligence|kecerdasan buatan|人工智能|提示词工程/i,
+    family: 'data',
+    requirements: { ai: 2, ethics: 2, python: 1, data: 2, critical: 2 },
+    otherSkills: ['Workflow evaluation and human oversight'],
+  },
+  {
+    pattern:
+      /product manag|scrum|agile|program manag|pengurus produk|产品经理|敏捷/i,
+    family: 'operations',
+    requirements: {
+      project: 2,
+      stakeholder: 2,
+      communication: 2,
+      data: 1,
+      critical: 2,
+    },
+    otherSkills: ['Product discovery and prioritisation'],
+  },
+  {
+    pattern: /ui.?ux|product design|interaction design|界面设计|产品设计/i,
+    family: 'people',
+    requirements: {
+      stakeholder: 2,
+      communication: 2,
+      critical: 2,
+      htmlcss: 1,
+    },
+    otherSkills: ['Wireframing and prototyping', 'Usability testing'],
+  },
+  {
+    pattern:
+      /human resource|\bhr\b|people ops|recruit|talent acquisition|sumber manusia|人力资源|招聘/i,
+    family: 'people',
+    requirements: {
+      communication: 2,
+      stakeholder: 2,
+      teaching: 2,
+      ethics: 2,
+      excel: 1,
+    },
+    otherSkills: ['Employment regulations and structured interviewing'],
+  },
+  {
+    pattern:
+      /supply chain|procurement|warehouse|inventory|operations coord|pengurusan rantaian|供应链|采购|仓储/i,
+    family: 'operations',
+    requirements: {
+      logistics: 2,
+      process: 2,
+      excel: 2,
+      project: 1,
+      communication: 2,
+    },
+    otherSkills: ['Vendor coordination and inventory systems'],
+  },
+  {
+    pattern:
+      /\besg\b|carbon|climate|environmental|kelestarian|可持续发展|碳管理/i,
+    family: 'sustainability',
+    requirements: {
+      sustainability: 2,
+      data: 2,
+      excel: 2,
+      stakeholder: 2,
+      ethics: 1,
+    },
+    otherSkills: ['ESG disclosure standards and emissions accounting'],
+  },
+  {
+    pattern:
+      /financial analy|accountant|accounting|bookkeep|akauntan|kewangan|财务分析|会计/i,
+    family: 'data',
+    requirements: { excel: 3, data: 2, critical: 2, ethics: 2, process: 1 },
+    otherSkills: ['Financial reporting standards and reconciliation'],
+  },
+  {
+    pattern:
+      /customer success|client success|customer support|account manag|khidmat pelanggan|客户成功|客户经理/i,
+    family: 'people',
+    requirements: {
+      communication: 2,
+      stakeholder: 2,
+      process: 1,
+      excel: 1,
+      critical: 2,
+    },
+    otherSkills: ['CRM workflows and escalation handling'],
+  },
 ];
 
 /** An explicit non-LLM fallback; unknown professions never receive made-up requirements. */

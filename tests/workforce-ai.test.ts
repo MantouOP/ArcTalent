@@ -210,6 +210,7 @@ test('every workforce planner, table and Track Record label has Malay and Chines
   const labels = new Set<string>();
   for (const file of [
     'workforce-planner',
+    'workforce-destination',
     'employer-panel',
     'track-record-panel',
     'finals-widgets',

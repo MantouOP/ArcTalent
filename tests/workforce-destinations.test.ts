@@ -9,6 +9,7 @@ import {
 import { analyseGoalLocally } from '../src/lib/career-goals';
 import { careerGoalSchema } from '../src/lib/validation';
 import {
+  applyDirectWorkforceDraft,
   applyWorkforceGoal,
   clearWorkforceGoal,
   removeWorkforceMember,
@@ -164,4 +165,63 @@ test('removing a worker clears their saved destination and goal while preserving
   assert.equal(removed.destinations[worker.id], undefined);
   assert.equal(removed.customDestinations?.[worker.id], undefined);
   assert.equal(workforceSettingsSchema.safeParse(removed).success, true);
+});
+
+test('direct inline customization applies mapped goals immediately and requests review only when unmapped', () => {
+  const initial = {
+    ...restoreWorkforceSettings(),
+    members: [worker, employees[2]],
+  };
+  const direct = applyDirectWorkforceDraft(
+    initial,
+    worker.id,
+    'Web developer',
+    analyseGoalLocally({ title: 'Web developer', description: '' }),
+  );
+  assert.equal(direct.kind, 'applied');
+  assert.equal(direct.settings.destinations[worker.id], 'custom-goal');
+  assert.equal(
+    direct.settings.customDestinations?.[worker.id]?.goal.title,
+    'Web developer',
+  );
+  assert.equal(direct.settings.customDestinations?.[worker.id]?.openings, 1);
+
+  const customSlots = applyWorkforceGoal(initial, worker.id, goal, 3);
+  const updatedDirect = applyDirectWorkforceDraft(
+    customSlots,
+    worker.id,
+    'Data analyst',
+    analyseGoalLocally({ title: 'Data analyst', description: '' }),
+  );
+  assert.equal(updatedDirect.kind, 'applied');
+  assert.equal(
+    updatedDirect.settings.customDestinations?.[worker.id]?.openings,
+    3,
+  );
+
+  const preset = applyDirectWorkforceDraft(
+    updatedDirect.settings,
+    worker.id,
+    'Logistician',
+    null,
+    'logistics',
+  );
+  assert.equal(preset.kind, 'applied');
+  assert.equal(preset.settings.destinations[worker.id], 'logistics');
+  assert.equal(
+    preset.settings.customDestinations?.[worker.id]?.goal.title,
+    'Data analyst',
+  );
+
+  const unknown = applyDirectWorkforceDraft(
+    customSlots,
+    worker.id,
+    '  Deep sea diver  ',
+    analyseGoalLocally({ title: 'Deep sea diver', description: '' }),
+  );
+  assert.deepEqual(unknown, {
+    kind: 'needs-review',
+    title: 'Deep sea diver',
+    openings: 3,
+  });
 });

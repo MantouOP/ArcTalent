@@ -15,5 +15,16 @@
   "Course previews use this worker’s current skills, weekly time and budget. Applying updates the company plan only.": "Pratonton kursus menggunakan kemahiran semasa, masa mingguan dan bajet pekerja ini. Penggunaan hanya mengemas kini pelan syarikat.",
   "Proposed openings for this worker’s custom destination": "Cadangan kekosongan untuk destinasi tersuai pekerja ini",
   "An employer planning assumption, not an inferred vacancy. Zero openings excludes this worker from allocated training.": "Andaian perancangan majikan, bukan kekosongan yang disimpulkan. Sifar kekosongan mengecualikan pekerja ini daripada peruntukan latihan.",
-  "Specialist skills not covered: {0}": "Kemahiran khusus yang belum diliputi: {0}"
+  "Specialist skills not covered: {0}": "Kemahiran khusus yang belum diliputi: {0}",
+  "+ Custom destination…": "+ Destinasi tersuai…",
+  "Type custom destination": "Taip destinasi tersuai",
+  "Customize destination for {0}": "Sesuaikan destinasi untuk {0}",
+  "Custom destination for {0}": "Destinasi tersuai untuk {0}",
+  "Apply custom destination for {0}": "Gunakan destinasi tersuai untuk {0}",
+  "Type any role (e.g. Web developer)…": "Taip sebarang peranan (cth. Pembangun web)…",
+  "Apply": "Gunakan",
+  "Applying…": "Sedang digunakan…",
+  "Cancel custom destination": "Batalkan destinasi tersuai",
+  "Skills & slots": "Kemahiran & slot",
+  "Choose at least one catalogue skill target to apply your custom destination.": "Pilih sekurang-kurangnya satu sasaran kemahiran katalog untuk menggunakan destinasi tersuai anda."
 }

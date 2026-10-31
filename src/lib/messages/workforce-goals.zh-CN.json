@@ -15,5 +15,16 @@
   "Course previews use this worker’s current skills, weekly time and budget. Applying updates the company plan only.": "课程预览依据这位员工的当前技能、每周学习时间和预算。应用后仅更新公司计划。",
   "Proposed openings for this worker’s custom destination": "为这位员工的自定义目标拟定岗位数量",
   "An employer planning assumption, not an inferred vacancy. Zero openings excludes this worker from allocated training.": "这是雇主的规划假设，并非推断出的职位空缺。岗位数量为零时，不为这位员工分配培训。",
-  "Specialist skills not covered: {0}": "尚未涵盖的专业技能：{0}"
+  "Specialist skills not covered: {0}": "尚未涵盖的专业技能：{0}",
+  "+ Custom destination…": "+ 自定义目标职业…",
+  "Type custom destination": "输入自定义目标职业",
+  "Customize destination for {0}": "自定义 {0} 的目标职业",
+  "Custom destination for {0}": "{0} 的自定义目标职业",
+  "Apply custom destination for {0}": "应用 {0} 的自定义目标职业",
+  "Type any role (e.g. Web developer)…": "输入任意职位（例如：Web 开发人员）…",
+  "Apply": "应用",
+  "Applying…": "正在应用…",
+  "Cancel custom destination": "取消自定义目标职业",
+  "Skills & slots": "技能与名额",
+  "Choose at least one catalogue skill target to apply your custom destination.": "请至少选择一项目录技能目标，以应用自定义目标职业。"
 }
