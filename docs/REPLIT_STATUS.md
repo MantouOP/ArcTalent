@@ -1,6 +1,14 @@
 # Replit runtime and publishing verification
 
-Verified on **31 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
+Verified on **31 October and 1 November 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
+
+## Inline destinations, budget suggestion, per-member report upload and homepage cards — live
+
+The redeployment table takes **inline custom destinations**: choose "+ Custom destination…" and type any role. A destination that maps to the catalogue applies at once, and an unmapped one asks for review. The SME planner can **suggest a starting budget** from a target team size, gap coverage and role slot cap; this is a deterministic planning heuristic, not a model answer. A **report can be uploaded for one member** (Word, PDF or text) to update that person's skill levels, shown as a before-and-after change. The Evidence panel's custom demand snapshot asks the configured AI provider, or a local calculation, for modelled record counts, and the public job and research feeds keep skill-matched items. The homepage pathway preview is redrawn with bordered cards.
+
+Source `6569bfb` builds on `0cb3c41` and adds the commits `60095a6`, `92a1457` and `6569bfb`. The release folder and the `artifact.toml` switch were prepared in the Replit project before this record (prior configurations retained as `artifact.toml.pre-60095a6-backup`, `artifact.toml.pre-92a1457-backup` and `artifact.toml.pre-6569bfb-backup`), and `.replitignore` keeps `node_modules` and `.next` for that release only. After publishing, a read-only check in Replit matched **293/293 tracked files** against the Git blob hashes of commit `6569bfb`, with no missing or extra source files, and confirmed that all three `artifact.toml` commands select the release. GitHub Actions passed for the commit (format check, typecheck, unit tests, production build and production API checks). A local run of the same application code passed **255 unit tests**, the typecheck, a production build (16/16 static pages) and **39 production integration checks** against a temporary server. Secrets were unchanged.
+
+Replit reported **success**, and the live site began serving the release at about 02:10 MYT on 1 November 2026. The **39 production integration checks passed against the live URL**, `POST /api/signals` now validates its input (400 where the previous release answered 405), `/api/health` reports all five AI features configured, and the live JavaScript contains the new interface code for each of the three commits. No separate test run inside Replit was recorded for this release; the evidence is the file-hash match, CI, the local run and the live checks.
 
 ## AI workforce planner schema fix — live
 

@@ -117,7 +117,7 @@ The repository may contain newer features than the deployed demo. See the dated 
 
 - **Development & Version Control**: Imported canonical source repository, maintaining continuous verified git histories.
 - **Production Hosting**: Live public deployment on Replit Autoscale (`https://arc-talent--emmanuelheng.replit.app/`) serving web views and API routes.
-- **Build & CI Verification**: Release `0cb3c41` matched 290 of 290 tracked files in Replit, then passed 250 unit tests, the typecheck, a production build and 39 production integration checks; its live health check and AI workforce planner were verified on 31 October 2026. Later source commits (255 unit tests and GitHub Actions passing) may differ from the live release. See [runtime status](docs/REPLIT_STATUS.md) for the dated record.
+- **Build & CI Verification**: Release `6569bfb` is live. Replit matched 293 of 293 tracked files to that commit, GitHub Actions passed, and the 39 production integration checks passed against the live site on 1 November 2026. The earlier release `0cb3c41` also passed 250 unit tests and a production build inside Replit. See [runtime status](docs/REPLIT_STATUS.md) for the dated record.
 - **Secrets Management**: AI provider keys and endpoints (RunPod or another OpenAI-compatible gateway) are stored in Replit Secrets, never committed to git.
 - 📄 Proof of use: [`submission/SDC2026_XenoForce_Replit_POU.pdf`](submission/SDC2026_XenoForce_Replit_POU.pdf)
 

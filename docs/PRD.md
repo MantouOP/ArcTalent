@@ -88,7 +88,7 @@ The full inventory of libraries, services, models and datasets is in the [Techni
 
 ### 5.3 Design thinking and deployment (≤200 words)
 
-> **Empathise and define:** unchanged. Our persona remains Aina, with four hours a week, RM0 and eight weeks, plus an SME manager who holds reports rather than spreadsheets. **Ideate:** we kept transferable skill bridges and a shared foundation, then asked what a person needs after the plan: evidence that they are progressing (study coach, practice badges, Track Record) and, for managers, a faster way in (the one-shot planner). **Prototype and test:** design audits of the finals build found small text, weak contrast and too many panels competing on the first screen. We raised text size and contrast, moved secondary tools into disclosures, used whole SDG goals instead of decimal targets, and checked the simplified views at 390 px width. Each release was verified in Replit with unit tests, production API checks and a production build. We have not yet run external user testing; the roadmap names it. **Deployment:** still zero-database and browser-stored, hosted on Replit, with AI through the finalist gateway or RunPod and a local fallback for every feature.
+> **Empathise and define:** unchanged. Our persona remains Aina, with four hours a week, RM0 and eight weeks, plus an SME manager who holds reports rather than spreadsheets. **Ideate:** we kept transferable skill bridges and a shared foundation, then asked what a person needs after the plan: evidence that they are progressing (study coach, practice badges, Track Record) and, for managers, a faster way in (the one-shot planner). **Prototype and test:** design audits of the finals build found small text, weak contrast and too many panels competing on the first screen. We raised text size and contrast, moved secondary tools into disclosures, used whole SDG goals instead of decimal targets, and checked the simplified views at 390 px width. Each release was verified with unit tests, production API checks and a production build, and the live site is re-checked after publishing. We have not yet run external user testing; the roadmap names it. **Deployment:** still zero-database and browser-stored, hosted on Replit, with AI through the finalist gateway or RunPod and a local fallback for every feature.
 
 ## 6. Requirements and status
 
@@ -201,7 +201,7 @@ The benchmark covers eight fictional workers and a fictional company. **No pilot
 ## 11. Verification and evidence
 
 - **Tests:** 255 unit tests pass at `6569bfb` (run on 1 November 2026). The GitHub Actions workflow `Verify ArcTalent` (format check, typecheck, unit tests, production build, production API checks) passed for that commit.
-- **Releases:** each release is imported into Replit and checked (file hashes, locked install, tests, build, production API checks) before publishing; see [REPLIT_STATUS.md](REPLIT_STATUS.md).
+- **Releases:** each release folder is checked in Replit against its Git commit (file hashes), and the live site is checked with the production API checks; see [REPLIT_STATUS.md](REPLIT_STATUS.md).
 - **Benchmark:** `npm run impact` reproduces [IMPACT.md](IMPACT.md); it matched the committed file on 1 November 2026.
 - **Sources:** [SOURCES.md](SOURCES.md) lists every course, video, occupation and cost assumption with check dates.
 - **Declaration:** [TECHNICAL_DECLARATION.md](TECHNICAL_DECLARATION.md) lists every library, service, model, dataset and AI tool, with corrections to the preliminary declaration.
