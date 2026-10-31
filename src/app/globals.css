@@ -2743,22 +2743,19 @@ dialog h2 {
 }
 
 /* ==========================================================================
-   2. SME Workspace: Liquid Glass on "Individual commercial seats",
-      "ArcTalent cohort plan" & "Saving" (hover-only highlight)
+   2. SME Workspace: Liquid Glass on "Planned learning" (.stats-grid.three) &
+      "Individual commercial seats", "ArcTalent cohort plan", "Saving"
    ========================================================================== */
 
-/* Apply uniform Liquid Glass surface to all 3 cost comparison cards
-   (including "ArcTalent cohort plan") so none is permanently purple */
+/* Apply uniform Liquid Glass surface to "Planned learning" (and all 3 top
+   stat cards) as well as all 3 cost comparison cards */
+.stats-grid.three > .stat,
+.stats-grid.three > .stat:nth-child(2),
 .cost-option,
 .cost-option.plan,
-.stats-grid.three > .stat:nth-child(2),
 .stat.warm,
 .panel .warm {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.68) 0%,
-    rgba(255, 255, 255, 0.42) 100%
-  ) !important;
+  background: var(--surface) !important;
   border: 1px solid var(--glass-edge) !important;
   border-radius: var(--radius-md) !important;
   backdrop-filter: var(--glass-blur) !important;
@@ -2772,14 +2769,11 @@ dialog h2 {
 }
 
 /* Highlight the liquid glass cards when hovered */
+.stats-grid.three > .stat:hover,
+.stats-grid.three > .stat:nth-child(2):hover,
 .cost-option:hover,
-.cost-option.plan:hover,
-.stats-grid.three > .stat:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.88) 0%,
-    rgba(255, 255, 255, 0.62) 100%
-  ) !important;
+.cost-option.plan:hover {
+  background: rgba(255, 255, 255, 0.78) !important;
   border-color: var(--primary) !important;
   box-shadow:
     var(--glass-shadow-hover),
