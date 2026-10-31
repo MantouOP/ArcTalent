@@ -48,123 +48,156 @@ export function WorkforceDestination({
     ),
   );
   return (
-    <div className="workforce-destination">
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          if (known) {
-            onChange({
-              ...workforce,
-              destinations: {
-                ...workforce.destinations,
-                [profile.id]: known.id,
-              },
-            });
-            setValue(t(known.title));
-          } else {
-            const existing =
-              saved?.goal.title === value.trim() ? saved : undefined;
-            setReview({
-              title: value.trim(),
-              goal: existing?.goal ?? null,
-              openings: saved?.openings ?? 1,
-            });
-          }
-        }}
-      >
-        <input
-          aria-label={t('Destination for {0}', { 0: profile.name })}
-          list={id}
-          value={value}
-          minLength={2}
-          maxLength={100}
-          required
-          onChange={(event) => setValue(event.target.value)}
-        />
-        <datalist id={id}>
-          {roles.map((option) => (
-            <option value={t(option.title)} key={option.id} />
-          ))}
-          {saved &&
-            !roles.some(
-              (option) =>
-                option.title === saved.goal.title ||
-                t(option.title) === saved.goal.title,
-            ) && <option value={saved.goal.title} />}
-        </datalist>
-        <button
-          type="submit"
-          className="text-button"
-          aria-label={t(known ? 'Use preset for {0}' : 'Review goal for {0}', {
-            0: profile.name,
-          })}
-        >
-          {t(known ? 'Use preset' : 'Review goal')}
-        </button>
-        {known && role.custom && saved && (
-          <button
-            type="button"
-            className="text-button"
-            onClick={() =>
+    <>
+      <div className="workforce-destination">
+        <form
+          className="workforce-destination-form"
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (known) {
+              onChange({
+                ...workforce,
+                destinations: {
+                  ...workforce.destinations,
+                  [profile.id]: known.id,
+                },
+              });
+              setValue(t(known.title));
+            } else {
+              const existing =
+                saved?.goal.title === value.trim() ? saved : undefined;
               setReview({
-                title: saved.goal.title,
-                goal: saved.goal,
-                openings: saved.openings,
-              })
+                title: value.trim(),
+                goal: existing?.goal ?? null,
+                openings: saved?.openings ?? 1,
+              });
             }
-          >
-            {t('Edit applied goal')}
-          </button>
+          }}
+        >
+          <div className="workforce-destination-row">
+            <input
+              className="workforce-destination-input"
+              aria-label={t('Destination for {0}', { 0: profile.name })}
+              list={id}
+              value={value}
+              minLength={2}
+              maxLength={100}
+              required
+              onChange={(event) => setValue(event.target.value)}
+            />
+            <button
+              type="submit"
+              className="text-button workforce-destination-submit"
+              aria-label={t(
+                known ? 'Use preset for {0}' : 'Review goal for {0}',
+                {
+                  0: profile.name,
+                },
+              )}
+            >
+              {t(known ? 'Use preset' : 'Review goal')}
+            </button>
+          </div>
+          <datalist id={id}>
+            {roles.map((option) => (
+              <option value={t(option.title)} key={option.id} />
+            ))}
+            {saved &&
+              !roles.some(
+                (option) =>
+                  option.title === saved.goal.title ||
+                  t(option.title) === saved.goal.title,
+              ) && <option value={saved.goal.title} />}
+          </datalist>
+          {known && role.custom && saved && (
+            <button
+              type="button"
+              className="text-button workforce-destination-edit"
+              onClick={() =>
+                setReview({
+                  title: saved.goal.title,
+                  goal: saved.goal,
+                  openings: saved.openings,
+                })
+              }
+            >
+              {t('Edit applied goal')}
+            </button>
+          )}
+        </form>
+        <small className="workforce-destination-hint">
+          {t('Type any career, or choose a suggestion.')}
+        </small>
+        {value.trim() !== displayTitle && (
+          <small className="workforce-destination-pending" role="status">
+            {t('Not applied yet. Review or use a preset to update the plan.')}
+          </small>
         )}
-      </form>
-      <small>{t('Type any career, or choose a suggestion.')}</small>
-      {value.trim() !== displayTitle && (
-        <small role="status">
-          {t('Not applied yet. Review or use a preset to update the plan.')}
-        </small>
-      )}
-      {role.custom && saved && saved.goal.otherSkills.length > 0 && (
-        <small>
-          {t('{0} additional specialist skills to review', {
-            0: saved.goal.otherSkills.length,
-          })}
-        </small>
-      )}
+        {role.custom && saved && saved.goal.otherSkills.length > 0 && (
+          <small className="workforce-destination-badge">
+            {t('{0} additional specialist skills to review', {
+              0: saved.goal.otherSkills.length,
+            })}
+          </small>
+        )}
+      </div>
       {review && (
         <Modal
           title={t('Destination for {0}', { 0: profile.name })}
           onClose={() => setReview(null)}
         >
           <div className="workforce-goal-dialog">
-            <p className="muted">
-              {t(
-                'Course previews use this worker’s current skills, weekly time and budget. Applying updates the company plan only.',
-              )}
-            </p>
-            <label className="workforce-opening-label">
-              {t('Proposed openings for this worker’s custom destination')}
-              <input
-                type="number"
-                min={0}
-                max={10}
-                step={1}
-                value={review.openings}
-                onChange={(event) =>
-                  setReview({
-                    ...review,
-                    openings: Math.max(
-                      0,
-                      Math.min(10, Math.floor(Number(event.target.value))),
-                    ),
-                  })
-                }
-              />
-            </label>
-            <p className="muted small">
-              {t(
-                'An employer planning assumption, not an inferred vacancy. Zero openings excludes this worker from allocated training.',
-              )}
-            </p>
+            <div className="workforce-dialog-banner">
+              <div className="workforce-worker-badge">
+                <span className="workforce-worker-initial" aria-hidden="true">
+                  {profile.name.slice(0, 1).toUpperCase()}
+                </span>
+                <div>
+                  <strong>{profile.name}</strong>
+                  <small>
+                    {t(profile.currentRole)} · {profile.hours}h/wk · RM{' '}
+                    {profile.budget}
+                  </small>
+                </div>
+              </div>
+              <p className="muted">
+                {t(
+                  'Course previews use this worker’s current skills, weekly time and budget. Applying updates the company plan only.',
+                )}
+              </p>
+            </div>
+            <div className="workforce-opening-card">
+              <label className="workforce-opening-label">
+                <span>
+                  <strong>
+                    {t(
+                      'Proposed openings for this worker’s custom destination',
+                    )}
+                  </strong>
+                  <small className="muted">
+                    {t(
+                      'An employer planning assumption, not an inferred vacancy. Zero openings excludes this worker from allocated training.',
+                    )}
+                  </small>
+                </span>
+                <input
+                  type="number"
+                  min={0}
+                  max={10}
+                  step={1}
+                  value={review.openings}
+                  onChange={(event) =>
+                    setReview({
+                      ...review,
+                      openings: Math.max(
+                        0,
+                        Math.min(10, Math.floor(Number(event.target.value))),
+                      ),
+                    })
+                  }
+                />
+              </label>
+            </div>
             <CareerGoalPanel
               profile={profile}
               goal={review.goal}
@@ -193,6 +226,6 @@ export function WorkforceDestination({
           </div>
         </Modal>
       )}
-    </div>
+    </>
   );
 }

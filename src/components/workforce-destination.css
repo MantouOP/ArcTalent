@@ -1,44 +1,203 @@
 .workforce-destination {
-  width: 245px;
+  width: 280px;
   max-width: 100%;
+  margin-top: 8px;
 }
-.workforce-destination form {
+.workforce-destination-form {
   display: grid;
-  gap: 5px;
-  margin-top: 7px;
+  gap: 6px;
 }
-.workforce-destination input {
+.workforce-destination-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.workforce-destination-input {
+  flex: 1;
   width: 100%;
   min-width: 0;
-  min-height: 34px;
-  padding: 7px 9px;
-  font-size: 12.5px;
+  min-height: 36px !important;
+  margin-top: 0 !important;
+  padding: 7px 11px !important;
+  font-size: 12.5px !important;
+  border-radius: 10px !important;
 }
-.workforce-destination button {
+.workforce-destination-submit,
+.workforce-destination-edit {
+  flex-shrink: 0;
+  min-height: 34px;
+  padding: 6px 12px !important;
+  font-size: 12px !important;
+  font-weight: 600;
+  border-radius: 9px;
+  background: rgba(107, 85, 214, 0.1);
+  border: 1px solid rgba(107, 85, 214, 0.24);
+  color: var(--accent, #5b4bd6);
+  white-space: nowrap;
+}
+.workforce-destination-submit:hover,
+.workforce-destination-edit:hover {
+  background: rgba(107, 85, 214, 0.18);
+  border-color: rgba(107, 85, 214, 0.42);
+  color: var(--ink);
+}
+.workforce-destination-edit {
   justify-self: start;
-  min-height: 30px;
-  padding: 2px 0;
-  font-size: 12.5px;
 }
 .heatmap .workforce-destination small {
-  margin-top: 4px;
-  font-size: 12px;
-  line-height: 1.5;
+  display: block;
+  margin-top: 5px;
+  font-size: 11.5px;
+  line-height: 1.45;
   white-space: normal;
   overflow-wrap: anywhere;
 }
-.workforce-goal-dialog .career-goal-panel {
-  padding: 16px 0 0;
-  border: 0;
-  background: transparent;
-  box-shadow: none;
+.workforce-destination-pending {
+  padding: 5px 9px;
+  border-radius: 8px;
+  background: rgba(214, 138, 40, 0.12);
+  border: 1px solid rgba(214, 138, 40, 0.28);
+  color: #8a520e !important;
+  font-weight: 500;
+}
+.workforce-destination-badge {
+  display: inline-block !important;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(22, 137, 193, 0.1);
+  border: 1px solid rgba(22, 137, 193, 0.24);
+  color: #126a96 !important;
+  font-weight: 500;
+}
+
+/* Modal & Dialog layout inside heatmap */
+.heatmap dialog {
+  text-align: left;
+  width: min(680px, 94vw);
+}
+.heatmap dialog > header .icon-button {
+  width: 36px;
+  height: 36px;
+  min-height: 36px;
+  padding: 0;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.65);
+}
+.heatmap dialog select {
+  font-size: 14px;
+  min-height: 42px;
+  padding: 9px 12px;
+  max-width: none;
+}
+.workforce-goal-dialog {
+  display: grid;
+  gap: 14px;
+  text-align: left;
+}
+.workforce-dialog-banner {
+  display: grid;
+  gap: 10px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid var(--glass-edge, rgba(255, 255, 255, 0.75));
+  box-shadow: var(--glass-shadow);
+}
+.workforce-dialog-banner > p {
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0;
+}
+.workforce-worker-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.workforce-worker-initial {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 15px;
+  color: #fff;
+  background: linear-gradient(135deg, #5b4bd6, #36c3e8);
+  box-shadow: 0 4px 12px rgba(91, 75, 214, 0.25);
+  flex-shrink: 0;
+}
+.workforce-worker-badge strong {
+  display: block;
+  font-size: 14.5px;
+  color: var(--ink);
+}
+.workforce-worker-badge small {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.workforce-opening-card {
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid var(--glass-edge, rgba(255, 255, 255, 0.75));
+  box-shadow: var(--glass-shadow);
 }
 .workforce-opening-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0;
+  font-size: 13.5px;
+}
+.workforce-opening-label > span {
   display: grid;
-  gap: 8px;
-  margin-top: 18px;
-  font-size: 13px;
+  gap: 4px;
+  min-width: 0;
+}
+.workforce-opening-label strong {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.workforce-opening-label small {
+  font-size: 12px;
+  line-height: 1.45;
+  font-weight: 400;
 }
 .workforce-opening-label input {
-  width: 100px;
+  width: 84px !important;
+  flex: 0 0 84px;
+  margin-top: 0 !important;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px !important;
+  min-height: 40px !important;
+}
+.workforce-goal-dialog .panel.career-goal-panel {
+  margin: 0;
+  padding: 22px 24px !important;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid var(--glass-edge, rgba(255, 255, 255, 0.8));
+  box-shadow: var(--glass-shadow);
+}
+@media (max-width: 560px) {
+  .workforce-destination-row {
+    flex-wrap: wrap;
+  }
+  .workforce-opening-label {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .workforce-opening-label input {
+    width: 100% !important;
+    flex-basis: auto;
+  }
+  .workforce-goal-dialog .panel.career-goal-panel {
+    padding: 18px !important;
+  }
 }
