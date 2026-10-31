@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import { ArrowUpRight, X, Check, Circle } from 'lucide-react';
-import { skillById, sdgUrl } from '@/lib/catalogue';
+import { skillById, sdgLabel, sdgUrl } from '@/lib/catalogue';
 import type { Match, Profile, Scenario, SkillId, Snapshot } from '@/lib/types';
 import { useI18n } from './language-provider';
 import { ScoreBoosterPanel } from './finals-widgets';
@@ -87,9 +87,9 @@ export function SkillChip({
       href={sdgUrl(skill.target)}
       target="_blank"
       rel="noreferrer"
-      aria-label={t('{0} — SDG target {1}. {2}', {
+      aria-label={t('{0} — {1}. {2}', {
         0: t(skill.label),
-        1: skill.target,
+        1: sdgLabel(skill.target),
         2: t(skill.rationale),
       })}
     >
@@ -180,7 +180,7 @@ export function MatchDetails({
           </External>
         )}
         <External href={sdgUrl(match.role.target)}>
-          {t('SDG target {0}', { 0: match.role.target })}
+          {sdgLabel(match.role.target)}
         </External>
       </div>
       <p className="muted">{t(match.role.rationale)}</p>

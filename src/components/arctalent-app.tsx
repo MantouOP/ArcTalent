@@ -20,7 +20,6 @@ import {
   Info,
   Leaf,
   Map,
-  RefreshCw,
   RotateCcw,
   Search,
   Settings,
@@ -83,7 +82,17 @@ import {
   type WorkforceSettings,
 } from '@/lib/workforce-settings';
 import type { SettingsSection } from '@/lib/settings-sections';
-import { applySdgPriority, type SdgFocus } from '@/lib/finals-enhancements';
+import {
+  applySdgPriority,
+  computeLearnerBadges,
+  type SdgFocus,
+} from '@/lib/finals-enhancements';
+import {
+  recordSkillProgressions,
+  restoreTrackRecords,
+  syncTrackRecord,
+  type TrackRecordsByProfile,
+} from '@/lib/track-record';
 import {
   prunePracticeBadges,
   restorePracticeBadgesByProfile,
@@ -97,6 +106,7 @@ import {
   MalaysiaHrdDirectoryPanel,
   SdgChoiceBar,
 } from './finals-widgets';
+import './simplified-layout.css';
 // Last, so the glass surfaces restyle every component stylesheet above.
 import './glass.css';
 type View = 'explore' | 'pathway' | 'team' | 'impact' | 'evidence' | 'settings';
@@ -149,6 +159,8 @@ export function ArcTalentApp({
   );
   const [practiceBadgesByProfile, setPracticeBadgesByProfile] =
     useState<PracticeBadgesByProfile>({});
+  const [trackRecordsByProfile, setTrackRecordsByProfile] =
+    useState<TrackRecordsByProfile>({});
   function chooseRole(id: string) {
     setSelected(id);
     setFollowTop(false);
@@ -166,6 +178,7 @@ export function ArcTalentApp({
           setSnapshot(fresh.snapshot);
           setWorkforce(fresh.workforce);
           setPracticeBadgesByProfile({});
+          setTrackRecordsByProfile({});
           setCustomGoal(null);
           setFollowTop(true);
           if (initialView === 'explore') setView('settings');
@@ -203,6 +216,9 @@ export function ArcTalentApp({
           );
         }
         setPracticeBadgesByProfile(restoredBadges);
+        setTrackRecordsByProfile(
+          restoreTrackRecords(saved.trackRecordsByProfile),
+        );
       }
     } catch {
       /* Browser storage is optional. */
@@ -224,6 +240,7 @@ export function ArcTalentApp({
             customGoal,
             needsSetup,
             practiceBadgesByProfile,
+            trackRecordsByProfile,
           }),
         );
       } catch {
@@ -240,6 +257,7 @@ export function ArcTalentApp({
     customGoal,
     needsSetup,
     practiceBadgesByProfile,
+    trackRecordsByProfile,
   ]);
   useEffect(() => () => exportRequest.current?.abort(), []);
   useEffect(() => {
@@ -267,6 +285,38 @@ export function ArcTalentApp({
     () => buildPlan(profile, active.role, shared, funding),
     [profile, active.role, shared, funding],
   );
+  const milestoneBadges = useMemo(
+    () => computeLearnerBadges(profile, plan, shared, active.role).badges,
+    [profile, plan, shared, active.role],
+  );
+  const activePracticeBadges = practiceBadgesByProfile[profile.id];
+  useEffect(() => {
+    if (!ready || needsSetup) return;
+    setTrackRecordsByProfile((current) => {
+      const before = current[profile.id] ?? [];
+      const next = syncTrackRecord(
+        before,
+        {
+          completed: profile.completed,
+          milestones: milestoneBadges,
+          practiceBadges: activePracticeBadges ?? [],
+        },
+        new Date().toISOString(),
+      );
+      if (JSON.stringify(next) === JSON.stringify(before)) return current;
+      const copy = { ...current };
+      if (next.length) copy[profile.id] = next;
+      else delete copy[profile.id];
+      return copy;
+    });
+  }, [
+    ready,
+    needsSetup,
+    profile.id,
+    profile.completed,
+    milestoneBadges,
+    activePracticeBadges,
+  ]);
   const changes = previous
     ? diffSnapshots(profile, scenario, previous, snapshot, candidates).filter(
         (c) => c.delta !== 0,
@@ -340,6 +390,7 @@ export function ArcTalentApp({
     setFollowTop(true);
     setWorkforce(restoreWorkforceSettings());
     setPracticeBadgesByProfile({});
+    setTrackRecordsByProfile({});
     setFunding('all');
     setSdgFocus('all');
     setCustomGoal(null);
@@ -364,6 +415,7 @@ export function ArcTalentApp({
     setFollowTop(true);
     setWorkforce(fresh.workforce);
     setPracticeBadgesByProfile({});
+    setTrackRecordsByProfile({});
     setCustomGoal(null);
     setFunding('all');
     setSdgFocus('all');
@@ -388,7 +440,25 @@ export function ArcTalentApp({
       'Learning activity updated. Skill proficiency stays unchanged until you review it in your profile.',
     );
   }
-  function saveProfile(next: Profile) {
+  function saveProfile(
+    next: Profile,
+    source: 'practice-badge' | 'profile-review' = 'profile-review',
+  ) {
+    // Only an explicit edit of the same, already set-up profile is a progression.
+    if (next.id === profile.id && !needsSetup)
+      setTrackRecordsByProfile((current) => {
+        const before = current[next.id] ?? [];
+        const recorded = recordSkillProgressions(
+          before,
+          profile.skills,
+          next.skills,
+          source,
+          new Date().toISOString(),
+        );
+        return recorded.length === before.length
+          ? current
+          : { ...current, [next.id]: recorded };
+      });
     setProfile(next);
     setNeedsSetup(false);
     setWorkforce((current) => updateWorkforceProfile(current, next));
@@ -412,6 +482,37 @@ export function ArcTalentApp({
       return copy;
     });
   }
+  const careerGoalPanel = (
+    <CareerGoalPanel
+      profile={profile}
+      goal={customGoal}
+      snapshot={snapshot}
+      funding={funding}
+      onApply={(goal) => {
+        setCustomGoal(goal);
+        setSelected('custom-goal');
+        setFollowTop(false);
+        setToast(
+          'Your custom goal is ready. Review the courses and any remaining gaps.',
+        );
+        requestAnimationFrame(() => {
+          const heading = document.getElementById('learning-courses');
+          heading?.focus({ preventScroll: true });
+          heading?.scrollIntoView({
+            block: 'start',
+            behavior: 'auto',
+          });
+        });
+      }}
+      onClear={() => {
+        setCustomGoal(null);
+        if (selected === 'custom-goal') {
+          setFollowTop(true);
+          setSelected(defaultRole);
+        }
+      }}
+    />
+  );
   async function exportPlan() {
     if (needsSetup) {
       setToast('Add your profile before exporting a learning plan.');
@@ -765,7 +866,7 @@ export function ArcTalentApp({
           )}
           {view === 'explore' && !needsSetup && (
             <>
-              <div className="stats-grid">
+              <div className="stats-grid summary-strip">
                 <div className="stat">
                   <Compass />
                   <span>{t('Career options')}</span>
@@ -826,14 +927,148 @@ export function ArcTalentApp({
                 defaultTopRole={baseMatches[0]?.role}
                 newTopRole={matches[0]?.role}
               />
-              <FutureSkillsRadarPanel
-                snapshot={snapshot}
-                previous={previous}
-                onFlipTrend={() =>
-                  useSnapshot(snapshot.id === updated.id ? baseline : updated)
-                }
-              />
-              <div className="explorer-grid">
+              <section className="career-section">
+                <div className="section-title">
+                  <div>
+                    <h2>{t('Where your skills could take you')}</h2>
+                    <p className="muted">
+                      {sdgFocus === 'all'
+                        ? t(
+                            'Ranked for your profile and the {0} adoption scenario.',
+                            { 0: t(scenario) },
+                          )
+                        : t(
+                            'Ranked for your profile, the {0} adoption scenario and your SDG priority.',
+                            { 0: t(scenario) },
+                          )}{' '}
+                    </p>
+                  </div>
+                  <button
+                    className="text-button"
+                    onClick={() => setShowAll(!showAll)}
+                  >
+                    {showAll
+                      ? t('Show top three')
+                      : t('View all {0}', { 0: matches.length })}
+                    <ArrowRight size={15} />
+                  </button>
+                </div>
+                {showAll && (
+                  <label className="search-box">
+                    <Search size={16} />
+                    <input
+                      aria-label={t('Search career options')}
+                      placeholder={t('Find a career option…')}
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                  </label>
+                )}
+                <div className="career-cards">
+                  {visibleMatches.map((m, i) => (
+                    <article
+                      className={`career-card ${m.role.id === active.role.id ? 'is-selected' : ''}`}
+                      key={m.role.id}
+                    >
+                      <div className="card-top">
+                        <span
+                          className="role-icon"
+                          style={{
+                            color: m.role.color,
+                            background: m.role.color + '12',
+                          }}
+                        >
+                          {m.role.family === 'sustainability' ? (
+                            <Leaf size={19} />
+                          ) : m.role.family === 'people' ? (
+                            <Users size={19} />
+                          ) : (
+                            <GitBranch size={19} />
+                          )}
+                        </span>
+                        <span className="rank">
+                          {i === 0
+                            ? t('TOP MATCH')
+                            : t('OPTION {0}', { 0: i + 1 })}
+                        </span>
+                        <button
+                          className="icon-button"
+                          aria-label={t('Explain {0} score', {
+                            0: roleLabel(m.role, t),
+                          })}
+                          onClick={() => setDetails(m)}
+                        >
+                          <Info size={16} />
+                        </button>
+                      </div>
+                      <h3>{roleLabel(m.role, t)}</h3>
+                      <p>
+                        {m.role.custom
+                          ? m.role.description
+                          : t(m.role.description)}
+                      </p>
+                      <div className="match-score">
+                        <strong>
+                          {Math.round(m.score)}
+                          <small>/100</small>
+                        </strong>
+                        <span>
+                          {t('Suitability')}{' '}
+                          <small>
+                            {t('Skill match {0}%', {
+                              0: Math.round(m.coverage),
+                            })}
+                          </small>
+                          {m.sdgBonus > 0 && (
+                            <small className="sdg-bonus">
+                              {t('+{0} SDG priority points', {
+                                0: m.sdgBonus,
+                              })}
+                            </small>
+                          )}
+                        </span>
+                        <svg viewBox="0 0 40 40" aria-hidden="true">
+                          <circle cx="20" cy="20" r="16" />
+                          <circle
+                            cx="20"
+                            cy="20"
+                            r="16"
+                            strokeDasharray={`${m.score} 100`}
+                            pathLength="100"
+                          />
+                        </svg>
+                      </div>
+                      <div className="career-meta">
+                        <span>
+                          {t('{0} transferable skills', {
+                            0: m.reused.length,
+                          })}
+                        </span>
+                        <span>{t('{0} gaps', { 0: m.gaps.length })}</span>
+                      </div>
+                      <button
+                        className={
+                          m.role.id === active.role.id
+                            ? 'primary full'
+                            : 'secondary full'
+                        }
+                        onClick={() => {
+                          chooseRole(m.role.id);
+                          navigate('pathway');
+                        }}
+                      >
+                        {t('Explore pathway')} <ArrowRight size={14} />
+                      </button>
+                    </article>
+                  ))}
+                </div>
+                {visibleMatches.length === 0 && (
+                  <div className="empty-state">
+                    {t('No occupation matches that search.')}{' '}
+                  </div>
+                )}
+              </section>
+              <div className="explorer-primary">
                 <RouteSummary
                   active={active}
                   matches={matches}
@@ -846,31 +1081,64 @@ export function ArcTalentApp({
                   onSelect={chooseRole}
                   onExplain={() => setDetails(active)}
                 />
-                <section className="panel map-panel">
-                  <div className="panel-heading">
-                    <div>
-                      <span className="eyebrow">
-                        {t('YOUR POSSIBILITIES, CONNECTED')}{' '}
-                      </span>
-                      <h2>{t('Your career constellation')}</h2>
-                    </div>
-                    <button
-                      className="icon-button"
-                      onClick={() => navigate('pathway')}
-                      aria-label={t('Open full learning pathway')}
-                    >
-                      <ArrowUpRight size={20} />
-                    </button>
-                  </div>
-                  <LearningMap
-                    matches={matches}
-                    shared={shared}
-                    profile={profile}
-                    selected={active.role.id}
-                    onSelect={chooseRole}
-                  />
+                <section className="next-step-card">
+                  <span className="eyebrow">
+                    <Sparkles size={13} />
+                    {t('YOUR NEXT USEFUL STEP')}{' '}
+                  </span>
+                  <h3>
+                    {plan.steps[0]?.course.title ??
+                      t('Review your learning constraints')}
+                  </h3>
+                  <p>
+                    {plan.steps.length
+                      ? t('{0} study hours · {1}', {
+                          0: plan.steps[0].course.hours,
+                          1: plan.steps[0].course.provider,
+                        })
+                      : t('Try a longer horizon or inspect uncovered skills.')}
+                  </p>
+                  {plan.steps[0] && (
+                    <CourseLink course={plan.steps[0].course} />
+                  )}
+                  <button onClick={() => navigate('pathway')}>
+                    {t('See the learning plan')} <ArrowRight size={16} />
+                  </button>
                 </section>
-                <aside className="explorer-aside">
+              </div>
+              <details className="panel disclosure">
+                <summary>
+                  <span>
+                    {t('Career constellation, skills radar & route analytics')}
+                  </span>
+                  <small className="muted">
+                    {t(
+                      'How your options connect and where your study hours fall',
+                    )}
+                  </small>
+                </summary>
+                <div className="disclosure-grid">
+                  <section className="panel map-panel">
+                    <div className="panel-heading">
+                      <div>
+                        <h2>{t('Your career constellation')}</h2>
+                      </div>
+                      <button
+                        className="icon-button"
+                        onClick={() => navigate('pathway')}
+                        aria-label={t('Open full learning pathway')}
+                      >
+                        <ArrowUpRight size={20} />
+                      </button>
+                    </div>
+                    <LearningMap
+                      matches={matches}
+                      shared={shared}
+                      profile={profile}
+                      selected={active.role.id}
+                      onSelect={chooseRole}
+                    />
+                  </section>
                   <section className="panel profile-card">
                     <div className="panel-heading">
                       <h2>{t('Your skills radar')}</h2>
@@ -893,214 +1161,28 @@ export function ArcTalentApp({
                       {t('Self-reported levels · 0 to 3')}
                     </p>
                   </section>
-                  <section className="next-step-card">
-                    <span className="eyebrow">
-                      <Sparkles size={13} />
-                      {t('YOUR NEXT USEFUL STEP')}{' '}
-                    </span>
-                    <h3>
-                      {plan.steps[0]?.course.title ??
-                        t('Review your learning constraints')}
-                    </h3>
-                    <p>
-                      {plan.steps.length
-                        ? t('{0} study hours · {1}', {
-                            0: plan.steps[0].course.hours,
-                            1: plan.steps[0].course.provider,
-                          })
-                        : t(
-                            'Try a longer horizon or inspect uncovered skills.',
-                          )}
-                    </p>
-                    {plan.steps[0] && (
-                      <CourseLink course={plan.steps[0].course} />
-                    )}
-                    <button onClick={() => navigate('pathway')}>
-                      {t('See the learning plan')} <ArrowRight size={16} />
-                    </button>
-                  </section>
-                  <div className="small-callout">
-                    <ShieldCheck size={20} />
-                    <p>
-                      {t('Your experience stays valuable.')} <br />
-                      <strong>
-                        {t('We show the bridge, not a blank slate.')}
-                      </strong>
-                    </p>
-                  </div>
-                </aside>
+                </div>
                 <RouteAnalytics
                   matches={matches}
                   plan={plan}
                   profile={profile}
                 />
-                <section className="career-section">
-                  <div className="section-title">
-                    <div>
-                      <h2>{t('Where your skills could take you')}</h2>
-                      <p className="muted">
-                        {sdgFocus === 'all'
-                          ? t(
-                              'Ranked for your profile and the {0} adoption scenario.',
-                              { 0: t(scenario) },
-                            )
-                          : t(
-                              'Ranked for your profile, the {0} adoption scenario and your SDG priority.',
-                              { 0: t(scenario) },
-                            )}{' '}
-                      </p>
-                    </div>
-                    <button
-                      className="text-button"
-                      onClick={() => setShowAll(!showAll)}
-                    >
-                      {showAll
-                        ? t('Show top three')
-                        : t('View all {0}', { 0: matches.length })}
-                      <ArrowRight size={15} />
-                    </button>
-                  </div>
-                  {showAll && (
-                    <label className="search-box">
-                      <Search size={16} />
-                      <input
-                        aria-label={t('Search career options')}
-                        placeholder={t('Find a career option…')}
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                      />
-                    </label>
-                  )}
-                  <div className="career-cards">
-                    {visibleMatches.map((m, i) => (
-                      <article
-                        className={`career-card ${m.role.id === active.role.id ? 'is-selected' : ''}`}
-                        key={m.role.id}
-                      >
-                        <div className="card-top">
-                          <span
-                            className="role-icon"
-                            style={{
-                              color: m.role.color,
-                              background: m.role.color + '12',
-                            }}
-                          >
-                            {m.role.family === 'sustainability' ? (
-                              <Leaf size={19} />
-                            ) : m.role.family === 'people' ? (
-                              <Users size={19} />
-                            ) : (
-                              <GitBranch size={19} />
-                            )}
-                          </span>
-                          <span className="rank">
-                            {i === 0
-                              ? t('TOP MATCH')
-                              : t('OPTION {0}', { 0: i + 1 })}
-                          </span>
-                          <button
-                            className="icon-button"
-                            aria-label={t('Explain {0} score', {
-                              0: roleLabel(m.role, t),
-                            })}
-                            onClick={() => setDetails(m)}
-                          >
-                            <Info size={16} />
-                          </button>
-                        </div>
-                        <h3>{roleLabel(m.role, t)}</h3>
-                        <p>
-                          {m.role.custom
-                            ? m.role.description
-                            : t(m.role.description)}
-                        </p>
-                        <div className="match-score">
-                          <strong>
-                            {Math.round(m.score)}
-                            <small>/100</small>
-                          </strong>
-                          <span>
-                            {t('Suitability')}{' '}
-                            <small>
-                              {t('Skill match {0}%', {
-                                0: Math.round(m.coverage),
-                              })}
-                            </small>
-                            {m.sdgBonus > 0 && (
-                              <small className="sdg-bonus">
-                                {t('+{0} SDG priority points', {
-                                  0: m.sdgBonus,
-                                })}
-                              </small>
-                            )}
-                          </span>
-                          <svg viewBox="0 0 40 40" aria-hidden="true">
-                            <circle cx="20" cy="20" r="16" />
-                            <circle
-                              cx="20"
-                              cy="20"
-                              r="16"
-                              strokeDasharray={`${m.score} 100`}
-                              pathLength="100"
-                            />
-                          </svg>
-                        </div>
-                        <div className="career-meta">
-                          <span>
-                            {t('{0} transferable skills', {
-                              0: m.reused.length,
-                            })}
-                          </span>
-                          <span>{t('{0} gaps', { 0: m.gaps.length })}</span>
-                        </div>
-                        <button
-                          className={
-                            m.role.id === active.role.id
-                              ? 'primary full'
-                              : 'secondary full'
-                          }
-                          onClick={() => {
-                            chooseRole(m.role.id);
-                            navigate('pathway');
-                          }}
-                        >
-                          {t('Explore pathway')} <ArrowRight size={14} />
-                        </button>
-                      </article>
-                    ))}
-                  </div>
-                  {visibleMatches.length === 0 && (
-                    <div className="empty-state">
-                      {t('No occupation matches that search.')}{' '}
-                    </div>
-                  )}
-                </section>
-              </div>
-              <section className="update-banner">
-                <div className="update-icon">
-                  <RefreshCw size={22} />
-                </div>
-                <div>
-                  <span className="eyebrow">{t('BUILT TO ADAPT')}</span>
-                  <h3>{t('What if the evidence changes?')}</h3>
-                  <p>
-                    {t(
-                      'Try a newer demo snapshot and see exactly why the recommendations move.',
-                    )}{' '}
-                  </p>
-                </div>
-                <button
-                  className="secondary"
-                  onClick={() => {
-                    useSnapshot(
-                      snapshot.id === updated.id ? baseline : updated,
-                    );
-                    navigate('evidence');
-                  }}
-                >
-                  {t('Try the replanning demo')} <ArrowRight size={16} />
-                </button>
-              </section>
+              </details>
+              <details className="panel disclosure">
+                <summary>
+                  <span>{t('Future skills radar')}</span>
+                  <small className="muted">
+                    {t('Rising and cooling skill demand in this snapshot')}
+                  </small>
+                </summary>
+                <FutureSkillsRadarPanel
+                  snapshot={snapshot}
+                  previous={previous}
+                  onFlipTrend={() =>
+                    useSnapshot(snapshot.id === updated.id ? baseline : updated)
+                  }
+                />
+              </details>
             </>
           )}
           {view === 'pathway' && !needsSetup && (
@@ -1112,54 +1194,6 @@ export function ArcTalentApp({
                 snapshot={snapshot}
                 candidates={candidates}
                 onInspectEvidence={() => navigate('evidence')}
-              />
-              <LearnerBadgesPanel
-                profile={profile}
-                plan={plan}
-                shared={shared}
-                role={active.role}
-                scenario={scenario}
-                snapshot={snapshot}
-                customGoal={customGoal}
-                funding={funding}
-                practiceBadges={practiceBadgesByProfile[profile.id] ?? []}
-                onChangePracticeBadges={updateActivePracticeBadges}
-                onConfirmSkillLevel={(skillId, level) => {
-                  saveProfile({
-                    ...profile,
-                    skills: { ...profile.skills, [skillId]: level },
-                  });
-                  setToast('Skill proficiency updated in your profile.');
-                }}
-              />
-              <CareerGoalPanel
-                profile={profile}
-                goal={customGoal}
-                snapshot={snapshot}
-                funding={funding}
-                onApply={(goal) => {
-                  setCustomGoal(goal);
-                  setSelected('custom-goal');
-                  setFollowTop(false);
-                  setToast(
-                    'Your custom goal is ready. Review the courses and any remaining gaps.',
-                  );
-                  requestAnimationFrame(() => {
-                    const heading = document.getElementById('learning-courses');
-                    heading?.focus({ preventScroll: true });
-                    heading?.scrollIntoView({
-                      block: 'start',
-                      behavior: 'auto',
-                    });
-                  });
-                }}
-                onClear={() => {
-                  setCustomGoal(null);
-                  if (selected === 'custom-goal') {
-                    setFollowTop(true);
-                    setSelected(defaultRole);
-                  }
-                }}
               />
               <div className="pathway-toolbar">
                 <label>
@@ -1215,287 +1249,256 @@ export function ArcTalentApp({
                   'Follow the leading recommendation as scenarios and evidence change',
                 )}{' '}
               </label>
-              <section className="panel map-panel">
-                <LearningMap
-                  matches={matches}
-                  shared={shared}
-                  profile={profile}
-                  selected={active.role.id}
-                  onSelect={chooseRole}
-                />
-              </section>
-              <div className="pathway-grid">
-                <section>
-                  <SkillBridge profile={profile} role={active.role} />
-                  <div className="section-title">
-                    <div>
-                      <span className="eyebrow">{t('YOUR CHOSEN ROUTE')}</span>
-                      <h2 id="learning-courses" tabIndex={-1}>
-                        {roleLabel(active.role, t)}
-                      </h2>
-                      <p className="muted">
-                        {t(
-                          '{0} planned hours · RM {1} in course fees · {2}-week horizon',
-                          {
-                            0: plan.totalHours,
-                            1: plan.totalCost,
-                            2: profile.weeks,
-                          },
-                        )}{' '}
-                      </p>
-                      <p className="muted small">
-                        {t(
-                          'Course coverage is a planning assumption. Study and assessment are needed to confirm proficiency.',
-                        )}{' '}
-                      </p>
-                    </div>
-                    <button
-                      className="text-button"
-                      onClick={() => setDetails(active)}
-                    >
-                      {t('Why this route?')} <Info size={15} />
-                    </button>
-                  </div>
-                  {active.role.custom && customGoal && (
-                    <div className="notice">
-                      <strong>{t('Your custom learning destination')}</strong>
-                      <p>
-                        {t(
-                          'Requirements are your reviewed planning targets. Scenario comparison uses an illustrative exposure of 0.5, not an occupation forecast.',
-                        )}
-                      </p>
-                      {(() => {
-                        const { covered, remaining } = splitSpecialistSkills(
-                          customGoal.otherSkills,
-                          profile.customSkills,
-                        );
-                        return (
-                          <>
-                            {remaining.length > 0 && (
-                              <p>
-                                {t('Other skills to investigate: {0}', {
-                                  0: remaining.join(', '),
-                                })}
-                              </p>
-                            )}
-                            {covered.length > 0 && (
-                              <p>
-                                {t('Already listed: {0}', {
-                                  0: covered.join(', '),
-                                })}
-                              </p>
-                            )}
-                          </>
-                        );
-                      })()}
-                    </div>
-                  )}
-                  {funding === 'hrd' && (
-                    <div className="notice">
+              <LearnerBadgesPanel
+                profile={profile}
+                plan={plan}
+                shared={shared}
+                role={active.role}
+                scenario={scenario}
+                snapshot={snapshot}
+                customGoal={customGoal}
+                funding={funding}
+                practiceBadges={practiceBadgesByProfile[profile.id] ?? []}
+                trackRecord={trackRecordsByProfile[profile.id] ?? []}
+                onChangePracticeBadges={updateActivePracticeBadges}
+                onConfirmSkillLevel={(skillId, level) => {
+                  saveProfile(
+                    {
+                      ...profile,
+                      skills: { ...profile.skills, [skillId]: level },
+                    },
+                    'practice-badge',
+                  );
+                  setToast('Skill proficiency updated in your profile.');
+                }}
+              />
+              {customGoal && active.role.custom && careerGoalPanel}
+              <section className="pathway-courses">
+                <div className="section-title">
+                  <div>
+                    <span className="eyebrow">{t('YOUR CHOSEN ROUTE')}</span>
+                    <h2 id="learning-courses" tabIndex={-1}>
+                      {roleLabel(active.role, t)}
+                    </h2>
+                    <p className="muted">
                       {t(
-                        'No HRD Corp programme has been verified in this starter catalogue yet. Use verified free options, or verify an individual programme before adding it. Provider registration alone does not guarantee claimability.',
+                        '{0} planned hours · RM {1} in course fees · {2}-week horizon',
+                        {
+                          0: plan.totalHours,
+                          1: plan.totalCost,
+                          2: profile.weeks,
+                        },
                       )}{' '}
-                      <External href="https://hrdcorp.gov.my/hrdcorp-claimable-courses">
-                        {t('Check HRD Corp guidance')}{' '}
-                      </External>
-                    </div>
-                  )}
-                  {plan.steps.length > 0 && (
+                    </p>
                     <p className="muted small">
                       {t(
-                        'Each step links to the exact course on its provider’s website. Links open in a new tab.',
+                        'Course coverage is a planning assumption. Study and assessment are needed to confirm proficiency.',
                       )}{' '}
+                    </p>
+                  </div>
+                  <button
+                    className="text-button"
+                    onClick={() => setDetails(active)}
+                  >
+                    {t('Why this route?')} <Info size={15} />
+                  </button>
+                </div>
+                {active.role.custom && customGoal && (
+                  <div className="notice">
+                    <strong>{t('Your custom learning destination')}</strong>
+                    <p>
                       {t(
-                        'Optional YouTube videos give a quick overview and are not counted in planned hours.',
+                        'Requirements are your reviewed planning targets. Scenario comparison uses an illustrative exposure of 0.5, not an occupation forecast.',
                       )}
                     </p>
-                  )}
-                  {plan.steps.map((step, i) => (
-                    <article className="course-card" key={step.course.id}>
-                      <div
-                        className={`course-number ${step.shared ? 'shared' : ''}`}
-                      >
-                        {String(i + 1).padStart(2, '0')}
-                      </div>
-                      <div className="course-content">
-                        <div className="course-top">
-                          <Tag tone={step.shared ? 'green' : 'blue'}>
-                            {step.shared
-                              ? t('Shared foundation')
-                              : t('Career branch')}
-                          </Tag>
-                          <small>
-                            {t('Week {0}{1}', {
-                              0: step.startWeek,
-                              1:
-                                step.endWeek !== step.startWeek
-                                  ? `–${step.endWeek}`
-                                  : '',
-                            })}
-                          </small>
-                        </div>
-                        <h3>{step.course.title}</h3>
-                        <p>
-                          {t('{0} · {1} hours ( {2}) · RM {3}', {
-                            0: step.course.provider,
-                            1: step.course.hours,
-                            2: t(step.course.durationKind),
-                            3: step.course.fee,
+                    {(() => {
+                      const { covered, remaining } = splitSpecialistSkills(
+                        customGoal.otherSkills,
+                        profile.customSkills,
+                      );
+                      return (
+                        <>
+                          {remaining.length > 0 && (
+                            <p>
+                              {t('Other skills to investigate: {0}', {
+                                0: remaining.join(', '),
+                              })}
+                            </p>
+                          )}
+                          {covered.length > 0 && (
+                            <p>
+                              {t('Already listed: {0}', {
+                                0: covered.join(', '),
+                              })}
+                            </p>
+                          )}
+                        </>
+                      );
+                    })()}
+                  </div>
+                )}
+                {funding === 'hrd' && (
+                  <div className="notice">
+                    {t(
+                      'No HRD Corp programme has been verified in this starter catalogue yet. Use verified free options, or verify an individual programme before adding it. Provider registration alone does not guarantee claimability.',
+                    )}{' '}
+                    <External href="https://hrdcorp.gov.my/hrdcorp-claimable-courses">
+                      {t('Check HRD Corp guidance')}{' '}
+                    </External>
+                  </div>
+                )}
+                {plan.steps.length > 0 && (
+                  <p className="muted small">
+                    {t(
+                      'Each step links to the exact course on its provider’s website. Links open in a new tab.',
+                    )}{' '}
+                    {t(
+                      'Optional YouTube videos give a quick overview and are not counted in planned hours.',
+                    )}
+                  </p>
+                )}
+                {plan.steps.map((step, i) => (
+                  <article className="course-card" key={step.course.id}>
+                    <div
+                      className={`course-number ${step.shared ? 'shared' : ''}`}
+                    >
+                      {String(i + 1).padStart(2, '0')}
+                    </div>
+                    <div className="course-content">
+                      <div className="course-top">
+                        <Tag tone={step.shared ? 'green' : 'blue'}>
+                          {step.shared
+                            ? t('Shared foundation')
+                            : t('Career branch')}
+                        </Tag>
+                        <small>
+                          {t('Week {0}{1}', {
+                            0: step.startWeek,
+                            1:
+                              step.endWeek !== step.startWeek
+                                ? `–${step.endWeek}`
+                                : '',
                           })}
-                        </p>
-                        <div className="chips">
-                          {step.course.skills.map((id) => (
-                            <SkillChip key={id} id={id} />
-                          ))}
-                        </div>
-                        <p className="muted small">{t(step.course.note)}</p>
-                        <div className="course-bottom">
-                          <CourseLink course={step.course} />
-                          <button
-                            className="text-button"
-                            onClick={() => complete(step.course.id)}
-                          >
-                            <CheckCircle2 size={15} />
-                            {t('Mark studied')}{' '}
-                          </button>
-                        </div>
-                        <small className="verification">
-                          <ShieldCheck size={12} />
-                          {t('Source checked')} {step.course.checkedAt} ·{' '}
-                          <a
-                            href={sdgUrl('4.4')}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            {t('SDG 4.4: relevant work skills')}{' '}
-                          </a>
                         </small>
                       </div>
-                    </article>
-                  ))}
-                  {!plan.steps.length && (
-                    <div className="panel empty-state">
-                      <BookOpen size={28} />
-                      <h3>{t('No new course fits this selection.')}</h3>
+                      <h3>{step.course.title}</h3>
                       <p>
-                        {t(
-                          'Review the available time, funding filter and gaps below. You may have already studied the relevant courses.',
-                        )}{' '}
-                      </p>
-                      <button
-                        className="secondary"
-                        onClick={() => openSettings('profile')}
-                      >
-                        {t('Edit constraints')}{' '}
-                      </button>
-                    </div>
-                  )}
-                  {plan.completed.length > 0 && (
-                    <section className="panel completed-panel">
-                      <h3>{t('Learning you’re keeping')}</h3>
-                      {plan.completed.map((c) => (
-                        <div key={c.id}>
-                          <div className="completed-course">
-                            <span>
-                              <CheckCircle2 size={16} />
-                              {c.title}
-                            </span>
-                            <small>{c.provider}</small>
-                            <CourseLink course={c} />
-                          </div>
-                          <button
-                            className="text-button"
-                            onClick={() => complete(c.id)}
-                          >
-                            {t('Undo')}{' '}
-                          </button>
-                        </div>
-                      ))}
-                      <p className="muted small">
-                        {t(
-                          'Marked studied in this browser. Your assessed skill levels do not change automatically.',
-                        )}{' '}
-                      </p>
-                    </section>
-                  )}
-                  {plan.uncovered.length > 0 && (
-                    <section className="panel gap-panel">
-                      <h3>{t('A useful start, with gaps still to cover.')}</h3>
-                      <p>
-                        {t(
-                          'These needs do not fit the available time, prerequisites or verified catalogue. Finishing the plan does not establish full role readiness.',
-                        )}{' '}
+                        {t('{0} · {1} hours ( {2}) · RM {3}', {
+                          0: step.course.provider,
+                          1: step.course.hours,
+                          2: t(step.course.durationKind),
+                          3: step.course.fee,
+                        })}
                       </p>
                       <div className="chips">
-                        {plan.uncovered.map((id) => (
+                        {step.course.skills.map((id) => (
                           <SkillChip key={id} id={id} />
                         ))}
                       </div>
-                    </section>
-                  )}
-                  <MalaysiaHrdDirectoryPanel
-                    role={active.role}
-                    funding={funding}
-                  />
-                </section>
-                <aside>
-                  <section className="panel">
-                    <span className="eyebrow">
-                      {t('MAKE ROOM FOR LEARNING')}
-                    </span>
-                    <h2>{t('Your weekly rhythm')}</h2>
-                    <p className="muted">
-                      {t('Maximum {0} hours each week.', {
-                        0: profile.hours,
-                      })}{' '}
+                      <p className="muted small">{t(step.course.note)}</p>
+                      <div className="course-bottom">
+                        <CourseLink course={step.course} />
+                        <button
+                          className="text-button"
+                          onClick={() => complete(step.course.id)}
+                        >
+                          <CheckCircle2 size={15} />
+                          {t('Mark studied')}{' '}
+                        </button>
+                      </div>
+                      <small className="verification">
+                        <ShieldCheck size={12} />
+                        {t('Source checked')} {step.course.checkedAt} ·{' '}
+                        <a href={sdgUrl('4')} target="_blank" rel="noreferrer">
+                          {t('SDG 4: Quality Education')}{' '}
+                        </a>
+                      </small>
+                    </div>
+                  </article>
+                ))}
+                {!plan.steps.length && (
+                  <div className="panel empty-state">
+                    <BookOpen size={28} />
+                    <h3>{t('No new course fits this selection.')}</h3>
+                    <p>
+                      {t(
+                        'Review the available time, funding filter and gaps below. You may have already studied the relevant courses.',
+                      )}{' '}
                     </p>
-                    <div className="weekly-chart">
-                      {Array.from(
-                        { length: Math.min(profile.weeks, 12) },
-                        (_, i) => {
-                          const w = plan.weeks[i];
-                          return (
-                            <div key={i}>
-                              <span>{t('W{0}', { 0: i + 1 })}</span>
-                              <div className="bar">
-                                <i
-                                  style={{
-                                    width: `${profile.hours ? ((w?.hours ?? 0) / profile.hours) * 100 : 0}%`,
-                                  }}
-                                />
-                              </div>
-                              <b>{t('{0} h', { 0: w?.hours ?? 0 })}</b>
-                            </div>
-                          );
-                        },
-                      )}
-                    </div>
-                    {profile.weeks > 12 && (
-                      <p className="muted small">
-                        {t(
-                          'First 12 weeks shown. Export includes the full schedule.',
-                        )}{' '}
-                      </p>
-                    )}
-                    <div className="section-divider" />
-                    <div className="budget-line">
-                      <span>{t('Course fees')}</span>
-                      <strong>{t('RM {0}', { 0: plan.totalCost })}</strong>
-                    </div>
-                    <div className="budget-line">
-                      <span>{t('Available budget')}</span>
-                      <strong>{t('RM {0}', { 0: profile.budget })}</strong>
-                    </div>
+                    <button
+                      className="secondary"
+                      onClick={() => openSettings('profile')}
+                    >
+                      {t('Edit constraints')}{' '}
+                    </button>
+                  </div>
+                )}
+                {plan.completed.length > 0 && (
+                  <section className="panel completed-panel">
+                    <h3>{t('Learning you’re keeping')}</h3>
+                    {plan.completed.map((c) => (
+                      <div key={c.id}>
+                        <div className="completed-course">
+                          <span>
+                            <CheckCircle2 size={16} />
+                            {c.title}
+                          </span>
+                          <small>{c.provider}</small>
+                          <CourseLink course={c} />
+                        </div>
+                        <button
+                          className="text-button"
+                          onClick={() => complete(c.id)}
+                        >
+                          {t('Undo')}{' '}
+                        </button>
+                      </div>
+                    ))}
                     <p className="muted small">
                       {t(
-                        'Device, software, data and staff-time costs are separate.',
+                        'Marked studied in this browser. Your assessed skill levels do not change automatically.',
                       )}{' '}
                     </p>
                   </section>
-                  <StudyRhythm
-                    profile={profile}
-                    onEdit={() => openSettings('profile')}
-                  />
+                )}
+                {plan.uncovered.length > 0 && (
+                  <section className="panel gap-panel">
+                    <h3>{t('A useful start, with gaps still to cover.')}</h3>
+                    <p>
+                      {t(
+                        'These needs do not fit the available time, prerequisites or verified catalogue. Finishing the plan does not establish full role readiness.',
+                      )}{' '}
+                    </p>
+                    <div className="chips">
+                      {plan.uncovered.map((id) => (
+                        <SkillChip key={id} id={id} />
+                      ))}
+                    </div>
+                  </section>
+                )}
+              </section>
+              <div className="pathway-drawers">
+                {!(customGoal && active.role.custom) && (
+                  <details className="panel disclosure">
+                    <summary>
+                      <span>{t('Set your own career goal')}</span>
+                      <small className="muted">
+                        {t(
+                          'Type any career and review the skill targets ArcTalent suggests',
+                        )}
+                      </small>
+                    </summary>
+                    {careerGoalPanel}
+                  </details>
+                )}
+                <details className="panel disclosure">
+                  <summary>
+                    <span>{t('Role requirements & skill bridge')}</span>
+                    <small className="muted">
+                      {t('What you already bring and what entry usually needs')}
+                    </small>
+                  </summary>
+                  <SkillBridge profile={profile} role={active.role} />
                   <section className="panel qualification-panel">
                     <GraduationCap size={23} />
                     <h3>{t('Keep the destination realistic')}</h3>
@@ -1523,7 +1526,83 @@ export function ArcTalentApp({
                       </button>
                     </section>
                   )}
-                </aside>
+                </details>
+                <details className="panel disclosure">
+                  <summary>
+                    <span>{t('Weekly rhythm & budget')}</span>
+                    <small className="muted">
+                      {t('Maximum {0} hours each week.', { 0: profile.hours })}
+                    </small>
+                  </summary>
+                  <div className="disclosure-grid">
+                    <section className="panel">
+                      <h2>{t('Your weekly rhythm')}</h2>
+                      <p className="muted">
+                        {t('Maximum {0} hours each week.', {
+                          0: profile.hours,
+                        })}{' '}
+                      </p>
+                      <div className="weekly-chart">
+                        {Array.from(
+                          { length: Math.min(profile.weeks, 12) },
+                          (_, i) => {
+                            const w = plan.weeks[i];
+                            return (
+                              <div key={i}>
+                                <span>{t('W{0}', { 0: i + 1 })}</span>
+                                <div className="bar">
+                                  <i
+                                    style={{
+                                      width: `${profile.hours ? ((w?.hours ?? 0) / profile.hours) * 100 : 0}%`,
+                                    }}
+                                  />
+                                </div>
+                                <b>{t('{0} h', { 0: w?.hours ?? 0 })}</b>
+                              </div>
+                            );
+                          },
+                        )}
+                      </div>
+                      {profile.weeks > 12 && (
+                        <p className="muted small">
+                          {t(
+                            'First 12 weeks shown. Export includes the full schedule.',
+                          )}{' '}
+                        </p>
+                      )}
+                      <div className="section-divider" />
+                      <div className="budget-line">
+                        <span>{t('Course fees')}</span>
+                        <strong>{t('RM {0}', { 0: plan.totalCost })}</strong>
+                      </div>
+                      <div className="budget-line">
+                        <span>{t('Available budget')}</span>
+                        <strong>{t('RM {0}', { 0: profile.budget })}</strong>
+                      </div>
+                      <p className="muted small">
+                        {t(
+                          'Device, software, data and staff-time costs are separate.',
+                        )}{' '}
+                      </p>
+                    </section>
+                    <StudyRhythm
+                      profile={profile}
+                      onEdit={() => openSettings('profile')}
+                    />
+                  </div>
+                </details>
+                <details className="panel disclosure">
+                  <summary>
+                    <span>{t('Malaysian training portals for this role')}</span>
+                    <small className="muted">
+                      e-LATiH · MyMahir · HRD Corp
+                    </small>
+                  </summary>
+                  <MalaysiaHrdDirectoryPanel
+                    role={active.role}
+                    funding={funding}
+                  />
+                </details>
               </div>
             </>
           )}
@@ -1534,6 +1613,7 @@ export function ArcTalentApp({
               scenario={scenario}
               snapshot={snapshot}
               workforce={workforce}
+              trackRecords={trackRecordsByProfile}
               onChange={setWorkforce}
               onProfileChange={(member) => {
                 if (member.id === profile.id) saveProfile(member);

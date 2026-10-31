@@ -14,6 +14,8 @@ import {
 import { analyseGoalLocally, careerGoalSchema } from '../src/lib/career-goals';
 import { makeStudyProgressRequest } from '../src/lib/study-progress-ai';
 import { detailedWorkforcePayload } from './fixtures/workforce-detailed';
+import { WORKFORCE_REPORT_SAMPLES } from '../src/lib/workforce-ai';
+import { workforceSettingsSchema } from '../src/lib/workforce-settings';
 
 const origin = process.env.TEST_BASE_URL || 'http://localhost:3000';
 const post = (path: string, body: unknown) =>
@@ -61,11 +63,58 @@ await check('health reports actual extraction mode', async () => {
   assert.ok(
     ['ai-configured', 'local-study-coach'].includes(health.studyProgress),
   );
+  assert.ok(
+    ['ai-configured', 'local-workforce-planner'].includes(
+      health.workforcePlanner,
+    ),
+  );
   assert.equal(
     health.aiProvider === null,
     health.careerChat !== 'ai-configured',
   );
 });
+await check(
+  'workforce planner turns a sample report into a valid team plan in one request',
+  async () => {
+    const response = await post('/api/workforce-ai', {
+      report: WORKFORCE_REPORT_SAMPLES[1].report,
+      processingConsent: true,
+      useAi: false,
+      scenario: 'moderate',
+      locale: 'en',
+    });
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('cache-control'), 'no-store');
+    const result = await response.json();
+    assert.equal(result.mode, 'local');
+    assert.ok(workforceSettingsSchema.safeParse(result.workforce).success);
+    assert.equal(result.workforce.members.length, 6);
+    assert.ok(
+      result.summary.some((item: { kind: string }) => item.kind === 'effort'),
+    );
+  },
+);
+await check(
+  'workforce planner rejects missing consent, cross-origin and oversized requests',
+  async () => {
+    const report = WORKFORCE_REPORT_SAMPLES[0].report;
+    assert.equal((await post('/api/workforce-ai', { report })).status, 400);
+    const crossOrigin = await fetch(origin + '/api/workforce-ai', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Origin: 'https://untrusted.invalid',
+      },
+      body: JSON.stringify({ report, processingConsent: true }),
+    });
+    assert.equal(crossOrigin.status, 403);
+    const huge = await post('/api/workforce-ai', {
+      report: 'x'.repeat(20000),
+      processingConsent: true,
+    });
+    assert.equal(huge.status, 413);
+  },
+);
 await check('all avatar choices are served as local SVG assets', async () => {
   await Promise.all(
     avatarPresets.map(async ({ id }) => {

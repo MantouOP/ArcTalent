@@ -6,23 +6,32 @@ import {
   Users,
   GraduationCap,
   Clock3,
-  ArrowUpRight,
+  History,
 } from 'lucide-react';
-import { sdgUrl } from '@/lib/catalogue';
+import { sdgUrl, skillById } from '@/lib/catalogue';
+import {
+  summarizeTrackRecord,
+  type TrackRecordsByProfile,
+} from '@/lib/track-record';
 import { buildWorkforcePlan } from '@/lib/workforce-plan';
 import type { Profile, Scenario, Snapshot } from '@/lib/types';
 import type { WorkforceSettings } from '@/lib/workforce-settings';
 import { TeamEditor } from './team-editor';
 import { WorkforceDestination } from './workforce-destination';
+import { WorkforcePlanner } from './workforce-planner';
 import { CourseLink } from './course-link';
 import { CostComparison } from './cost-comparison';
 import { downloadFile, External, Tag } from './ui';
 import { useI18n } from './language-provider';
+
+const visibleGaps = 3;
+
 export function EmployerPanel({
   profile,
   scenario,
   snapshot,
   workforce,
+  trackRecords = {},
   onChange,
   onProfileChange,
   needsProfile = false,
@@ -31,6 +40,7 @@ export function EmployerPanel({
   scenario: Scenario;
   snapshot: Snapshot;
   workforce: WorkforceSettings;
+  trackRecords?: TrackRecordsByProfile;
   onChange: (settings: WorkforceSettings) => void;
   onProfileChange: (profile: Profile) => void;
   needsProfile?: boolean;
@@ -38,22 +48,28 @@ export function EmployerPanel({
   const { t, locale } = useI18n();
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState(false);
+  const [applied, setApplied] = useState(false);
   const exportRequest = useRef<AbortController | null>(null);
   useEffect(() => () => exportRequest.current?.abort(), []);
   const { budget, slots } = workforce;
-  const {
-    team,
-    allocations,
-    groups,
-    allocated,
-    hours,
-    learners,
-    shown,
-    openings,
-  } = useMemo(
-    () => buildWorkforcePlan(profile, scenario, snapshot, workforce),
-    [profile, scenario, snapshot, workforce],
-  );
+  const { team, allocations, groups, allocated, hours, learners, openings } =
+    useMemo(
+      () => buildWorkforcePlan(profile, scenario, snapshot, workforce),
+      [profile, scenario, snapshot, workforce],
+    );
+  // Only people who have a track record in this browser count towards the cohort row.
+  const cohort = useMemo(() => {
+    const recorded = team.filter((member) => trackRecords[member.id]?.length);
+    const totals = recorded.map((member) =>
+      summarizeTrackRecord(trackRecords[member.id]!),
+    );
+    return {
+      people: recorded.length,
+      hours: totals.reduce((sum, item) => sum + item.hoursStudied, 0),
+      badges: totals.reduce((sum, item) => sum + item.verifiedBadges, 0),
+      skills: totals.reduce((sum, item) => sum + item.skillsLeveledUp, 0),
+    };
+  }, [team, trackRecords]);
   async function exportPdf() {
     if (exporting || needsProfile) return;
     const controller = new AbortController();
@@ -118,7 +134,7 @@ export function EmployerPanel({
           ) : (
             <Download size={16} />
           )}
-          {t(exporting ? 'Preparing PDF…' : 'Export plan (PDF)')}
+          {exporting ? t('Preparing PDF…') : t('Export plan (PDF)')}
         </button>
       </div>
       {needsProfile && (
@@ -131,12 +147,20 @@ export function EmployerPanel({
           {t('Could not download the PDF. Please try again.')}
         </p>
       )}
-      <TeamEditor
-        team={team}
-        workforce={workforce}
-        onChange={onChange}
-        onProfileChange={onProfileChange}
+      <WorkforcePlanner
+        scenario={scenario}
+        onApply={(next) => {
+          onChange({ ...next, costs: workforce.costs });
+          setApplied(true);
+        }}
       />
+      {applied && (
+        <p className="notice small" role="status">
+          {t(
+            'The team plan was applied. Review each row below and adjust anything by hand.',
+          )}
+        </p>
+      )}
       <div className="stats-grid three">
         <div className="stat">
           <Users />
@@ -163,96 +187,181 @@ export function EmployerPanel({
           </strong>
         </div>
       </div>
+      <p className="cohort-track-record">
+        <History size={16} />
+        {cohort.people
+          ? t(
+              'Team track record: {0} hours studied · {1} verified badges · {2} skills levelled up, from {3} people with records in this browser.',
+              {
+                0: cohort.hours,
+                1: cohort.badges,
+                2: cohort.skills,
+                3: cohort.people,
+              },
+            )
+          : t(
+              'Team track record: no studied courses, badges or confirmed skill levels recorded for this team yet.',
+            )}
+      </p>
       <section className="panel">
         <div className="panel-heading">
           <div>
-            <h2>{t('Workforce skills heatmap')}</h2>
-            <p>
+            <h2>{t('Workforce redeployment table')}</h2>
+            <p className="muted">
               {t('Each row is measured against its proposed destination role.')}
             </p>
           </div>
           <Tag tone={snapshot.kind === 'live' ? 'blue' : 'amber'}>
-            {t(
-              snapshot.kind === 'live'
-                ? 'Public evidence'
-                : 'Simulated evidence',
-            )}
+            {snapshot.kind === 'live'
+              ? t('Public evidence')
+              : t('Simulated evidence')}
           </Tag>
         </div>
-        <div className="heatmap-wrap">
-          <table className="heatmap">
+        <div className="workforce-table-wrap">
+          <table className="workforce-table">
             <thead>
               <tr>
-                <th>{t('Team member / destination')}</th>
-                {shown.map((s) => (
-                  <th key={s.id}>{t(s.label)}</th>
-                ))}
-                <th>{t('Plan status')}</th>
+                <th scope="col">{t('Member & current role')}</th>
+                <th scope="col">{t('Target destination')}</th>
+                <th scope="col">{t('Readiness')}</th>
+                <th scope="col">{t('Key skill gaps')}</th>
+                <th scope="col">{t('Planned training')}</th>
+                <th scope="col">{t('Status')}</th>
               </tr>
             </thead>
             <tbody>
-              {allocations.map((row) => (
-                <tr key={row.profile.id}>
-                  <td>
-                    <strong>{row.profile.name}</strong>
-                    <small>{t(row.profile.currentRole)}</small>
-                    <WorkforceDestination
-                      profile={row.profile}
-                      role={row.role}
-                      snapshot={snapshot}
-                      workforce={workforce}
-                      onChange={onChange}
-                    />
-                  </td>
-                  {shown.map((s) => {
-                    const required = row.role.requirements[s.id],
-                      value = row.profile.skills[s.id] ?? 0,
-                      gap = required ? Math.max(required - value, 0) : null;
-                    return (
-                      <td key={s.id}>
-                        <span
-                          className={`heat-cell ${gap === null ? 'na' : gap === 0 ? 'ready' : gap === 1 ? 'develop' : 'gap'}`}
-                          title={t('{0}: {1}; current {2}, required {3}', {
-                            0: row.profile.name,
-                            1: t(s.label),
-                            2: value,
-                            3: required ?? t('not required'),
-                          })}
-                        >
-                          {gap === null ? '—' : gap === 0 ? '✓' : `−${gap}`}
+              {allocations.map((row) => {
+                const gaps = [...row.match.gaps].sort((a, b) => b.gap - a.gap);
+                return (
+                  <tr key={row.profile.id}>
+                    <th scope="row">
+                      <strong>{row.profile.name}</strong>
+                      <small>{t(row.profile.currentRole)}</small>
+                    </th>
+                    <td>
+                      <WorkforceDestination
+                        profile={row.profile}
+                        role={row.role}
+                        snapshot={snapshot}
+                        workforce={workforce}
+                        onChange={onChange}
+                      />
+                    </td>
+                    <td>
+                      <strong>{Math.round(row.match.score)}</strong>
+                      <small>
+                        {t('{0}% skill coverage', {
+                          0: Math.round(row.match.coverage),
+                        })}
+                      </small>
+                    </td>
+                    <td>
+                      {gaps.length ? (
+                        <span className="gap-badges">
+                          {gaps.slice(0, visibleGaps).map((gap) => (
+                            <span
+                              className="gap-badge"
+                              key={gap.id}
+                              title={t('{0}: current {1}, required {2}', {
+                                0: t(skillById[gap.id].label),
+                                1: gap.current,
+                                2: gap.required,
+                              })}
+                            >
+                              {t(skillById[gap.id].label)}
+                            </span>
+                          ))}
+                          {gaps.length > visibleGaps && (
+                            <span className="gap-badge more">
+                              {t('+{0} more', {
+                                0: gaps.length - visibleGaps,
+                              })}
+                            </span>
+                          )}
                         </span>
-                      </td>
-                    );
-                  })}
-                  <td>
-                    <span className={`tag ${row.included ? 'green' : 'amber'}`}>
-                      {t(row.reason)}
-                    </span>
-                  </td>
-                </tr>
-              ))}
+                      ) : (
+                        <small>{t('No gaps')}</small>
+                      )}
+                    </td>
+                    <td>
+                      {t('{0} courses · {1}h', {
+                        0: row.plan.steps.length,
+                        1: row.plan.totalHours,
+                      })}
+                    </td>
+                    <td>
+                      <span
+                        className={`tag ${row.included ? 'green' : 'amber'}`}
+                      >
+                        {row.included ? t('Included') : t(row.reason)}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
-        <div className="heatmap-legend">
-          <span>
-            <i className="heat-cell ready">✓</i>
-            {t('Current level meets model')}
-          </span>
-          <span>
-            <i className="heat-cell develop">−1</i>
-            {t('One level gap')}
-          </span>
-          <span>
-            <i className="heat-cell gap">−2</i>
-            {t('Two level gap')}
-          </span>
-          <span>{t('— Not required')}</span>
-        </div>
+        {!allocations.length && (
+          <p className="empty-state">
+            {t('Your team is empty. Add a fictional worker to begin planning.')}
+          </p>
+        )}
       </section>
-      <div className="two-columns">
-        <section className="panel">
-          <h2>{t('Plan within real constraints')}</h2>
+      <section className="panel">
+        <h2>{t('Learn together')}</h2>
+        <p className="muted">
+          {t(
+            'Compatible needs grouped into the same verified learning resource.',
+          )}
+        </p>
+        <div className="training-groups">
+          {[...groups].map(([id, g]) => (
+            <div className="training-group" key={id}>
+              <div className="course-icon">
+                <GraduationCap size={18} />
+              </div>
+              <div className="training-course">
+                <h3>{g.course.title}</h3>
+                <small>{g.course.provider}</small>
+                <p>{g.names.join(', ')}</p>
+                <small>
+                  {t('{0} learners · {1} hours each · RM {2} each', {
+                    0: g.names.length,
+                    1: g.course.hours,
+                    2: g.course.fee,
+                  })}
+                </small>
+                <div>
+                  <CourseLink course={g.course} />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        {!groups.size && (
+          <div className="empty-state">
+            {t(
+              'No training fits the current slots and constraints. Increase capacity or choose a different role.',
+            )}
+          </div>
+        )}
+      </section>
+      <details className="panel disclosure">
+        <summary>
+          <span>{t('Edit individual members & slot caps manually')}</span>
+          <small className="muted">
+            {t('{0} people · RM {1} budget', { 0: team.length, 1: budget })}
+          </small>
+        </summary>
+        <TeamEditor
+          team={team}
+          workforce={workforce}
+          onChange={onChange}
+          onProfileChange={onProfileChange}
+        />
+        <div className="manual-constraints">
+          <h3>{t('Plan within real constraints')}</h3>
           <label>
             {t('Company training budget (RM)')}
             <input
@@ -289,41 +398,27 @@ export function EmployerPanel({
                   min={0}
                   max={10}
                   value={count}
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    const value = Math.max(
+                      0,
+                      Math.min(10, Math.floor(Number(e.target.value))),
+                    );
+                    const workerId = r.id.slice('custom:'.length);
                     onChange({
                       ...workforce,
                       ...(r.custom
                         ? {
                             customDestinations: {
                               ...workforce.customDestinations,
-                              [r.id.slice('custom:'.length)]: {
-                                ...workforce.customDestinations![
-                                  r.id.slice('custom:'.length)
-                                ],
-                                openings: Math.max(
-                                  0,
-                                  Math.min(
-                                    10,
-                                    Math.floor(Number(e.target.value)),
-                                  ),
-                                ),
+                              [workerId]: {
+                                ...workforce.customDestinations![workerId],
+                                openings: value,
                               },
                             },
                           }
-                        : {
-                            slots: {
-                              ...slots,
-                              [r.id]: Math.max(
-                                0,
-                                Math.min(
-                                  10,
-                                  Math.floor(Number(e.target.value)),
-                                ),
-                              ),
-                            },
-                          }),
-                    })
-                  }
+                        : { slots: { ...slots, [r.id]: value } }),
+                    });
+                  }}
                 />
               </label>
             ))}
@@ -333,50 +428,21 @@ export function EmployerPanel({
               'Allocation follows the displayed worker order. It is a planning heuristic, not an optimum allocation or an employment decision.',
             )}
           </p>
-        </section>
-        <section className="panel">
-          <h2>{t('Learn together')}</h2>
-          <p className="muted">
-            {t(
-              'Compatible needs grouped into the same verified learning resource.',
-            )}
-          </p>
-          {[...groups].map(([id, g]) => (
-            <div className="training-group" key={id}>
-              <div className="course-icon">
-                <GraduationCap size={18} />
-              </div>
-              <div className="training-course">
-                <h3>{g.course.title}</h3>
-                <small>{g.course.provider}</small>
-                <p>{g.names.join(', ')}</p>
-                <small>
-                  {t('{0} learners · {1} hours each · RM {2} each', {
-                    0: g.names.length,
-                    1: g.course.hours,
-                    2: g.course.fee,
-                  })}
-                </small>
-                <div>
-                  <CourseLink course={g.course} />
-                </div>
-              </div>
-            </div>
-          ))}
-          {!groups.size && (
-            <div className="empty-state">
-              {t(
-                'No training fits the current slots and constraints. Increase capacity or choose a different role.',
-              )}
-            </div>
-          )}
-        </section>
-      </div>
-      <CostComparison
-        groups={groups}
-        workforce={workforce}
-        onChange={onChange}
-      />
+        </div>
+      </details>
+      <details className="panel disclosure">
+        <summary>
+          <span>{t('Customize cost assumptions')}</span>
+          <small className="muted">
+            {t('Seat price, trainer rate and wage rate')}
+          </small>
+        </summary>
+        <CostComparison
+          groups={groups}
+          workforce={workforce}
+          onChange={onChange}
+        />
+      </details>
       <section className="panel impact-panel">
         <div className="panel-heading">
           <div>
@@ -391,7 +457,7 @@ export function EmployerPanel({
             <h3>{t('Relevant work skills')}</h3>
             <strong>{t('{0} learners', { 0: learners })}</strong>
             <p>{t('With at least one planned learning activity.')}</p>
-            <External href={sdgUrl('4.4')}>{t('Target 4.4')}</External>
+            <External href={sdgUrl('4')}>{t('SDG 4')}</External>
           </div>
           <div>
             <span className="sdg-square burgundy">8</span>
@@ -402,7 +468,7 @@ export function EmployerPanel({
                 'Proposed training time; productivity effects are unmeasured.',
               )}
             </p>
-            <External href={sdgUrl('8.2')}>{t('Targets 8.2 & 8.5')}</External>
+            <External href={sdgUrl('8')}>{t('SDG 8')}</External>
           </div>
           <div>
             <span className="sdg-square pink">10</span>
@@ -413,7 +479,7 @@ export function EmployerPanel({
                 'At least one free activity; routes may still have uncovered gaps.',
               )}
             </p>
-            <External href={sdgUrl('10.2')}>{t('Target 10.2')}</External>
+            <External href={sdgUrl('10')}>{t('SDG 10')}</External>
           </div>
         </div>
         <p className="muted small">

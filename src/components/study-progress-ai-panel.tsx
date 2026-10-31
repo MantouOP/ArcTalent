@@ -8,7 +8,7 @@ import {
   Sparkles,
   Trash2,
 } from 'lucide-react';
-import { courses, sdgUrl, skillById } from '@/lib/catalogue';
+import { courses, sdgGoal, sdgLabel, sdgUrl, skillById } from '@/lib/catalogue';
 import {
   coachStudyProgressLocally,
   makeStudyProgressRequest,
@@ -37,6 +37,7 @@ const courseById = new Map<string, Course>(
 );
 
 export function StudyProgressAiSection({
+  view = 'coach',
   profile,
   plan,
   role,
@@ -48,6 +49,8 @@ export function StudyProgressAiSection({
   onChangePracticeBadges,
   onConfirmSkillLevel,
 }: {
+  /** Which half the badges panel tab shows; both keep their state. */
+  view?: 'coach' | 'practice';
   profile: Profile;
   plan: LearningPlan;
   role: Role;
@@ -316,12 +319,6 @@ export function StudyProgressAiSection({
   return (
     <div className="study-ai-section">
       <div className="study-ai-header">
-        <div>
-          <span className="eyebrow">
-            {t('AI STUDY COACH & PRACTICE BADGES')}
-          </span>
-          <h3>{t('Personalised study coaching & skill reflection')}</h3>
-        </div>
         <label className="checkbox-label study-ai-toggle">
           <input
             type="checkbox"
@@ -356,7 +353,7 @@ export function StudyProgressAiSection({
       </p>
 
       <div className="study-ai-grid">
-        <div className="study-ai-card">
+        <div className="study-ai-card" hidden={view !== 'coach'}>
           <div className="badge-card-top">
             <strong>{t('Study progress coach')}</strong>
             {coachResult && (
@@ -432,7 +429,7 @@ export function StudyProgressAiSection({
           )}
         </div>
 
-        <div className="study-ai-card">
+        <div className="study-ai-card" hidden={view !== 'practice'}>
           <div className="badge-card-top">
             <strong>{t('Practice badge check-in')}</strong>
             {verifyResult && (
@@ -567,7 +564,7 @@ export function StudyProgressAiSection({
         </div>
       </div>
 
-      {activePracticeBadges.length > 0 && (
+      {view === 'practice' && activePracticeBadges.length > 0 && (
         <div className="earned-practice-badges">
           <div className="badge-card-top">
             <strong>
@@ -592,18 +589,20 @@ export function StudyProgressAiSection({
                   <div className="badge-card-top">
                     <Tag tone="green">{t('Practice verified')}</Tag>
                     <small>
-                      {badge.sdgTargets.map((target, index) => (
-                        <span key={target}>
-                          {index > 0 ? ' · ' : ''}
-                          <a
-                            href={sdgUrl(target)}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            SDG {target}
-                          </a>
-                        </span>
-                      ))}
+                      {[...new Set(badge.sdgTargets.map(sdgGoal))].map(
+                        (goal, index) => (
+                          <span key={goal}>
+                            {index > 0 ? ' · ' : ''}
+                            <a
+                              href={sdgUrl(goal)}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              {sdgLabel(goal)}
+                            </a>
+                          </span>
+                        ),
+                      )}
                     </small>
                   </div>
                   <h3>{badge.badgeTitle}</h3>

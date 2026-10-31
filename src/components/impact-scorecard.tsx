@@ -286,60 +286,74 @@ export function ImpactScorecard({
             </div>
           ))}
         </div>
-        <div className="heatmap-wrap">
-          <table className="impact-table">
-            <thead>
-              <tr>
-                <th scope="col">{t('Worker')}</th>
-                <th scope="col">{t('Proposed route')}</th>
-                <th scope="col">{t('Gap distance')}</th>
-                <th scope="col">{t('Reduction')}</th>
-                <th scope="col">{t('Foundation, weeks 1–4')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cohort.people.map((p) => (
-                <tr key={p.profile.id}>
-                  <th scope="row">
-                    {p.profile.name}
-                    <small>{t(p.profile.currentRole)}</small>
-                  </th>
-                  <td>{roleLabel(p.role, t, true)}</td>
-                  <td>
-                    {p.distanceBefore.toFixed(1)} → {p.distanceAfter.toFixed(1)}
-                  </td>
-                  <td className={`impact-cell ${p.reductionStatus}`}>
-                    {pct(p.reduction)}
-                  </td>
-                  <td className={`impact-cell ${p.foundationStatus}`}>
-                    {pct(p.foundation.share)}
-                    {p.foundationStatus === 'early' && (
-                      <small>
-                        {t('done by week {0}', {
-                          0: p.foundation.completeWeek,
-                        })}
-                      </small>
-                    )}
-                  </td>
+        <details className="disclosure-inline">
+          <summary>{t('Show each synthetic worker')}</summary>
+          <div className="heatmap-wrap">
+            <table className="impact-table">
+              <thead>
+                <tr>
+                  <th scope="col">{t('Worker')}</th>
+                  <th scope="col">{t('Proposed route')}</th>
+                  <th scope="col">{t('Gap distance')}</th>
+                  <th scope="col">{t('Reduction')}</th>
+                  <th scope="col">{t('Foundation, weeks 1–4')}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {cohort.people.map((p) => (
+                  <tr key={p.profile.id}>
+                    <th scope="row">
+                      {p.profile.name}
+                      <small>{t(p.profile.currentRole)}</small>
+                    </th>
+                    <td>{roleLabel(p.role, t, true)}</td>
+                    <td>
+                      {p.distanceBefore.toFixed(1)} →{' '}
+                      {p.distanceAfter.toFixed(1)}
+                    </td>
+                    <td className={`impact-cell ${p.reductionStatus}`}>
+                      {pct(p.reduction)}
+                    </td>
+                    <td className={`impact-cell ${p.foundationStatus}`}>
+                      {pct(p.foundation.share)}
+                      {p.foundationStatus === 'early' && (
+                        <small>
+                          {t('done by week {0}', {
+                            0: p.foundation.completeWeek,
+                          })}
+                        </small>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </details>
         <p className="muted small">
           {t(
             'Projections, not observed outcomes. They assume each planned course lifts its skills to working level (2 of 3), the same rule the planner uses. Profiles are synthetic; pilot results have not been measured.',
           )}
         </p>
       </section>
-      <AggregatedSdgAndFairnessPanel
-        profile={profile}
-        activeRole={active.role}
-        plan={plan}
-        scenario={scenario}
-        snapshot={snapshot}
-        workforce={workforce}
-      />
+      <details className="panel disclosure">
+        <summary>
+          <span>{t('SDG totals & fairness check')}</span>
+          <small className="muted">
+            {t(
+              'Hours towards SDG 4, 8, 9 and 10, plus a name and job-title swap test',
+            )}
+          </small>
+        </summary>
+        <AggregatedSdgAndFairnessPanel
+          profile={profile}
+          activeRole={active.role}
+          plan={plan}
+          scenario={scenario}
+          snapshot={snapshot}
+          workforce={workforce}
+        />
+      </details>
     </div>
   );
 }

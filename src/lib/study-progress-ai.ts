@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { courses, skillById } from './catalogue';
+import { courses, sdgLabel, skillById } from './catalogue';
 import { goalCandidates } from './career-goals';
 import { buildPlan, rankRoles, sharedFoundation } from './engine';
 import { computeLearnerBadges } from './finals-enhancements';
@@ -363,7 +363,8 @@ export function prepareStudyProgressFacts(input: StudyProgressRequest) {
         id: badge.id,
         title: badge.title,
         earned: badge.earned,
-        sdgTarget: badge.sdgTarget,
+        // Whole UN goals only, so model text never cites a sub-target.
+        sdg: sdgLabel(badge.sdgTarget),
       })),
     },
     ...(targetCourse
@@ -375,7 +376,7 @@ export function prepareStudyProgressFacts(input: StudyProgressRequest) {
             allowedSkills: targetCourse.skills.map((id) => ({
               id,
               label: skillById[id].label,
-              sdgTarget: skillById[id].target,
+              sdg: sdgLabel(skillById[id].target),
             })),
           },
           learnerReflectionUntrustedText: parsed.reflection ?? '',

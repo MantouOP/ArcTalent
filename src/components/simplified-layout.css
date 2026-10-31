@@ -1,0 +1,497 @@
+/* Progressive disclosure, compact SDG pills, the badge tabs, the Track Record,
+   the AI workforce planner and the workforce table. Loaded before glass.css so
+   the frosted surfaces still apply last. */
+
+.app-shell [hidden] {
+  display: none !important;
+}
+
+/* Compact summary strip */
+.stats-grid.summary-strip {
+  margin-bottom: 16px;
+  gap: 12px;
+}
+.stats-grid.summary-strip .stat {
+  padding: 12px 16px;
+}
+
+/* SDG priority pills */
+.sdg-pill-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 0 0 20px;
+}
+.sdg-pill-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+.sdg-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+.sdg-pill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  min-height: 36px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--glass-edge);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13px;
+  text-align: left;
+}
+.sdg-pill span {
+  color: var(--muted);
+}
+.sdg-pill.is-active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+.sdg-pill.is-active span {
+  color: rgba(255, 255, 255, 0.86);
+}
+.sdg-pill-note {
+  flex-basis: 100%;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin: 0;
+  font-size: 13px;
+}
+.sdg-pill-note > svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--accent);
+}
+
+/* Explorer: the decision first */
+.explorer-primary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gap);
+  margin-bottom: 24px;
+}
+.explorer-primary > .route-summary,
+.explorer-primary > .next-step-card {
+  margin: 0;
+}
+
+/* Disclosures */
+details.disclosure {
+  padding: 0;
+}
+details.disclosure > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  padding: 18px 24px;
+  cursor: pointer;
+  list-style: none;
+  font-weight: 600;
+  color: var(--ink);
+}
+details.disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+details.disclosure > summary::before {
+  content: '';
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-right: 2px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 160ms ease;
+  align-self: center;
+}
+details.disclosure[open] > summary::before {
+  transform: rotate(45deg);
+}
+details.disclosure > summary small {
+  font-weight: 400;
+}
+details.disclosure > summary:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: -3px;
+  border-radius: inherit;
+}
+details.disclosure[open] {
+  padding-bottom: 24px;
+}
+details.disclosure[open] > :not(summary) {
+  margin-left: 24px;
+  margin-right: 24px;
+}
+details.disclosure > .panel,
+details.disclosure .disclosure-grid > .panel {
+  margin-bottom: 16px;
+}
+.disclosure-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: var(--gap);
+  align-items: start;
+}
+details.disclosure-inline {
+  margin: 12px 0;
+}
+details.disclosure-inline > summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--green);
+}
+.pathway-drawers {
+  display: grid;
+  gap: 0;
+}
+.pathway-courses {
+  margin-bottom: 24px;
+}
+
+/* Badge tabs */
+.badge-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 16px 0;
+  padding: 4px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--glass-edge);
+}
+.badge-tabs [role='tab'] {
+  flex: 1 1 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 600;
+}
+.badge-tabs [role='tab'].is-active {
+  background: var(--primary);
+  color: #fff;
+}
+.badge-tab-count {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+  font-size: 12px;
+}
+.badge-tabs [role='tab']:not(.is-active) .badge-tab-count {
+  background: var(--raised);
+}
+.learner-badges-panel .study-ai-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Track Record */
+.track-record {
+  display: grid;
+  gap: 14px;
+}
+.track-record-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+.track-record-summary > div {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--glass-edge);
+}
+.track-record-summary dt {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.track-record-summary dd {
+  margin: 4px 0 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.track-record-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.track-record-list li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--raised);
+}
+.track-record-list li > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.track-record-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--accent);
+}
+.track-record-list time {
+  font-size: 12.5px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.cohort-track-record {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin: -12px 0 24px;
+  color: var(--ink-soft);
+  font-size: 13.5px;
+}
+.cohort-track-record > svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+/* AI workforce planner */
+.workforce-planner {
+  display: grid;
+  gap: 12px;
+}
+.workforce-planner > .panel-heading {
+  margin-bottom: 0;
+}
+.workforce-planner textarea {
+  width: 100%;
+  resize: vertical;
+}
+.workforce-planner-samples,
+.workforce-planner-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.workforce-planner-inputs > label:not(.file-button) {
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+}
+.workforce-planner-inputs input[type='number'] {
+  width: 180px;
+  max-width: 100%;
+}
+.file-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+.file-button input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.file-button:has(input:disabled) {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.file-button:focus-within {
+  outline: 3px solid var(--cyan);
+  outline-offset: 2px;
+}
+.workforce-plan-preview {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--glass-edge);
+}
+.workforce-summary {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 20px;
+}
+.workforce-plan-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+.workforce-plan-stats > div {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--raised);
+}
+.workforce-plan-stats dt {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.workforce-plan-stats dd {
+  margin: 2px 0 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+.workforce-plan-members {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.workforce-plan-members li {
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--raised);
+  overflow-wrap: anywhere;
+}
+
+/* Workforce redeployment table */
+.workforce-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.workforce-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+.workforce-table th,
+.workforce-table td {
+  padding: 12px 10px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+.workforce-table thead th {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.workforce-table tbody th strong,
+.workforce-table td > strong {
+  display: block;
+  font-size: 15px;
+}
+.workforce-table small {
+  display: block;
+  color: var(--muted);
+}
+.workforce-table .workforce-destination-hint {
+  display: none;
+}
+.workforce-table td:nth-child(2) {
+  min-width: 210px;
+}
+.gap-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.gap-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--raised);
+  border: 1px solid var(--glass-edge);
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+.gap-badge.more {
+  color: var(--muted);
+}
+.training-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0 var(--gap);
+}
+.manual-constraints {
+  margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+  .explorer-primary,
+  .disclosure-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .track-record-summary,
+  .workforce-plan-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  details.disclosure > summary {
+    padding: 16px;
+  }
+  details.disclosure[open] > :not(summary) {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+  .track-record-list li {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .track-record-list time {
+    grid-column: 2;
+  }
+  /* One scrollable row of pills; only the chosen goal spells out its name. */
+  .sdg-pills {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    max-width: 100%;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+  .sdg-pill {
+    flex: none;
+    min-height: 40px;
+  }
+  .sdg-pill:not(.is-active) span {
+    display: none;
+  }
+  .stats-grid.summary-strip {
+    gap: 8px;
+  }
+  .stats-grid.summary-strip .stat {
+    padding: 10px 12px;
+  }
+  .stats-grid.summary-strip .stat strong {
+    font-size: 22px;
+  }
+}

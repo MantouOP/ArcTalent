@@ -433,7 +433,7 @@ export function renderWorkforcePdf(
       ensure(280);
       section('Planning assumptions and SDG activity');
       text(
-        `${t('{0} learners', { 0: plan.learners })} - SDG 4.4\n${t('{0} person-hours', { 0: plan.hours })} - SDG 8.2 / 8.5\n${t('{0} free routes', { 0: plan.learners })} - SDG 10.2`,
+        `${t('{0} learners', { 0: plan.learners })} - SDG 4\n${t('{0} person-hours', { 0: plan.hours })} - SDG 8\n${t('{0} free routes', { 0: plan.learners })} - SDG 10`,
         10,
       );
       text(

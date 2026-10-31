@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import {
   Award,
   CheckCircle2,
@@ -12,6 +12,7 @@ import {
   TrendingUp,
   Zap,
 } from 'lucide-react';
+import { sdgLabel } from '@/lib/catalogue';
 import { roleLabel } from '@/lib/role-label';
 import {
   aggregateSdgContributions,
@@ -35,10 +36,12 @@ import type {
   Snapshot,
 } from '@/lib/types';
 import type { PracticeBadge } from '@/lib/study-progress-ai';
+import type { TrackRecordEntry } from '@/lib/track-record';
 import type { WorkforceSettings } from '@/lib/workforce-settings';
 import { CourseLink } from './course-link';
 import { useI18n } from './language-provider';
 import { StudyProgressAiSection } from './study-progress-ai-panel';
+import { TrackRecordPanel } from './track-record-panel';
 import { External, SkillChip, Tag } from './ui';
 
 export function SdgChoiceBar({
@@ -55,53 +58,33 @@ export function SdgChoiceBar({
   newTopRole?: Role;
 }) {
   const { t } = useI18n();
+  const active = SDG_FOCUS_OPTIONS.find((option) => option.id === focus);
   return (
-    <section
-      className="panel sdg-choice-panel"
-      aria-label={t('SDG priority lens')}
-    >
-      <div className="panel-heading">
-        <div>
-          <span className="eyebrow">{t('SDG PRIORITY LENS')}</span>
-          <h2>{t('Choose an SDG priority lens')}</h2>
-          <p className="muted small">
-            {t(
-              'Select a UN Sustainable Development Goal priority to weight role rankings and surface aligned reskilling pathways.',
-            )}
-          </p>
-        </div>
-        {focus !== 'all' && (
+    <section className="sdg-pill-bar" aria-label={t('SDG priority lens')}>
+      <span className="sdg-pill-label">{t('SDG priority')}</span>
+      <div
+        className="sdg-pills"
+        role="group"
+        aria-label={t('SDG priority lens')}
+      >
+        {SDG_FOCUS_OPTIONS.map((option) => (
           <button
             type="button"
-            className="text-button"
-            onClick={() => onChange('all')}
+            key={option.id}
+            className={`sdg-pill ${focus === option.id ? 'is-active' : ''}`}
+            aria-pressed={focus === option.id}
+            title={t(option.description)}
+            onClick={() => onChange(option.id)}
           >
-            {t('Reset to balanced match')}
+            <strong>{t(option.badge)}</strong>
+            {option.id !== 'all' && <span>{t(option.title)}</span>}
           </button>
-        )}
+        ))}
       </div>
-      <div className="sdg-focus-grid" role="group">
-        {SDG_FOCUS_OPTIONS.map((option) => {
-          const active = focus === option.id;
-          return (
-            <button
-              type="button"
-              key={option.id}
-              className={`sdg-focus-card ${active ? 'is-active' : ''}`}
-              aria-pressed={active}
-              onClick={() => onChange(option.id)}
-            >
-              <span className="sdg-focus-badge">{t(option.badge)}</span>
-              <strong>{t(option.title)}</strong>
-              <small>{t(option.description)}</small>
-            </button>
-          );
-        })}
-      </div>
-      {focus !== 'all' && defaultTopRole && newTopRole && (
-        <div className="notice sdg-shift-notice" role="status">
-          <Sparkles size={16} />
-          <div>
+      {focus !== 'all' && active && defaultTopRole && newTopRole && (
+        <p className="sdg-pill-note" role="status">
+          <Sparkles size={14} />
+          <span>
             <strong>
               {shifted
                 ? t('SDG lens changed your #1 recommendation: {0} → {1}', {
@@ -111,14 +94,14 @@ export function SdgChoiceBar({
                 : t('With this lens, {0} is still your #1 match.', {
                     0: roleLabel(newTopRole, t),
                   })}
-            </strong>
-            <p className="muted small">
+            </strong>{' '}
+            <span className="muted">
               {t(
-                'Lens points: +10 when a role’s own SDG target matches, plus up to +10 for the share of its required skills mapped to that target. Suitability scores stay the same; only the order changes.',
+                'Lens points: +10 when a role’s own SDG goal matches, plus up to +10 for the share of its required skills mapped to that goal. Suitability scores stay the same; only the order changes.',
               )}
-            </p>
-          </div>
-        </div>
+            </span>
+          </span>
+        </p>
       )}
     </section>
   );
@@ -147,7 +130,7 @@ export function FutureSkillsRadarPanel({
     <div className="momentum-row" key={item.skillId}>
       <div>
         <strong>{t(item.label)}</strong>
-        <small>SDG {item.sdgTarget}</small>
+        <small>{sdgLabel(item.sdgTarget)}</small>
       </div>
       <Tag tone={tone}>
         {item.beforeDemand === null
@@ -399,6 +382,14 @@ export function ScoreBoosterPanel({
   );
 }
 
+const badgeTabs = [
+  { id: 'milestones', label: 'Milestone badges' },
+  { id: 'coach', label: 'AI study coach' },
+  { id: 'practice', label: 'Practice check-in' },
+  { id: 'track', label: 'Track record' },
+] as const;
+type BadgeTab = (typeof badgeTabs)[number]['id'];
+
 export function LearnerBadgesPanel({
   profile,
   plan,
@@ -409,6 +400,7 @@ export function LearnerBadgesPanel({
   customGoal = null,
   funding = 'all',
   practiceBadges = [],
+  trackRecord = [],
   onChangePracticeBadges,
   onConfirmSkillLevel,
 }: {
@@ -421,13 +413,26 @@ export function LearnerBadgesPanel({
   customGoal?: CareerGoal | null;
   funding?: 'all' | 'free' | 'hrd';
   practiceBadges?: PracticeBadge[];
+  trackRecord?: TrackRecordEntry[];
   onChangePracticeBadges?: (next: PracticeBadge[]) => void;
   onConfirmSkillLevel?: (skillId: SkillId, level: number) => void;
 }) {
   const { t } = useI18n();
+  const id = useId();
+  const [tab, setTab] = useState<BadgeTab>('milestones');
   const { badges, completedHours, totalPlannedHours, progressPercent } =
     computeLearnerBadges(profile, plan, shared, role);
   const earnedCount = badges.filter((b) => b.earned).length;
+  const hasStudyAi = Boolean(scenario && snapshot && onChangePracticeBadges);
+  const tabs = badgeTabs.filter(
+    (item) => hasStudyAi || (item.id !== 'coach' && item.id !== 'practice'),
+  );
+  const move = (step: number) => {
+    const index = tabs.findIndex((item) => item.id === tab);
+    const next = tabs[(index + step + tabs.length) % tabs.length].id;
+    setTab(next);
+    document.getElementById(`${id}-tab-${next}`)?.focus();
+  };
 
   return (
     <section
@@ -436,9 +441,6 @@ export function LearnerBadgesPanel({
     >
       <div className="panel-heading">
         <div>
-          <span className="eyebrow">
-            {t('LEARNER MOTIVATION & MILESTONES')}
-          </span>
           <h2>{t('Your skill badges & study progress')}</h2>
           <p className="muted small">
             {t(
@@ -458,40 +460,94 @@ export function LearnerBadgesPanel({
       <div className="badge-progress-bar" aria-hidden="true">
         <i style={{ width: `${progressPercent}%` }} />
       </div>
-      <div className="badges-grid">
-        {badges.map((badge) => (
-          <article
-            key={badge.id}
-            className={`learner-badge-card ${badge.earned ? 'is-earned' : ''}`}
+      <div
+        className="badge-tabs"
+        role="tablist"
+        aria-label={t('Badge and progress views')}
+        onKeyDown={(event) => {
+          if (event.key === 'ArrowRight') move(1);
+          else if (event.key === 'ArrowLeft') move(-1);
+          else return;
+          event.preventDefault();
+        }}
+      >
+        {tabs.map((item) => (
+          <button
+            key={item.id}
+            id={`${id}-tab-${item.id}`}
+            type="button"
+            role="tab"
+            aria-selected={tab === item.id}
+            aria-controls={`${id}-panel-${item.id === 'practice' ? 'coach' : item.id}`}
+            tabIndex={tab === item.id ? 0 : -1}
+            className={tab === item.id ? 'is-active' : ''}
+            onClick={() => setTab(item.id)}
           >
-            <div className="badge-card-top">
-              <Tag tone={badge.earned ? 'green' : 'amber'}>
-                {badge.earned ? t('Unlocked') : t('In progress')}
-              </Tag>
-              <small>SDG {badge.sdgTarget}</small>
-            </div>
-            <h3>{t(badge.title)}</h3>
-            <p className="muted small">{t(badge.description)}</p>
-            <small className="badge-status-text">
-              {t(badge.progressText, badge.progressValues)}
-            </small>
-          </article>
+            {t(item.label)}
+            {item.id === 'track' && trackRecord.length > 0 && (
+              <span className="badge-tab-count">{trackRecord.length}</span>
+            )}
+          </button>
         ))}
       </div>
+      <div
+        id={`${id}-panel-milestones`}
+        role="tabpanel"
+        aria-labelledby={`${id}-tab-milestones`}
+        hidden={tab !== 'milestones'}
+      >
+        <div className="badges-grid">
+          {badges.map((badge) => (
+            <article
+              key={badge.id}
+              className={`learner-badge-card ${badge.earned ? 'is-earned' : ''}`}
+            >
+              <div className="badge-card-top">
+                <Tag tone={badge.earned ? 'green' : 'amber'}>
+                  {badge.earned ? t('Unlocked') : t('In progress')}
+                </Tag>
+                <small>{sdgLabel(badge.sdgTarget)}</small>
+              </div>
+              <h3>{t(badge.title)}</h3>
+              <p className="muted small">{t(badge.description)}</p>
+              <small className="badge-status-text">
+                {t(badge.progressText, badge.progressValues)}
+              </small>
+            </article>
+          ))}
+        </div>
+      </div>
       {scenario && snapshot && onChangePracticeBadges && (
-        <StudyProgressAiSection
-          profile={profile}
-          plan={plan}
-          role={role}
-          scenario={scenario}
-          snapshot={snapshot}
-          customGoal={customGoal}
-          funding={funding}
-          practiceBadges={practiceBadges}
-          onChangePracticeBadges={onChangePracticeBadges}
-          onConfirmSkillLevel={onConfirmSkillLevel}
-        />
+        // Stays mounted across tabs so a coach answer or draft reflection is kept.
+        <div
+          id={`${id}-panel-coach`}
+          role="tabpanel"
+          aria-labelledby={`${id}-tab-${tab === 'practice' ? 'practice' : 'coach'}`}
+          hidden={tab !== 'coach' && tab !== 'practice'}
+        >
+          <StudyProgressAiSection
+            view={tab === 'practice' ? 'practice' : 'coach'}
+            profile={profile}
+            plan={plan}
+            role={role}
+            scenario={scenario}
+            snapshot={snapshot}
+            customGoal={customGoal}
+            funding={funding}
+            practiceBadges={practiceBadges}
+            onChangePracticeBadges={onChangePracticeBadges}
+            onConfirmSkillLevel={onConfirmSkillLevel}
+          />
+        </div>
       )}
+      <div
+        id={`${id}-panel-track`}
+        role="tabpanel"
+        aria-labelledby={`${id}-tab-track`}
+        hidden={tab !== 'track'}
+      >
+        <TrackRecordPanel record={trackRecord} role={role} />
+      </div>
     </section>
   );
 }
@@ -638,8 +694,8 @@ export function AggregatedSdgAndFairnessPanel({
           {activeSdgList.map((item) => (
             <article className="sdg-aggregate-card" key={item.target}>
               <div className="sdg-card-header">
-                <Tag tone="green">SDG {item.target}</Tag>
-                <External href={item.url}>{t('UN Target')}</External>
+                <Tag tone="green">{sdgLabel(item.target)}</Tag>
+                <External href={item.url}>{t('UN Goal')}</External>
               </div>
               <h3>{t(item.title)}</h3>
               <p className="muted small">{t(item.rationale)}</p>

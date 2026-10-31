@@ -734,5 +734,16 @@ export const updated: Snapshot = {
   sampleSize: 0,
   note: 'A dated synthetic update demonstrates sensitivity. It is not a claim about events on this date.',
 };
+/** The whole UN goal number for a target ("4.4" is goal "4"). Targets stay internal; people see goals. */
+export const sdgGoal = (target: string) => target.split('.')[0];
+/** The label people see for any SDG target or goal: "SDG 4", never "SDG 4.4". */
+export const sdgLabel = (target: string) => `SDG ${sdgGoal(target)}`;
+/** Official short names of the UN goals ArcTalent maps to. */
+export const SDG_GOAL_NAMES: Record<string, string> = {
+  '4': 'Quality Education',
+  '8': 'Decent Work and Economic Growth',
+  '9': 'Industry, Innovation and Infrastructure',
+  '10': 'Reduced Inequalities',
+};
 export const sdgUrl = (target: string) =>
-  `https://sdgs.un.org/goals/goal${target.split('.')[0]}`;
+  `https://sdgs.un.org/goals/goal${sdgGoal(target)}`;

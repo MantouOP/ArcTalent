@@ -1,4 +1,12 @@
-import { courses, roles, sdgUrl, skillById, skills } from './catalogue';
+import {
+  courses,
+  roles,
+  SDG_GOAL_NAMES,
+  sdgGoal,
+  sdgUrl,
+  skillById,
+  skills,
+} from './catalogue';
 import { buildPlan, matchRole, rankRoles, sharedFoundation } from './engine';
 import type { TranslationValues } from './i18n';
 import type {
@@ -14,14 +22,14 @@ import type {
 import type { WorkforceSettings } from './workforce-settings';
 import { buildWorkforcePlan } from './workforce-plan';
 
-export type SdgFocus = 'all' | '4.4' | '8.2' | '9.4';
+export type SdgFocus = 'all' | '4' | '8' | '9';
 
 export interface SdgFocusOption {
   id: SdgFocus;
   badge: string;
   title: string;
   description: string;
-  /** SDG targets whose roles and skills this lens moves up the ranking. */
+  /** UN goal numbers whose roles and skills this lens moves up the ranking. */
   targets: string[];
 }
 
@@ -35,28 +43,28 @@ export const SDG_FOCUS_OPTIONS: SdgFocusOption[] = [
     targets: [],
   },
   {
-    id: '4.4',
-    badge: 'SDG 4.3 & 4.4',
-    title: 'Quality TVET & Digital Skills',
+    id: '4',
+    badge: 'SDG 4',
+    title: 'Quality Education',
     description:
       'Prioritises roles and courses that build transferable technical, digital and learning-design capabilities.',
-    targets: ['4.3', '4.4'],
+    targets: ['4'],
   },
   {
-    id: '8.2',
-    badge: 'SDG 8.2',
-    title: 'Decent Work & Productivity',
+    id: '8',
+    badge: 'SDG 8',
+    title: 'Decent Work and Economic Growth',
     description:
       'Prioritises high-productivity operational, analytical and project coordination transitions.',
-    targets: ['8.2'],
+    targets: ['8'],
   },
   {
-    id: '9.4',
-    badge: 'SDG 9.4',
-    title: 'Green & Sustainable Industry',
+    id: '9',
+    badge: 'SDG 9',
+    title: 'Industry, Innovation and Infrastructure',
     description:
       'Prioritises resource-efficient operations, sustainability literacy and low-carbon transition roles.',
-    targets: ['9.4'],
+    targets: ['9'],
   },
 ];
 
@@ -64,18 +72,19 @@ const round = (n: number) => Math.round(n * 10) / 10;
 
 /**
  * SDG priority points for a role under a lens: 10 when the role's own SDG
- * target is in focus, plus up to 10 for the share of its required skill
- * levels mapped to a focused target.
+ * goal is in focus, plus up to 10 for the share of its required skill levels
+ * mapped to a focused goal. Targets ("4.4") count as their goal ("4").
  */
 export function sdgPriorityBonus(role: Role, targets: string[]) {
   if (!targets.length) return 0;
+  const goals = targets.map(sdgGoal);
   const requirements = Object.entries(role.requirements) as [SkillId, number][];
   const total = requirements.reduce((sum, [, level]) => sum + level, 0);
   const aligned = requirements
-    .filter(([id]) => targets.includes(skillById[id].target))
+    .filter(([id]) => goals.includes(sdgGoal(skillById[id].target)))
     .reduce((sum, [, level]) => sum + level, 0);
   return round(
-    (targets.includes(role.target) ? 10 : 0) +
+    (goals.includes(sdgGoal(role.target)) ? 10 : 0) +
       (total > 0 ? (10 * aligned) / total : 0),
   );
 }
@@ -114,52 +123,28 @@ export interface SdgTargetSummary {
   learnersCount: number;
 }
 
-const SDG_TARGET_METADATA: Record<
-  string,
-  { title: string; rationale: string }
-> = {
-  '4.3': {
-    title: 'Equal access to affordable TVET & lifelong learning',
-    rationale:
-      'Workplace learning design and peer coaching expand accessible technical training.',
-  },
-  '4.4': {
-    title: 'Relevant technical and vocational skills for decent jobs',
-    rationale:
-      'Core digital, analytical and problem-solving skills improve employability.',
-  },
-  '8.2': {
-    title: 'Higher economic productivity through diversification & upgrading',
-    rationale:
-      'Process improvement, data analytics and supply-chain coordination raise SME productivity.',
-  },
-  '9.4': {
-    title: 'Upgrade infrastructure & industries for sustainability',
-    rationale:
-      'Sustainability literacy and resource-efficient workflows support cleaner operations.',
-  },
-  '10.3': {
-    title: 'Ensure equal opportunity & reduce outcome inequalities',
-    rationale:
-      'Responsible AI governance and bias-free skill matching protect workers during transition.',
-  },
+const SDG_GOAL_RATIONALE: Record<string, string> = {
+  '4': 'Core digital, analytical and problem-solving skills improve employability.',
+  '8': 'Process improvement, data analytics and supply-chain coordination raise SME productivity.',
+  '9': 'Sustainability literacy and resource-efficient workflows support cleaner operations.',
+  '10': 'Responsible AI governance and bias-free skill matching protect workers during transition.',
 };
 
-/** Planned hours counted toward an SDG target: every course when the destination role maps to it, otherwise courses teaching a skill mapped to it. */
-function alignedHours(plan: LearningPlan, role: Role, target: string) {
+/** Planned hours counted toward an SDG goal: every course when the destination role maps to it, otherwise courses teaching a skill mapped to it. */
+function alignedHours(plan: LearningPlan, role: Role, goal: string) {
   return plan.steps
     .filter(
       (step) =>
-        role.target === target ||
-        step.course.skills.some((id) => skillById[id].target === target),
+        sdgGoal(role.target) === goal ||
+        step.course.skills.some((id) => sdgGoal(skillById[id].target) === goal),
     )
     .reduce((sum, step) => sum + step.course.hours, 0);
 }
 
 /**
- * Contextual SDG contributions for one learner, the SME team, and a
- * projection of that team to 1,000 learners. A learner counts toward a target
- * only when their plan schedules hours for it.
+ * Contextual contributions to whole UN goals (SDG 4, 8, 9 and 10) for one
+ * learner, the SME team, and a projection of that team to 1,000 learners. A
+ * learner counts toward a goal only when their plan schedules hours for it.
  */
 export function aggregateSdgContributions(
   profile: Profile,
@@ -170,16 +155,16 @@ export function aggregateSdgContributions(
   workforce: WorkforceSettings,
 ) {
   const wfPlan = buildWorkforcePlan(profile, scenario, snapshot, workforce);
-  const targets = ['4.4', '8.2', '9.4', '4.3', '10.3'];
+  const targets = ['4', '8', '9', '10'];
   const summary = (
     target: string,
     hours: number,
     learnersCount: number,
   ): SdgTargetSummary => ({
     target,
-    goalNumber: target.split('.')[0],
-    title: SDG_TARGET_METADATA[target].title,
-    rationale: SDG_TARGET_METADATA[target].rationale,
+    goalNumber: target,
+    title: SDG_GOAL_NAMES[target],
+    rationale: SDG_GOAL_RATIONALE[target],
     url: sdgUrl(target),
     hours: round(hours),
     learnersCount,
@@ -602,7 +587,7 @@ export function computeLearnerBadges(
         'Developed sustainability literacy to support cleaner, resource-efficient operations.',
       earned: hasGreenSkill,
       progressText: hasGreenSkill
-        ? 'Unlocked · SDG 9.4 capability active'
+        ? 'Unlocked · SDG 9 capability active'
         : 'Study Sustainability literacy to unlock',
       sdgTarget: '9.4',
     },

@@ -113,7 +113,7 @@ test('Feature #1: SDG priority lens re-ranks roles without changing any suitabil
   assert.equal(balanced.matches[0].role.id, 'bi');
   assert.ok(balanced.matches.every((m) => m.sdgBonus === 0));
 
-  const greenFocus = applySdgPriority(baseMatches, '9.4');
+  const greenFocus = applySdgPriority(baseMatches, '9');
   const position = (list: { role: { id: string } }[]) =>
     list.findIndex((m) => m.role.id === 'sustainability');
   assert.ok(position(greenFocus.matches) < position(baseMatches));
@@ -155,9 +155,13 @@ test('SDG totals count a learner only when their plan schedules hours for the ta
     baseline,
     restoreWorkforceSettings(),
   );
-  assert.equal(agg.person.length, 5);
-  assert.equal(agg.company.length, 5);
-  assert.equal(agg.region.length, 5);
+  // Whole UN goals only: SDG 4, 8, 9 and 10.
+  assert.deepEqual(
+    agg.person.map((item) => item.target),
+    ['4', '8', '9', '10'],
+  );
+  assert.equal(agg.company.length, 4);
+  assert.equal(agg.region.length, 4);
   for (const scope of [agg.person, agg.company, agg.region])
     for (const item of scope)
       assert.equal(item.learnersCount > 0, item.hours > 0, item.target);
