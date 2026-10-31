@@ -350,6 +350,40 @@ const videos: Record<string, CourseVideo> = {
     '19:58',
   ),
 };
+/** Each course page's own share image (og:image), checked 31 October 2026; SQLBolt publishes none. */
+const covers: Record<string, string> = {
+  excel:
+    'https://www.open.edu/openlearn/pluginfile.php/4938977/tool_ocwmanage/image/0/b126_1_OLHP_786x400.jpg',
+  thinking:
+    'https://course.oc-static.com/courses/7003486/7003486_teaser_picture_1680858579.jpg',
+  communication:
+    'https://www.open.edu/openlearn/pluginfile.php/1577035/tool_ocwmanage/image/0/com_1_olhp_786x400.jpg',
+  project:
+    'https://www.open.edu/openlearn/pluginfile.php/776444/tool_ocwmanage/image/0/m865_1_cover_image_1%20%281%29.jpg',
+  powerbi:
+    'https://learn.microsoft.com/training/achievements/get-started-power-bi-social.png',
+  responsible:
+    'https://learn.microsoft.com/training/achievements/embrace-responsible-ai-principles-practices-social.png',
+  'thinking-ou':
+    'https://www.open.edu/openlearn/pluginfile.php/774700/tool_ocwmanage/image/0/ldt101_2_cover_image_1.jpg',
+  'project-v':
+    'https://course.oc-static.com/courses/8371431/8371431_teaser_picture_1719823550.jpg',
+  operations:
+    'https://www.open.edu/openlearn/pluginfile.php/1006066/tool_ocwmanage/image/0/b207_OLHP_786x400.jpg',
+  environment:
+    'https://www.open.edu/openlearn/pluginfile.php/1307947/tool_ocwmanage/image/0/u116_1_cover_image_1.jpg',
+  python:
+    'https://course.oc-static.com/courses/2304731/2304731_teaser_picture_1739555288.jpg',
+  'ai-basics':
+    'https://learn.microsoft.com/training/achievements/get-started-ai-fundamentals-social.png',
+  security:
+    'https://www.open.edu/openlearn/pluginfile.php/1049112/tool_ocwmanage/image/0/cyber_b1_course_image_786x400lo_edited.jpg',
+  htmlcss:
+    'https://course.oc-static.com/courses/5265446/5265446_teaser_picture_1739555360.jpg',
+  javascript: 'https://developer.mozilla.org/mdn-social-image.46ac2375.png',
+  marketing:
+    'https://www.open.edu/openlearn/pluginfile.php/3525530/tool_ocwmanage/image/0/b328_OLHP_786x400.jpg',
+};
 const course = (
   id: string,
   title: string,
@@ -373,6 +407,7 @@ const course = (
   checkedAt,
   fee: 0,
   funding: 'free',
+  ...(covers[id] ? { cover: covers[id] } : {}),
   ...(videos[id] ? { video: videos[id] } : {}),
 });
 export const courses: Course[] = [

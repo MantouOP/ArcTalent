@@ -99,6 +99,8 @@ export type Course = {
   prerequisites: SkillId[];
   checkedAt: string;
   note: string;
+  /** The course page's own share image; absent when the provider publishes none. */
+  cover?: string;
   video?: CourseVideo;
 };
 export type Signal = {

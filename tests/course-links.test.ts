@@ -31,6 +31,26 @@ test('each catalogue course has a distinct official HTTPS destination checked in
   }
 });
 
+test('course covers are each provider’s own share image', () => {
+  const hosts: Record<string, string> = {
+    OpenLearn: 'www.open.edu',
+    OpenClassrooms: 'course.oc-static.com',
+    'Microsoft Learn': 'learn.microsoft.com',
+    MDN: 'developer.mozilla.org',
+  };
+  for (const course of courses) {
+    // SQLBolt publishes no share image, so its card keeps the drawn cover.
+    if (course.provider === 'SQLBolt') {
+      assert.equal(course.cover, undefined);
+      continue;
+    }
+    assert.ok(course.cover, course.id);
+    const url = new URL(course.cover);
+    assert.equal(url.protocol, 'https:');
+    assert.equal(url.hostname, hosts[course.provider], course.id);
+  }
+});
+
 test('every course has a unique, checked YouTube companion video', () => {
   const urls = new Set<string>();
   for (const course of courses) {

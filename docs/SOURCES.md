@@ -32,6 +32,10 @@ The MDN JavaScript pathway assumes HTML and basic CSS knowledge; the planner sch
 
 Custom goal titles and specialist notes are user-authored. Model-suggested or manually selected skill targets do not establish official occupational requirements. The custom destination uses neutral exposure **0.5** solely for illustrative scenario comparison; it has no invented O*NET citation. Skills outside this vocabulary remain separate gaps rather than being assigned unrelated courses. Goal analysis never defines trusted course URLs.
 
+## Course covers
+
+Each course card shows the course page's own share image (its `og:image`), recorded on **31 October 2026**: OpenLearn, OpenClassrooms and Microsoft Learn publish one per course, and MDN one for the whole site. SQLBolt publishes none, so its card keeps a drawn book cover, as does any card whose image cannot load. Images load from the provider's own servers without sending the ArcTalent page address.
+
 ## Companion videos
 
 Each course card also links one optional YouTube video for a quick overview, shown with the video's own cover image and length. On **30 October 2026**, titles and channels were confirmed through YouTube oEmbed, and lengths were recorded as YouTube displays them. Cover images load from YouTube's image server (`i.ytimg.com`) without sending the ArcTalent page address. Videos are not counted in planned hours, are not proficiency evidence and may be removed or changed by their publishers.

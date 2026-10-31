@@ -1,43 +1,12 @@
-.course-access {
-  display: inline-flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 2px;
-  max-width: 100%;
-  padding: 8px 12px;
-  border: 1px solid rgba(26, 244, 255, 0.25);
-  border-radius: 10px;
-  color: var(--green);
-  background: rgba(0, 242, 254, 0.06);
-  transition:
-    background 200ms ease-out,
-    border-color 200ms ease-out;
-}
-.course-access:hover {
-  background: rgba(0, 242, 254, 0.1);
-  border-color: var(--green);
-  text-decoration: none;
-}
-.course-access > strong {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 600;
-}
-.course-access > small {
-  font-size: 12px;
-  color: var(--muted);
-  overflow-wrap: anywhere;
-}
+/* Full width, so the cards sit side by side whenever two of them fit. */
 .course-links {
-  display: inline-flex;
+  display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  max-width: 100%;
+  width: 100%;
 }
-/* A compact "up next" card: YouTube's own cover, its length, then title and channel. */
+/* Two matching cards, like a link preview: the destination's own cover, then what it is. */
+.course-access,
 .course-video {
   display: flex;
   /* Up to 340px, shrinking with its column without widening narrow layouts. */
@@ -47,38 +16,60 @@
   max-width: 340px;
   min-width: 0;
   padding: 6px 10px 6px 6px;
-  border: 1px solid rgba(255, 77, 112, 0.25);
+  border: 1px solid;
   border-radius: 10px;
-  color: var(--ink);
-  background: rgba(255, 130, 155, 0.06);
   transition:
     background 200ms ease-out,
     border-color 200ms ease-out;
+}
+.course-access {
+  border-color: rgba(26, 244, 255, 0.25);
+  color: var(--green);
+  background: rgba(0, 242, 254, 0.06);
+}
+.course-access:hover {
+  background: rgba(0, 242, 254, 0.1);
+  border-color: var(--green);
+  text-decoration: none;
+}
+.course-video {
+  border-color: rgba(255, 77, 112, 0.25);
+  color: var(--ink);
+  background: rgba(255, 130, 155, 0.06);
 }
 .course-video:hover {
   background: rgba(255, 130, 155, 0.11);
   border-color: var(--coral);
   text-decoration: none;
 }
-.video-cover {
+.link-cover {
   position: relative;
+  display: grid;
   flex: none;
+  place-items: center;
   width: min(124px, 40%);
   aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: 6px;
-  /* Shown while the cover loads, or if YouTube's image host is unreachable. */
+  /* Shown while a cover loads, or if its image host is unreachable. */
   background: linear-gradient(135deg, #ffd6df 0%, #ddd5ff 100%);
   box-shadow: 0 6px 14px -8px rgba(64, 92, 122, 0.5);
 }
-.video-cover img {
+.course-cover {
+  color: var(--green);
+  background: linear-gradient(135deg, #d3f1f7 0%, #dde2ff 100%);
+}
+.link-cover img {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 300ms ease-out;
 }
-.course-video:hover .video-cover img {
+.course-access:hover .link-cover img,
+.course-video:hover .link-cover img {
   transform: scale(1.05);
 }
 .video-play {
@@ -121,13 +112,13 @@
   color: #fff;
   background: rgba(15, 23, 42, 0.8);
 }
-.video-meta {
+.link-meta {
   display: grid;
   flex: 1;
   gap: 2px;
   min-width: 0;
 }
-.video-meta > strong {
+.link-meta > strong {
   display: -webkit-box;
   overflow: hidden;
   font-size: 13px;
@@ -137,7 +128,12 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
-.video-meta > small {
+.course-access .link-meta > strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.link-meta > small {
   display: -webkit-box;
   overflow: hidden;
   font-size: 12px;
@@ -158,8 +154,12 @@
 .next-step-card .course-links {
   margin-bottom: 14px;
 }
-/* The next-step summary can be a narrow column; the cover and length already mark a video. */
-.next-step-card .video-source {
+/* The next-step summary can be a narrow column; keep each card to its essentials. */
+.next-step-card .link-cover {
+  width: min(124px, 34%);
+}
+.next-step-card .video-source,
+.next-step-card .link-domain {
   display: none;
 }
 .training-course {
@@ -190,11 +190,12 @@
 @media (prefers-reduced-motion: reduce) {
   .course-access,
   .course-video,
-  .video-cover img,
+  .link-cover img,
   .video-play {
     transition: none;
   }
-  .course-video:hover .video-cover img,
+  .course-access:hover .link-cover img,
+  .course-video:hover .link-cover img,
   .video-play {
     transform: none;
   }

@@ -165,8 +165,9 @@
   font-size: 14px;
   overflow-wrap: anywhere;
 }
+/* Room for the course and video cards side by side (2 × 340px + gap), shrinking to stack them. */
 .goal-course-row .course-links {
-  flex-shrink: 0;
+  flex: 0 1 688px;
 }
 .career-goal-applied {
   display: flex;
