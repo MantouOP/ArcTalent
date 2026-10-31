@@ -12,6 +12,7 @@ import {
   restoreWorkforceSettings,
 } from '../src/lib/workforce-settings';
 import { analyseGoalLocally, careerGoalSchema } from '../src/lib/career-goals';
+import { makeStudyProgressRequest } from '../src/lib/study-progress-ai';
 import { detailedWorkforcePayload } from './fixtures/workforce-detailed';
 
 const origin = process.env.TEST_BASE_URL || 'http://localhost:3000';
@@ -56,6 +57,9 @@ await check('health reports actual extraction mode', async () => {
   assert.equal(health.ok, true);
   assert.ok(
     ['ai-configured', 'local-planning-guide'].includes(health.careerChat),
+  );
+  assert.ok(
+    ['ai-configured', 'local-study-coach'].includes(health.studyProgress),
   );
   assert.equal(
     health.aiProvider === null,
@@ -736,6 +740,97 @@ await check(
     });
     assert.equal(response.status, 200);
     assert.match((await response.json()).text, /SQL/);
+  },
+);
+await check(
+  'study-progress rejects cross-origin, unconsented, unstudied-course and oversized requests',
+  async () => {
+    const crossOrigin = await fetch(origin + '/api/study-progress', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Origin: 'https://untrusted.invalid',
+      },
+      body: JSON.stringify({ consent: true }),
+    });
+    assert.equal(crossOrigin.status, 403);
+    assert.equal(crossOrigin.headers.get('cache-control'), 'no-store');
+
+    for (const bad of [
+      { consent: false },
+      {
+        ...makeStudyProgressRequest({
+          action: 'coach',
+          locale: 'en',
+          profile: baseProfile,
+          scenario: 'moderate',
+          snapshot: baseline,
+          roleId: 'bi',
+        }),
+        action: 'verify-badge',
+        courseId: 'sql',
+        reflection: 'Practised SQL SELECT and JOIN queries on order tables.',
+      },
+      { reflection: 'x'.repeat(25000) },
+    ]) {
+      const res = await post('/api/study-progress', bad);
+      assert.ok([400, 413].includes(res.status));
+      assert.equal(res.headers.get('cache-control'), 'no-store');
+    }
+  },
+);
+await check(
+  'study-progress coaches scheduled courses and verifies studied-course practice badges',
+  async () => {
+    const coachRes = await post(
+      '/api/study-progress',
+      makeStudyProgressRequest({
+        action: 'coach',
+        locale: 'en',
+        profile: baseProfile,
+        scenario: 'moderate',
+        snapshot: baseline,
+        roleId: 'bi',
+      }),
+    );
+    assert.equal(coachRes.status, 200);
+    assert.equal(coachRes.headers.get('cache-control'), 'no-store');
+    const coachBody = await coachRes.json();
+    assert.equal(coachBody.kind, 'coach');
+    assert.ok(['ai', 'local'].includes(coachBody.mode));
+    assert.ok(coachBody.summary.length > 10);
+    assert.ok(coachBody.microTask.length > 10);
+    for (const c of coachBody.courses) {
+      const canonical = courses.find((item) => item.id === c.id);
+      assert.ok(canonical);
+      assert.equal(c.url, canonical.url);
+    }
+
+    const reflectionText =
+      'I practised SQL SELECT, WHERE and JOIN queries on sample sales tables to summarise monthly totals.';
+    const badgeRes = await post(
+      '/api/study-progress',
+      makeStudyProgressRequest({
+        action: 'verify-badge',
+        locale: 'en',
+        profile: { ...baseProfile, completed: ['sql'] },
+        scenario: 'moderate',
+        snapshot: baseline,
+        roleId: 'bi',
+        courseId: 'sql',
+        reflection: reflectionText,
+      }),
+    );
+    assert.equal(badgeRes.status, 200);
+    const badgeBody = await badgeRes.json();
+    assert.equal(badgeBody.kind, 'verify-badge');
+    assert.equal(badgeBody.awarded, true);
+    assert.equal(badgeBody.courseId, 'sql');
+    assert.ok(badgeBody.demonstratedSkills.length >= 1);
+    for (const item of badgeBody.demonstratedSkills) {
+      assert.equal(item.id, 'sql');
+      assert.ok(reflectionText.includes(item.quote));
+    }
   },
 );
 console.log(`${checks} production integration checks passed.`);

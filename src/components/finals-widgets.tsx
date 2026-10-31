@@ -26,6 +26,7 @@ import {
   type SkillMomentumItem,
 } from '@/lib/finals-enhancements';
 import type {
+  CareerGoal,
   LearningPlan,
   Profile,
   Role,
@@ -33,9 +34,11 @@ import type {
   SkillId,
   Snapshot,
 } from '@/lib/types';
+import type { PracticeBadge } from '@/lib/study-progress-ai';
 import type { WorkforceSettings } from '@/lib/workforce-settings';
 import { CourseLink } from './course-link';
 import { useI18n } from './language-provider';
+import { StudyProgressAiSection } from './study-progress-ai-panel';
 import { External, SkillChip, Tag } from './ui';
 
 export function SdgChoiceBar({
@@ -401,11 +404,25 @@ export function LearnerBadgesPanel({
   plan,
   shared,
   role,
+  scenario,
+  snapshot,
+  customGoal = null,
+  funding = 'all',
+  practiceBadges = [],
+  onChangePracticeBadges,
+  onConfirmSkillLevel,
 }: {
   profile: Profile;
   plan: LearningPlan;
   shared: SkillId[];
   role: Role;
+  scenario?: Scenario;
+  snapshot?: Snapshot;
+  customGoal?: CareerGoal | null;
+  funding?: 'all' | 'free' | 'hrd';
+  practiceBadges?: PracticeBadge[];
+  onChangePracticeBadges?: (next: PracticeBadge[]) => void;
+  onConfirmSkillLevel?: (skillId: SkillId, level: number) => void;
 }) {
   const { t } = useI18n();
   const { badges, completedHours, totalPlannedHours, progressPercent } =
@@ -461,6 +478,20 @@ export function LearnerBadgesPanel({
           </article>
         ))}
       </div>
+      {scenario && snapshot && onChangePracticeBadges && (
+        <StudyProgressAiSection
+          profile={profile}
+          plan={plan}
+          role={role}
+          scenario={scenario}
+          snapshot={snapshot}
+          customGoal={customGoal}
+          funding={funding}
+          practiceBadges={practiceBadges}
+          onChangePracticeBadges={onChangePracticeBadges}
+          onConfirmSkillLevel={onConfirmSkillLevel}
+        />
+      )}
     </section>
   );
 }

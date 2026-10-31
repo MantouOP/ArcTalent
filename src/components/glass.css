@@ -339,6 +339,7 @@ dialog > header {
 .replan-box,
 .booster-item,
 .learner-badge-card,
+.study-ai-card,
 .malaysia-hrd-card,
 .sdg-aggregate-card,
 .fairness-stat {
@@ -374,6 +375,9 @@ dialog > header {
 .momentum-row,
 .sdg-metrics-row,
 .score-booster-section,
+.study-ai-section,
+.earned-practice-badges,
+.practice-badge-footer,
 .fairness-table th,
 .fairness-table td {
   border-color: var(--line);

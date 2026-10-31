@@ -11,5 +11,6 @@ export function GET() {
     careerAnalysis: configured ? 'ai-configured' : 'local-goal-matching',
     extraction: configured ? 'ai-configured' : 'local-alias-matching',
     careerChat: configured ? 'ai-configured' : 'local-planning-guide',
+    studyProgress: configured ? 'ai-configured' : 'local-study-coach',
   });
 }

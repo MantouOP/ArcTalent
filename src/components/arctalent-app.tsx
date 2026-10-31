@@ -85,6 +85,12 @@ import {
 import type { SettingsSection } from '@/lib/settings-sections';
 import { applySdgPriority, type SdgFocus } from '@/lib/finals-enhancements';
 import {
+  prunePracticeBadges,
+  restorePracticeBadgesByProfile,
+  type PracticeBadge,
+  type PracticeBadgesByProfile,
+} from '@/lib/study-progress-ai';
+import {
   AutoReplanBanner,
   FutureSkillsRadarPanel,
   LearnerBadgesPanel,
@@ -141,6 +147,8 @@ export function ArcTalentApp({
   const [workforce, setWorkforce] = useState<WorkforceSettings>(() =>
     restoreWorkforceSettings(),
   );
+  const [practiceBadgesByProfile, setPracticeBadgesByProfile] =
+    useState<PracticeBadgesByProfile>({});
   function chooseRole(id: string) {
     setSelected(id);
     setFollowTop(false);
@@ -157,6 +165,7 @@ export function ArcTalentApp({
           setScenario(fresh.scenario);
           setSnapshot(fresh.snapshot);
           setWorkforce(fresh.workforce);
+          setPracticeBadgesByProfile({});
           setCustomGoal(null);
           setFollowTop(true);
           if (initialView === 'explore') setView('settings');
@@ -184,6 +193,16 @@ export function ArcTalentApp({
             ? updateWorkforceProfile(restoredWorkforce, p.data)
             : restoredWorkforce,
         );
+        const restoredBadges = restorePracticeBadgesByProfile(
+          saved.practiceBadgesByProfile,
+        );
+        if (p.success && restoredBadges[p.data.id]) {
+          restoredBadges[p.data.id] = prunePracticeBadges(
+            restoredBadges[p.data.id],
+            p.data.completed,
+          );
+        }
+        setPracticeBadgesByProfile(restoredBadges);
       }
     } catch {
       /* Browser storage is optional. */
@@ -204,6 +223,7 @@ export function ArcTalentApp({
             workforce,
             customGoal,
             needsSetup,
+            practiceBadgesByProfile,
           }),
         );
       } catch {
@@ -219,6 +239,7 @@ export function ArcTalentApp({
     workforce,
     customGoal,
     needsSetup,
+    practiceBadgesByProfile,
   ]);
   useEffect(() => () => exportRequest.current?.abort(), []);
   useEffect(() => {
@@ -318,6 +339,7 @@ export function ArcTalentApp({
     setSelected(defaultRole);
     setFollowTop(true);
     setWorkforce(restoreWorkforceSettings());
+    setPracticeBadgesByProfile({});
     setFunding('all');
     setSdgFocus('all');
     setCustomGoal(null);
@@ -341,6 +363,7 @@ export function ArcTalentApp({
     setSelected(defaultRole);
     setFollowTop(true);
     setWorkforce(fresh.workforce);
+    setPracticeBadgesByProfile({});
     setCustomGoal(null);
     setFunding('all');
     setSdgFocus('all');
@@ -369,6 +392,25 @@ export function ArcTalentApp({
     setProfile(next);
     setNeedsSetup(false);
     setWorkforce((current) => updateWorkforceProfile(current, next));
+    setPracticeBadgesByProfile((current) => {
+      const existing = current[next.id];
+      if (!existing) return current;
+      const pruned = prunePracticeBadges(existing, next.completed);
+      if (pruned.length === existing.length) return current;
+      const copy = { ...current };
+      if (pruned.length) copy[next.id] = pruned;
+      else delete copy[next.id];
+      return copy;
+    });
+  }
+  function updateActivePracticeBadges(next: PracticeBadge[]) {
+    setPracticeBadgesByProfile((current) => {
+      const pruned = prunePracticeBadges(next, profile.completed);
+      const copy = { ...current };
+      if (pruned.length) copy[profile.id] = pruned;
+      else delete copy[profile.id];
+      return copy;
+    });
   }
   async function exportPlan() {
     if (needsSetup) {
@@ -1076,6 +1118,19 @@ export function ArcTalentApp({
                 plan={plan}
                 shared={shared}
                 role={active.role}
+                scenario={scenario}
+                snapshot={snapshot}
+                customGoal={customGoal}
+                funding={funding}
+                practiceBadges={practiceBadgesByProfile[profile.id] ?? []}
+                onChangePracticeBadges={updateActivePracticeBadges}
+                onConfirmSkillLevel={(skillId, level) => {
+                  saveProfile({
+                    ...profile,
+                    skills: { ...profile.skills, [skillId]: level },
+                  });
+                  setToast('Skill proficiency updated in your profile.');
+                }}
               />
               <CareerGoalPanel
                 profile={profile}
