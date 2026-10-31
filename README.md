@@ -98,7 +98,7 @@ ArcTalent provides an explainable career reskilling command center that maps cur
 - **Development & Version Control**: Imported canonical source repository, maintaining continuous verified git histories.
 - **Production Hosting**: Live public deployment on Replit Autoscale (`https://arc-talent--emmanuelheng.replit.app/`) serving web views and API routes.
 - **Build & CI Verification**: The published release (`30bd9c6`, 30 October 2026) passed 209 unit tests and 35 production integration checks inside Replit before publishing, then the same 35 checks against the live site ([runtime status](docs/REPLIT_STATUS.md)). GitHub Actions runs the full suite on every pull request and push to `main`.
-- **Secrets Management**: RunPod API keys and endpoints are stored in Replit Secrets, never committed to git.
+- **Secrets Management**: AI provider keys and endpoints (RunPod or another OpenAI-compatible gateway) are stored in Replit Secrets, never committed to git.
 - 📄 Proof of use: [`submission/SDC2026_XenoForce_Replit_POU.pdf`](submission/SDC2026_XenoForce_Replit_POU.pdf)
 
 ## How We Use RunPod _(Official Sponsor)_
@@ -132,6 +132,15 @@ npm run test:integration
 # Print the Phase 2 impact benchmark (docs/IMPACT.md):
 npm run impact
 ```
+
+### AI provider (optional)
+
+Without AI settings, ArcTalent uses local skill matching and the local planning guide. To turn on AI answers, set **one** of these in Replit Secrets or an untracked `.env.local` (see [`.env.example`](.env.example)):
+
+- **RunPod**: `RUNPOD_API_KEY`, plus `RUNPOD_ENDPOINT_ID` or `RUNPOD_BASE_URL`, plus `RUNPOD_MODEL`.
+- **Any OpenAI-compatible gateway** (for example LiteLLM): `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`, and optionally `AI_PROVIDER_NAME`, the name people see before they send data.
+
+When both are complete, the `AI_*` settings are used. The interface always names the provider that receives the data.
 
 ---
 

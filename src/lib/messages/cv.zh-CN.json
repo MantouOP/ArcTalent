@@ -8,8 +8,8 @@
   "Processing your CV…": "正在处理您的简历…",
   "CV text to review": "待核对的简历文本",
   "I agree to process this CV to suggest skills.": "我同意处理这份简历以推荐技能。",
-  "Use AI-assisted skill detection (RunPod)": "使用 AI 辅助技能识别（RunPod）",
-  "AI is configured. Enabling it sends the reviewed CV text to RunPod. Leave it off to match skills on your device.": "AI 已配置。开启后，核对过的简历文本会发送至 RunPod。保持关闭即可在您的设备上匹配技能。",
+  "Use AI-assisted skill detection ({0})": "使用 AI 辅助技能识别（{0}）",
+  "AI is configured. Enabling it sends the reviewed CV text to {0}. Leave it off to match skills on your device.": "AI 已配置。开启后，核对过的简历文本会发送至 {0}。保持关闭即可在您的设备上匹配技能。",
   "Checking AI availability. Local skill matching is available on your device.": "正在检查 AI 状态。您可以在本设备上匹配技能。",
   "Local skill matching is available on your device. AI is not configured on this deployment.": "您可以在本设备上匹配技能。此部署尚未配置 AI。",
   "AI status is unavailable. You can still match skills on your device.": "暂时无法获取 AI 状态。您仍可在本设备上匹配技能。",
@@ -27,5 +27,6 @@
   "Local skill matching (AI not selected)": "本地技能匹配（未选择 AI）",
   "Provide 5–12,000 characters of CV text and agree to processing.": "请提供 5–12,000 字符的简历文本，并同意处理。",
   "Agree to CV processing and choose a PDF.": "请同意处理简历并选择 PDF 文件。",
-  "Use a CV of 10 pages or fewer.": "请使用不超过 10 页的简历。"
+  "Use a CV of 10 pages or fewer.": "请使用不超过 10 页的简历。",
+  "Use AI-assisted skill detection": "使用 AI 辅助技能识别"
 }

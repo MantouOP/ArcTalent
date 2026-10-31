@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { skillIdSchema } from '@/lib/validation';
 import { skills } from '@/lib/catalogue';
 import { extractAliases } from '@/lib/engine';
-import { getRunpodConfig } from '@/lib/runpod-config';
+import { getAiConfig } from '@/lib/ai-config';
 export const runtime = 'nodejs';
 const inputSchema = z
   .object({
@@ -52,13 +52,13 @@ export async function POST(request: Request) {
         skills: fallback,
         mode: 'Local skill matching (AI not selected)',
       });
-    const config = getRunpodConfig();
+    const config = getAiConfig();
     if (!config)
       return NextResponse.json({
         skills: fallback,
         mode: 'Local skill matching (no LLM configured)',
       });
-    const { model } = config;
+    const { model, provider } = config;
     recentCalls = recentCalls.filter((time) => Date.now() - time < 60000);
     if (recentCalls.length >= 8)
       return NextResponse.json({
@@ -89,7 +89,7 @@ export async function POST(request: Request) {
       );
       return NextResponse.json({
         skills: valid.map((s) => ({ ...s, level: 1 })),
-        mode: `RunPod extraction · ${model} · human confirmation required`,
+        mode: `${provider} extraction · ${model} · human confirmation required`,
       });
     } catch {
       return NextResponse.json({

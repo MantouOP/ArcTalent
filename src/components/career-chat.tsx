@@ -63,6 +63,7 @@ export function CareerChat({
   const [availability, setAvailability] = useState<
     'checking' | 'configured' | 'local'
   >('checking');
+  const [provider, setProvider] = useState('');
   const [pending, setPending] = useState(false);
   const request = useRef<AbortController | null>(null);
   const nextId = useRef(0);
@@ -91,11 +92,11 @@ export function CareerChat({
       cache: 'no-store',
     })
       .then((response) => (response.ok ? response.json() : Promise.reject()))
-      .then((data) =>
-        setAvailability(
-          data.careerChat === 'runpod-configured' ? 'configured' : 'local',
-        ),
-      )
+      .then((data) => {
+        const configured = data.careerChat === 'ai-configured';
+        setProvider(configured ? String(data.aiProvider ?? '') : '');
+        setAvailability(configured ? 'configured' : 'local');
+      })
       .catch(() => {
         if (!controller.signal.aborted) setAvailability('local');
       });
@@ -225,11 +226,9 @@ export function CareerChat({
           <div>
             <h2 id={headingId}>{t('ArcTalent Guide')}</h2>
             <p>
-              {t(
-                aiEnabled
-                  ? 'AI-assisted guide · RunPod'
-                  : 'Plan-based guide · On this device',
-              )}
+              {aiEnabled
+                ? t('AI-assisted guide · {0}', { 0: provider || 'AI' })
+                : t('Plan-based guide · On this device')}
             </p>
           </div>
           <button
@@ -276,16 +275,21 @@ export function CareerChat({
                 setAiEnabled(event.target.checked);
               }}
             />
-            {t('Use AI answers (RunPod)')}
+            {provider
+              ? t('Use AI answers ({0})', { 0: provider })
+              : t('Use AI answers')}
           </label>
           <p>
-            {t(
-              availability === 'checking'
-                ? 'Checking AI configuration…'
-                : availability === 'configured'
-                  ? 'When enabled, your question, recent same-plan chat, skills, selected goal, time and budget are sent to RunPod. CV text, names, photos and team records are not included. ArcTalent does not save the chat on its server.'
-                  : 'AI is not connected. You can still ask the local planning guide.',
-            )}
+            {availability === 'configured'
+              ? t(
+                  'When enabled, your question, recent same-plan chat, skills, selected goal, time and budget are sent to {0}. CV text, names, photos and team records are not included. ArcTalent does not save the chat on its server.',
+                  { 0: provider },
+                )
+              : t(
+                  availability === 'checking'
+                    ? 'Checking AI configuration…'
+                    : 'AI is not connected. You can still ask the local planning guide.',
+                )}
           </p>
         </div>
         {hasEarlierContext && (
@@ -329,7 +333,7 @@ export function CareerChat({
               <div className="career-chat-answer">
                 <span className="career-chat-speaker">
                   {turn.mode === 'ai'
-                    ? `${t('AI answer')} · ${turn.model ?? 'RunPod'}`
+                    ? `${t('AI answer')} · ${turn.model ?? (provider || 'AI')}`
                     : t('Local planning guide')}
                 </span>
                 {turn.notice && (

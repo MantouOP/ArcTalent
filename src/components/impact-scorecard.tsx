@@ -205,7 +205,7 @@ export function ImpactScorecard({
       value: '100%',
       status: 'design',
       detail: t(
-        'AI suggestions change your profile only after you add and save them. RunPod quotes are kept only when found word-for-word in the CV.',
+        'AI suggestions change your profile only after you add and save them. AI quotes are kept only when found word-for-word in the CV.',
       ),
     },
   ];

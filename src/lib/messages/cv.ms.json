@@ -8,8 +8,8 @@
   "Processing your CV…": "Memproses CV anda…",
   "CV text to review": "Teks CV untuk disemak",
   "I agree to process this CV to suggest skills.": "Saya bersetuju CV ini diproses untuk mencadangkan kemahiran.",
-  "Use AI-assisted skill detection (RunPod)": "Gunakan pengesanan kemahiran berbantu AI (RunPod)",
-  "AI is configured. Enabling it sends the reviewed CV text to RunPod. Leave it off to match skills on your device.": "AI telah dikonfigurasi. Mengaktifkannya akan menghantar teks CV yang disemak ke RunPod. Biarkannya dimatikan untuk memadankan kemahiran pada peranti anda.",
+  "Use AI-assisted skill detection ({0})": "Gunakan pengesanan kemahiran berbantu AI ({0})",
+  "AI is configured. Enabling it sends the reviewed CV text to {0}. Leave it off to match skills on your device.": "AI telah dikonfigurasi. Mengaktifkannya akan menghantar teks CV yang disemak ke {0}. Biarkannya dimatikan untuk memadankan kemahiran pada peranti anda.",
   "Checking AI availability. Local skill matching is available on your device.": "Menyemak ketersediaan AI. Padanan kemahiran setempat tersedia pada peranti anda.",
   "Local skill matching is available on your device. AI is not configured on this deployment.": "Padanan kemahiran setempat tersedia pada peranti anda. AI tidak dikonfigurasi pada pelaksanaan ini.",
   "AI status is unavailable. You can still match skills on your device.": "Status AI tidak tersedia. Anda masih boleh memadankan kemahiran pada peranti anda.",
@@ -27,5 +27,6 @@
   "Local skill matching (AI not selected)": "Padanan kemahiran setempat (AI tidak dipilih)",
   "Provide 5–12,000 characters of CV text and agree to processing.": "Sediakan teks CV sepanjang 5–12,000 aksara dan bersetuju dengan pemprosesan.",
   "Agree to CV processing and choose a PDF.": "Bersetuju dengan pemprosesan CV dan pilih PDF.",
-  "Use a CV of 10 pages or fewer.": "Gunakan CV dengan 10 halaman atau kurang."
+  "Use a CV of 10 pages or fewer.": "Gunakan CV dengan 10 halaman atau kurang.",
+  "Use AI-assisted skill detection": "Gunakan pengesanan kemahiran berbantu AI"
 }

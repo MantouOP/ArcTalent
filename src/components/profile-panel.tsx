@@ -53,6 +53,7 @@ export function ProfilePanel({
   const [service, setService] = useState<
     'checking' | 'ai' | 'local' | 'unknown'
   >('checking');
+  const [provider, setProvider] = useState('');
   const [fileName, setFileName] = useState('');
   const [formError, setFormError] = useState('');
   const { text, consented, message, candidates } = cv;
@@ -71,14 +72,17 @@ export function ProfilePanel({
         const result = await response.json();
         if (!response.ok || result.ok !== true)
           throw new Error('Status unavailable');
-        if (!controller.signal.aborted)
+        if (!controller.signal.aborted) {
+          if (result.extraction === 'ai-configured')
+            setProvider(String(result.aiProvider ?? ''));
           setService(
-            result.extraction === 'runpod-configured'
+            result.extraction === 'ai-configured'
               ? 'ai'
               : result.extraction === 'local-alias-matching'
                 ? 'local'
                 : 'unknown',
           );
+        }
       } catch {
         if (!controller.signal.aborted) setService('unknown');
       }
@@ -101,15 +105,16 @@ export function ProfilePanel({
   let statusMessage = t(message);
   if (message.endsWith(reviewSuffix)) {
     const mode = message.slice(0, -reviewSuffix.length);
-    const runPodMode = mode.match(
-      /^RunPod extraction · (.+) · human confirmation required$/,
+    const aiMode = mode.match(
+      /^(.+?) extraction · (.+) · human confirmation required$/,
     );
     statusMessage = t(
       '{0}. Review these candidates and set your own skill levels below.',
       {
-        0: runPodMode
-          ? t('RunPod extraction · {0} · human confirmation required', {
-              0: runPodMode[1],
+        0: aiMode
+          ? t('{0} extraction · {1} · human confirmation required', {
+              0: aiMode[1],
+              1: aiMode[2],
             })
           : t(mode),
       },
@@ -438,18 +443,23 @@ export function ProfilePanel({
                     dispatchCv({ type: 'source' });
                   }}
                 />
-                {t('Use AI-assisted skill detection (RunPod)')}
+                {provider
+                  ? t('Use AI-assisted skill detection ({0})', { 0: provider })
+                  : t('Use AI-assisted skill detection')}
               </label>
               <p id="cv-ai-help" className="muted small">
-                {t(
-                  service === 'ai'
-                    ? 'AI is configured. Enabling it sends the reviewed CV text to RunPod. Leave it off to match skills on your device.'
-                    : service === 'checking'
-                      ? 'Checking AI availability. Local skill matching is available on your device.'
-                      : service === 'local'
-                        ? 'Local skill matching is available on your device. AI is not configured on this deployment.'
-                        : 'AI status is unavailable. You can still match skills on your device.',
-                )}
+                {service === 'ai'
+                  ? t(
+                      'AI is configured. Enabling it sends the reviewed CV text to {0}. Leave it off to match skills on your device.',
+                      { 0: provider },
+                    )
+                  : t(
+                      service === 'checking'
+                        ? 'Checking AI availability. Local skill matching is available on your device.'
+                        : service === 'local'
+                          ? 'Local skill matching is available on your device. AI is not configured on this deployment.'
+                          : 'AI status is unavailable. You can still match skills on your device.',
+                    )}
               </p>
             </div>
             <button

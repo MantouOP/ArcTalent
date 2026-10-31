@@ -62,7 +62,11 @@ await check('health reports actual extraction mode', async () => {
   const health = await response.json();
   assert.equal(health.ok, true);
   assert.ok(
-    ['runpod-configured', 'local-planning-guide'].includes(health.careerChat),
+    ['ai-configured', 'local-planning-guide'].includes(health.careerChat),
+  );
+  assert.equal(
+    health.aiProvider === null,
+    health.careerChat !== 'ai-configured',
   );
 });
 await check('all avatar choices are served as local SVG assets', async () => {

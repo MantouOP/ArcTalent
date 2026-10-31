@@ -48,7 +48,7 @@
   "Local matching — RunPod URL configuration needs review": "Padanan setempat — konfigurasi URL RunPod perlu disemak",
   "Local matching — AI demo request limit reached": "Padanan setempat — had permintaan demo AI telah dicapai",
   "Local matching — AI unavailable or unsupported output": "Padanan setempat — AI tidak tersedia atau output tidak disokong",
-  "RunPod extraction · {0} · human confirmation required": "Pengekstrakan RunPod · {0} · pengesahan manusia diperlukan",
+  "{0} extraction · {1} · human confirmation required": "Pengekstrakan {0} · {1} · pengesahan manusia diperlukan",
   "Use a shorter sample": "Gunakan contoh yang lebih pendek",
   "Provide 5–12,000 characters of confirmed synthetic CV text": "Berikan 5–12,000 aksara teks CV yang disahkan sebagai rekaan",
   "Invalid extraction request": "Permintaan pengekstrakan tidak sah",

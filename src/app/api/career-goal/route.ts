@@ -5,7 +5,7 @@ import { careerGoalInputSchema } from '@/lib/validation';
 import { goalAnalysisSchema } from '@/lib/career-goals';
 import { analyseCareerGoal } from '@/lib/career-goal-service';
 import { skills } from '@/lib/catalogue';
-import { getRunpodConfig } from '@/lib/runpod-config';
+import { getAiConfig } from '@/lib/ai-config';
 
 export const runtime = 'nodejs';
 let recentCalls: number[] = [];
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
         },
         { status: 400 },
       );
-    const config = getRunpodConfig();
+    const config = getAiConfig();
     if (!config) return NextResponse.json(await analyseCareerGoal(parsed.data));
     recentCalls = recentCalls.filter((time) => Date.now() - time < 60000);
     if (recentCalls.length >= 8) {

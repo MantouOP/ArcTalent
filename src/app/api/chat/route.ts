@@ -6,7 +6,7 @@ import {
   chatModelOutputSchemaForPlan,
 } from '@/lib/career-chat-ai';
 import { chatRequestSchema } from '@/lib/career-chat-request';
-import { getRunpodConfig } from '@/lib/runpod-config';
+import { getAiConfig } from '@/lib/ai-config';
 import { createRunpodModel } from '@/lib/runpod-model';
 import { readBoundedText } from '@/lib/request-body';
 
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
   } catch {
     return json({ error: 'Invalid chat request.' }, 400);
   }
-  const config = getRunpodConfig();
+  const config = getAiConfig();
   recentCalls = recentCalls.filter((time) => Date.now() - time < 60000);
   const busy = recentCalls.length >= 8;
   if (config && !busy) recentCalls.push(Date.now());

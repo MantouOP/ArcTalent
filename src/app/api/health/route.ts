@@ -1,13 +1,15 @@
 import { NextResponse } from 'next/server';
 import { MODEL_VERSION } from '@/lib/engine';
-import { getRunpodConfig } from '@/lib/runpod-config';
+import { getAiConfig } from '@/lib/ai-config';
 export function GET() {
-  const configured = Boolean(getRunpodConfig());
+  const config = getAiConfig();
+  const configured = Boolean(config);
   return NextResponse.json({
     ok: true,
     engine: MODEL_VERSION,
-    careerAnalysis: configured ? 'runpod-configured' : 'local-goal-matching',
-    extraction: configured ? 'runpod-configured' : 'local-alias-matching',
-    careerChat: configured ? 'runpod-configured' : 'local-planning-guide',
+    aiProvider: config?.provider ?? null,
+    careerAnalysis: configured ? 'ai-configured' : 'local-goal-matching',
+    extraction: configured ? 'ai-configured' : 'local-alias-matching',
+    careerChat: configured ? 'ai-configured' : 'local-planning-guide',
   });
 }

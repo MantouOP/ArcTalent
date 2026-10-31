@@ -48,7 +48,7 @@
   "Local matching — RunPod URL configuration needs review": "本地匹配 — 请检查 RunPod URL 配置",
   "Local matching — AI demo request limit reached": "本地匹配 — 已达到 AI 演示请求上限",
   "Local matching — AI unavailable or unsupported output": "本地匹配 — AI 不可用或输出格式不受支持",
-  "RunPod extraction · {0} · human confirmation required": "RunPod 提取 · {0} · 需要人工确认",
+  "{0} extraction · {1} · human confirmation required": "{0} 提取 · {1} · 需要人工确认",
   "Use a shorter sample": "请使用更短的示例",
   "Provide 5–12,000 characters of confirmed synthetic CV text": "请提供已确认是虚构内容的简历文本，长度为 5–12,000 个字符",
   "Invalid extraction request": "无效的提取请求",

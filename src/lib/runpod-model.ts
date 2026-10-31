@@ -1,8 +1,8 @@
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
-import type { getRunpodConfig } from './runpod-config';
+import type { AiConfig } from './ai-config';
 
 export function createRunpodModel(
-  config: NonNullable<ReturnType<typeof getRunpodConfig>>,
+  config: Pick<AiConfig, 'baseURL' | 'apiKey' | 'model'>,
   fetch: typeof globalThis.fetch = globalThis.fetch,
 ) {
   return createOpenAICompatible({
