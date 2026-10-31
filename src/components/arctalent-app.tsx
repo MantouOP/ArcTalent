@@ -1648,21 +1648,23 @@ export function ArcTalentApp({
                   <section className="panel completed-panel">
                     <h3>{t('Learning you’re keeping')}</h3>
                     {plan.completed.map((c) => (
-                      <div key={c.id}>
-                        <div className="completed-course">
-                          <span>
-                            <CheckCircle2 size={16} />
-                            {c.title}
-                          </span>
-                          <small>{c.provider}</small>
-                          <CourseLink course={c} />
+                      <div className="completed-row" key={c.id}>
+                        <div className="completed-header">
+                          <div className="completed-course">
+                            <span className="completed-title">
+                              <CheckCircle2 size={16} />
+                              {c.title}
+                            </span>
+                            <small>{c.provider}</small>
+                          </div>
+                          <button
+                            className="text-button"
+                            onClick={() => complete(c.id)}
+                          >
+                            {t('Undo')}{' '}
+                          </button>
                         </div>
-                        <button
-                          className="text-button"
-                          onClick={() => complete(c.id)}
-                        >
-                          {t('Undo')}{' '}
-                        </button>
+                        <CourseLink course={c} />
                       </div>
                     ))}
                     <p className="muted small">

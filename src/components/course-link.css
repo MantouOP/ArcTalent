@@ -1,65 +1,64 @@
-/* Full width, so the cards sit side by side whenever two of them fit. */
+/* Full-width responsive grid so cards sit side by side and expand cleanly to the panel border. */
 .course-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 10px;
   width: 100%;
+  min-width: 0;
 }
 /* Two matching cards, like a link preview: the destination's own cover, then what it is. */
-.course-access,
-.course-video {
+.course-links > .course-access,
+.course-links > .course-video {
   display: flex;
-  /* Up to 340px, shrinking with its column without widening narrow layouts. */
-  flex: 0 1 340px;
   align-items: center;
-  gap: 10px;
-  max-width: 340px;
+  gap: 12px;
+  width: 100%;
   min-width: 0;
-  padding: 6px 10px 6px 6px;
+  padding: 8px 12px 8px 8px;
   border: 1px solid;
-  border-radius: 10px;
+  border-radius: 12px;
   transition:
     background 200ms ease-out,
     border-color 200ms ease-out;
 }
-.course-access {
-  border-color: rgba(26, 244, 255, 0.25);
+.course-links > .course-access {
+  border-color: rgba(26, 200, 224, 0.32);
   color: var(--green);
-  background: rgba(0, 242, 254, 0.06);
+  background: rgba(0, 212, 232, 0.06);
 }
-.course-access:hover {
-  background: rgba(0, 242, 254, 0.1);
+.course-links > .course-access:hover {
+  background: rgba(0, 212, 232, 0.11);
   border-color: var(--green);
   text-decoration: none;
 }
-.course-video {
-  border-color: rgba(255, 77, 112, 0.25);
+.course-links > .course-video {
+  border-color: rgba(255, 77, 112, 0.28);
   color: var(--ink);
   background: rgba(255, 130, 155, 0.06);
 }
-.course-video:hover {
-  background: rgba(255, 130, 155, 0.11);
+.course-links > .course-video:hover {
+  background: rgba(255, 130, 155, 0.12);
   border-color: var(--coral);
   text-decoration: none;
 }
-.link-cover {
+.course-links .link-cover {
   position: relative;
   display: grid;
   flex: none;
   place-items: center;
-  width: min(124px, 40%);
+  width: min(124px, 36%);
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 8px;
   /* Shown while a cover loads, or if its image host is unreachable. */
   background: linear-gradient(135deg, #ffd6df 0%, #ddd5ff 100%);
   box-shadow: 0 6px 14px -8px rgba(64, 92, 122, 0.5);
 }
-.course-cover {
+.course-links .course-cover {
   color: var(--green);
   background: linear-gradient(135deg, #d3f1f7 0%, #dde2ff 100%);
 }
-.link-cover img {
+.course-links .link-cover img {
   position: absolute;
   inset: 0;
   display: block;
@@ -68,11 +67,11 @@
   object-fit: cover;
   transition: transform 300ms ease-out;
 }
-.course-access:hover .link-cover img,
-.course-video:hover .link-cover img {
+.course-links > .course-access:hover .link-cover img,
+.course-links > .course-video:hover .link-cover img {
   transform: scale(1.05);
 }
-.video-play {
+.course-links .video-play {
   position: absolute;
   inset: 0;
   display: grid;
@@ -90,16 +89,16 @@
     opacity 200ms ease-out,
     transform 200ms ease-out;
 }
-.video-play > svg {
+.course-links .video-play > svg {
   margin-left: 2px;
 }
 /* Like YouTube, keep the cover clean until the pointer or keyboard reaches it. */
-.course-video:hover .video-play,
-.course-video:focus-visible .video-play {
+.course-links > .course-video:hover .video-play,
+.course-links > .course-video:focus-visible .video-play {
   opacity: 1;
   transform: none;
 }
-.video-duration {
+.course-links .video-duration {
   position: absolute;
   right: 4px;
   bottom: 4px;
@@ -112,54 +111,72 @@
   color: #fff;
   background: rgba(15, 23, 42, 0.8);
 }
-.link-meta {
+.course-links .link-meta {
   display: grid;
   flex: 1;
-  gap: 2px;
+  gap: 3px;
   min-width: 0;
+  align-content: center;
 }
-.link-meta > strong {
+.course-links .link-meta > strong {
   display: -webkit-box;
   overflow: hidden;
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 600;
   line-height: 1.35;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+  word-break: normal;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
-.course-access .link-meta > strong {
+.course-links > .course-access .link-meta > strong {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
+  max-width: 100%;
 }
-.link-meta > small {
-  display: -webkit-box;
+.course-links .link-meta > small {
+  display: block;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 12px;
+  line-height: 1.35;
   color: var(--muted);
-  overflow-wrap: anywhere;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
 }
-.video-source {
+.course-links .video-source {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  margin-top: 1px;
+  gap: 5px;
+  margin-top: 2px;
   font-size: 12px;
   font-weight: 600;
+  line-height: 1.3;
   color: var(--coral);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.course-bottom > .course-links,
+.booster-actions > .course-links {
+  flex: 1;
+  min-width: 0;
+}
+.course-bottom > button {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .next-step-card .course-links {
   margin-bottom: 14px;
 }
 /* The next-step summary can be a narrow column; keep each card to its essentials. */
-.next-step-card .link-cover {
+.next-step-card .course-links .link-cover {
   width: min(124px, 34%);
 }
-.next-step-card .video-source,
-.next-step-card .link-domain {
+.next-step-card .course-links .video-source,
+.next-step-card .course-links .link-domain {
   display: none;
 }
 .training-course {
@@ -168,35 +185,57 @@
 .training-course .course-links {
   margin-top: 10px;
 }
-.completed-panel > div {
+.completed-panel > .completed-row {
+  display: grid;
   gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.completed-panel > .completed-row:last-of-type {
+  border-bottom: 0;
+  padding-bottom: 4px;
+}
+.completed-panel .completed-header {
+  display: flex;
+  justify-content: space-between;
   align-items: flex-start;
+  gap: 12px;
+  width: 100%;
 }
 .completed-panel .completed-course {
   display: grid;
-  justify-items: start;
-  gap: 7px;
+  gap: 3px;
   min-width: 0;
+  flex: 1;
 }
-.completed-course > span {
-  overflow-wrap: anywhere;
+.completed-panel .completed-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+  overflow-wrap: break-word;
 }
-.completed-course > span > svg {
+.completed-panel .completed-title > svg {
   flex-shrink: 0;
+  color: var(--green);
 }
-.completed-course > small {
+.completed-panel .completed-course > small {
   color: var(--muted);
+  padding-left: 24px;
+}
+.completed-panel .completed-header > button {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 @media (prefers-reduced-motion: reduce) {
-  .course-access,
-  .course-video,
-  .link-cover img,
-  .video-play {
+  .course-links > .course-access,
+  .course-links > .course-video,
+  .course-links .link-cover img,
+  .course-links .video-play {
     transition: none;
   }
-  .course-access:hover .link-cover img,
-  .course-video:hover .link-cover img,
-  .video-play {
+  .course-links > .course-access:hover .link-cover img,
+  .course-links > .course-video:hover .link-cover img,
+  .course-links .video-play {
     transform: none;
   }
 }

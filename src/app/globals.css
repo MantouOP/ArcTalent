@@ -1537,13 +1537,12 @@ input[type='checkbox'] {
   margin: 10px 0;
 }
 .completed-panel > div {
-  display: flex;
-  justify-content: space-between;
   border-bottom: 1px solid var(--line);
   padding: 12px 0;
   font-size: 13px;
 }
-.completed-panel > div span {
+.completed-panel .completed-course > span,
+.completed-panel .completed-title {
   display: flex;
   gap: 8px;
   align-items: center;
