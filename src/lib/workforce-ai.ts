@@ -45,24 +45,41 @@ export const workforceAiRequestSchema = z.object({
 });
 export type WorkforceAiRequest = z.infer<typeof workforceAiRequestSchema>;
 
-/** What the model returns: role-level team entries, never personal details. */
+/**
+ * What the model returns: role-level team entries, never personal details.
+ * Skills and openings are lists, not maps: strict structured output only
+ * accepts objects with fixed properties.
+ */
 export const workforceModelOutputSchema = z.object({
   members: z
     .array(
       z.object({
         alias: plainText(1, 40),
         currentRole: plainText(2, 100),
-        skills: z.partialRecord(skillIdSchema, z.number().int().min(0).max(3)),
+        skills: z
+          .array(
+            z.object({
+              id: skillIdSchema,
+              level: z.number().int().min(1).max(3),
+            }),
+          )
+          .max(Object.keys(skillById).length),
         interests: z.array(interestSchema).max(4),
         hours: z.number().int().min(1).max(40),
         destination: roleIdSchema,
       }),
     )
-    .min(1)
     .max(maxPlannedMembers),
-  slots: z.partialRecord(roleIdSchema, z.number().int().min(0).max(10)),
+  slots: z
+    .array(
+      z.object({
+        role: roleIdSchema,
+        openings: z.number().int().min(0).max(10),
+      }),
+    )
+    .max(roles.length),
   budget: z.number().min(0).max(100000),
-  summary: z.array(plainText(10, 280)).min(1).max(3),
+  summary: z.array(plainText(10, 280)).max(3),
 });
 export type WorkforceModelOutput = z.infer<typeof workforceModelOutputSchema>;
 
@@ -436,9 +453,18 @@ export async function planWorkforceFromReport(
         }),
       });
       const output = workforceModelOutputSchema.parse(generated.output);
+      // Array minimums are checked here: strict schemas only take maxItems.
+      if (!output.members.length) throw new Error('No members');
       workforce = toWorkforce(
-        output.members,
-        output.slots,
+        output.members.map((member) => ({
+          ...member,
+          skills: Object.fromEntries(
+            member.skills.map((skill) => [skill.id, skill.level]),
+          ),
+        })),
+        Object.fromEntries(
+          output.slots.map((slot) => [slot.role, slot.openings]),
+        ),
         input.budget ?? output.budget,
       );
       // Model bullets may not carry figures; computed ones do.

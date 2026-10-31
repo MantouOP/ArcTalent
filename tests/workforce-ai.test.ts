@@ -1,4 +1,5 @@
 import { test } from 'node:test';
+import { z } from 'zod';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { courses, roles } from '../src/lib/catalogue';
@@ -10,6 +11,7 @@ import {
   redactPersonalDetails,
   safeAlias,
   WORKFORCE_REPORT_SAMPLES,
+  workforceModelOutputSchema,
   type WorkforceModelOutput,
 } from '../src/lib/workforce-ai';
 import { workforceSettingsSchema } from '../src/lib/workforce-settings';
@@ -122,7 +124,10 @@ test('a model structures the report in one shot; its text cannot carry figures o
       {
         alias: 'Nadia Binti Rahman',
         currentRole: 'Admin assistant',
-        skills: { excel: 2, communication: 2 },
+        skills: [
+          { id: 'excel', level: 2 },
+          { id: 'communication', level: 2 },
+        ],
         interests: ['data'],
         hours: 4,
         destination: 'bi',
@@ -130,13 +135,16 @@ test('a model structures the report in one shot; its text cannot carry figures o
       {
         alias: 'Ops-2',
         currentRole: 'Warehouse supervisor',
-        skills: { logistics: 2, process: 1 },
+        skills: [
+          { id: 'logistics', level: 2 },
+          { id: 'process', level: 1 },
+        ],
         interests: [],
         hours: 3,
         destination: 'logistics',
       },
     ],
-    slots: { bi: 1 },
+    slots: [{ role: 'bi', openings: 1 }],
     budget: 4000,
     summary: [
       'Both people can share a data and process cohort.',
@@ -174,6 +182,13 @@ test('a model structures the report in one shot; its text cannot carry figures o
     fakeModel(output),
   );
   assert.equal(capped?.workforce.budget, 900);
+});
+
+test('the model schema is strict structured-output compatible', () => {
+  const schema = JSON.stringify(z.toJSONSchema(workforceModelOutputSchema));
+  assert.doesNotMatch(schema, /"additionalProperties":\{/);
+  assert.doesNotMatch(schema, /propertyNames/);
+  assert.doesNotMatch(schema, /minItems/);
 });
 
 test('invalid model output falls back to the local parser', async () => {
