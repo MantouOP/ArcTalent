@@ -2,6 +2,14 @@
 
 Verified on **31 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
+## Profile-picture Reset to Default — live
+
+Settings → Profile now places **Reset to Default** beside **Upload a photo**. It restores the current profile's initials using the existing picture-selection handler, which also invalidates pending photo preparation and clears upload errors. Picture storage and profile data logic are unchanged. The label is translated as **Kembali ke Lalai** and **恢复默认**.
+
+Source `6595079966ec456a607ed15c8da0d522b5881676` includes the team's newer glass styling from `04eeae4`. Replit verified all **265 tracked files** against Git blob hashes before and after locked installation, **216 unit tests**, the production build and **35 integration checks**. All checks passed. Runtime commit `06f50759be6d0e4acd49f5d4a5adb2f5ccdb1de9` selects `artifacts/arctalent-release-6595079` and preserves the prior configuration as `artifact.toml.pre-photo-default-reset-backup`.
+
+Replit reports **Live**. The public browser reset Cat to initials, confirmed persistence after reload, and checked that all ten profile input values remained unchanged. The original Cat avatar and English language were restored after testing. Both translated reset labels render correctly. Local browser checks also verified Tab/Enter operation with a visible focus ring and a 390-pixel layout that wraps the buttons without horizontal overflow, keeping 44-pixel touch targets. See the [live reset controls](images/profile-picture-reset-live.png).
+
 ## Shared language selector polish — live
 
 The introduction and workspace now share one soft glass language pill, with a globe, a matching chevron, cleaner spacing and a visible keyboard focus ring. The native select, three language choices, change handler and saved-language logic are retained. The select itself is transparent and borderless, avoiding the previous nested input appearance. Touch height increases on phones.
