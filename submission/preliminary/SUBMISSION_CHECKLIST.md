@@ -1,6 +1,6 @@
 # Preliminary round (Phase 1) — submission working checklist
 
-> **Archived.** This checklist belongs to the preliminary round (25 October 2026). The final-round items are listed in [`submission/README.md`](../../submission/README.md).
+> **Archived.** This checklist belongs to the preliminary round (25 October 2026). The final-round items are listed in [`submission/README.md`](../README.md).
 
 Based on the supplied official handbooks and the team's stated dates. The organiser's current official instructions and templates must be checked before submission. This checklist is not an official organiser document.
 

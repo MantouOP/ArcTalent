@@ -1,13 +1,13 @@
 # ArcTalent submissions — Team Xeno Force
 
-The two rounds of SDC Hackathon 2026 are kept in separate folders so their documents are not mixed up.
+The two rounds of SDC Hackathon 2026 are kept in separate folders so their documents are not mixed up. The finalist round comes first; the preliminary round is archived below it.
 
 | Folder                         | Round                   | Deadline                   |
 | :----------------------------- | :---------------------- | :------------------------- |
 | [`final/`](final/)             | Phase 2, finalist round | 1 November 2026, 08:00 MYT |
 | [`preliminary/`](preliminary/) | Phase 1, preliminary    | 25 October 2026, 07:59 MYT |
 
-## Final round (Phase 2) — six compulsory items
+## Finalist round (Phase 2) — six compulsory items
 
 | #   | Item                             | Where                                                                                                                                                                                                                                   |
 | :-- | :------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -30,6 +30,6 @@ Replit proof of use is not required for the final round (organiser notice), so n
 | Technical & Tools Declaration | [`preliminary/SDC2026_XenoForce_TechDeclaration.pdf`](preliminary/SDC2026_XenoForce_TechDeclaration.pdf) |
 | Replit proof of use           | [`preliminary/SDC2026_XenoForce_Replit_POU.pdf`](preliminary/SDC2026_XenoForce_Replit_POU.pdf)           |
 | RunPod proof of use           | [`preliminary/SDC2026_XenoForce_Runpod_POU.pdf`](preliminary/SDC2026_XenoForce_Runpod_POU.pdf)           |
-| Working checklist             | [`../docs/preliminary/SUBMISSION_CHECKLIST.md`](../docs/preliminary/SUBMISSION_CHECKLIST.md)             |
+| Working checklist             | [`preliminary/SUBMISSION_CHECKLIST.md`](preliminary/SUBMISSION_CHECKLIST.md)                             |
 
 These files are kept as submitted on 25 October 2026 and are not updated.

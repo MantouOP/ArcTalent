@@ -4,7 +4,7 @@
 
 ### 🌟 Quick Links:
 
-👉 **[🚀 Open Live App Demo](https://arc-talent--emmanuelheng.replit.app/)** · **[🏁 Final-Round Submission](submission/README.md#final-round-phase-2--six-compulsory-items)** · **[📊 Final Pitch Deck (PDF)](submission/final/SDC2026_XenoForce_PitchDeck.pdf)** · **[🎥 Backup Pitch Video](https://youtu.be/PYpaD5IAYpE)** · **[📘 Updated PRD](docs/PRD.md)** · **[🧾 Technical & Tools Declaration](docs/TECHNICAL_DECLARATION.md)** · **[📁 Preliminary-Round Archive](submission/preliminary/)**
+👉 **[🚀 Open Live App Demo](https://arc-talent--emmanuelheng.replit.app/)** · **[🏁 Finalist Round Submission](#-finalist-round--phase-2)** · **[📊 Final Pitch Deck (PDF)](submission/final/SDC2026_XenoForce_PitchDeck.pdf)** · **[🎥 Backup Pitch Video](https://youtu.be/PYpaD5IAYpE)** · **[📘 Updated PRD](docs/PRD.md)** · **[🧾 Technical & Tools Declaration](docs/TECHNICAL_DECLARATION.md)** · **[📁 Preliminary Round (archived)](#%EF%B8%8F-preliminary-round--phase-1-archived)**
 
 ---
 
@@ -34,13 +34,11 @@
 
 ---
 
-## Official Submission Documents
+## 🏁 Finalist Round — Phase 2
 
-The two rounds are kept apart: final-round files are in [`submission/final/`](submission/final/), preliminary-round files in [`submission/preliminary/`](submission/preliminary/). The [submission index](submission/README.md) lists both.
+Deadline 1 November 2026, 08:00 MYT. Finalist files are in [`submission/final/`](submission/final/). The preliminary round is archived at the [bottom of this page](#%EF%B8%8F-preliminary-round--phase-1-archived).
 
-### 🏁 Final round — Phase 2 (deadline 1 November 2026, 08:00 MYT)
-
-The six compulsory items:
+### Six compulsory submissions
 
 1. 📄 **Final Project & Prototype Report**: [`submission/final/SDC2026_XenoForce_Final.pdf`](submission/final/SDC2026_XenoForce_Final.pdf)
 2. 🧾 **Technical & Tools Declaration** (adds to the preliminary one): [`submission/final/SDC2026_XenoForce_TechDeclaration.pdf`](submission/final/SDC2026_XenoForce_TechDeclaration.pdf), with full detail in [`docs/TECHNICAL_DECLARATION.md`](docs/TECHNICAL_DECLARATION.md)
@@ -49,23 +47,25 @@ The six compulsory items:
 5. 📊 **Pitch Slides**: [`PDF`](submission/final/SDC2026_XenoForce_PitchDeck.pdf) · [`PPTX`](submission/final/SDC2026_XenoForce_PitchDeck.pptx)
 6. 🚀 **Live Demo Materials**: [live app](https://arc-talent--emmanuelheng.replit.app/) (no login needed), [synthetic CV](https://arc-talent--emmanuelheng.replit.app/synthetic-cv.pdf) and the demo script [`docs/DEMO.md`](docs/DEMO.md)
 
-Supporting final-round documents:
+### Supporting documents
 
 - 📘 **Updated PRD**, what changed since the preliminary round and why: [`docs/PRD.md`](docs/PRD.md)
 - 📏 **Impact benchmark**, reproducible results for the four Phase 2 targets: [`docs/IMPACT.md`](docs/IMPACT.md)
 - 📚 **Sources register**: [`docs/SOURCES.md`](docs/SOURCES.md)
 - ☁️ **Replit release and verification record**: [`docs/REPLIT_STATUS.md`](docs/REPLIT_STATUS.md)
 
-Replit proof of use is not required in the final round.
+Replit proof of use is not required in the finalist round.
 
-### 🗂️ Preliminary round — Phase 1 (submitted 25 October 2026, archived)
+### Finalist checklist
 
-- 📄 **Preliminary Proposal PDF**: [`submission/preliminary/SDC2026_XenoForce_Preliminary.pdf`](submission/preliminary/SDC2026_XenoForce_Preliminary.pdf)
-- 📄 **Technical Tools Declaration PDF**: [`submission/preliminary/SDC2026_XenoForce_TechDeclaration.pdf`](submission/preliminary/SDC2026_XenoForce_TechDeclaration.pdf)
-- 📄 **Replit Proof of Use (POU) PDF**: [`submission/preliminary/SDC2026_XenoForce_Replit_POU.pdf`](submission/preliminary/SDC2026_XenoForce_Replit_POU.pdf)
-- 📄 **RunPod Proof of Use (POU) PDF**: [`submission/preliminary/SDC2026_XenoForce_Runpod_POU.pdf`](submission/preliminary/SDC2026_XenoForce_Runpod_POU.pdf)
-- 📊 **Preliminary Pitch Deck**: [Canva](https://canva.link/upnutijay2qn7vn)
-- ✅ **Working checklist**: [`docs/preliminary/SUBMISSION_CHECKLIST.md`](docs/preliminary/SUBMISSION_CHECKLIST.md)
+- [x] Final Project & Prototype Report (`submission/final/SDC2026_XenoForce_Final.pdf`)
+- [x] Technical & Tools Declaration, added to the preliminary one (`submission/final/SDC2026_XenoForce_TechDeclaration.pdf`, detail in [`docs/TECHNICAL_DECLARATION.md`](docs/TECHNICAL_DECLARATION.md))
+- [x] Backup pitch video ([YouTube](https://youtu.be/PYpaD5IAYpE))
+- [x] Public GitHub repository with the Apache License 2.0 and a continuous commit history
+- [ ] Committee accounts added as repository collaborators
+- [x] Pitch slides as PPTX and flattened PDF (`submission/final/SDC2026_XenoForce_PitchDeck.*`)
+- [x] Live demo ([Replit deployment](https://arc-talent--emmanuelheng.replit.app/)) with dated release records in [`docs/REPLIT_STATUS.md`](docs/REPLIT_STATUS.md)
+- [x] Updated PRD ([`docs/PRD.md`](docs/PRD.md))
 
 ---
 
@@ -128,7 +128,6 @@ The repository may contain newer features than the deployed demo. See the dated 
 - **Production Hosting**: Live public deployment on Replit Autoscale (`https://arc-talent--emmanuelheng.replit.app/`) serving web views and API routes.
 - **Build & CI Verification**: Release `ce314b7` is live. In Replit, 294 of 294 tracked files matched the commit, then 255 unit tests, the typecheck, a production build and 39 production integration checks passed; the same 39 checks passed against the live site on 1 November 2026. See [runtime status](docs/REPLIT_STATUS.md) for the dated record.
 - **Secrets Management**: AI provider keys and endpoints (RunPod or another OpenAI-compatible gateway) are stored in Replit Secrets, never committed to git.
-- 📄 Proof of use (preliminary round): [`submission/preliminary/SDC2026_XenoForce_Replit_POU.pdf`](submission/preliminary/SDC2026_XenoForce_Replit_POU.pdf)
 
 ## How We Use the Finalist AI Gateway _(provided by the organisers)_
 
@@ -142,7 +141,6 @@ The repository may contain newer features than the deployed demo. See the dated 
 - **Integration**: Next.js route handlers communicate with RunPod via the Vercel AI SDK using structured JSON schema decoding (`Output.object`).
 - **Verbatim evidence anchoring**: CV skill candidates are checked against exact source substrings; users still need to review the suggestions.
 - **Resilient Fallback**: Automatically falls back to deterministic local alias matching if the cloud GPU is idle or offline.
-- 📄 Proof of use (preliminary round): [`submission/preliminary/SDC2026_XenoForce_Runpod_POU.pdf`](submission/preliminary/SDC2026_XenoForce_Runpod_POU.pdf)
 
 ---
 
@@ -157,11 +155,10 @@ The repository may contain newer features than the deployed demo. See the dated 
 ├── tests/                   # Unit tests and production integration checks
 ├── public/                  # Avatars, icon, synthetic CV
 ├── scripts/                 # Impact benchmark and avatar generation
-├── docs/                    # Final-round PRD, declaration, impact, sources, release record
-│   └── preliminary/         # Preliminary-round working checklist (archived)
+├── docs/                    # Finalist-round PRD, declaration, impact, sources, release record
 ├── submission/              # Official submission files, one folder per round
-│   ├── README.md            # Index of both rounds
-│   ├── final/               # Phase 2 (1 Nov 2026)
+│   ├── README.md            # Index: finalist round first, preliminary round below
+│   ├── final/               # Phase 2, finalist round (1 Nov 2026)
 │   │   ├── SDC2026_XenoForce_Final.pdf            # Final Project & Prototype Report
 │   │   ├── SDC2026_XenoForce_TechDeclaration.pdf  # Technical & Tools Declaration (final)
 │   │   ├── SDC2026_XenoForce_PitchDeck.pptx       # Pitch slides
@@ -170,7 +167,8 @@ The repository may contain newer features than the deployed demo. See the dated 
 │       ├── SDC2026_XenoForce_Preliminary.pdf
 │       ├── SDC2026_XenoForce_TechDeclaration.pdf
 │       ├── SDC2026_XenoForce_Replit_POU.pdf
-│       └── SDC2026_XenoForce_Runpod_POU.pdf
+│       ├── SDC2026_XenoForce_Runpod_POU.pdf
+│       └── SUBMISSION_CHECKLIST.md                # Preliminary working checklist
 ├── .env.example             # Example AI provider settings (no secrets)
 ├── .replit                  # Replit run configuration
 └── LICENSE                  # Apache License 2.0
@@ -243,20 +241,21 @@ $$\text{Suitability} = 55\% \times \text{Skill Coverage} + 15\% \times \text{Int
 
 ---
 
-## Submission Checklist
+## 🗂️ Preliminary Round — Phase 1 (archived)
 
-### Final round — Phase 2
+Submitted 25 October 2026. These files are kept as submitted in [`submission/preliminary/`](submission/preliminary/) and are not updated.
 
-- [x] Final Project & Prototype Report (`submission/final/SDC2026_XenoForce_Final.pdf`)
-- [x] Technical & Tools Declaration, added to the preliminary one (`submission/final/SDC2026_XenoForce_TechDeclaration.pdf`, detail in [`docs/TECHNICAL_DECLARATION.md`](docs/TECHNICAL_DECLARATION.md))
-- [x] Backup pitch video ([YouTube](https://youtu.be/PYpaD5IAYpE))
-- [x] Public GitHub repository with the Apache License 2.0 and a continuous commit history
-- [ ] Committee accounts added as repository collaborators
-- [x] Pitch slides as PPTX and flattened PDF (`submission/final/SDC2026_XenoForce_PitchDeck.*`)
-- [x] Live demo ([Replit deployment](https://arc-talent--emmanuelheng.replit.app/)) with dated release records in [`docs/REPLIT_STATUS.md`](docs/REPLIT_STATUS.md)
-- [x] Updated PRD ([`docs/PRD.md`](docs/PRD.md))
+### Preliminary submissions
 
-### Preliminary round — Phase 1 (archived)
+- 📄 **Preliminary Proposal PDF**: [`submission/preliminary/SDC2026_XenoForce_Preliminary.pdf`](submission/preliminary/SDC2026_XenoForce_Preliminary.pdf)
+- 📄 **Technical Tools Declaration PDF**: [`submission/preliminary/SDC2026_XenoForce_TechDeclaration.pdf`](submission/preliminary/SDC2026_XenoForce_TechDeclaration.pdf)
+- 📄 **Replit Proof of Use (POU) PDF**: [`submission/preliminary/SDC2026_XenoForce_Replit_POU.pdf`](submission/preliminary/SDC2026_XenoForce_Replit_POU.pdf)
+- 📄 **RunPod Proof of Use (POU) PDF**: [`submission/preliminary/SDC2026_XenoForce_Runpod_POU.pdf`](submission/preliminary/SDC2026_XenoForce_Runpod_POU.pdf)
+- 📊 **Preliminary Pitch Deck**: [Canva](https://canva.link/upnutijay2qn7vn)
+- 🎥 **Demo Video**: [YouTube](https://youtu.be/PYpaD5IAYpE)
+- ✅ **Working checklist**: [`submission/preliminary/SUBMISSION_CHECKLIST.md`](submission/preliminary/SUBMISSION_CHECKLIST.md)
+
+### Preliminary checklist
 
 - [x] Complete and functional repository codebase
 - [x] Apache License 2.0 included
