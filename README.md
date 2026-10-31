@@ -51,35 +51,38 @@ All required official submission deliverables are accessible below and archived 
 
 ### Problem
 
-Rapid AI adoption is outpacing traditional training programmes. In Malaysia, 56% of professionals use AI at work but only 26% have received formal training (Hays Asia 2025), while over 600,000 workers will need reskilling within 3–5 years (MOSTI). Working adults cannot afford to start from scratch whenever AI forecasts shift, and SMEs (97% of Malaysian businesses) lack the HR intelligence to redeploy existing talent before turning to layoffs or costly hiring.
+Working adults often have limited time and money to retrain, while uncertainty about AI makes it difficult to choose which skills to learn. SME managers also need a practical way to understand their team's skills and discuss potential internal moves.
 
 ### Solution
 
-ArcTalent provides an explainable career reskilling command center that maps current capabilities into adjacent careers across two distinct AI scenarios: **Moderate** and **Rapid AI Adoption**. It isolates the **shared foundation** (skills vital in both futures, like data literacy and critical thinking) so learners can start immediately with zero wasted effort, while scheduling free verified courses within weekly hour and budget limits.
+ArcTalent maps a learner's skills and interests to career options across **moderate** and **rapid AI adoption** scenarios. It highlights a shared foundation across the top options, shows where later pathways differ, and schedules catalogue learning resources within the learner's time and budget. Scores and scenarios are planning aids, not forecasts or hiring probabilities.
+
+The repository may contain newer features than the deployed demo. See the dated [Replit verification record](docs/REPLIT_STATUS.md) for details of verified releases.
 
 ### Key Features
 
 - **Interactive Orion Command Center**: Dynamic SVG career constellation, transferable skill bridges, and visual score analytics.
 - **Frosted-Glass Interface**: Translucent glass cards on a soft icy backdrop, lit from the top left, with glass tooltips on the icon sidebar. **Reduce visual effects** in Settings turns off blur, shadows and animation on slower phones.
-- **Dual-Scenario Adaptability**: Instant toggle between Moderate and Rapid AI futures; preserves foundational learning while updating specialized branches.
-- **CV Import and Reviewed Skills**: Import your own TXT or text PDF after a clear consent notice. Local skill matching runs on your device by default. Optional AI analysis (`Qwen/Qwen2.5-7B-Instruct` on RunPod) uses exact source quotes and falls back to labelled local matching. Review every candidate before adding it to your profile.
-- **SME Workforce Redeployment**: 8–10 worker gap heatmap, company budget management, internal seat quotas, grouped training economies, and localized PDF reports.
+- **Dual-Scenario Adaptability**: Toggle between moderate and rapid AI adoption to compare rankings, shared foundations and role-specific learning steps.
+- **Your own goals and skills**: Add interests, skills and a career destination in your own words. Review and edit suggested skill targets before using them in a plan. The starter role and course catalogues are finite, so specialist gaps may remain uncovered.
+- **CV Import and Reviewed Skills**: Import a TXT or text PDF with consent, then review suggested skills before saving. Local word matching is the default; optional AI-assisted extraction uses the configured provider and checks returned evidence against the source text.
+- **SME Workforce Planning**: Add up to ten fictional team members, explore skill gaps and custom destinations, set a company budget and internal openings, and export a workforce PDF. The team view is a prototype for planning conversations.
 - **SME Cost Model**: Prices the team plan as internal cohorts versus individual commercial seats, using HRD Corp's Allowable Cost Matrix and DOSM wage data, with editable assumptions and a break-even seat price.
 - **Impact Scorecard**: Live check of the four Phase 2 targets from our proposal, for your own route and the synthetic team in both AI scenarios. See the reproducible [impact benchmark](docs/IMPACT.md).
 - **SDG Priority Lens**: Choose SDG 4.3 & 4.4, 8.2 or 9.4 to re-rank career options toward that goal. Each option shows its SDG priority points next to an unchanged suitability score.
 - **Future Skills Radar and Re-planning**: Compares skill demand between snapshots, then shows which courses the plan kept, added or dropped after a trend update.
 - **What Would Raise This Score?**: Each skill gap shows the exact score gain from closing it and the shortest catalogue course that teaches it.
-- **AI Study Progress Coach, Skill Badges and Malaysian Training Portals**: Milestone badges on the learning pathway now pair with an AI study progress coach and an evidence-anchored practice reflection reviewer (`/api/study-progress`, with full local fallback). Learners get tailored micro-session plans with canonical scheduled course links and earn verified practice badges backed by verbatim reflection quotes—while skill proficiency updates remain strictly human-confirmed. Also includes official links to HRD Corp e-LATiH, TalentCorp MyMahir and HRD Corp Claimable Courses.
+- **Study coach and practice badges**: In the latest repository, learners can request a short study-session plan and reflect on a course marked studied. An optional AI review or local fallback can award a practice badge linked to the learner's reflection; skill-level changes require the learner's confirmation. These badges are self-study milestones, not independent certifications. The app also links to Malaysian training portals.
 - **SDG Totals and Fairness Check**: SDG-aligned study hours for one learner, the SME team and a labelled 1,000-learner projection. A fairness check re-runs matching with six different names and job titles and shows the results are identical, because matching never reads them.
 - **PDF learning plans**: Download personal or SME plans as searchable PDFs with direct course links. Personal exports preserve the selected destination, funding filter, specialist gaps and typed study preferences in English, Bahasa Melayu or Simplified Chinese.
 - **Course and Video Cards**: Each course step shows the course as a card with the provider's own cover image, hours and website, beside an optional YouTube video card with the video's original cover, length, title and channel. Covers load from the providers' and YouTube's image servers, with a drawn cover when none is available; videos are not counted in planned hours.
-- **Multilingual Support**: Fully accessible in English, Bahasa Melayu, and 简体中文.
+- **Multilingual support**: Interface options for English, Bahasa Melayu and Simplified Chinese.
 - **One Settings page**: Profile, Skills (with CV import), Language & accessibility and Demo data are tabs of one Settings page. Profile and skill edits form one draft and update your pathways together. Language & accessibility also offers larger text, reduced motion and reduced visual effects for slower phones.
 - **Start fresh**: The header's **Reset to Default** asks for confirmation, then clears saved profiles, skills, interests, goals, learning progress, team plans and pictures, plus open CV drafts and chat. It opens a blank profile with 4 h/week, RM 0 and 8 weeks, and stays blank after reload. Language and display preferences are kept. **Reset demo** loads the sample workspace again.
 - **Profile pictures**: Settings → Profile offers six classic and twelve animal avatars, initials or a JPG/PNG/WebP photo. Photos are cropped and resized on the device, saved per profile in browser storage, and displayed consistently in the workspace.
 - **Interests in your own words**: Besides the four work areas, Settings → Profile accepts up to eight interests typed in English, Bahasa Melayu or Simplified Chinese. An interest that matches a work area (for example "data visualisation" or "环保") counts towards route scores like a ticked box, and every interest appears as a one-click idea for your own career goal. The typed words stay in the browser; only the matched work areas reach the AI guide.
-- **CV Privacy Controls**: ArcTalent does not save CV files or raw CV text. PDF conversion processes the file on the application server. AI analysis sends reviewed text to RunPod only when explicitly selected. Reviewed profile skills are saved in this browser, and transient CV text/suggestions have a clear action.
-- **Optional AI Career Guide**: Enable **Use AI answers (RunPod)** in the chat to ask natural career and learning questions in English, Bahasa Melayu or Simplified Chinese. The server recomputes the selected plan and uses catalogue-owned course links. Names, photos, CV text and employee records are not attached. Replies identify the actual model or an explicit local fallback; chat does not modify the plan or persist on ArcTalent's server.
+- **CV privacy controls**: ArcTalent does not save CV files or raw CV text. PDF conversion processes the file on the application server. Optional AI analysis sends reviewed text to the configured provider when selected. Reviewed profile skills are saved in this browser, and transient CV text and suggestions can be cleared.
+- **Optional AI career guide**: Enable **Use AI answers** to ask about your selected plan. The server recomputes the plan and uses catalogue-owned course links; names, photos, CV text and employee records are not attached. The guide also works in local mode.
 
 ### Tech Stack
 
@@ -88,7 +91,7 @@ ArcTalent provides an explainable career reskilling command center that maps cur
 | **Frontend**            | Next.js 16 (App Router), React 19, TypeScript, Lucide Icons, custom CSS with frosted-glass design tokens                  |
 | **Backend & Engine**    | Node.js route handlers, deterministic heuristic matching engine (`engine.ts`), Zod validation                             |
 | **Document Processing** | `pdf-parse` for consented text PDFs; PDFKit with an embedded Noto Sans SC font for English, Malay and Chinese PDF reports |
-| **AI / GPU Compute**    | **RunPod** (Serverless `Qwen/Qwen2.5-7B-Instruct` via Vercel AI SDK)                                                      |
+| **AI / GPU Compute**    | Optional RunPod or an HTTPS OpenAI-compatible gateway via Vercel AI SDK                                                   |
 | **Cloud Hosting**       | **Replit** (Full-stack production Autoscale deployment in Asia region)                                                    |
 | **Storage & Privacy**   | Browser LocalStorage (Zero cloud database required)                                                                       |
 
@@ -98,15 +101,15 @@ ArcTalent provides an explainable career reskilling command center that maps cur
 
 - **Development & Version Control**: Imported canonical source repository, maintaining continuous verified git histories.
 - **Production Hosting**: Live public deployment on Replit Autoscale (`https://arc-talent--emmanuelheng.replit.app/`) serving web views and API routes.
-- **Build & CI Verification**: The published release (`30bd9c6`, 30 October 2026) passed 209 unit tests and 35 production integration checks inside Replit before publishing, then the same 35 checks against the live site ([runtime status](docs/REPLIT_STATUS.md)). GitHub Actions runs the full suite on every pull request and push to `main`.
+- **Build & CI Verification**: The reset release `27c9345` passed 227 unit tests and 35 production integration checks in Replit; the 35 checks also passed against the live site on 31 October 2026. Later source changes may differ from that verified release. See [runtime status](docs/REPLIT_STATUS.md) for the dated record.
 - **Secrets Management**: AI provider keys and endpoints (RunPod or another OpenAI-compatible gateway) are stored in Replit Secrets, never committed to git.
 - 📄 Proof of use: [`submission/SDC2026_XenoForce_Replit_POU.pdf`](submission/SDC2026_XenoForce_Replit_POU.pdf)
 
 ## How We Use RunPod _(Official Sponsor)_
 
-- **Workload**: Cloud GPU container hosting `Qwen/Qwen2.5-7B-Instruct` for structured CV skill extraction and custom career goal analysis.
+- **Workload**: RunPod can host a configured model such as `Qwen/Qwen2.5-7B-Instruct` for CV skill extraction, career goal analysis and optional guidance. An OpenAI-compatible gateway can also be configured.
 - **Integration**: Next.js route handlers communicate with RunPod via the Vercel AI SDK using structured JSON schema decoding (`Output.object`).
-- **Verbatim Evidence Anchoring**: Model candidates are filtered against exact CV substrings to eliminate hallucination.
+- **Verbatim evidence anchoring**: CV skill candidates are checked against exact source substrings; users still need to review the suggestions.
 - **Resilient Fallback**: Automatically falls back to deterministic local alias matching if the cloud GPU is idle or offline.
 - 📄 Proof of use: [`submission/SDC2026_XenoForce_Runpod_POU.pdf`](submission/SDC2026_XenoForce_Runpod_POU.pdf)
 
@@ -121,7 +124,7 @@ npm ci
 npm run dev
 ```
 
-Open http://localhost:3000 for the introduction, then choose **Explore my pathway** or **Plan for my team**.
+Open http://localhost:3000 for the introduction, then choose **Build my pathway** or **Plan for my team**.
 
 ```sh
 npm run typecheck
@@ -138,10 +141,17 @@ npm run impact
 
 Without AI settings, ArcTalent uses local skill matching and the local planning guide. To turn on AI answers, set **one** of these in Replit Secrets or an untracked `.env.local` (see [`.env.example`](.env.example)):
 
-- **RunPod**: `RUNPOD_API_KEY`, plus `RUNPOD_ENDPOINT_ID` or `RUNPOD_BASE_URL`, plus `RUNPOD_MODEL`.
+- **RunPod**: `RUNPOD_API_KEY`, either `RUNPOD_ENDPOINT_ID` or `RUNPOD_BASE_URL`, and either `RUNPOD_MODEL` or `RUNPOD_MODEL_NAME`. The base URL must be a supported RunPod Pod or Serverless OpenAI-compatible endpoint. See [`.env.example`](.env.example).
 - **Any OpenAI-compatible gateway** (for example LiteLLM): `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`, and optionally `AI_PROVIDER_NAME`, the name people see before they send data (by default, the model name).
 
-When both are complete, the `AI_*` settings are used. The interface always names the provider that receives the data.
+When both configurations are complete, the `AI_*` settings take precedence. CV extraction, chat and the study coach offer AI controls that identify the configured provider. Career-goal analysis sends the entered title and description to the configured provider when requested. These features have local fallbacks when AI is unavailable.
+
+### Data, sources and limits
+
+- Profiles, planning choices, progress, pictures and display preferences are stored in the browser. Chat is transient; uploaded CV text is not saved by ArcTalent's server. When AI is used, the configured provider receives the relevant inputs; the study coach's practice note is free text, so learners should avoid including sensitive information.
+- The default and replayed snapshots are labelled simulations. Public evidence refreshes use a bounded European job-posting sample and arXiv research, not a representative Malaysian labour-market forecast. Custom snapshots are user-entered assumptions.
+- Course cards link directly to the curated resources in [the source register](docs/SOURCES.md). Public learning content is listed at RM 0, but certificates, software and other costs may apply. HRD Corp claimability and current availability must be checked with the provider.
+- The workforce and SDG views show planning estimates and contextual mappings, not measured employment, productivity or SDG outcomes. People make their own learning and employment decisions.
 
 ---
 
