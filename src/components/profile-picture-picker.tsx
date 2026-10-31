@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useId, useRef, useState } from 'react';
-import { Check, LoaderCircle, Upload } from 'lucide-react';
+import { Check, LoaderCircle, RotateCcw, Upload } from 'lucide-react';
 import { avatarPresets } from '@/lib/profile-pictures';
 import {
   prepareProfilePhoto,
@@ -69,20 +69,31 @@ export function ProfilePicturePicker({ profile }: { profile: Profile }) {
       <div className="picture-preview-row">
         <ProfileAvatar profile={profile} className="picture-preview" />
         <div className="picture-upload">
-          <button
-            type="button"
-            className="settings-action"
-            disabled={busy || storage === 'checking'}
-            aria-busy={busy}
-            onClick={() => input.current?.click()}
-          >
-            {busy ? (
-              <LoaderCircle className="spin" size={15} />
-            ) : (
-              <Upload size={15} />
-            )}
-            {t(busy ? 'Preparing photo…' : 'Upload a photo')}
-          </button>
+          <div className="picture-actions">
+            <button
+              type="button"
+              className="settings-action"
+              disabled={busy || storage === 'checking'}
+              aria-busy={busy}
+              onClick={() => input.current?.click()}
+            >
+              {busy ? (
+                <LoaderCircle className="spin" size={15} />
+              ) : (
+                <Upload size={15} />
+              )}
+              {t(busy ? 'Preparing photo…' : 'Upload a photo')}
+            </button>
+            <button
+              type="button"
+              className="settings-action"
+              disabled={storage === 'checking'}
+              onClick={() => choose(null)}
+            >
+              <RotateCcw size={15} aria-hidden="true" />
+              {t('Reset to Default')}
+            </button>
+          </div>
           <input
             ref={input}
             type="file"

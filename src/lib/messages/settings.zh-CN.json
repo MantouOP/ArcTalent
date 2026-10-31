@@ -34,6 +34,7 @@
   "Demo data restored. Language and display preferences are kept.": "演示数据已恢复，语言和显示偏好已保留。",
   "Profile picture": "个人头像",
   "Upload a photo": "上传照片",
+  "Reset to Default": "恢复默认",
   "Preparing photo…": "正在处理照片…",
   "Choose a profile photo": "选择个人照片",
   "JPG, PNG or WebP · up to 5 MB. Photos are cropped to a square and stored only in this browser.": "支持 JPG、PNG 或 WebP，最大 5 MB。照片会裁剪为正方形，并仅保存在此浏览器中。",

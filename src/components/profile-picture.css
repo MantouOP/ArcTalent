@@ -38,6 +38,11 @@
 .picture-upload {
   min-width: 0;
 }
+.picture-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 .picture-upload .settings-action {
   display: inline-flex;
   gap: 8px;
