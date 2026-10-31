@@ -9,6 +9,7 @@ import {
 import {
   createFreshWorkspace,
   restoreFreshWorkspace,
+  startingWorkspace,
 } from '../src/lib/workspace-defaults';
 
 test('fresh workspace starts with no personal data or sample employees', () => {
@@ -102,4 +103,51 @@ test('fresh defaults are independent and only explicit setup mode overrides lega
     { needsSetup: false },
   ])
     assert.equal(restoreFreshWorkspace(value), null);
+});
+
+test('a first visit opens in the blank default, not the Aina demo', () => {
+  for (const nothingUsable of [
+    null,
+    undefined,
+    [],
+    {},
+    'text',
+    42,
+    { profile: { name: '' } },
+    { scenario: 'rapid' },
+  ]) {
+    const start = startingWorkspace(nothingUsable);
+    assert.ok(start, JSON.stringify(nothingUsable));
+    assert.equal(start.needsSetup, true);
+    assert.equal(start.profile.name, '');
+    assert.deepEqual(start.profile.skills, {});
+    assert.deepEqual(start.workforce.members, []);
+    assert.equal(start.customGoal, null);
+  }
+});
+
+test('saved workspaces are left alone, so Reset demo still loads the sample', () => {
+  assert.equal(profileSchema.safeParse(baseProfile).success, true);
+  assert.equal(
+    startingWorkspace(
+      JSON.parse(
+        JSON.stringify({ profile: baseProfile, scenario: 'moderate' }),
+      ),
+    ),
+    null,
+  );
+  assert.equal(
+    startingWorkspace({
+      profile: { ...baseProfile, name: 'Own profile' },
+      needsSetup: false,
+    }),
+    null,
+  );
+  const savedBlank = JSON.parse(
+    JSON.stringify({ ...createFreshWorkspace(), scenario: 'rapid' }),
+  );
+  const restored = startingWorkspace(savedBlank);
+  assert.equal(restored?.needsSetup, true);
+  assert.equal(restored?.scenario, 'rapid');
+  assert.equal(restored?.profile.name, '');
 });

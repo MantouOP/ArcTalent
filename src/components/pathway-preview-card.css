@@ -11,6 +11,8 @@
   box-shadow: 0 20px 50px rgba(30, 41, 59, 0.08);
   box-sizing: border-box;
   font-family: inherit;
+  /* The diagram below adapts to the card's own width, not the viewport's. */
+  container: pathway-preview / inline-size;
 }
 
 .pathway-preview-card * {
@@ -20,9 +22,6 @@
 /* Utilities matching the provided JSX */
 .pathway-preview-card .relative {
   position: relative;
-}
-.pathway-preview-card .absolute {
-  position: absolute;
 }
 .pathway-preview-card .w-full {
   width: 100%;
@@ -130,95 +129,18 @@
 .pathway-preview-card .bg-\[\#EAE8F2\] {
   background-color: #eae8f2;
 }
-.pathway-preview-card .bg-\[\#F7F6FA\] {
-  background-color: #f7f6fa;
-}
-.pathway-preview-card .bg-\[\#DCD6F0\] {
-  background-color: #dcd6f0;
-}
-.pathway-preview-card .text-right {
-  text-align: right;
-}
-.pathway-preview-card .h-\[290px\] {
-  height: 290px;
-}
-.pathway-preview-card .pointer-events-none {
-  pointer-events: none;
-}
-.pathway-preview-card .inset-0 {
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-.pathway-preview-card .h-full {
-  height: 100%;
-}
-.pathway-preview-card .left-\[64px\] {
-  left: 64px;
-}
-.pathway-preview-card .top-\[88px\] {
-  top: 88px;
-}
-.pathway-preview-card .z-10 {
-  z-index: 10;
-}
-.pathway-preview-card .w-\[204px\] {
-  width: 204px;
-}
-.pathway-preview-card .rounded-xl {
-  border-radius: 12px;
-}
 .pathway-preview-card .border {
   border-width: 1px;
   border-style: solid;
 }
-.pathway-preview-card .border-\[\#D5D1E4\] {
-  border-color: #d5d1e4;
-}
-.pathway-preview-card .border-\[\#D8D4E7\] {
-  border-color: #d8d4e7;
-}
-.pathway-preview-card .p-3\.5 {
-  padding: 14px;
-}
-.pathway-preview-card .px-4 {
-  padding-left: 16px;
-  padding-right: 16px;
-}
-.pathway-preview-card .py-3 {
-  padding-top: 12px;
-  padding-bottom: 12px;
-}
-.pathway-preview-card .shadow-sm {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+.pathway-preview-card .text-right {
+  text-align: right;
 }
 .pathway-preview-card .leading-snug {
   line-height: 1.375;
 }
 .pathway-preview-card .leading-relaxed {
   line-height: 1.625;
-}
-.pathway-preview-card .left-\[340px\] {
-  left: 340px;
-}
-.pathway-preview-card .top-\[14px\] {
-  top: 14px;
-}
-.pathway-preview-card .top-\[115px\] {
-  top: 115px;
-}
-.pathway-preview-card .top-\[216px\] {
-  top: 216px;
-}
-.pathway-preview-card .w-\[235px\] {
-  width: 235px;
-}
-.pathway-preview-card .h-2\.5 {
-  height: 10px;
-}
-.pathway-preview-card .w-2\.5 {
-  width: 10px;
 }
 .pathway-preview-card .shrink-0 {
   flex-shrink: 0;
@@ -230,17 +152,283 @@
   width: 16px;
 }
 
+/*
+ * Pathway diagram: a single grid, so each connector is drawn by the cell it
+ * joins. Columns: gutter for the cyan line | source card | branch links |
+ * target cards. The three rows are equal, so the middle branch always meets
+ * the centre of the source card.
+ */
+.pathway-diagram {
+  --line: #5d516c;
+  --line-width: 2px;
+  --cyan: #7dd3df;
+  --gutter: 64px;
+  --link: 56px;
+  --stem: 22px;
+  --elbow: 18px;
+  --cyan-elbow: 24px;
+  position: relative;
+  display: grid;
+  grid-template-columns:
+    var(--gutter) minmax(0, 190fr) var(--link)
+    minmax(0, 235fr);
+  grid-template-rows: repeat(3, 1fr);
+  align-items: center;
+  margin-top: 24px;
+}
+
+/* Cyan line from the avatar down and into the source card, with its start dot. */
+.pathway-diagram::before {
+  content: '';
+  position: absolute;
+  left: 22px;
+  top: 20px;
+  width: calc(var(--gutter) - 22px);
+  height: calc(50% - 20px + 1.5px);
+  border-left: 3px solid var(--cyan);
+  border-bottom: 3px solid var(--cyan);
+  border-bottom-left-radius: var(--cyan-elbow);
+  pointer-events: none;
+}
+.pathway-diagram::after {
+  content: '';
+  position: absolute;
+  left: 18.5px;
+  top: 15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--cyan);
+  pointer-events: none;
+}
+
+.pathway-source {
+  position: relative;
+  z-index: 1;
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: center;
+  padding: 14px;
+  border: 1px solid #d5d1e4;
+  border-radius: 12px;
+  background: #f7f6fa;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+/* Junction node on the source card's right edge, where the branches start. */
+.pathway-source::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -6px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: #cee5ea;
+  transform: translateY(-50%);
+}
+
+.pathway-row-1 {
+  grid-row: 1;
+}
+.pathway-row-2 {
+  grid-row: 2;
+}
+.pathway-row-3 {
+  grid-row: 3;
+}
+
+.pathway-link {
+  position: relative;
+  grid-column: 3;
+  align-self: stretch;
+}
+.pathway-link::before,
+.pathway-link::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+/* Upper branch: rises along the stem, then turns right into its card. */
+.pathway-link.pathway-row-1::before {
+  left: var(--stem);
+  right: 0;
+  top: calc(50% - var(--line-width) / 2);
+  bottom: 0;
+  border-top: var(--line-width) solid var(--line);
+  border-left: var(--line-width) solid var(--line);
+  border-top-left-radius: var(--elbow);
+}
+/* Middle branch: straight into its card, with the stem passing through it. */
+.pathway-link.pathway-row-2::before {
+  left: 0;
+  right: 0;
+  top: calc(50% - var(--line-width) / 2);
+  border-top: var(--line-width) solid var(--line);
+}
+.pathway-link.pathway-row-2::after {
+  left: var(--stem);
+  top: 0;
+  bottom: 0;
+  border-left: var(--line-width) solid var(--line);
+}
+/* Lower branch: drops along the stem, then turns right into its card. */
+.pathway-link.pathway-row-3::before {
+  left: var(--stem);
+  right: 0;
+  top: 0;
+  bottom: calc(50% - var(--line-width) / 2);
+  border-bottom: var(--line-width) solid var(--line);
+  border-left: var(--line-width) solid var(--line);
+  border-bottom-left-radius: var(--elbow);
+}
+
+.pathway-target {
+  grid-column: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-block: 17px;
+  padding: 12px 14px 12px 16px;
+  border: 1px solid #d8d4e7;
+  border-radius: 12px;
+  background: #f7f6fa;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+.pathway-target-title {
+  overflow-wrap: anywhere;
+}
+.pathway-target-dot {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: #dcd6f0;
+}
+
+/* Medium cards (laptop screens, where the hero shares the row with the copy). */
+@container pathway-preview (max-width: 520px) {
+  .pathway-diagram {
+    --gutter: 48px;
+    --link: 40px;
+    --stem: 16px;
+    --elbow: 14px;
+    --cyan-elbow: 20px;
+    grid-template-columns:
+      var(--gutter) minmax(0, 170fr) var(--link)
+      minmax(0, 235fr);
+  }
+  .pathway-source {
+    padding: 14px 12px;
+  }
+  .pathway-preview-card .text-\[16px\] {
+    font-size: 15px;
+  }
+  .pathway-target {
+    padding: 12px 12px 12px 14px;
+  }
+  .pathway-preview-card .pathway-target-title {
+    font-size: 14px;
+  }
+}
+
+/*
+ * Narrow cards (phones, and the two-column hero on small tablets): too tight
+ * for side-by-side cards, so the source card sits on top and the three options
+ * hang below it on a rail down the left side.
+ */
+@container pathway-preview (max-width: 400px) {
+  .pathway-diagram {
+    --gutter: 40px;
+    --link: 28px;
+    --stem: 12px;
+    --elbow: 10px;
+    --cyan-elbow: 14px;
+    --drop: 14px;
+    grid-template-columns: var(--gutter) var(--link) minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto;
+    align-items: start;
+  }
+  /* The cyan line now belongs to the source card, which starts at the top. */
+  .pathway-diagram::before {
+    display: none;
+  }
+  .pathway-source {
+    grid-column: 2 / span 2;
+    grid-row: 1;
+    margin-bottom: var(--drop);
+    padding: 12px;
+  }
+  .pathway-source::before {
+    content: '';
+    position: absolute;
+    right: 100%;
+    top: 20px;
+    width: calc(var(--gutter) - 22px);
+    height: calc(50% - 20px + 1.5px);
+    border-left: 3px solid var(--cyan);
+    border-bottom: 3px solid var(--cyan);
+    border-bottom-left-radius: var(--cyan-elbow);
+  }
+  /* The junction sits on the bottom edge, where the rail starts. */
+  .pathway-source::after {
+    top: auto;
+    right: auto;
+    bottom: -6px;
+    left: calc(var(--stem) - 5px);
+    transform: none;
+  }
+  .pathway-link {
+    grid-column: 2;
+    align-self: stretch;
+  }
+  .pathway-target {
+    grid-column: 3;
+    gap: 6px;
+    margin-block: 6px;
+    padding: 10px 12px;
+  }
+  .pathway-row-1 {
+    grid-row: 2;
+  }
+  .pathway-row-2 {
+    grid-row: 3;
+  }
+  .pathway-row-3 {
+    grid-row: 4;
+  }
+  /* First and second options: a stub off the rail. */
+  .pathway-link.pathway-row-1::before,
+  .pathway-link.pathway-row-2::before {
+    left: var(--stem);
+    right: 0;
+    top: calc(50% - var(--line-width) / 2);
+    bottom: auto;
+    height: 0;
+    border-top: var(--line-width) solid var(--line);
+    border-left: 0;
+    border-top-left-radius: 0;
+  }
+  .pathway-link.pathway-row-1::after,
+  .pathway-link.pathway-row-2::after {
+    left: var(--stem);
+    top: 0;
+    bottom: 0;
+    border-left: var(--line-width) solid var(--line);
+  }
+  /* The rail reaches up to the junction through the gap under the source. */
+  .pathway-link.pathway-row-1::after {
+    top: calc(-1 * var(--drop));
+  }
+  .pathway-preview-card .text-\[16px\] {
+    font-size: 15px;
+  }
+}
+
 @media (max-width: 640px) {
   .pathway-preview-card {
     padding: 20px 16px;
     border-radius: 20px 20px 48px 20px;
-  }
-  .pathway-preview-diagram-wrap {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 8px;
-  }
-  .pathway-preview-diagram-wrap > div {
-    min-width: 580px;
   }
 }

@@ -68,7 +68,7 @@ import { SettingsPage } from './settings-page';
 import { useProfilePictures } from './profile-pictures-provider';
 import {
   createFreshWorkspace,
-  restoreFreshWorkspace,
+  startingWorkspace,
 } from '@/lib/workspace-defaults';
 import { ProfileAvatar } from './profile-avatar';
 import { CourseLink } from './course-link';
@@ -180,62 +180,67 @@ export function ArcTalentApp({
     setFollowTop(false);
   }
   useEffect(() => {
+    // Nothing saved (a first visit, or storage that cannot be read) opens in the
+    // same blank default as Reset to Default. Reset demo loads the sample data.
+    let saved: any = null;
     try {
       const raw = localStorage.getItem('arctalent-v1');
-      if (raw) {
-        const saved = JSON.parse(raw);
-        const fresh = restoreFreshWorkspace(saved);
-        if (fresh) {
-          setProfile(fresh.profile);
-          setNeedsSetup(true);
-          setScenario(fresh.scenario);
-          setSnapshot(fresh.snapshot);
-          setWorkforce(fresh.workforce);
-          setPracticeBadgesByProfile({});
-          setTrackRecordsByProfile({});
-          setCustomGoal(null);
-          setFollowTop(true);
-          if (initialView === 'explore') setView('settings');
-          setReady(true);
-          return;
-        }
-        const p = profileSchema.safeParse(saved.profile),
-          s = snapshotSchema.safeParse(saved.snapshot);
-        if (p.success) setProfile(p.data);
-        if (s.success) setSnapshot(s.data);
-        if (saved.scenario === 'moderate' || saved.scenario === 'rapid')
-          setScenario(saved.scenario);
-        const storedGoal = careerGoalSchema.safeParse(saved.customGoal);
-        if (storedGoal.success) setCustomGoal(storedGoal.data);
-        if (
-          goalCandidates(storedGoal.success ? storedGoal.data : null).some(
-            (r) => r.id === saved.selected,
-          )
-        )
-          setSelected(saved.selected);
-        if (typeof saved.followTop === 'boolean') setFollowTop(saved.followTop);
-        const restoredWorkforce = restoreWorkforceSettings(saved.workforce);
-        setWorkforce(
-          p.success
-            ? updateWorkforceProfile(restoredWorkforce, p.data)
-            : restoredWorkforce,
-        );
-        const restoredBadges = restorePracticeBadgesByProfile(
-          saved.practiceBadgesByProfile,
-        );
-        if (p.success && restoredBadges[p.data.id]) {
-          restoredBadges[p.data.id] = prunePracticeBadges(
-            restoredBadges[p.data.id],
-            p.data.completed,
-          );
-        }
-        setPracticeBadgesByProfile(restoredBadges);
-        setTrackRecordsByProfile(
-          restoreTrackRecords(saved.trackRecordsByProfile),
-        );
-      }
+      saved = raw ? JSON.parse(raw) : null;
     } catch {
       /* Browser storage is optional. */
+    }
+    try {
+      const fresh = startingWorkspace(saved);
+      if (fresh) {
+        setProfile(fresh.profile);
+        setNeedsSetup(true);
+        setScenario(fresh.scenario);
+        setSnapshot(fresh.snapshot);
+        setWorkforce(fresh.workforce);
+        setPracticeBadgesByProfile({});
+        setTrackRecordsByProfile({});
+        setCustomGoal(null);
+        setFollowTop(true);
+        if (initialView === 'explore') setView('settings');
+        setReady(true);
+        return;
+      }
+      const p = profileSchema.safeParse(saved.profile),
+        s = snapshotSchema.safeParse(saved.snapshot);
+      if (p.success) setProfile(p.data);
+      if (s.success) setSnapshot(s.data);
+      if (saved.scenario === 'moderate' || saved.scenario === 'rapid')
+        setScenario(saved.scenario);
+      const storedGoal = careerGoalSchema.safeParse(saved.customGoal);
+      if (storedGoal.success) setCustomGoal(storedGoal.data);
+      if (
+        goalCandidates(storedGoal.success ? storedGoal.data : null).some(
+          (r) => r.id === saved.selected,
+        )
+      )
+        setSelected(saved.selected);
+      if (typeof saved.followTop === 'boolean') setFollowTop(saved.followTop);
+      const restoredWorkforce = restoreWorkforceSettings(saved.workforce);
+      setWorkforce(
+        p.success
+          ? updateWorkforceProfile(restoredWorkforce, p.data)
+          : restoredWorkforce,
+      );
+      const restoredBadges = restorePracticeBadgesByProfile(
+        saved.practiceBadgesByProfile,
+      );
+      if (p.success && restoredBadges[p.data.id]) {
+        restoredBadges[p.data.id] = prunePracticeBadges(
+          restoredBadges[p.data.id],
+          p.data.completed,
+        );
+      }
+      setPracticeBadgesByProfile(restoredBadges);
+      setTrackRecordsByProfile(
+        restoreTrackRecords(saved.trackRecordsByProfile),
+      );
+    } catch {
+      /* A saved workspace that cannot be read keeps the demo defaults. */
     }
     setReady(true);
   }, []);

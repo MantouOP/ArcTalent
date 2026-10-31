@@ -113,9 +113,11 @@ export function EmployerPanel({
     <>
       <div className="section-title">
         <div>
-          <span className="eyebrow">
-            {t('SYNTHETIC COMPANY · {0} PEOPLE', { 0: team.length })}
-          </span>
+          {team.length > 0 && (
+            <span className="eyebrow">
+              {t('SYNTHETIC COMPANY · {0} PEOPLE', { 0: team.length })}
+            </span>
+          )}
           <h2>{t('A stronger team starts with shared skills.')}</h2>
           <p className="muted">
             {t(

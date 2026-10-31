@@ -1,7 +1,7 @@
 import type { Profile, Scenario, Snapshot } from './types';
 import { baseline, roles } from './catalogue';
 import { createProfileDraft } from './custom-inputs';
-import { snapshotSchema } from './validation';
+import { profileSchema, snapshotSchema } from './validation';
 import {
   workforceSettingsSchema,
   type WorkforceSettings,
@@ -48,4 +48,21 @@ export function restoreFreshWorkspace(value: unknown): FreshWorkspace | null {
         ? workforce.data
         : fresh.workforce,
   };
+}
+
+/**
+ * What the workspace opens with. A first visit, or storage without a usable
+ * profile, starts from the same blank default as Reset to Default. A saved
+ * blank workspace comes back as it was. A saved set-up workspace returns null
+ * so the caller restores it; Reset demo is what loads the sample profile.
+ */
+export function startingWorkspace(saved: unknown): FreshWorkspace | null {
+  const fresh = restoreFreshWorkspace(saved);
+  if (fresh) return fresh;
+  const hasProfile =
+    !!saved &&
+    typeof saved === 'object' &&
+    !Array.isArray(saved) &&
+    profileSchema.safeParse((saved as Record<string, unknown>).profile).success;
+  return hasProfile ? null : createFreshWorkspace();
 }
