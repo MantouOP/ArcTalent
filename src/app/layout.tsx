@@ -3,6 +3,7 @@ import './globals.css';
 import { LanguageProvider } from '@/components/language-provider';
 import { DisplayPreferencesProvider } from '@/components/display-preferences-provider';
 import { ProfilePicturesProvider } from '@/components/profile-pictures-provider';
+import { AuthProvider } from '@/components/auth-provider';
 export const metadata: Metadata = {
   title: 'ArcTalent — Your next chapter, mapped',
   description:
@@ -17,7 +18,9 @@ export default function RootLayout({
       <body>
         <LanguageProvider>
           <DisplayPreferencesProvider>
-            <ProfilePicturesProvider>{children}</ProfilePicturesProvider>
+            <ProfilePicturesProvider>
+              <AuthProvider>{children}</AuthProvider>
+            </ProfilePicturesProvider>
           </DisplayPreferencesProvider>
         </LanguageProvider>
       </body>

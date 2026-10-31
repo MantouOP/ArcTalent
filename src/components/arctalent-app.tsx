@@ -19,6 +19,8 @@ import {
   GraduationCap,
   Info,
   Leaf,
+  LogIn,
+  LogOut,
   Map,
   RefreshCw,
   RotateCcw,
@@ -28,6 +30,7 @@ import {
   ShieldCheck,
   Sparkles,
   Target,
+  UserPlus,
   Users,
   Wallet,
   X,
@@ -67,6 +70,7 @@ import { careerGoalSchema, goalCandidates } from '@/lib/career-goals';
 import { roleLabel } from '@/lib/role-label';
 import type { CareerGoal } from '@/lib/types';
 import { useDisplayPreferences } from './display-preferences-provider';
+import { useAuth } from './auth-provider';
 import { shouldReduceMotion } from '@/lib/display-preferences';
 import {
   restoreWorkforceSettings,
@@ -102,6 +106,9 @@ export function ArcTalentApp({
 }) {
   const { t, locale } = useI18n();
   const { preferences: displayPreferences } = useDisplayPreferences();
+  const { currentUser, isLoggedIn, updateProfile, openAuthModal, logout } =
+    useAuth();
+  const lastAuthUserId = useRef<string | null>(null);
   const [settingsSection, setSettingsSection] =
     useState<SettingsSection>('profile');
   const [exporting, setExporting] = useState(false);
@@ -192,6 +199,30 @@ export function ArcTalentApp({
     workforce,
     customGoal,
   ]);
+  useEffect(() => {
+    if (!currentUser) {
+      lastAuthUserId.current = null;
+      return;
+    }
+    const isInteractiveSwitch =
+      ready && lastAuthUserId.current !== currentUser.id;
+    lastAuthUserId.current = currentUser.id;
+    setProfile(currentUser.profile);
+    setWorkforce((current) =>
+      updateWorkforceProfile(current, currentUser.profile),
+    );
+    if (isInteractiveSwitch) {
+      setFollowTop(true);
+      setSelected(
+        rankRoles(currentUser.profile, scenario, snapshot, candidates)[0].role
+          .id,
+      );
+      setView('explore');
+      setToast(
+        `Signed in as ${currentUser.name}. Command Center updated with your profile.`,
+      );
+    }
+  }, [currentUser, ready, scenario, snapshot, candidates]);
   useEffect(() => {
     if (!toast) return;
     const timer = setTimeout(() => setToast(''), 7000);
@@ -308,6 +339,7 @@ export function ArcTalentApp({
   function saveProfile(next: Profile) {
     setProfile(next);
     setWorkforce((current) => updateWorkforceProfile(current, next));
+    updateProfile(next);
   }
   async function exportPlan() {
     if (exporting) return;
@@ -420,13 +452,34 @@ export function ArcTalentApp({
         </div>
         <div
           className="sidebar-user"
-          title={t('{0} · Synthetic demo profile', { 0: profile.name })}
+          title={
+            isLoggedIn && currentUser
+              ? `${currentUser.name} · ${currentUser.email}`
+              : t('{0} · Synthetic demo profile', { 0: profile.name })
+          }
         >
-          <ProfileAvatar profile={profile} />
-          <div>
-            <strong>{profile.name}</strong>
-            <small>{t('Synthetic demo profile')}</small>
-          </div>
+          <button
+            type="button"
+            className="sidebar-user-trigger"
+            onClick={() => openSettings('profile')}
+            aria-label={t('Open my profile')}
+          >
+            <ProfileAvatar
+              profile={
+                isLoggedIn && currentUser ? currentUser.profile : profile
+              }
+            />
+            <div>
+              <strong>
+                {isLoggedIn && currentUser ? currentUser.name : profile.name}
+              </strong>
+              <small>
+                {isLoggedIn && currentUser
+                  ? currentUser.email
+                  : t('Synthetic demo profile')}
+              </small>
+            </div>
+          </button>
           <button
             type="button"
             onClick={() => openSettings()}
@@ -454,6 +507,38 @@ export function ArcTalentApp({
           </div>
           <div className="topbar-actions">
             <LanguageSelector />
+            {isLoggedIn && currentUser ? (
+              <div className="topbar-auth-controls">
+                <button
+                  type="button"
+                  className="auth-pill-button"
+                  onClick={logout}
+                  title={t('Log out')}
+                >
+                  <LogOut size={14} aria-hidden="true" />
+                  <span>{t('Log out')}</span>
+                </button>
+              </div>
+            ) : (
+              <div className="topbar-auth-controls">
+                <button
+                  type="button"
+                  className="auth-pill-button"
+                  onClick={() => openAuthModal('login')}
+                >
+                  <LogIn size={14} aria-hidden="true" />
+                  <span>{t('Log in')}</span>
+                </button>
+                <button
+                  type="button"
+                  className="auth-pill-button primary-pill"
+                  onClick={() => openAuthModal('signup')}
+                >
+                  <UserPlus size={14} aria-hidden="true" />
+                  <span>{t('Sign up')}</span>
+                </button>
+              </div>
+            )}
             <span className="demo-indicator">
               <i />
               {t('Hackathon prototype')}{' '}
@@ -473,7 +558,9 @@ export function ArcTalentApp({
               onClick={() => openSettings('profile')}
             >
               <ProfileAvatar
-                profile={profile}
+                profile={
+                  isLoggedIn && currentUser ? currentUser.profile : profile
+                }
                 className="profile-avatar-fill"
               />
             </button>

@@ -68,5 +68,12 @@
   "Capybara avatar": "水豚头像",
   "Penguin avatar": "企鹅头像",
   "Owl avatar": "猫头鹰头像",
-  "Axolotl avatar": "美西螈头像"
+  "Axolotl avatar": "美西螈头像",
+  "Log in": "登录",
+  "Sign up": "注册",
+  "Log out": "退出登录",
+  "Switch account": "切换账号",
+  "Browsing with local profile": "当前使用本地资料浏览",
+  "Signed in. Clicking Update my pathways syncs your profile, skills and custom interests to your account.": "已登录。点击“更新我的路径”会将你的个人资料、技能和自定义兴趣同步保存到你的账号。",
+  "Log in or sign up to save your profile, custom interests and skills to a named account.": "登录或注册账号，即可将你的个人资料、自定义兴趣和技能保存到专属账号。"
 }

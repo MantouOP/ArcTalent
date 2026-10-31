@@ -1,12 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, ArrowUpRight, Check, GitBranch, Play } from 'lucide-react';
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Check,
+  GitBranch,
+  LogIn,
+  LogOut,
+  Play,
+  UserPlus,
+} from 'lucide-react';
 import { baseline, skillById, updated } from '@/lib/catalogue';
 import { diffSnapshots } from '@/lib/engine';
 import { introductionDemo, introductionPeople } from '@/lib/introduction-demo';
 import { IntroductionDemo } from './introduction-demo';
 import { LanguageSelector, useI18n } from './language-provider';
+import { useAuth } from './auth-provider';
 import './introduction.css';
 
 const example = introductionDemo('aina', 4, 'moderate', false);
@@ -45,6 +55,7 @@ const questions = [
 
 export function Introduction() {
   const { t } = useI18n();
+  const { currentUser, isLoggedIn, openAuthModal, logout } = useAuth();
   return (
     <div className="intro-page">
       <a href="#welcome" className="skip-link">
@@ -60,6 +71,40 @@ export function Introduction() {
           <a href="#try-demo">{t('Try the demo')}</a>
           <a href="#for-teams">{t('For teams')}</a>
           <LanguageSelector />
+          {isLoggedIn && currentUser ? (
+            <div className="intro-auth-controls">
+              <span className="auth-pill-button" title={currentUser.email}>
+                {currentUser.name}
+              </span>
+              <button
+                type="button"
+                className="auth-pill-button"
+                onClick={logout}
+              >
+                <LogOut size={14} aria-hidden="true" />
+                {t('Log out')}
+              </button>
+            </div>
+          ) : (
+            <div className="intro-auth-controls">
+              <button
+                type="button"
+                className="auth-pill-button"
+                onClick={() => openAuthModal('login')}
+              >
+                <LogIn size={14} aria-hidden="true" />
+                {t('Log in')}
+              </button>
+              <button
+                type="button"
+                className="auth-pill-button primary-pill"
+                onClick={() => openAuthModal('signup')}
+              >
+                <UserPlus size={14} aria-hidden="true" />
+                {t('Sign up')}
+              </button>
+            </div>
+          )}
           <Link href="/workspace" prefetch={false} className="intro-nav-action">
             {t('Open workspace')}
             <ArrowUpRight size={16} aria-hidden="true" />

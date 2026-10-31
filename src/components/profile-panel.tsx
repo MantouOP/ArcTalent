@@ -1,6 +1,15 @@
 'use client';
 import { useEffect, useReducer, useRef, useState } from 'react';
-import { Upload, Check, ArrowRight, BadgeCheck, FileText } from 'lucide-react';
+import {
+  Upload,
+  Check,
+  ArrowRight,
+  BadgeCheck,
+  FileText,
+  LogIn,
+  LogOut,
+  UserPlus,
+} from 'lucide-react';
 import { skills, baseProfile, employees } from '@/lib/catalogue';
 import type { Profile } from '@/lib/types';
 import { profileSchema } from '@/lib/validation';
@@ -11,6 +20,7 @@ import { ProfileAvatar } from './profile-avatar';
 import { ProfilePicturePicker } from './profile-picture-picker';
 import { createProfileDraft, validateCvFile } from '@/lib/custom-inputs';
 import { useI18n } from './language-provider';
+import { useAuth } from './auth-provider';
 import { extractAliases } from '@/lib/engine';
 import { Modal } from './ui';
 /** One profile draft, edited on the Profile and Skills settings tabs. */
@@ -28,7 +38,12 @@ export function ProfilePanel({
   onSave: (p: Profile) => void;
 }) {
   const { t, locale } = useI18n();
+  const { currentUser, isLoggedIn, updateProfile, openAuthModal, logout } =
+    useAuth();
   const [form, setForm] = useState(profile);
+  useEffect(() => {
+    setForm(profile);
+  }, [profile]);
   const unsaved = JSON.stringify(form) !== JSON.stringify(profile);
   const baseOptions = [
     ...employees.map(
@@ -244,9 +259,69 @@ export function ProfilePanel({
               return;
             }
             setFormError('');
+            updateProfile(parsed.data);
             onSave(parsed.data);
           }}
         >
+          <div className="profile-account-banner">
+            <div className="profile-account-banner-info">
+              <strong>
+                {isLoggedIn && currentUser
+                  ? `${currentUser.name} (${currentUser.email})`
+                  : t('Browsing with local profile')}
+              </strong>
+              <small>
+                {isLoggedIn && currentUser
+                  ? t(
+                      'Signed in. Clicking Update my pathways syncs your profile, skills and custom interests to your account.',
+                    )
+                  : t(
+                      'Log in or sign up to save your profile, custom interests and skills to a named account.',
+                    )}
+              </small>
+            </div>
+            <div className="profile-account-banner-actions">
+              {isLoggedIn ? (
+                <>
+                  <button
+                    type="button"
+                    className="auth-pill-button"
+                    onClick={() => openAuthModal('login')}
+                  >
+                    <LogIn size={14} aria-hidden="true" />
+                    {t('Switch account')}
+                  </button>
+                  <button
+                    type="button"
+                    className="auth-pill-button"
+                    onClick={logout}
+                  >
+                    <LogOut size={14} aria-hidden="true" />
+                    {t('Log out')}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    className="auth-pill-button"
+                    onClick={() => openAuthModal('login')}
+                  >
+                    <LogIn size={14} aria-hidden="true" />
+                    {t('Log in')}
+                  </button>
+                  <button
+                    type="button"
+                    className="auth-pill-button primary-pill"
+                    onClick={() => openAuthModal('signup')}
+                  >
+                    <UserPlus size={14} aria-hidden="true" />
+                    {t('Sign up')}
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
           {section === 'profile' ? (
             <>
               <div className="panel-heading">
@@ -331,12 +406,14 @@ export function ProfilePanel({
         {section === 'profile' ? (
           <aside className="panel settings-panel">
             <div className="settings-identity">
-              <ProfileAvatar profile={profile} />
+              <ProfileAvatar profile={form} />
               <div>
-                <h2>{profile.name}</h2>
+                <h2>{form.name || profile.name}</h2>
                 <p>
-                  {profile.currentRole ? `${t(profile.currentRole)} · ` : ''}
-                  {t('Synthetic demo profile')}
+                  {form.currentRole ? `${t(form.currentRole)} · ` : ''}
+                  {isLoggedIn && currentUser
+                    ? currentUser.email
+                    : t('Synthetic demo profile')}
                 </p>
               </div>
             </div>
