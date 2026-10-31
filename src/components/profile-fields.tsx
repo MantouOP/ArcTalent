@@ -8,8 +8,148 @@ import {
   maxCustomInterestLength,
   maxCustomInterests,
 } from '@/lib/interests';
+import {
+  addCustomSkill,
+  maxCustomSkillLength,
+  maxCustomSkills,
+} from '@/lib/custom-skills';
 import type { Profile } from '@/lib/types';
 import { useI18n } from './language-provider';
+
+const levelLabels = ['1 · Basic', '2 · Independent', '3 · Advanced'];
+
+/** Skills outside the catalogue, such as Microsoft Word, each with its own level. */
+function CustomSkills({
+  profile,
+  onChange,
+}: {
+  profile: Profile;
+  onChange: (profile: Profile) => void;
+}) {
+  const { t } = useI18n();
+  const id = useId();
+  const [draft, setDraft] = useState('');
+  const [level, setLevel] = useState(1);
+  const [status, setStatus] = useState('');
+  const values = profile.customSkills ?? [];
+  const full = values.length >= maxCustomSkills;
+  const add = () => {
+    if (!draft.trim()) return;
+    const result = addCustomSkill(profile, draft, level);
+    if (result.matched) {
+      const label = skills.find((skill) => skill.id === result.matched)!.label;
+      setStatus(
+        t('“{0}” is already listed as {1}. Its level is set there.', {
+          0: draft.trim(),
+          1: t(label),
+        }),
+      );
+    } else if (result.profile === profile) {
+      setStatus(t('You can add up to {0} skills.', { 0: maxCustomSkills }));
+      return;
+    } else setStatus('');
+    onChange(result.profile);
+    setDraft('');
+  };
+  return (
+    <div className="custom-interests custom-skills">
+      <label htmlFor={id}>{t('Add a skill that is not listed')}</label>
+      <div className="custom-interest-entry">
+        <input
+          id={id}
+          value={draft}
+          maxLength={maxCustomSkillLength}
+          disabled={full}
+          placeholder={t('For example: Microsoft Word, Canva')}
+          onChange={(event) => setDraft(event.target.value)}
+          onKeyDown={(event) => {
+            // Enter adds the skill instead of submitting the whole form.
+            if (event.key !== 'Enter') return;
+            event.preventDefault();
+            add();
+          }}
+        />
+        <select
+          aria-label={t('Level for the new skill')}
+          value={level}
+          disabled={full}
+          onChange={(event) => setLevel(Number(event.target.value))}
+        >
+          {levelLabels.map((label, index) => (
+            <option value={index + 1} key={label}>
+              {t(label)}
+            </option>
+          ))}
+        </select>
+        <button
+          type="button"
+          className="secondary"
+          onClick={add}
+          disabled={full || !draft.trim()}
+        >
+          <Plus size={15} aria-hidden="true" />
+          {t('Add')}
+        </button>
+      </div>
+      {status && (
+        <p className="muted small" role="status">
+          {status}
+        </p>
+      )}
+      {values.length > 0 && (
+        <ul className="custom-interest-list">
+          {values.map((skill) => (
+            <li key={skill.name}>
+              <span>{skill.name}</span>
+              <select
+                aria-label={t('Level for {0}', { 0: skill.name })}
+                value={skill.level}
+                onChange={(event) =>
+                  onChange({
+                    ...profile,
+                    customSkills: values.map((item) =>
+                      item.name === skill.name
+                        ? { ...item, level: Number(event.target.value) }
+                        : item,
+                    ),
+                  })
+                }
+              >
+                {levelLabels.map((label, index) => (
+                  <option value={index + 1} key={label}>
+                    {t(label)}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                className="icon-button"
+                aria-label={t('Remove {0}', { 0: skill.name })}
+                onClick={() =>
+                  onChange({
+                    ...profile,
+                    customSkills: values.filter(
+                      (item) => item.name !== skill.name,
+                    ),
+                  })
+                }
+              >
+                <X size={14} aria-hidden="true" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <p className="muted small">
+        {full
+          ? t('You can add up to {0} skills.', { 0: maxCustomSkills })
+          : t(
+              'Listed skills drive route scores. Skills you add here are kept on the profile and count towards matching specialist skills of a custom destination.',
+            )}
+      </p>
+    </div>
+  );
+}
 
 /** Interests in the person's own words, each shown with the work area it counts as. */
 function CustomInterests({
@@ -246,6 +386,7 @@ export function ProfileFields({
           </label>
         ))}
       </div>
+      <CustomSkills profile={profile} onChange={onChange} />
     </>
   );
   if (part === 'details') return details;

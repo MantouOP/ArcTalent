@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { maxCustomInterestLength, maxCustomInterests } from './interests';
+import { maxCustomSkillLength, maxCustomSkills } from './custom-skills';
 export const learningPreferencesSchema = z.object({
   focus: z.enum(['data', 'people', 'operations', 'sustainability']),
   format: z.enum(['guided', 'practice', 'discussion']),
@@ -62,6 +63,15 @@ export const profileSchema = z.object({
     .max(maxCustomInterests)
     .optional(),
   skills: z.partialRecord(skillIdSchema, z.number().int().min(0).max(3)),
+  customSkills: z
+    .array(
+      z.object({
+        name: z.string().trim().min(1).max(maxCustomSkillLength),
+        level: z.number().int().min(1).max(3),
+      }),
+    )
+    .max(maxCustomSkills)
+    .optional(),
   completed: z.array(z.string().max(50)).max(30),
   learningPreferences: learningPreferencesSchema.optional(),
 });

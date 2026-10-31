@@ -41,6 +41,7 @@ import {
   sharedFoundation,
 } from '@/lib/engine';
 import { profileSchema, snapshotSchema } from '@/lib/validation';
+import { splitSpecialistSkills } from '@/lib/custom-skills';
 import type { Match, Profile, Scenario, Snapshot } from '@/lib/types';
 import {
   downloadFile,
@@ -1088,13 +1089,30 @@ export function ArcTalentApp({
                           'Requirements are your reviewed planning targets. Scenario comparison uses an illustrative exposure of 0.5, not an occupation forecast.',
                         )}
                       </p>
-                      {customGoal.otherSkills.length > 0 && (
-                        <p>
-                          {t('Other skills to investigate: {0}', {
-                            0: customGoal.otherSkills.join(', '),
-                          })}
-                        </p>
-                      )}
+                      {(() => {
+                        const { covered, remaining } = splitSpecialistSkills(
+                          customGoal.otherSkills,
+                          profile.customSkills,
+                        );
+                        return (
+                          <>
+                            {remaining.length > 0 && (
+                              <p>
+                                {t('Other skills to investigate: {0}', {
+                                  0: remaining.join(', '),
+                                })}
+                              </p>
+                            )}
+                            {covered.length > 0 && (
+                              <p>
+                                {t('Already listed: {0}', {
+                                  0: covered.join(', '),
+                                })}
+                              </p>
+                            )}
+                          </>
+                        );
+                      })()}
                     </div>
                   )}
                   {funding === 'hrd' && (

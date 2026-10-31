@@ -1,6 +1,7 @@
 import { roles, skills } from './catalogue';
 import { buildPlan, rankRoles, matchRole } from './engine';
 import { goalToRole } from './career-goals';
+import { splitSpecialistSkills } from './custom-skills';
 import type { Course, Profile, Scenario, Snapshot } from './types';
 import {
   getWorkforceMembers,
@@ -30,7 +31,10 @@ export function buildWorkforcePlan(
       role,
       match: matchRole(p, role, scenario, snapshot),
       plan: buildPlan(p, role),
-      specialistSkills: custom?.goal.otherSkills ?? [],
+      specialistSkills: splitSpecialistSkills(
+        custom?.goal.otherSkills ?? [],
+        p.customSkills,
+      ).remaining,
       openings: custom?.openings ?? slots[role.id] ?? 0,
     };
   });

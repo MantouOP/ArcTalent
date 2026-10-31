@@ -146,5 +146,13 @@
   "Counts as {0}": "Dikira sebagai {0}",
   "Not linked to a scored work area": "Tidak dipadankan dengan bidang kerja yang diberi skor",
   "You can add up to {0} interests.": "Anda boleh menambah sehingga {0} minat.",
-  "Type any interest in your own words. If it matches a work area above, it counts towards your route scores. Every interest you add also appears as a goal idea under “Type your own career goal”.": "Taip apa-apa minat dengan perkataan anda sendiri. Jika ia sepadan dengan bidang kerja di atas, ia dikira dalam skor laluan anda. Setiap minat yang anda tambah juga dipaparkan sebagai idea matlamat di bawah “Taip matlamat kerjaya anda sendiri”."
+  "Type any interest in your own words. If it matches a work area above, it counts towards your route scores. Every interest you add also appears as a goal idea under “Type your own career goal”.": "Taip apa-apa minat dengan perkataan anda sendiri. Jika ia sepadan dengan bidang kerja di atas, ia dikira dalam skor laluan anda. Setiap minat yang anda tambah juga dipaparkan sebagai idea matlamat di bawah “Taip matlamat kerjaya anda sendiri”.",
+  "Add a skill that is not listed": "Tambah kemahiran yang tiada dalam senarai",
+  "For example: Microsoft Word, Canva": "Contoh: Microsoft Word, Canva",
+  "Level for the new skill": "Tahap untuk kemahiran baharu",
+  "Level for {0}": "Tahap untuk {0}",
+  "“{0}” is already listed as {1}. Its level is set there.": "“{0}” sudah disenaraikan sebagai {1}. Tahapnya ditetapkan di sana.",
+  "You can add up to {0} skills.": "Anda boleh menambah sehingga {0} kemahiran.",
+  "Listed skills drive route scores. Skills you add here are kept on the profile and count towards matching specialist skills of a custom destination.": "Kemahiran dalam senarai menentukan skor laluan. Kemahiran yang anda tambah di sini disimpan dalam profil dan dikira apabila sepadan dengan kemahiran pakar destinasi tersuai.",
+  "Already listed: {0}": "Sudah disenaraikan: {0}"
 }

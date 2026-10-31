@@ -1274,6 +1274,19 @@ legend {
 .custom-interests > p {
   margin: 0;
 }
+.custom-skills {
+  margin-top: 16px;
+}
+.custom-skills .custom-interest-entry select {
+  flex: none;
+  width: auto;
+}
+.custom-skills .custom-interest-list li > select {
+  width: auto;
+  min-height: 0;
+  padding: 2px 6px;
+  font-size: 12.5px;
+}
 input[type='checkbox'] {
   accent-color: var(--green);
   width: 15px;

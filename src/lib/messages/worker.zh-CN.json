@@ -146,5 +146,13 @@
   "Counts as {0}": "计为{0}",
   "Not linked to a scored work area": "未关联到计分的工作领域",
   "You can add up to {0} interests.": "您最多可以添加 {0} 项兴趣。",
-  "Type any interest in your own words. If it matches a work area above, it counts towards your route scores. Every interest you add also appears as a goal idea under “Type your own career goal”.": "用您自己的话输入任何兴趣。如果它与上方的工作领域相符，就会计入您的路线分数。您添加的每项兴趣也会在“输入你自己的职业目标”下显示为目标灵感。"
+  "Type any interest in your own words. If it matches a work area above, it counts towards your route scores. Every interest you add also appears as a goal idea under “Type your own career goal”.": "用您自己的话输入任何兴趣。如果它与上方的工作领域相符，就会计入您的路线分数。您添加的每项兴趣也会在“输入你自己的职业目标”下显示为目标灵感。",
+  "Add a skill that is not listed": "添加未列出的技能",
+  "For example: Microsoft Word, Canva": "例如：Microsoft Word、Canva",
+  "Level for the new skill": "新技能的水平",
+  "Level for {0}": "{0} 的水平",
+  "“{0}” is already listed as {1}. Its level is set there.": "“{0}”已列为{1}，其水平在那里设置。",
+  "You can add up to {0} skills.": "最多可添加 {0} 项技能。",
+  "Listed skills drive route scores. Skills you add here are kept on the profile and count towards matching specialist skills of a custom destination.": "列表中的技能决定路线评分。在此添加的技能会保存在资料中，并可抵消自定义目的地中相同的专项技能。",
+  "Already listed: {0}": "已列出：{0}"
 }

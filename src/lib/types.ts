@@ -26,6 +26,7 @@ export type SkillId =
   | 'htmlcss'
   | 'javascript'
   | 'marketing';
+export type CustomSkill = { name: string; level: number };
 export type CareerGoal = {
   title: string;
   description: string;
@@ -46,6 +47,8 @@ export type Profile = {
   /** Interests in the person's own words; matching ones count towards work areas. */
   customInterests?: string[];
   skills: Partial<Record<SkillId, number>>;
+  /** Skills outside the catalogue, in the person's own words (for example Microsoft Word). */
+  customSkills?: CustomSkill[];
   completed: string[];
   learningPreferences?: LearningPreferences;
 };

@@ -8,6 +8,7 @@ import {
   type WorkforceSettings,
 } from '@/lib/workforce-settings';
 import type { CareerGoal, Profile, Role, Snapshot } from '@/lib/types';
+import { splitSpecialistSkills } from '@/lib/custom-skills';
 import { CareerGoalPanel } from './career-goal-panel';
 import { Modal } from './ui';
 import { useI18n } from './language-provider';
@@ -133,13 +134,30 @@ export function WorkforceDestination({
             {t('Not applied yet. Review or use a preset to update the plan.')}
           </small>
         )}
-        {role.custom && saved && saved.goal.otherSkills.length > 0 && (
-          <small className="workforce-destination-badge">
-            {t('{0} additional specialist skills to review', {
-              0: saved.goal.otherSkills.length,
-            })}
-          </small>
-        )}
+        {role.custom &&
+          saved &&
+          (() => {
+            const { covered, remaining } = splitSpecialistSkills(
+              saved.goal.otherSkills,
+              profile.customSkills,
+            );
+            return (
+              <>
+                {remaining.length > 0 && (
+                  <small className="workforce-destination-badge">
+                    {t('{0} additional specialist skills to review', {
+                      0: remaining.length,
+                    })}
+                  </small>
+                )}
+                {covered.length > 0 && (
+                  <small className="workforce-destination-hint">
+                    {t('Already listed: {0}', { 0: covered.join(', ') })}
+                  </small>
+                )}
+              </>
+            );
+          })()}
       </div>
       {review && (
         <Modal
