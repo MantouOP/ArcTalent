@@ -149,9 +149,13 @@ export function EmployerPanel({
       )}
       <WorkforcePlanner
         scenario={scenario}
+        workforce={workforce}
         onApply={(next) => {
           onChange({ ...next, costs: workforce.costs });
           setApplied(true);
+        }}
+        onBudgetChange={(nextBudget) => {
+          onChange({ ...workforce, budget: nextBudget });
         }}
       />
       {applied && (

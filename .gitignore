@@ -9,3 +9,6 @@ out/
 .replit-cache/
 tmp/pdfs/
 tmp/taste-intro/
+.agent/
+.agents/
+skills-lock.json

@@ -13,7 +13,26 @@ import { diffSnapshots, MODEL_VERSION } from '@/lib/engine';
 import type { Profile, Role, Scenario, Snapshot } from '@/lib/types';
 import { External, Tag } from './ui';
 import { useI18n } from './language-provider';
-import { CustomSnapshotForm } from './custom-snapshot-form';
+import {
+  CustomSnapshotForm,
+  type CustomSnapshotPreview,
+} from './custom-snapshot-form';
+import {
+  CUSTOM_SNAPSHOT_DISCLAIMER,
+  SYNTHETIC_UPDATE_DISCLAIMER,
+  getSnapshotRecordCounts,
+  hasModifiedValues,
+  isDifferentFromDefault,
+  sanitizeCustomNote,
+} from '@/lib/custom-inputs';
+
+export {
+  CUSTOM_SNAPSHOT_DISCLAIMER,
+  SYNTHETIC_UPDATE_DISCLAIMER,
+  hasModifiedValues,
+  isDifferentFromDefault,
+};
+
 export function EvidencePanel({
   profile,
   scenario,
@@ -43,8 +62,18 @@ export function EvidencePanel({
   const dateLocale =
     locale === 'en' ? 'en-MY' : locale === 'ms' ? 'ms-MY' : 'zh-CN';
   const [all, setAll] = useState(false);
-  const customNotice =
-    'User-entered planning assumptions, not verified market evidence.';
+  const [customOpen, setCustomOpen] = useState(false);
+  const [customPreview, setCustomPreview] =
+    useState<CustomSnapshotPreview | null>(null);
+  const customNotice = CUSTOM_SNAPSHOT_DISCLAIMER;
+  const hasModified = isDifferentFromDefault(snapshot);
+  const recordCounts =
+    customOpen && customPreview
+      ? {
+          jobRecords: customPreview.jobRecords,
+          researchRecords: customPreview.researchRecords,
+        }
+      : getSnapshotRecordCounts(snapshot, scenario);
   const changes =
     previous && showPersonalComparisons
       ? diffSnapshots(profile, scenario, previous, snapshot, candidates)
@@ -101,7 +130,13 @@ export function EvidencePanel({
           <small>{t('Clearly simulated. No invented market event.')}</small>
         </section>
       </div>
-      <CustomSnapshotForm snapshot={snapshot} onApply={onApply} />
+      <CustomSnapshotForm
+        snapshot={snapshot}
+        scenario={scenario}
+        onApply={onApply}
+        onModeChange={setCustomOpen}
+        onPreviewChange={setCustomPreview}
+      />
       <section className="panel">
         <div className="panel-heading">
           <div>
@@ -121,25 +156,44 @@ export function EvidencePanel({
             {t(snapshot.kind === 'live' ? 'Public data' : 'Simulation')}
           </Tag>
         </div>
-        <p className="notice">
-          {snapshot.note.startsWith(customNotice) ? (
-            <>
-              {t(customNotice)}{' '}
-              {snapshot.note.slice(customNotice.length).trim()}
-            </>
-          ) : (
-            t(snapshot.note)
-          )}
-        </p>
+        {(() => {
+          if (customOpen) {
+            if (!customPreview?.modified) {
+              return null;
+            }
+            return <p className="notice">{t(customNotice)}</p>;
+          }
+          if (snapshot.note.startsWith(customNotice)) {
+            if (!hasModified) {
+              return null;
+            }
+            const extra = sanitizeCustomNote(
+              snapshot.note.slice(customNotice.length),
+            );
+            return (
+              <p className="notice">
+                {t(customNotice)}
+                {extra ? <> {extra}</> : null}
+              </p>
+            );
+          }
+          if (snapshot.note.includes(SYNTHETIC_UPDATE_DISCLAIMER)) {
+            if (!hasModified) {
+              const rest = sanitizeCustomNote(snapshot.note);
+              return rest ? <p className="notice">{t(rest)}</p> : null;
+            }
+            return <p className="notice">{t(snapshot.note)}</p>;
+          }
+          const clean = sanitizeCustomNote(snapshot.note);
+          return clean ? <p className="notice">{t(clean)}</p> : null;
+        })()}
         <div className="signal-metrics">
           <span>
-            <strong>{snapshot.sampleSize}</strong>
+            <strong>{recordCounts.jobRecords}</strong>
             {t('job records')}
           </span>
           <span>
-            <strong>
-              {snapshot.signals.filter((s) => s.kind === 'research').length}
-            </strong>
+            <strong>{recordCounts.researchRecords}</strong>
             {t('research records')}
           </span>
           <span>

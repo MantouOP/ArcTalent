@@ -270,6 +270,30 @@ test('Feature #5 & #6: Malaysian portals and learner badges respond to role and 
   );
   assert.ok(afterBadges.completedHours > 0);
   assert.ok(afterBadges.badges.filter((b) => b.earned).length >= 3);
+
+  // When 100% of planned hours/modules are marked studied, all 4 of 4 badges unlock.
+  for (const role of roles) {
+    let completedProfile = { ...baseProfile, completed: [] as string[] };
+    let currentPlan = buildPlan(completedProfile, role, shared);
+    while (currentPlan.steps.length > 0) {
+      completedProfile = {
+        ...completedProfile,
+        completed: [
+          ...completedProfile.completed,
+          ...currentPlan.steps.map((s) => s.course.id),
+        ],
+      };
+      currentPlan = buildPlan(completedProfile, role, shared);
+    }
+    const fullBadges = computeLearnerBadges(
+      completedProfile,
+      currentPlan,
+      shared,
+      role,
+    );
+    assert.equal(fullBadges.progressPercent, 100, role.id);
+    assert.equal(fullBadges.badges.filter((b) => b.earned).length, 4, role.id);
+  }
 });
 
 test('every finals panel label has Malay and Simplified Chinese copy', () => {

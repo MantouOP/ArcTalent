@@ -1,15 +1,23 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { FileUp, LoaderCircle } from 'lucide-react';
 import type { Profile } from '@/lib/types';
 import {
   removeWorkforceMember,
   type WorkforceSettings,
 } from '@/lib/workforce-settings';
 import { createProfileDraft } from '@/lib/custom-inputs';
+import {
+  extractReportTextFromFile,
+  parseMemberReportSkills,
+} from '@/lib/member-report-parser';
 import { profileSchema } from '@/lib/validation';
 import { ProfileFields } from './profile-fields';
-import { Modal } from './ui';
+import { Modal, Tag } from './ui';
 import { useI18n } from './language-provider';
+
+const REPORT_ACCEPT =
+  '.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf,.txt,.csv';
 
 export function TeamEditor({
   team,
@@ -26,6 +34,12 @@ export function TeamEditor({
   const [draft, setDraft] = useState<Profile | null>(null);
   const [error, setError] = useState('');
   const [remove, setRemove] = useState<string | null>(null);
+  const [uploadingByMember, setUploadingByMember] = useState<
+    Record<string, boolean>
+  >({});
+  const [memberStatus, setMemberStatus] = useState<Record<string, string>>({});
+  const [toastBanner, setToastBanner] = useState('');
+  const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
   const addTrigger = useRef<HTMLButtonElement>(null);
   const focusAddAfterRemove = useRef(false);
   useEffect(() => {
@@ -34,6 +48,42 @@ export function TeamEditor({
       focusAddAfterRemove.current = false;
     }
   }, [remove]);
+
+  async function handleMemberReportUpload(member: Profile, file: File) {
+    if (file.size > 5 * 1024 * 1024) {
+      setMemberStatus((prev) => ({
+        ...prev,
+        [member.id]: t('Choose a file smaller than 5 MB.'),
+      }));
+      return;
+    }
+    setUploadingByMember((prev) => ({ ...prev, [member.id]: true }));
+    try {
+      const text = await extractReportTextFromFile(file);
+      const parsed = parseMemberReportSkills(text, member.skills, member.name);
+      const updatedMember: Profile = {
+        ...member,
+        skills: parsed.skills,
+      };
+      const nextMembers = team.map((item) =>
+        item.id === member.id ? updatedMember : item,
+      );
+      onChange({ ...workforce, members: nextMembers });
+      onProfileChange(updatedMember);
+      setMemberStatus((prev) => ({ ...prev, [member.id]: parsed.summary }));
+      setToastBanner(parsed.summary);
+    } catch {
+      setMemberStatus((prev) => ({
+        ...prev,
+        [member.id]: t(
+          'This file could not be read. Paste the report text instead.',
+        ),
+      }));
+    } finally {
+      setUploadingByMember((prev) => ({ ...prev, [member.id]: false }));
+    }
+  }
+
   return (
     <section className="panel team-editor">
       <div className="panel-heading">
@@ -57,39 +107,78 @@ export function TeamEditor({
           {t('Add team member')}
         </button>
       </div>
+      {toastBanner && (
+        <p className="notice small" role="status" aria-live="polite">
+          {toastBanner}
+        </p>
+      )}
       {!team.length && (
         <p className="empty-state">
           {t('Your team is empty. Add a fictional worker to begin planning.')}
         </p>
       )}
       <div className="team-member-list">
-        {team.map((member) => (
-          <div className="team-member-row" key={member.id}>
-            <span>
-              <strong>{member.name}</strong>
-              <small>{t(member.currentRole)}</small>
-            </span>
-            <div className="button-row">
-              <button
-                className="text-button"
-                aria-label={t('Edit {0}', { 0: member.name })}
-                onClick={() => {
-                  setError('');
-                  setDraft(structuredClone(member));
-                }}
-              >
-                {t('Edit')}
-              </button>
-              <button
-                className="text-button"
-                aria-label={t('Remove {0}', { 0: member.name })}
-                onClick={() => setRemove(member.id)}
-              >
-                {t('Remove')}
-              </button>
+        {team.map((member) => {
+          const isUploading = Boolean(uploadingByMember[member.id]);
+          const rowNotice = memberStatus[member.id];
+          return (
+            <div className="team-member-row" key={member.id}>
+              <span>
+                <strong>{member.name}</strong>
+                <small>{t(member.currentRole)}</small>
+                {rowNotice && <Tag tone="green">{rowNotice}</Tag>}
+              </span>
+              <div className="button-row">
+                <input
+                  ref={(el) => {
+                    fileInputRefs.current[member.id] = el;
+                  }}
+                  id={`upload-report-${member.id}`}
+                  type="file"
+                  accept={REPORT_ACCEPT}
+                  hidden
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    event.target.value = '';
+                    if (file) void handleMemberReportUpload(member, file);
+                  }}
+                />
+                <button
+                  type="button"
+                  className="text-button"
+                  disabled={isUploading}
+                  aria-busy={isUploading}
+                  aria-label={t('Upload report for {0}', { 0: member.name })}
+                  onClick={() => fileInputRefs.current[member.id]?.click()}
+                >
+                  {isUploading ? (
+                    <LoaderCircle size={14} className="spin" />
+                  ) : (
+                    <FileUp size={14} />
+                  )}
+                  {t(isUploading ? 'Uploading…' : 'Upload Report')}
+                </button>
+                <button
+                  className="text-button"
+                  aria-label={t('Edit {0}', { 0: member.name })}
+                  onClick={() => {
+                    setError('');
+                    setDraft(structuredClone(member));
+                  }}
+                >
+                  {t('Edit')}
+                </button>
+                <button
+                  className="text-button"
+                  aria-label={t('Remove {0}', { 0: member.name })}
+                  onClick={() => setRemove(member.id)}
+                >
+                  {t('Remove')}
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
       {team.length >= 10 && (
         <p className="muted small">

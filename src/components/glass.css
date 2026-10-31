@@ -112,7 +112,7 @@
 /* Floating papers: each career option is a glass folder with a sheet peeking out,
    so the cards read as layered rather than flat. */
 .career-cards {
-  padding-top: 18px;
+  padding-top: 24px;
 }
 .career-card {
   position: relative;

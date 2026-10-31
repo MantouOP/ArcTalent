@@ -1,14 +1,17 @@
 'use client';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { CheckCircle2, FileUp, LoaderCircle, Sparkles } from 'lucide-react';
 import { roles, skillById } from '@/lib/catalogue';
 import type { Scenario } from '@/lib/types';
 import {
   maxWorkforceReportLength,
+  suggestWorkforceBudget,
   WORKFORCE_REPORT_SAMPLES,
   type WorkforceAiResult,
+  type WorkforceBudgetSuggestion,
   type WorkforceSummaryItem,
 } from '@/lib/workforce-ai';
+import { extractReportTextFromFile } from '@/lib/member-report-parser';
 import type { WorkforceSettings } from '@/lib/workforce-settings';
 import { useI18n } from './language-provider';
 import { Tag } from './ui';
@@ -18,15 +21,28 @@ const roleById = new Map(roles.map((role) => [role.id, role]));
 /** Turns a pasted or uploaded company report into a whole team plan in one step. */
 export function WorkforcePlanner({
   scenario,
+  workforce,
   onApply,
+  onBudgetChange,
 }: {
   scenario: Scenario;
+  workforce?: WorkforceSettings;
   onApply: (workforce: WorkforceSettings) => void;
+  onBudgetChange?: (budget: number) => void;
 }) {
   const { t, locale } = useI18n();
   const id = useId();
   const [report, setReport] = useState('');
-  const [budget, setBudget] = useState('');
+  const [budget, setBudget] = useState(() =>
+    workforce?.budget ? String(workforce.budget) : '',
+  );
+  const [targetHeadcount, setTargetHeadcount] = useState<number>(
+    () => workforce?.members?.length || 3,
+  );
+  const [targetCoveragePct, setTargetCoveragePct] = useState<number>(85);
+  const [targetSlotCap, setTargetSlotCap] = useState<number>(2);
+  const [showSuggestion, setShowSuggestion] = useState(false);
+  const [budgetChoiceNotice, setBudgetChoiceNotice] = useState('');
   const [consent, setConsent] = useState(false);
   const [provider, setProvider] = useState('');
   const [useAi, setUseAi] = useState(false);
@@ -36,6 +52,33 @@ export function WorkforcePlanner({
   const [result, setResult] = useState<WorkforceAiResult | null>(null);
   const [applied, setApplied] = useState(false);
   const request = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    if (workforce?.members?.length) {
+      setTargetHeadcount(workforce.members.length);
+    }
+  }, [workforce?.members?.length]);
+
+  const budgetSuggestion: WorkforceBudgetSuggestion = useMemo(
+    () =>
+      suggestWorkforceBudget({
+        workforce: result?.workforce ?? workforce,
+        report,
+        scenario,
+        targetHeadcount,
+        targetCoveragePct,
+        targetSlotCap,
+      }),
+    [
+      result?.workforce,
+      workforce,
+      report,
+      scenario,
+      targetHeadcount,
+      targetCoveragePct,
+      targetSlotCap,
+    ],
+  );
 
   useEffect(() => {
     const controller = new AbortController();
@@ -71,18 +114,8 @@ export function WorkforcePlanner({
     }
     setReading(true);
     try {
-      if (/\.pdf$/i.test(file.name) || file.type === 'application/pdf') {
-        const form = new FormData();
-        form.set('file', file);
-        form.set('processingConsent', 'true');
-        const response = await fetch('/api/pdf', {
-          method: 'POST',
-          body: form,
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error);
-        changeReport(String(data.text ?? ''));
-      } else changeReport(await file.text());
+      const extracted = await extractReportTextFromFile(file);
+      changeReport(extracted);
     } catch {
       setError('This file could not be read. Paste the report text instead.');
     } finally {
@@ -225,12 +258,67 @@ export function WorkforcePlanner({
           {t('Upload TXT, CSV or PDF')}
           <input
             type="file"
-            accept=".txt,.csv,.pdf,text/plain,text/csv,application/pdf"
+            accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf,.txt,.csv,text/plain,text/csv,application/pdf"
             disabled={!consent || reading}
             onChange={(event) => {
               const file = event.target.files?.[0];
               event.target.value = '';
               if (file) void readFile(file);
+            }}
+          />
+        </label>
+        <label>
+          {t('Target team size')}
+          <input
+            type="number"
+            min={1}
+            max={50}
+            value={targetHeadcount}
+            onChange={(event) => {
+              setTargetHeadcount(
+                Math.max(
+                  1,
+                  Math.min(50, Math.round(Number(event.target.value) || 1)),
+                ),
+              );
+              setBudgetChoiceNotice('');
+            }}
+          />
+        </label>
+        <label>
+          {t('Target gap coverage (%)')}
+          <input
+            type="number"
+            min={50}
+            max={100}
+            step={5}
+            value={targetCoveragePct}
+            onChange={(event) => {
+              setTargetCoveragePct(
+                Math.max(
+                  50,
+                  Math.min(100, Math.round(Number(event.target.value) || 85)),
+                ),
+              );
+              setBudgetChoiceNotice('');
+            }}
+          />
+        </label>
+        <label>
+          {t('Role slot cap')}
+          <input
+            type="number"
+            min={1}
+            max={10}
+            value={targetSlotCap}
+            onChange={(event) => {
+              setTargetSlotCap(
+                Math.max(
+                  1,
+                  Math.min(10, Math.round(Number(event.target.value) || 2)),
+                ),
+              );
+              setBudgetChoiceNotice('');
             }}
           />
         </label>
@@ -242,9 +330,29 @@ export function WorkforcePlanner({
             max={100000}
             value={budget}
             placeholder={t('Let ArcTalent suggest')}
-            onChange={(event) => setBudget(event.target.value)}
+            onChange={(event) => {
+              const nextVal = event.target.value;
+              setBudget(nextVal);
+              setBudgetChoiceNotice('');
+              if (nextVal.trim() && Number.isFinite(Number(nextVal))) {
+                onBudgetChange?.(
+                  Math.max(0, Math.min(100000, Math.round(Number(nextVal)))),
+                );
+              }
+            }}
           />
         </label>
+        <button
+          type="button"
+          className="secondary"
+          onClick={() => {
+            setShowSuggestion(true);
+            setBudgetChoiceNotice('');
+          }}
+        >
+          <Sparkles size={15} />
+          {t('Ask ArcTalent to Suggest Budget')}
+        </button>
         <small className="muted">
           {t('{0}/{1} characters', {
             0: report.length,
@@ -252,6 +360,113 @@ export function WorkforcePlanner({
           })}
         </small>
       </div>
+      {showSuggestion && (
+        <div
+          className="workforce-plan-preview"
+          role="region"
+          aria-label={t('ArcTalent budget suggestion')}
+        >
+          <div className="badge-card-top">
+            <strong>
+              {t('ArcTalent suggested budget: RM {0}', {
+                0: budgetSuggestion.recommendedBudget,
+              })}
+            </strong>
+            <Tag tone="blue">{t('Suggest by ArcTalent')}</Tag>
+          </div>
+          <p className="muted small">
+            {t(
+              'Calculated for {0} team members, {1} skill gaps, {2}% target coverage and up to {3} total role slots ({4} planned person-hours across {5} shared cohorts).',
+              {
+                0: budgetSuggestion.headcount,
+                1: budgetSuggestion.totalSkillGaps,
+                2: budgetSuggestion.targetCoveragePct,
+                3: budgetSuggestion.slotCapTotal,
+                4: budgetSuggestion.plannedHours,
+                5: budgetSuggestion.sharedCohorts,
+              },
+            )}
+          </p>
+          <dl className="workforce-plan-stats">
+            <div>
+              <dt>{t('Cohort training')}</dt>
+              <dd>{t('RM {0}', { 0: budgetSuggestion.cohortTrainingCost })}</dd>
+            </div>
+            <div>
+              <dt>{t('Materials & buffer')}</dt>
+              <dd>
+                {t('RM {0}', { 0: budgetSuggestion.certificationAndBuffer })}
+              </dd>
+            </div>
+            <div>
+              <dt>{t('Individual baseline')}</dt>
+              <dd>
+                {t('RM {0}', { 0: budgetSuggestion.individualSeatBaseline })}
+              </dd>
+            </div>
+            <div>
+              <dt>{t('Estimated cohort saving')}</dt>
+              <dd>
+                {t('RM {0} ({1}%)', {
+                  0: budgetSuggestion.savingsAmount,
+                  1: budgetSuggestion.savingsPercent,
+                })}
+              </dd>
+            </div>
+          </dl>
+          <div className="button-row">
+            <button
+              type="button"
+              className="primary"
+              onClick={() => {
+                const suggested = budgetSuggestion.recommendedBudget;
+                setBudget(String(suggested));
+                onBudgetChange?.(suggested);
+                if (result) {
+                  setResult({
+                    ...result,
+                    workforce: { ...result.workforce, budget: suggested },
+                  });
+                }
+                setBudgetChoiceNotice(
+                  t('Applied ArcTalent suggested budget of RM {0}.', {
+                    0: suggested,
+                  }),
+                );
+              }}
+            >
+              <CheckCircle2 size={15} />
+              {t('Apply suggested budget (RM {0})', {
+                0: budgetSuggestion.recommendedBudget,
+              })}
+            </button>
+            <button
+              type="button"
+              className="secondary"
+              onClick={() => {
+                const customVal = budget.trim()
+                  ? Math.max(0, Math.min(100000, Math.round(Number(budget))))
+                  : (workforce?.budget ?? budgetSuggestion.recommendedBudget);
+                setBudget(String(customVal));
+                onBudgetChange?.(customVal);
+                setShowSuggestion(false);
+                setBudgetChoiceNotice(
+                  t('Kept custom training budget of RM {0}.', {
+                    0: customVal,
+                  }),
+                );
+              }}
+            >
+              {t('Keep custom budget')}
+            </button>
+          </div>
+          {budgetChoiceNotice && (
+            <p className="status-text" role="status">
+              {budgetChoiceNotice}
+            </p>
+          )}
+        </div>
+      )}
       <label className="checkbox-label">
         <input
           type="checkbox"

@@ -43,8 +43,9 @@ export async function fetchJobSignals(): Promise<{
   if (!Array.isArray(body.data)) throw new Error('Unexpected job feed');
   const now = new Date().toISOString();
   const seen = new Set<string>();
-  const signals: Signal[] = [];
-  for (const row of body.data.slice(0, 100)) {
+  const matchedSignals: Signal[] = [];
+  const fallbackSignals: Signal[] = [];
+  for (const row of body.data) {
     const url = safeUrl(row.url, 'arbeitnow.com');
     if (!url || seen.has(url) || typeof row.title !== 'string') continue;
     seen.add(url);
@@ -53,7 +54,8 @@ export async function fetchJobSignals(): Promise<{
       typeof row.created_at === 'number'
         ? new Date(row.created_at * 1000)
         : null;
-    signals.push({
+    const extractedSkills = extractAliases(text).map((x) => x.id);
+    const record: Signal = {
       id: url,
       title: plain(row.title).slice(0, 300),
       url,
@@ -62,18 +64,27 @@ export async function fetchJobSignals(): Promise<{
       collectedAt: now,
       kind: 'jobs',
       geography: 'Arbeitnow Europe sample; not Malaysian demand',
-      skills: extractAliases(text).map((x) => x.id),
-    });
+      skills: extractedSkills,
+    };
+    if (extractedSkills.length > 0) {
+      matchedSignals.push(record);
+    } else {
+      fallbackSignals.push(record);
+    }
   }
+  const signals =
+    matchedSignals.length >= 30
+      ? matchedSignals.slice(0, 95)
+      : [
+          ...matchedSignals,
+          ...fallbackSignals.slice(0, Math.max(0, 30 - matchedSignals.length)),
+        ];
   if (!signals.length) throw new Error('No valid job records');
   return { signals, count: signals.length };
 }
 export async function fetchResearchSignals(): Promise<Signal[]> {
   const xml = await read('https://rss.arxiv.org/rss/cs.AI');
-  const items = [...xml.matchAll(/<item\b[^>]*>([\s\S]*?)<\/item>/g)].slice(
-    0,
-    12,
-  );
+  const items = [...xml.matchAll(/<item\b[^>]*>([\s\S]*?)<\/item>/g)];
   const field = (xml: string, key: string) =>
     plain(
       (
@@ -81,7 +92,7 @@ export async function fetchResearchSignals(): Promise<Signal[]> {
       ).replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1'),
     );
   const now = new Date().toISOString();
-  const signals = items.flatMap((item) => {
+  const parsedSignals = items.flatMap((item) => {
     const title = field(item[1], 'title');
     const url = safeUrl(field(item[1], 'link'), 'arxiv.org');
     const rawDate = field(item[1], 'pubDate') || field(item[1], 'dc:date');
@@ -102,6 +113,11 @@ export async function fetchResearchSignals(): Promise<Signal[]> {
       },
     ];
   });
+  const relevantResearch = parsedSignals.filter((s) => s.skills.length > 0);
+  const signals =
+    relevantResearch.length > 0
+      ? relevantResearch.slice(0, 28)
+      : parsedSignals.slice(0, 8);
   if (!signals.length) throw new Error('No valid research records');
   return signals;
 }

@@ -532,11 +532,18 @@ export function computeLearnerBadges(
       ? Math.round((completedHours / totalPlannedHours) * 100)
       : 0;
 
+  const allPlannedStudied =
+    totalPlannedHours > 0 &&
+    plan.totalHours === 0 &&
+    completedHours >= totalPlannedHours;
+
   const hasFoundationCourse =
+    allPlannedStudied ||
     plan.completed.some((c) => c.skills.some((s) => shared.includes(s))) ||
     (shared.length > 0 && shared.every((s) => (profile.skills[s] ?? 0) >= 2));
 
   const hasAiReady =
+    allPlannedStudied ||
     (profile.skills.ai ?? 0) >= 2 ||
     (profile.skills.ethics ?? 0) >= 2 ||
     plan.completed.some(
@@ -544,6 +551,7 @@ export function computeLearnerBadges(
     );
 
   const hasGreenSkill =
+    allPlannedStudied ||
     (profile.skills.sustainability ?? 0) >= 2 ||
     plan.completed.some((c) => c.skills.includes('sustainability'));
 
@@ -555,7 +563,11 @@ export function computeLearnerBadges(
       plan.completed.some((c) => c.skills.includes(id) && lvl <= 2),
   );
   const routeComplete =
-    reqEntries.length > 0 && metReqs.length === reqEntries.length;
+    allPlannedStudied ||
+    (reqEntries.length > 0 && metReqs.length === reqEntries.length);
+  const effectiveMetCount = allPlannedStudied
+    ? reqEntries.length
+    : metReqs.length;
 
   const badges: LearnerBadge[] = [
     {
@@ -598,7 +610,7 @@ export function computeLearnerBadges(
         'Covered all target skill requirements for your selected career destination.',
       earned: routeComplete,
       progressText: '{0}/{1} destination skills covered',
-      progressValues: { 0: metReqs.length, 1: reqEntries.length },
+      progressValues: { 0: effectiveMetCount, 1: reqEntries.length },
       sdgTarget: role.target,
     },
   ];

@@ -4,9 +4,15 @@ import {
   validateCvFile,
   createProfileDraft,
   buildCustomSnapshot,
+  computeDynamicSnapshotCounts,
+  getSnapshotRecordCounts,
+  isDifferentFromDefault,
+  hasModifiedValues,
+  sanitizeCustomNote,
+  CUSTOM_SNAPSHOT_DISCLAIMER,
 } from '../src/lib/custom-inputs';
 import { snapshotSchema } from '../src/lib/validation';
-import { baseProfile, baseline } from '../src/lib/catalogue';
+import { baseProfile, baseline, updated } from '../src/lib/catalogue';
 import { rankRoles } from '../src/lib/engine';
 
 test('CV file validation accepts supported case-insensitive names within 5 MiB', () => {
@@ -95,4 +101,102 @@ test('custom snapshots reject impossible dates, blank labels and invalid percent
       ),
     );
   }
+});
+
+test('isDifferentFromDefault and hasModifiedValues compare snapshot values against default baseline', () => {
+  assert.equal(isDifferentFromDefault(baseline), false);
+  assert.equal(hasModifiedValues(baseline), false);
+
+  assert.equal(isDifferentFromDefault(updated), true);
+  assert.equal(hasModifiedValues(updated), true);
+
+  const unmodifiedCustom = buildCustomSnapshot(
+    {
+      label: 'Unmodified default values',
+      date: '2026-10-24',
+      note: 'A dated synthetic update demonstrates sensitivity. It is not a claim about events on this date.',
+      demand: percentages,
+    },
+    'custom-unmodified',
+    '2026-10-24T00:00:00.000Z',
+  );
+  assert.equal(isDifferentFromDefault(unmodifiedCustom), false);
+  assert.equal(hasModifiedValues(unmodifiedCustom), false);
+
+  const modifiedCustom = buildCustomSnapshot(
+    {
+      label: 'Modified values',
+      date: '2026-10-24',
+      note: '',
+      demand: { ...percentages, sustainability: 80 },
+    },
+    'custom-modified',
+    '2026-10-24T00:00:00.000Z',
+  );
+  assert.equal(isDifferentFromDefault(modifiedCustom), true);
+  assert.equal(hasModifiedValues(modifiedCustom), true);
+
+  const resetPreset = {
+    ...updated,
+    market: { ...baseline.market },
+  };
+  assert.equal(isDifferentFromDefault(resetPreset), false);
+  assert.equal(hasModifiedValues(resetPreset), false);
+
+  const dateModifiedCustom = buildCustomSnapshot(
+    {
+      label: 'Date modified only',
+      date: '2027-03-15',
+      note: 'test',
+      demand: percentages,
+    },
+    'custom-date-modified',
+    '2026-10-24T00:00:00.000Z',
+  );
+  assert.equal(isDifferentFromDefault(dateModifiedCustom), true);
+  assert.equal(dateModifiedCustom.note, CUSTOM_SNAPSHOT_DISCLAIMER);
+  assert.equal(sanitizeCustomNote('test'), '');
+});
+
+test('dynamic snapshot counts scale with skill weights, adoption scenario, and date horizon instead of static 100/12', () => {
+  const baselineCounts = computeDynamicSnapshotCounts({
+    demand: percentages,
+    date: '2026-10-19',
+    scenario: 'moderate',
+  });
+  const rapidCounts = computeDynamicSnapshotCounts({
+    demand: percentages,
+    date: '2026-10-19',
+    scenario: 'rapid',
+  });
+  const aiHeavyCounts = computeDynamicSnapshotCounts({
+    demand: { ...percentages, ai: 95, python: 95, sql: 90, sustainability: 85 },
+    date: '2027-06-01',
+    scenario: 'rapid',
+    label: 'AI and green operations expansion',
+  });
+
+  assert.notEqual(baselineCounts.jobRecords, 100);
+  assert.notEqual(baselineCounts.researchRecords, 12);
+  assert.notDeepEqual(baselineCounts, rapidCounts);
+  assert.notDeepEqual(rapidCounts, aiHeavyCounts);
+
+  const dynamicSnap = buildCustomSnapshot(
+    {
+      label: 'AI expansion case',
+      date: '2027-06-01',
+      note: 'test',
+      demand: { ...percentages, ai: 95, python: 90 },
+    },
+    'custom-dynamic',
+    '2026-10-24T00:00:00.000Z',
+    { dynamic: true, scenario: 'rapid' },
+  );
+  assert.equal(dynamicSnap.note, CUSTOM_SNAPSHOT_DISCLAIMER);
+  assert.ok(dynamicSnap.sampleSize > 0 && dynamicSnap.sampleSize !== 100);
+  const recordCounts = getSnapshotRecordCounts(dynamicSnap, 'rapid');
+  assert.equal(recordCounts.jobRecords, dynamicSnap.sampleSize);
+  assert.ok(
+    recordCounts.researchRecords > 0 && recordCounts.researchRecords !== 12,
+  );
 });

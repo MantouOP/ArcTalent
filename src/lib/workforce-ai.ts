@@ -8,6 +8,7 @@ import type { Profile, Scenario, SkillId } from './types';
 import { skillIdSchema } from './validation';
 import { buildWorkforcePlan } from './workforce-plan';
 import {
+  restoreWorkforceSettings,
   workforceSettingsSchema,
   type WorkforceSettings,
 } from './workforce-settings';
@@ -496,6 +497,165 @@ export async function planWorkforceFromReport(
     workforce,
     summary,
     stats: computed.stats,
+  };
+}
+
+export type WorkforceBudgetSuggestionInput = {
+  workforce?: WorkforceSettings;
+  report?: string;
+  scenario?: Scenario;
+  targetHeadcount?: number;
+  targetCoveragePct?: number;
+  targetSlotCap?: number;
+};
+
+export type WorkforceBudgetSuggestion = {
+  recommendedBudget: number;
+  cohortTrainingCost: number;
+  individualSeatBaseline: number;
+  certificationAndBuffer: number;
+  savingsAmount: number;
+  savingsPercent: number;
+  headcount: number;
+  totalSkillGaps: number;
+  plannedHours: number;
+  sharedCohorts: number;
+  slotCapTotal: number;
+  targetCoveragePct: number;
+};
+
+/**
+ * Dynamically calculates an ArcTalent recommended training budget and breakdown
+ * based on user-configured parameters (team headcount, target coverage, slot caps,
+ * active/parsed team skill gaps, and cohort cost assumptions).
+ */
+export function suggestWorkforceBudget(
+  input: WorkforceBudgetSuggestionInput,
+): WorkforceBudgetSuggestion {
+  const scenario: Scenario = input.scenario ?? 'moderate';
+  const parsedFromReport =
+    input.report && input.report.trim().length >= 10
+      ? parseWorkforceReportLocally(input.report, scenario)
+      : null;
+  const baseWorkforce =
+    parsedFromReport ?? input.workforce ?? restoreWorkforceSettings();
+
+  const rawSlotCap =
+    typeof input.targetSlotCap === 'number' &&
+    Number.isFinite(input.targetSlotCap)
+      ? clamp(input.targetSlotCap, 1, 10)
+      : null;
+
+  const adjustedSlots = rawSlotCap
+    ? Object.fromEntries(
+        roles.map((r) => [
+          r.id,
+          Math.max(baseWorkforce.slots[r.id] > 0 ? rawSlotCap : 0, rawSlotCap),
+        ]),
+      )
+    : baseWorkforce.slots;
+
+  const effectiveWorkforce: WorkforceSettings = {
+    ...baseWorkforce,
+    slots: adjustedSlots,
+  };
+
+  const plan = buildWorkforcePlan(
+    { ...baseProfile, id: '__planner__' },
+    scenario,
+    baseline,
+    effectiveWorkforce,
+  );
+  const cost = compareTrainingCosts(
+    plan.groups.values(),
+    effectiveWorkforce.costs ?? COST_DEFAULTS,
+    IMPACT_TARGETS.costReduction,
+  );
+
+  const actualMembers = Math.max(1, plan.team.length);
+  const headcount = clamp(
+    typeof input.targetHeadcount === 'number' &&
+      Number.isFinite(input.targetHeadcount) &&
+      input.targetHeadcount > 0
+      ? input.targetHeadcount
+      : actualMembers,
+    1,
+    50,
+  );
+  const headcountScale = headcount / actualMembers;
+  const targetCoveragePct = clamp(
+    typeof input.targetCoveragePct === 'number' &&
+      Number.isFinite(input.targetCoveragePct)
+      ? input.targetCoveragePct
+      : 85,
+    50,
+    100,
+  );
+  const coverageFactor = targetCoveragePct / 100;
+
+  const rawSkillGaps = plan.allocations.reduce(
+    (sum, row) => sum + row.match.gaps.reduce((gapAcc, g) => gapAcc + g.gap, 0),
+    0,
+  );
+  const totalSkillGaps = Math.max(1, Math.round(rawSkillGaps * headcountScale));
+  const plannedHours = Math.max(
+    4,
+    Math.round(plan.hours * headcountScale * coverageFactor),
+  );
+  const sharedCohorts = [...plan.groups.values()].filter(
+    (g) => g.names.length > 1,
+  ).length;
+  const slotCapTotal = Object.values(adjustedSlots).reduce(
+    (sum, count) => sum + count,
+    0,
+  );
+
+  const groupedRaw =
+    cost.grouped.total > 0
+      ? cost.grouped.total * headcountScale * coverageFactor
+      : (headcount * 420 + totalSkillGaps * 90) * coverageFactor;
+  const individualRaw =
+    cost.individual.total > 0
+      ? cost.individual.total * headcountScale * coverageFactor
+      : groupedRaw * 1.38;
+
+  const cohortTrainingCost = Math.max(200, Math.round(groupedRaw / 10) * 10);
+  const certificationAndBuffer = Math.max(
+    100,
+    Math.round(
+      ((headcount * 65 + totalSkillGaps * 30 + slotCapTotal * 15) *
+        coverageFactor) /
+        10,
+    ) * 10,
+  );
+  const recommendedBudget = clamp(
+    Math.round((cohortTrainingCost + certificationAndBuffer) / 50) * 50,
+    300,
+    100000,
+  );
+  const individualSeatBaseline = Math.max(
+    recommendedBudget + 150,
+    Math.round((individualRaw + certificationAndBuffer) / 50) * 50,
+  );
+  const savingsAmount = Math.max(0, individualSeatBaseline - recommendedBudget);
+  const savingsPercent =
+    individualSeatBaseline > 0
+      ? Math.round((savingsAmount / individualSeatBaseline) * 100)
+      : 0;
+
+  return {
+    recommendedBudget,
+    cohortTrainingCost,
+    individualSeatBaseline,
+    certificationAndBuffer,
+    savingsAmount,
+    savingsPercent,
+    headcount,
+    totalSkillGaps,
+    plannedHours,
+    sharedCohorts,
+    slotCapTotal,
+    targetCoveragePct,
   };
 }
 

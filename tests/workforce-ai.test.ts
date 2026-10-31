@@ -10,10 +10,15 @@ import {
   planWorkforceFromReport,
   redactPersonalDetails,
   safeAlias,
+  suggestWorkforceBudget,
   WORKFORCE_REPORT_SAMPLES,
   workforceModelOutputSchema,
   type WorkforceModelOutput,
 } from '../src/lib/workforce-ai';
+import {
+  extractWordDocumentText,
+  parseMemberReportSkills,
+} from '../src/lib/member-report-parser';
 import { workforceSettingsSchema } from '../src/lib/workforce-settings';
 
 const request = (report: string, extra = {}) => ({
@@ -230,4 +235,59 @@ test('every workforce planner, table and Track Record label has Malay and Chines
   for (const [locale, messages] of Object.entries(dictionaries))
     for (const label of labels)
       assert.ok(Object.hasOwn(messages, label), `${locale}: ${label}`);
+});
+
+test('ArcTalent budget suggestion scales with headcount, target coverage, and slot caps', () => {
+  const smallTeam = suggestWorkforceBudget({
+    targetHeadcount: 3,
+    targetCoveragePct: 70,
+    targetSlotCap: 1,
+    scenario: 'moderate',
+  });
+  const largeTeam = suggestWorkforceBudget({
+    targetHeadcount: 10,
+    targetCoveragePct: 100,
+    targetSlotCap: 4,
+    scenario: 'rapid',
+  });
+
+  assert.ok(smallTeam.recommendedBudget >= 300);
+  assert.ok(largeTeam.recommendedBudget > smallTeam.recommendedBudget);
+  assert.ok(largeTeam.plannedHours > smallTeam.plannedHours);
+  assert.ok(largeTeam.individualSeatBaseline > largeTeam.recommendedBudget);
+  assert.ok(largeTeam.savingsAmount > 0);
+});
+
+test('per-member report parser extracts .docx XML and updates individual skill levels', async () => {
+  const xml =
+    '<?xml version="1.0" encoding="UTF-8"?><w:document><w:body><w:p><w:r><w:t>Communication: 3</w:t></w:r></w:p><w:p><w:r><w:t>Python Level 2</w:t></w:r></w:p></w:body></w:document>';
+  const encoder = new TextEncoder();
+  const nameBytes = encoder.encode('word/document.xml');
+  const dataBytes = encoder.encode(xml);
+  const zipBuffer = new ArrayBuffer(30 + nameBytes.length + dataBytes.length);
+  const view = new DataView(zipBuffer);
+  const bytes = new Uint8Array(zipBuffer);
+  view.setUint32(0, 0x04034b50, true);
+  view.setUint16(4, 20, true);
+  view.setUint16(8, 0, true); // stored (uncompressed)
+  view.setUint32(18, dataBytes.length, true);
+  view.setUint32(22, dataBytes.length, true);
+  view.setUint16(26, nameBytes.length, true);
+  view.setUint16(28, 0, true);
+  bytes.set(nameBytes, 30);
+  bytes.set(dataBytes, 30 + nameBytes.length);
+
+  const extracted = await extractWordDocumentText(zipBuffer);
+  assert.match(extracted, /Communication:\s*3/);
+  assert.match(extracted, /Python Level 2/);
+
+  const parsed = parseMemberReportSkills(
+    extracted,
+    { communication: 2, project: 2 },
+    'Sarah',
+  );
+  assert.equal(parsed.skills.communication, 3);
+  assert.equal(parsed.skills.python, 2);
+  assert.equal(parsed.skills.project, 2);
+  assert.match(parsed.summary, /Updated Sarah:.*Communication 2 → 3/);
 });
