@@ -4,21 +4,21 @@
 
 ### 🌟 Quick Links:
 
-👉 **[🎥 Watch YouTube Demo Video](https://youtu.be/PYpaD5IAYpE)** · **[📊 Open Canva Pitch Deck Slides](https://canva.link/upnutijay2qn7vn)** · **[🚀 Open Live App Demo](https://arc-talent--emmanuelheng.replit.app/)** · **[📁 View Official Submission PDFs](submission/)**
+👉 **[🎥 Watch YouTube Demo Video](https://youtu.be/PYpaD5IAYpE)** · **[📊 Open Canva Pitch Deck Slides](https://canva.link/upnutijay2qn7vn)** · **[🚀 Open Live App Demo](https://arc-talent--emmanuelheng.replit.app/)** · **[📘 Read the Updated PRD](docs/PRD.md)** · **[🧾 Read the Technical & Tools Declaration](docs/TECHNICAL_DECLARATION.md)** · **[📁 View Preliminary Submission PDFs](submission/)**
 
 ---
 
 ## Team Information
 
-| Field                       | Details                                                                                                                                                  |
-| :-------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Team Name**               | **Xeno Force**                                                                                                                                           |
-| **Team Domain**             | **Domain 1 — The Aiversecity Future-Ready Workforce Domain**                                                                                             |
-| **SDG Track (1–17)**        | **SDG 8: Decent Work and Economic Growth** _(also addressing SDG 4: Quality Education & SDG 10: Reduced Inequalities)_                                   |
-| **Team Leader**             | **Emmanuel Heng Zi Teng**                                                                                                                                |
-| **Email & Phone**           | **Enuelhzt1524@gmail.com** · **010-271-6363**                                                                                                            |
-| **University Affiliations** | **Universiti Malaya (UM)**, **Universiti Teknologi Malaysia (UTM)**, **Management and Science University (MSU)**, **Swinburne University of Technology** |
-| **Number of Members**       | **4**                                                                                                                                                    |
+| Field                       | Details                                                                                                                                                                |
+| :-------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Team Name**               | **Xeno Force**                                                                                                                                                         |
+| **Team Domain**             | **Domain 1 — The Aiversecity Future-Ready Workforce Domain**                                                                                                           |
+| **SDG Track (1–17)**        | **SDG 8: Decent Work and Economic Growth** _(also addressing SDG 4: Quality Education, SDG 9: Industry, Innovation and Infrastructure & SDG 10: Reduced Inequalities)_ |
+| **Team Leader**             | **Emmanuel Heng Zi Teng**                                                                                                                                              |
+| **Email & Phone**           | **Enuelhzt1524@gmail.com** · **010-271-6363**                                                                                                                          |
+| **University Affiliations** | **Universiti Malaya (UM)**, **Universiti Teknologi Malaysia (UTM)**, **Management and Science University (MSU)**, **Swinburne University of Technology**               |
+| **Number of Members**       | **4**                                                                                                                                                                  |
 
 ## Links
 
@@ -36,10 +36,23 @@
 
 ## Official Submission Documents
 
-All required official submission deliverables are accessible below and archived in the [`submission/`](submission/) directory:
+The final-round documents are Markdown files in [`docs/`](docs/). The preliminary-round PDFs are archived in [`submission/`](submission/).
+
+### Final round (1 November 2026)
+
+- 📘 **Updated PRD**, what changed since the preliminary round and why: [`docs/PRD.md`](docs/PRD.md)
+- 🧾 **Technical & Tools Declaration (final)**, every library, service, model, dataset and AI tool, with corrections to the preliminary declaration: [`docs/TECHNICAL_DECLARATION.md`](docs/TECHNICAL_DECLARATION.md)
+- 📏 **Impact benchmark**, reproducible results for the four Phase 2 targets: [`docs/IMPACT.md`](docs/IMPACT.md)
+- 📚 **Sources register**: [`docs/SOURCES.md`](docs/SOURCES.md)
+- ☁️ **Replit release and verification record**: [`docs/REPLIT_STATUS.md`](docs/REPLIT_STATUS.md)
+
+### Pitch materials
 
 - 🎥 **Pitching & Demo Video**: **[Watch on YouTube](https://youtu.be/PYpaD5IAYpE)**
 - 📊 **Pitch Deck Slides**: **[Open Canva Presentation](https://canva.link/upnutijay2qn7vn)**
+
+### Preliminary round (25 October 2026)
+
 - 📄 **Preliminary Proposal PDF**: [`submission/SDC2026_XenoForce_Preliminary.pdf`](submission/SDC2026_XenoForce_Preliminary.pdf)
 - 📄 **Technical Tools Declaration PDF**: [`submission/SDC2026_XenoForce_TechDeclaration.pdf`](submission/SDC2026_XenoForce_TechDeclaration.pdf)
 - 📄 **Replit Proof of Use (POU) PDF**: [`submission/SDC2026_XenoForce_Replit_POU.pdf`](submission/SDC2026_XenoForce_Replit_POU.pdf)
@@ -66,13 +79,16 @@ The repository may contain newer features than the deployed demo. See the dated 
 - **Dual-Scenario Adaptability**: Toggle between moderate and rapid AI adoption to compare rankings, shared foundations and role-specific learning steps.
 - **Your own goals and skills**: Add interests, skills and a career destination in your own words. Review and edit suggested skill targets before using them in a plan. The starter role and course catalogues are finite, so specialist gaps may remain uncovered.
 - **CV Import and Reviewed Skills**: Import a TXT or text PDF with consent, then review suggested skills before saving. Local word matching is the default; optional AI-assisted extraction uses the configured provider and checks returned evidence against the source text.
-- **SME Workforce Planning**: Add up to ten fictional team members, explore skill gaps and custom destinations, set a company budget and internal openings, and export a workforce PDF. The team view is a prototype for planning conversations.
+- **One-shot team planner and redeployment table**: Paste or upload a team report (TXT, CSV, Word or text PDF) and the planner drafts members, destinations, openings and a budget. E-mail addresses, phone numbers and MyKad numbers are removed before any AI is used, every figure is recomputed in code, and nothing is applied until you preview it. A six-column table then shows each person's destination, readiness, skill gaps, courses and why they are included.
+- **SME Workforce Planning**: Add up to ten fictional team members by hand, customise a destination inline, upload a report for one member, set slot caps and a company budget (or ask for a suggested starting budget), and export a workforce PDF. The team view is a prototype for planning conversations.
 - **SME Cost Model**: Prices the team plan as internal cohorts versus individual commercial seats, using HRD Corp's Allowable Cost Matrix and DOSM wage data, with editable assumptions and a break-even seat price.
 - **Impact Scorecard**: Live check of the four Phase 2 targets from our proposal, for your own route and the synthetic team in both AI scenarios. See the reproducible [impact benchmark](docs/IMPACT.md).
-- **SDG Priority Lens**: Choose SDG 4.3 & 4.4, 8.2 or 9.4 to re-rank career options toward that goal. Each option shows its SDG priority points next to an unchanged suitability score.
-- **Future Skills Radar and Re-planning**: Compares skill demand between snapshots, then shows which courses the plan kept, added or dropped after a trend update.
+- **SDG Priority Lens**: Choose SDG 4, 8 or 9 to re-rank career options toward that goal. The interface shows whole goals; the sub-target mapping behind them stays in the [source register](docs/SOURCES.md). Each option shows its SDG priority points next to an unchanged suitability score.
+- **Future Skills Radar and Re-planning**: Compares skill demand between snapshots, then shows which courses the plan kept, added or dropped after a trend update. You can also enter your own 0–100 demand per skill for a dated snapshot; the app shows modelled record counts and labelled placeholder scenario items under a notice that these are planning assumptions, not verified market evidence.
 - **What Would Raise This Score?**: Each skill gap shows the exact score gain from closing it and the shortest catalogue course that teaches it.
-- **Study coach and practice badges**: In the latest repository, learners can request a short study-session plan and reflect on a course marked studied. An optional AI review or local fallback can award a practice badge linked to the learner's reflection; skill-level changes require the learner's confirmation. These badges are self-study milestones, not independent certifications. The app also links to Malaysian training portals.
+- **Study coach and practice badges**: Learners can request a short study-session plan and reflect on a course marked studied. An optional AI review or local fallback can award a practice badge linked to the learner's reflection; skill-level changes require the learner's confirmation. These badges are self-study milestones, not independent certifications. The app also links to Malaysian training portals.
+- **Track Record**: A per-profile log of courses studied, milestone and practice badges, and skill levels the learner explicitly confirmed, with hours studied and gap distance closed, also summed for an SME cohort. It stays in the browser and never changes skills or scores by itself.
+- **Simplified workspace**: Each main view leads with one decision. Explorer starts with a summary strip, one row of SDG pills, the career cards and the selected route; Pathway starts with the destination, badges and course steps. Secondary tools sit in disclosures, and every SDG label is a whole goal (SDG 4, 8, 9 or 10).
 - **SDG Totals and Fairness Check**: SDG-aligned study hours for one learner, the SME team and a labelled 1,000-learner projection. A fairness check re-runs matching with six different names and job titles and shows the results are identical, because matching never reads them.
 - **PDF learning plans**: Download personal or SME plans as searchable PDFs with direct course links. Personal exports preserve the selected destination, funding filter, specialist gaps and typed study preferences in English, Bahasa Melayu or Simplified Chinese.
 - **Course and Video Cards**: Each course step shows the course as a card with the provider's own cover image, hours and website, beside an optional YouTube video card with the video's original cover, length, title and channel. Covers load from the providers' and YouTube's image servers, with a drawn cover when none is available; videos are not counted in planned hours.
@@ -101,9 +117,15 @@ The repository may contain newer features than the deployed demo. See the dated 
 
 - **Development & Version Control**: Imported canonical source repository, maintaining continuous verified git histories.
 - **Production Hosting**: Live public deployment on Replit Autoscale (`https://arc-talent--emmanuelheng.replit.app/`) serving web views and API routes.
-- **Build & CI Verification**: The reset release `27c9345` passed 227 unit tests and 35 production integration checks in Replit; the 35 checks also passed against the live site on 31 October 2026. Later source changes may differ from that verified release. See [runtime status](docs/REPLIT_STATUS.md) for the dated record.
+- **Build & CI Verification**: Release `0cb3c41` matched 290 of 290 tracked files in Replit, then passed 250 unit tests, the typecheck, a production build and 39 production integration checks; its live health check and AI workforce planner were verified on 31 October 2026. Later source commits (255 unit tests and GitHub Actions passing) may differ from the live release. See [runtime status](docs/REPLIT_STATUS.md) for the dated record.
 - **Secrets Management**: AI provider keys and endpoints (RunPod or another OpenAI-compatible gateway) are stored in Replit Secrets, never committed to git.
 - 📄 Proof of use: [`submission/SDC2026_XenoForce_Replit_POU.pdf`](submission/SDC2026_XenoForce_Replit_POU.pdf)
+
+## How We Use the Finalist AI Gateway _(provided by the organisers)_
+
+- **Workload**: An OpenAI-compatible LiteLLM gateway issued to finalists (model `gpt-5.4-mini`) serves CV skill extraction, career-goal analysis, career chat, the study coach, the workforce planner and demand-assumption estimates whenever the `AI_*` settings are present. Its key is held only in Replit Secrets.
+- **Verification**: On 31 October 2026, live CV extraction, career-goal analysis, career chat and the one-shot workforce planner were checked through the gateway.
+- **Precedence and fallback**: Complete `AI_*` settings take precedence over RunPod. With no provider, every feature falls back to local logic.
 
 ## How We Use RunPod _(Official Sponsor)_
 
@@ -181,6 +203,15 @@ $$\text{Suitability} = 55\% \times \text{Skill Coverage} + 15\% \times \text{Int
 ---
 
 ## Submission Checklist
+
+### Final round
+
+- [x] Updated PRD ([`docs/PRD.md`](docs/PRD.md))
+- [x] Technical & Tools Declaration updated ([`docs/TECHNICAL_DECLARATION.md`](docs/TECHNICAL_DECLARATION.md))
+- [x] Public GitHub repository with the Apache License 2.0 and a continuous commit history
+- [x] Live demo ([Replit deployment](https://arc-talent--emmanuelheng.replit.app/)) with dated release records in [`docs/REPLIT_STATUS.md`](docs/REPLIT_STATUS.md)
+
+### Preliminary round
 
 - [x] Complete and functional repository codebase
 - [x] Apache License 2.0 included

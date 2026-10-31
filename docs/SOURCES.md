@@ -77,29 +77,29 @@ O*NET pages establish occupational context in the United States. The simplified 
 
 The UN target pages define the target; the relationship to a particular skill is a project interpretation. A mapped skill does not establish a measured SDG outcome.
 
-| Skill | Target | Rationale |
-| ----------------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | --- |
-| Spreadsheets | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
-| Data literacy | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
-| Critical thinking | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
-| Communication | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
-| Project planning | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
-| Stakeholder engagement | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
-| SQL | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
-| Data visualisation | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
-| AI literacy | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
-| Responsible AI | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
-| Process improvement | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
-| Supply chain | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
-| Sustainability literacy | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
-| Learning design | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
-| Digital security | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
-| Python | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
-| HTML & CSS | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
-| JavaScript | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
-| Digital marketing | [4.4](https://sdgs.un.org/goals/goal4) | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
+| Skill                   | Target                                   | Rationale                                                                                                                    |
+| ----------------------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Spreadsheets            | [4.4](https://sdgs.un.org/goals/goal4)   | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
+| Data literacy           | [4.4](https://sdgs.un.org/goals/goal4)   | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
+| Critical thinking       | [4.4](https://sdgs.un.org/goals/goal4)   | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
+| Communication           | [4.4](https://sdgs.un.org/goals/goal4)   | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
+| Project planning        | [4.4](https://sdgs.un.org/goals/goal4)   | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
+| Stakeholder engagement  | [4.4](https://sdgs.un.org/goals/goal4)   | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
+| SQL                     | [4.4](https://sdgs.un.org/goals/goal4)   | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
+| Data visualisation      | [4.4](https://sdgs.un.org/goals/goal4)   | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
+| AI literacy             | [4.4](https://sdgs.un.org/goals/goal4)   | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
+| Responsible AI          | [10.3](https://sdgs.un.org/goals/goal10) | Supports fair, accountable use of AI at work. This is a contextual mapping, not a measured SDG outcome.                      |
+| Process improvement     | [8.2](https://sdgs.un.org/goals/goal8)   | Can support productivity improvements at work. This is a contextual mapping, not a measured SDG outcome.                     |
+| Supply chain            | [8.2](https://sdgs.un.org/goals/goal8)   | Can support productivity improvements at work. This is a contextual mapping, not a measured SDG outcome.                     |
+| Sustainability literacy | [9.4](https://sdgs.un.org/goals/goal9)   | Can support more resource-efficient operations. This is a contextual mapping, not a measured SDG outcome.                    |
+| Learning design         | [4.3](https://sdgs.un.org/goals/goal4)   | Helps colleagues access technical and vocational learning at work. This is a contextual mapping, not a measured SDG outcome. |
+| Digital security        | [4.4](https://sdgs.un.org/goals/goal4)   | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
+| Python                  | [4.4](https://sdgs.un.org/goals/goal4)   | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
+| HTML & CSS              | [4.4](https://sdgs.un.org/goals/goal4)   | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
+| JavaScript              | [4.4](https://sdgs.un.org/goals/goal4)   | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
+| Digital marketing       | [4.4](https://sdgs.un.org/goals/goal4)   | Develop a transferable technical or vocational skill used at work. This is a contextual mapping, not a measured SDG outcome. |
 
-The employer view reports planned learners and person-hours relevant to SDG 4.4, 8.2/8.5 and 10.2. These are overlapping activity counts, not official indicators or evidence of jobs saved, productivity gains or reduced inequality.
+The employer view reports planned learners and person-hours for SDG 4, 8, 9 and 10 (whole goals; the mappings above decide which courses count toward each). These are overlapping activity counts, not official indicators or evidence of jobs saved, productivity gains or reduced inequality.
 
 ## Cost assumptions
 
@@ -115,8 +115,8 @@ The matrix sets maximum claimable amounts, not market quotes, so the seat price 
 
 ## Refresh adapters
 
-- [Arbeitnow API information](https://www.arbeitnow.com/blog/job-board-api), [API endpoint](https://www.arbeitnow.com/api/job-board-api): up to 100 current public job records, Europe-focused. URLs and dates are shown in the app. Alias matching only samples skill visibility; no comparable historical windows are available for a growth claim.
-- [arXiv RSS documentation](https://info.arxiv.org/help/rss.html), [AI feed](https://rss.arxiv.org/rss/cs.AI): up to twelve research records. Titles, source links, dates and detected skills provide context. Papers are not evidence of real-world adoption or validated automation rates.
+- [Arbeitnow API information](https://www.arbeitnow.com/blog/job-board-api), [API endpoint](https://www.arbeitnow.com/api/job-board-api): current public job records, Europe-focused: up to 95 postings that mention a catalogue skill or, when fewer than 30 match, the matches plus enough other postings to reach 30. URLs and dates are shown in the app. Alias matching only samples skill visibility; no comparable historical windows are available for a growth claim.
+- [arXiv RSS documentation](https://info.arxiv.org/help/rss.html), [AI feed](https://rss.arxiv.org/rss/cs.AI): up to 28 research records that mention a catalogue skill, or the first 8 when none do. Titles, source links, dates and detected skills provide context. Papers are not evidence of real-world adoption or validated automation rates.
 - Dates without an upstream publication date are labelled unknown. Collection dates do not substitute for publication dates. Content is bounded and rendered as text.
 
 The five-minute cache and duplicate detection avoid repeatedly treating identical evidence as a new snapshot. Partial feed failures produce a visible warning; a failed overall refresh keeps the existing snapshot. New research can change the snapshot identity without changing career scores.
