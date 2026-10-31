@@ -125,7 +125,7 @@ The repository may contain newer features than the deployed demo. See the dated 
 
 - **Development & Version Control**: Imported canonical source repository, maintaining continuous verified git histories.
 - **Production Hosting**: Live public deployment on Replit Autoscale (`https://arc-talent--emmanuelheng.replit.app/`) serving web views and API routes.
-- **Build & CI Verification**: Release `ce314b7` is live. In Replit, 294 of 294 tracked files matched the commit, then 255 unit tests, the typecheck, a production build and 39 production integration checks passed; the same 39 checks passed against the live site on 1 November 2026. See [runtime status](docs/REPLIT_STATUS.md) for the dated record.
+- **Build & CI Verification**: Release `1e95a55` is live. In Replit, 294 of 294 tracked files matched the commit, then 257 unit tests, the typecheck, a production build and 39 production integration checks passed; the same 39 checks passed against the live site on 1 November 2026. See [runtime status](docs/REPLIT_STATUS.md) for the dated record.
 - **Secrets Management**: AI provider keys and endpoints (RunPod or another OpenAI-compatible gateway) are stored in Replit Secrets, never committed to git.
 
 ## How We Use the Finalist AI Gateway _(provided by the organisers)_

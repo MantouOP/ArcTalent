@@ -2,6 +2,14 @@
 
 Verified on **31 October and 1 November 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
+## Preview card layout fix and blank first visit — live
+
+The homepage pathway preview no longer spills out of its box on laptop-width screens. Its cards used fixed pixel positions while the connector lines scaled with the card, so the option cards overflowed the box and the lines stopped short of them. The diagram is now one grid in which each connector is drawn by the cell it joins, so every line meets its card at any width, and narrow cards stack the three options under the source card. A first visit, or a browser with nothing usable saved, now opens in the blank Reset to Default state: an empty profile on Settings, or an empty team on the SME page. A saved workspace is restored as it was, and **Reset demo** still loads Aina and the fictional company. The "SYNTHETIC COMPANY" label is hidden while the team is empty.
+
+Source `1e95a55` builds on `ce314b7`. The application change is commit `63cac5c`, and `1e95a55` adds documentation only. Replit matched **294/294 tracked files** against Git blob hashes before and after locked installation, **257 unit tests**, the typecheck, a production build and **39 production integration checks**, all passing in the release folder. `artifact.toml` now selects `artifacts/arctalent-release-1e95a55`; the prior configuration is retained as `artifact.toml.pre-1e95a55-backup`, and the two `!artifacts/arctalent-release-…` lines in `.replitignore` now name that release. Secrets were unchanged. GitHub Actions passed for the commit, and the card layout was checked during development at 390, 800, 900, 1024, 1100, 1280 and 1440 px: every option card stayed inside the box, every line met its card, no text was clipped and the page did not scroll sideways.
+
+Replit reported **success**, and the live site began serving the release at about 04:14 MYT on 1 November 2026. The **39 production integration checks passed against the live URL**. On the live site, with saved data cleared, `/workspace` opened on a blank Settings profile (4 h/week, RM 0, 8 weeks) and **Reset demo** then loaded Aina; the homepage card at 1280 px kept all three option cards inside the box with every line meeting its card; and all seven live stylesheet bundles have the same content-hashed file names as a local production build of the same code.
+
 ## Card layout and completed-course polish — live
 
 Completed-course rows no longer stack their text: the title and provider sit beside the Undo button with the course link below. Course and explorer cards expand to fit the panel width, and explorer card borders and the folder tab no longer collide or overlap. These are interface changes only (three stylesheets, `globals.css` and the completed-course markup in one component); no API route, data or engine file changed.
