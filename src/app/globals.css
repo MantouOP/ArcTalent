@@ -2713,3 +2713,119 @@ dialog h2 {
     scroll-behavior: auto !important;
   }
 }
+
+/* ==========================================================================
+   1. SME Workspace: Make "Plan within real constraints" horizontal & full-width
+   ========================================================================== */
+
+/* Stack the two-column container holding "Plan within real constraints"
+   and "Learn together" so they span 100% width instead of 50/50 side-by-side */
+.two-columns:has(.slot-inputs) {
+  grid-template-columns: 1fr !important;
+}
+
+/* Arrange the 6 internal opening inputs into 3 horizontal columns on desktop */
+.slot-inputs {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 10px 24px !important;
+}
+
+@media (max-width: 900px) {
+  .slot-inputs {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .slot-inputs {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ==========================================================================
+   2. SME Workspace: Remove permanent highlight on "ArcTalent cohort plan"
+   ========================================================================== */
+
+/* Neutralize the purple/tinted background and border on the 2nd cost card
+   (.cost-option.plan, .stats-grid.three > .stat:nth-child(2), .warm) so it matches the others */
+.cost-option.plan,
+.stats-grid.three > .stat:nth-child(2),
+.stat.warm,
+.panel .warm {
+  background: white !important;
+  border-color: var(--line) !important;
+  box-shadow: none !important;
+}
+
+.cost-option {
+  background: white;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+/* Only highlight the cost comparison / stat cards when hovered */
+.cost-option:hover,
+.cost-option.plan:hover,
+.stats-grid.three > .stat:hover {
+  background: var(--raised) !important;
+  border-color: var(--primary) !important;
+  box-shadow: var(--glass-shadow-hover) !important;
+}
+
+/* ==========================================================================
+   3. Career Explorer: Highlight "Where your skills could take you" on hover
+      instead of permanently highlighting the last chosen card
+   ========================================================================== */
+
+/* Reset the permanent selected state on the career card */
+.career-card.is-selected {
+  border-color: var(--line) !important;
+  box-shadow: none !important;
+  background: white !important;
+}
+
+/* Reset the "Explore pathway" button inside the selected card so it isn't
+   permanently purple (.primary) when not hovered */
+.career-card .full.primary,
+.career-card.is-selected .full {
+  background: white !important;
+  color: var(--muted) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: none !important;
+}
+
+/* Apply the card highlight when the mouse moves over ANY career card */
+.career-card:hover,
+.career-card.is-selected:hover {
+  border-color: var(--primary) !important;
+  box-shadow: var(--glass-shadow-hover) !important;
+  transform: translateY(-2px);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+/* Highlight the "Explore pathway" button in purple when hovering over the card */
+.career-card:hover .full,
+.career-card.is-selected:hover .full {
+  background: var(--primary) !important;
+  color: white !important;
+  border-color: var(--primary) !important;
+}
+
+/* Also apply hover-only highlighting to the route map destination boxes if needed */
+.destination.chosen {
+  border-color: var(--line) !important;
+  background: var(--surface) !important;
+  box-shadow: none !important;
+}
+
+.destination:hover,
+.destination.chosen:hover {
+  border-color: var(--primary) !important;
+  background: var(--raised) !important;
+}
