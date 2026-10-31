@@ -2,6 +2,16 @@
 
 Verified on **31 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
+## Blank workspace Reset to Default — live
+
+The workspace header now places **Reset to Default** beside **Reset demo**. A translated confirmation clears this browser's saved profile details, skills, interests, goals, learning progress, team plans and pictures, plus transient CV drafts and chat. It opens a blank profile with 4 h/week, RM 0 and 8 weeks; the blank workspace persists after reload. Language and display/accessibility preferences are retained. Personal recommendations and exports wait for a valid profile. Reset demo restores the sample workspace.
+
+Source `27c934560cebdeb7ef87880517d6085e929ab288` includes the team's course-cover and custom-skill work. Replit matched **273/273 tracked files** against Git blob hashes before and after locked installation, **227 unit tests**, a successful production build and **35 production integration checks**. Runtime commit `77264e0fd9670a35e2b0505e5872dd396d663f98` selects `artifacts/arctalent-release-27c9345`; the exact prior configuration is retained as `artifact.toml.pre-reset-default-backup`. Nothing was deleted and Secrets were unchanged.
+
+Waited for the other team publication to finish before scheduling this release. Replit then passed build, bundle and promotion and reported **success**. All **35 public HTTPS integration checks passed**. Public Chrome verified the new header control, translated confirmation and Cancel path, preserving the existing profile; the destructive flow was tested only with disposable synthetic data on an isolated local origin. Local browser checks also verified persistent blank profile/skills/team/picture state, retained language/display choices, cleared CV consent/drafts/chat, new profile/team entry, and Reset demo. A fresh source review has no outstanding findings. The viewport override did not change Chrome's desktop width, so no phone screenshot is claimed for this change.
+
+See the [live header controls](images/workspace-reset-controls-live.png) and [confirmation](images/workspace-reset-confirmation-live.png).
+
 ## Profile-picture Reset to Default — live
 
 Settings → Profile now places **Reset to Default** beside **Upload a photo**. It restores the current profile's initials using the existing picture-selection handler, which also invalidates pending photo preparation and clears upload errors. Picture storage and profile data logic are unchanged. The label is translated as **Kembali ke Lalai** and **恢复默认**.

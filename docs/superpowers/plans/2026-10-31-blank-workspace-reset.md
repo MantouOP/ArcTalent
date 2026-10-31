@@ -26,7 +26,7 @@
 - [x] Add and run failing tests for blank state, persistence, explicit empty workforce, validation boundaries and legacy mode.
 - [x] Implement the factory/restorer, confirmed reset, picture clearing, draft remounting, stale-request cancellation and empty-state presentation.
 - [x] Translate labels, check responsive CSS/keyboard behavior, and run unit/type/build/integration checks and a fresh source review.
-- [ ] Push and deploy the exact verified release, inspect the public confirmation and Cancel path, and record live proof.
+- [x] Push and deploy the exact verified release, inspect the public confirmation and Cancel path, and record live proof.
 
 ## Verification ledger
 
@@ -36,3 +36,7 @@
 - Malay confirmation/reset preserves Malay; Chinese confirmation translated; Escape dismisses. Larger text/reduced motion preserved after reset/reload. Responsive styles inspected; Chrome viewport capability retained a desktop viewport despite requested dimensions, so a phone screenshot is not claimed.
 - Ruling: keep strict export API validation and disable exports with a translated setup notice until a personal profile is saved, avoiding invalid blank-profile requests.
 - Ruling: incorporate newer remote course-cover commit 2b74590 before deployment so this reset release preserves concurrent team work.
+- Combined source `27c934560cebdeb7ef87880517d6085e929ab288` passed 227 unit tests, typecheck, production build and 35 production integration checks locally. Further browser checks confirmed CV text/consent and chat history are discarded. The local preview was stopped after verification.
+- Replit prepared `artifacts/arctalent-release-27c9345`: 273/273 Git blob hashes matched before and after locked installation, 227 unit tests, production build and 35 integration checks. Runtime `77264e0fd9670a35e2b0505e5872dd396d663f98` selects it; exact preceding configuration is backed up as `artifact.toml.pre-reset-default-backup`. Workspace size after preparation: 4.926 GiB. No source regeneration, secret changes or deletion.
+- Newer GitHub AI-label commit `054ca85` retains this feature and was fast-forwarded locally; its 227 unit tests and typecheck pass. Replit prepared it separately without selecting it. Waited for the other team publication to finish before scheduling publication of the selected reset release.
+- Publication completed with Replit status `success`. Public browser shows Reset to Default beside Reset demo; the confirmation opens and Cancel preserves Aina. No public saved data was reset. All 35 public HTTPS integration checks passed. Proof: `docs/images/workspace-reset-controls-live.png` and `docs/images/workspace-reset-confirmation-live.png`.
