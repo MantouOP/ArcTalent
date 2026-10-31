@@ -2,6 +2,26 @@
 
 Verified on **31 October 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
+## AI workforce planner schema fix — live
+
+The one-shot workforce planner now reaches the AI gateway. The previous release sent skills and openings to the model as open-ended maps, which strict structured output rejects, so every request fell back to the local parser within a second. Skills and openings are now lists of `{id, level}` and `{role, openings}`, the form the career-goal analysis already uses, and array minimums are checked in code. A unit test keeps open-ended maps and `minItems` out of the model schema.
+
+Source `0cb3c41` builds on `1965f98`. Replit matched **290/290 tracked files** against Git blob hashes before and after locked installation, **250 unit tests**, the typecheck, a production build (16/16 static pages) and **39 production integration checks**, all passing. `artifact.toml` now selects `artifacts/arctalent-release-0cb3c41`; the prior configuration is retained as `artifact.toml.pre-planner-schema-backup`. Secrets were unchanged.
+
+The first publication passed the production build but **exceeded Replit's 8 GiB deployment-image limit**: the workspace measured 8.49 GiB, of which 5.58 GiB was `node_modules` and 1.30 GiB was `.next` across all release folders. `.replitignore` now leaves those two folders out of the image for every release except the active one, which the deploy reinstalls and rebuilds anyway. Nothing was deleted and every older release keeps its source for rollback. **When `artifact.toml` switches release, update the two `!artifacts/arctalent-release-…` lines in `.replitignore` to the new folder.** The retry passed build, bundling and promotion and reported **success**.
+
+The live planner turned the fictional retail sample report into an AI plan through `gpt-5.4-mini` in 3.1 seconds: 8 members with destinations, openings and the stated RM 6,000 budget, two model-written summary points, and a computed effort line (156 person-hours, about 67% below individual commercial seats).
+
+## Simplified workspace, one-shot AI team planning and Track Record — live
+
+Explorer now leads with a compact summary strip, one row of SDG pills, the career cards and the selected route; the career constellation, skills radar, route analytics and Future Skills Radar sit in disclosures. Pathway runs destination and toolbar, the badges panel, then course steps, with the custom goal, skill bridge, weekly rhythm and Malaysian portals in drawers and no duplicate constellation. Impact folds its per-worker table and SDG/fairness panel away. Every SDG label people see is a whole UN goal (SDG 4, 8, 9 or 10); internal targets still drive ranking, so suitability scores are unchanged.
+
+The SME workspace opens with a one-shot planner: paste or upload a TXT, CSV or PDF report, and `POST /api/workforce-ai` drafts members, destinations, openings, budget and a short summary, with e-mails, phone and IC numbers removed first and every figure computed from the plan. A six-column redeployment table replaces the skills heatmap, and the member editor, slot caps and cost assumptions are collapsed. A per-profile Track Record logs studied courses, milestone and practice badges and explicitly confirmed skill levels; it never changes skills or scores. The badges panel has four tabs: milestones, AI study coach, practice check-in and track record. All new copy has Bahasa Melayu and Simplified Chinese text.
+
+Source `1965f98` includes the team's study-progress coach (`4a0ac28`) and README refresh (`de9a494`). Replit matched **290/290 tracked files** before and after locked installation, **249 unit tests**, the typecheck, a production build (16/16 static pages) and **39 production integration checks**, all passing. `artifact.toml` was switched from `artifacts/arctalent-release-4a0ac28`, retained as `artifact.toml.pre-simplified-ui-backup`. Replit reported **success**.
+
+The live site showed SDG pills reading SDG 4, 8 and 9 with no decimal SDG text, both Explorer disclosures, the planner first on the SME page and the six-column table with no heatmap; `/api/health` reports `workforcePlanner: ai-configured`. Locally, before release, every view fitted 390 CSS pixels without horizontal page overflow. The AI planner path fell back to the local parser on this release; the next release fixed it.
+
 ## Blank workspace Reset to Default — live
 
 The workspace header now places **Reset to Default** beside **Reset demo**. A translated confirmation clears this browser's saved profile details, skills, interests, goals, learning progress, team plans and pictures, plus transient CV drafts and chat. It opens a blank profile with 4 h/week, RM 0 and 8 weeks; the blank workspace persists after reload. Language and display/accessibility preferences are retained. Personal recommendations and exports wait for a valid profile. Reset demo restores the sample workspace.
@@ -11,6 +31,20 @@ Source `27c934560cebdeb7ef87880517d6085e929ab288` includes the team's course-cov
 Waited for the other team publication to finish before scheduling this release. Replit then passed build, bundle and promotion and reported **success**. All **35 public HTTPS integration checks passed**. Public Chrome verified the new header control, translated confirmation and Cancel path, preserving the existing profile; the destructive flow was tested only with disposable synthetic data on an isolated local origin. Local browser checks also verified persistent blank profile/skills/team/picture state, retained language/display choices, cleared CV consent/drafts/chat, new profile/team entry, and Reset demo. A fresh source review has no outstanding findings. The viewport override did not change Chrome's desktop width, so no phone screenshot is claimed for this change.
 
 See the [live header controls](images/workspace-reset-controls-live.png) and [confirmation](images/workspace-reset-confirmation-live.png).
+
+## Custom skills outside the catalogue — live
+
+The skills step of Settings and the team member editor takes up to eight skills typed in any words, such as Microsoft Word, each with a level from Basic to Advanced. A name that is already a catalogue skill (MS Excel is Spreadsheets) raises that skill's level instead of adding a duplicate. A custom skill that names a specialist skill of a custom destination counts as already listed in the team plan, the destination badge and the personal pathway. Route scores still use only catalogue skills.
+
+Source `d9c4d2a` matched **270/270 tracked files** in Replit before and after locked installation, **222 unit tests**, the typecheck, a production build (14/14 static pages) and **35 production integration checks**, all passing. `artifact.toml` was switched from `artifacts/arctalent-release-e5929fe`, retained as `artifact.toml.pre-custom-skills-backup`. Replit reported **success**, and the live team member editor shows the new skill field.
+
+## OpenAI-compatible AI gateway alongside RunPod — live
+
+`AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL` and optional `AI_PROVIDER_NAME` connect CV extraction, career-goal analysis and chat to any HTTPS OpenAI-compatible gateway, such as the hackathon LiteLLM endpoint. Complete `AI_*` settings take precedence; RunPod remains the fallback with its host checks unchanged. The interface and consent text name the provider that actually receives the data.
+
+Source `e5929fe` matched **267/267 tracked files** in Replit before and after locked installation, **219 unit tests**, the typecheck, a production build (14/14 static pages) and **35 production integration checks**, all passing. The release waited for the team's `6595079` publication to finish; `artifact.toml` was then switched from it, retained as `artifact.toml.pre-ai-gateway-backup`. Replit reported **success**.
+
+With the `AI_*` secrets set, live CV extraction of a fictional paragraph returned four skills with exact quotes through `gpt-5.4-mini`; career-goal analysis returned AI drafts in English, Bahasa Melayu and Simplified Chinese; and the public career chat answered with **AI answer · gpt-5.4-mini**, citing four catalogue courses.
 
 ## Profile-picture Reset to Default — live
 
