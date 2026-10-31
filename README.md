@@ -4,7 +4,7 @@
 
 ### 🌟 Quick Links:
 
-👉 **[🚀 Open Live App Demo](https://arc-talent--emmanuelheng.replit.app/)** · **[🏁 Finalist Round Submission](#-finalist-round--phase-2)** · **[📊 Final Pitch Deck (PDF)](submission/final/SDC2026_XenoForce_PitchDeck.pdf)** · **[🎥 Backup Pitch Video](https://youtu.be/PYpaD5IAYpE)** · **[📘 Updated PRD](docs/PRD.md)** · **[🧾 Technical & Tools Declaration](docs/TECHNICAL_DECLARATION.md)** · **[📁 Preliminary Round (archived)](#%EF%B8%8F-preliminary-round--phase-1-archived)**
+👉 **[🚀 Open Live App Demo](https://arc-talent--emmanuelheng.replit.app/)** · **[🏁 Finalist Round Submission](#-finalist-round--phase-2)** · **[📊 Final Pitch Deck (PDF)](submission/final/SDC2026_XenoForce_PitchDeck.pdf)** · **[🎥 Backup Pitch Video](https://youtu.be/PYpaD5IAYpE)** · **[📘 Updated PRD](docs/PRD.md)** · **[🧾 Technical & Tools Declaration (PDF)](submission/final/SDC2026_XenoForce_TechDeclaration.pdf)** · **[📁 Preliminary Round (archived)](#%EF%B8%8F-preliminary-round--phase-1-archived)**
 
 ---
 
@@ -41,7 +41,7 @@ Deadline 1 November 2026, 08:00 MYT. Finalist files are in [`submission/final/`]
 ### Six compulsory submissions
 
 1. 📄 **Final Project & Prototype Report**: [`submission/final/SDC2026_XenoForce_Final.pdf`](submission/final/SDC2026_XenoForce_Final.pdf)
-2. 🧾 **Technical & Tools Declaration** (adds to the preliminary one): [`submission/final/SDC2026_XenoForce_TechDeclaration.pdf`](submission/final/SDC2026_XenoForce_TechDeclaration.pdf), with full detail in [`docs/TECHNICAL_DECLARATION.md`](docs/TECHNICAL_DECLARATION.md)
+2. 🧾 **Technical & Tools Declaration** (adds to the preliminary one): [`submission/final/SDC2026_XenoForce_TechDeclaration.pdf`](submission/final/SDC2026_XenoForce_TechDeclaration.pdf)
 3. 🎥 **Backup Pitch Video**: [YouTube](https://youtu.be/PYpaD5IAYpE)
 4. 💻 **GitHub Repository** (public): this repository
 5. 📊 **Pitch Slides**: [`PDF`](submission/final/SDC2026_XenoForce_PitchDeck.pdf) · [`PPTX`](submission/final/SDC2026_XenoForce_PitchDeck.pptx)
@@ -59,10 +59,9 @@ Replit proof of use is not required in the finalist round.
 ### Finalist checklist
 
 - [x] Final Project & Prototype Report (`submission/final/SDC2026_XenoForce_Final.pdf`)
-- [x] Technical & Tools Declaration, added to the preliminary one (`submission/final/SDC2026_XenoForce_TechDeclaration.pdf`, detail in [`docs/TECHNICAL_DECLARATION.md`](docs/TECHNICAL_DECLARATION.md))
+- [x] Technical & Tools Declaration, added to the preliminary one (`submission/final/SDC2026_XenoForce_TechDeclaration.pdf`)
 - [x] Backup pitch video ([YouTube](https://youtu.be/PYpaD5IAYpE))
 - [x] Public GitHub repository with the Apache License 2.0 and a continuous commit history
-- [ ] Committee accounts added as repository collaborators
 - [x] Pitch slides as PPTX and flattened PDF (`submission/final/SDC2026_XenoForce_PitchDeck.*`)
 - [x] Live demo ([Replit deployment](https://arc-talent--emmanuelheng.replit.app/)) with dated release records in [`docs/REPLIT_STATUS.md`](docs/REPLIT_STATUS.md)
 - [x] Updated PRD ([`docs/PRD.md`](docs/PRD.md))

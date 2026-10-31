@@ -9,14 +9,14 @@ The two rounds of SDC Hackathon 2026 are kept in separate folders so their docum
 
 ## Finalist round (Phase 2) — six compulsory items
 
-| #   | Item                             | Where                                                                                                                                                                                                                                   |
-| :-- | :------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | Final Project & Prototype Report | [`final/SDC2026_XenoForce_Final.pdf`](final/SDC2026_XenoForce_Final.pdf) (official finalist template)                                                                                                                                   |
-| 2   | Technical & Tools Declaration    | [`final/SDC2026_XenoForce_TechDeclaration.pdf`](final/SDC2026_XenoForce_TechDeclaration.pdf) (finalist template, adds to the preliminary declaration); detail in [`../docs/TECHNICAL_DECLARATION.md`](../docs/TECHNICAL_DECLARATION.md) |
-| 3   | Backup pitch video               | [YouTube](https://youtu.be/PYpaD5IAYpE)                                                                                                                                                                                                 |
-| 4   | GitHub repository (public)       | [github.com/MantouOP/ArcTalent](https://github.com/MantouOP/ArcTalent)                                                                                                                                                                  |
-| 5   | Pitch slides                     | [`final/SDC2026_XenoForce_PitchDeck.pptx`](final/SDC2026_XenoForce_PitchDeck.pptx) and flattened [`final/SDC2026_XenoForce_PitchDeck.pdf`](final/SDC2026_XenoForce_PitchDeck.pdf)                                                       |
-| 6   | Live demo materials              | [Live app](https://arc-talent--emmanuelheng.replit.app/) · no login needed · [synthetic CV](https://arc-talent--emmanuelheng.replit.app/synthetic-cv.pdf) · demo script [`../docs/DEMO.md`](../docs/DEMO.md)                            |
+| #   | Item                             | Where                                                                                                                                                                                                        |
+| :-- | :------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Final Project & Prototype Report | [`final/SDC2026_XenoForce_Final.pdf`](final/SDC2026_XenoForce_Final.pdf) (official finalist template)                                                                                                        |
+| 2   | Technical & Tools Declaration    | [`final/SDC2026_XenoForce_TechDeclaration.pdf`](final/SDC2026_XenoForce_TechDeclaration.pdf) (finalist template, adds to the preliminary declaration)                                                        |
+| 3   | Backup pitch video               | [YouTube](https://youtu.be/PYpaD5IAYpE)                                                                                                                                                                      |
+| 4   | GitHub repository (public)       | [github.com/MantouOP/ArcTalent](https://github.com/MantouOP/ArcTalent)                                                                                                                                       |
+| 5   | Pitch slides                     | [`final/SDC2026_XenoForce_PitchDeck.pptx`](final/SDC2026_XenoForce_PitchDeck.pptx) and flattened [`final/SDC2026_XenoForce_PitchDeck.pdf`](final/SDC2026_XenoForce_PitchDeck.pdf)                            |
+| 6   | Live demo materials              | [Live app](https://arc-talent--emmanuelheng.replit.app/) · no login needed · [synthetic CV](https://arc-talent--emmanuelheng.replit.app/synthetic-cv.pdf) · demo script [`../docs/DEMO.md`](../docs/DEMO.md) |
 
 Supporting final-round documents: [Updated PRD](../docs/PRD.md) · [Impact benchmark](../docs/IMPACT.md) · [Sources register](../docs/SOURCES.md) · [Replit release record](../docs/REPLIT_STATUS.md).
 

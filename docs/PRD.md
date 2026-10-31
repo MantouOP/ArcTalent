@@ -79,7 +79,7 @@ The reasons below are drawn from the build record (commit messages, [REPLIT_STAT
 
 ### 5.2 Architecture changes
 
-The full inventory of libraries, services, models and datasets is in the [Technical & Tools Declaration](TECHNICAL_DECLARATION.md). In short:
+The full inventory of libraries, services, models and datasets is in the [Technical & Tools Declaration](../submission/final/SDC2026_XenoForce_TechDeclaration.pdf). In short:
 
 - **Unchanged:** Next.js 16 and React 19 client, Zod validation, the shared deterministic engine (`src/lib/engine.ts`), browser-only storage, no database.
 - **New API routes:** `/api/chat` (career chat), `/api/study-progress` (study coach), `/api/workforce-ai` (workforce planner), `POST /api/signals` (demand-assumption estimate) and `/api/pathway-export` (personal PDF plan).
@@ -204,8 +204,8 @@ The benchmark covers eight fictional workers and a fictional company. **No pilot
 - **Releases:** each release folder is checked in Replit against its Git commit (file hashes), and the live site is checked with the production API checks; see [REPLIT_STATUS.md](REPLIT_STATUS.md).
 - **Benchmark:** `npm run impact` reproduces [IMPACT.md](IMPACT.md); it matched the committed file on 1 November 2026.
 - **Sources:** [SOURCES.md](SOURCES.md) lists every course, video, occupation and cost assumption with check dates.
-- **Declaration:** [TECHNICAL_DECLARATION.md](TECHNICAL_DECLARATION.md) lists every library, service, model, dataset and AI tool, with corrections to the preliminary declaration.
+- **Declaration:** the [Technical & Tools Declaration](../submission/final/SDC2026_XenoForce_TechDeclaration.pdf) lists every library, service, model, dataset and AI tool.
 
 ## 12. IP and originality
 
-Unchanged from the preliminary proposal. Third-party code, datasets, models and fonts, with their licences, are listed in the [Technical & Tools Declaration](TECHNICAL_DECLARATION.md). Course content, videos and occupation data stay with their owners and are linked, not copied.
+Unchanged from the preliminary proposal. Third-party code, datasets, models and fonts, with their licences, are listed in the [Technical & Tools Declaration](../submission/final/SDC2026_XenoForce_TechDeclaration.pdf). Course content, videos and occupation data stay with their owners and are linked, not copied.
