@@ -2,7 +2,7 @@
 
 **Team Xeno Force** · Domain 1, The Aiversecity Future-Ready Workforce Domain · SDG 8 (supporting SDG 4, 9 and 10)
 
-This revises the preliminary proposal ([`submission/SDC2026_XenoForce_Preliminary.pdf`](../submission/SDC2026_XenoForce_Preliminary.pdf), 25 October 2026). It records what changed since the preliminary round, why, and how each preliminary promise stands today. It describes the application at source commit `ce314b7` (repository `main`, 1 November 2026); the dated release record is in [REPLIT_STATUS.md](REPLIT_STATUS.md). The problem, solution and design-thinking answers keep the preliminary template's word limits so they can be pasted into the official form.
+This revises the preliminary proposal ([`submission/preliminary/SDC2026_XenoForce_Preliminary.pdf`](../submission/preliminary/SDC2026_XenoForce_Preliminary.pdf), 25 October 2026). It records what changed since the preliminary round, why, and how each preliminary promise stands today. It describes the application at source commit `ce314b7` (repository `main`, 1 November 2026); the dated release record is in [REPLIT_STATUS.md](REPLIT_STATUS.md). The problem, solution and design-thinking answers keep the preliminary template's word limits so they can be pasted into the official form.
 
 ## 1. Team & project overview
 

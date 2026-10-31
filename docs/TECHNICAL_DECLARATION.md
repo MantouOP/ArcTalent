@@ -1,6 +1,6 @@
 # Technical & Tools Declaration — final round
 
-**Add-on to the preliminary declaration** ([`submission/SDC2026_XenoForce_TechDeclaration.pdf`](../submission/SDC2026_XenoForce_TechDeclaration.pdf), 25 October 2026). The sections follow the organiser's template (1–8) so each entry can be copied into the official form. Entries marked **NEW** were added after the preliminary round; entries marked **CORRECTED** fix something the preliminary declaration got wrong. Unmarked entries are unchanged.
+**Add-on to the preliminary declaration** ([`submission/preliminary/SDC2026_XenoForce_TechDeclaration.pdf`](../submission/preliminary/SDC2026_XenoForce_TechDeclaration.pdf), 25 October 2026). The sections follow the organiser's template (1–8) so each entry can be copied into the official form. Entries marked **NEW** were added after the preliminary round; entries marked **CORRECTED** fix something the preliminary declaration got wrong. Unmarked entries are unchanged.
 
 Describes the application at source commit `ce314b7` (repository `main`, 1 November 2026). Which release is live, and how it was verified, is recorded in [REPLIT_STATUS.md](REPLIT_STATUS.md). Answers with a word limit keep the preliminary template's limit.
 
