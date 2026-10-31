@@ -2448,3 +2448,57 @@ dialog > header {
     display: none;
   }
 }
+.topbar .reset-workspace {
+  white-space: nowrap;
+  gap: 6px;
+  min-height: 40px;
+}
+.workspace-reset-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+.workspace-empty {
+  padding: 32px;
+  max-width: 680px;
+}
+.workspace-empty > svg {
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.workspace-empty p {
+  color: var(--muted);
+  margin-top: 8px;
+}
+.workspace-empty .workspace-reset-actions {
+  justify-content: flex-start;
+}
+@media (max-width: 1100px) {
+  .reset-default-label {
+    display: none;
+  }
+  .topbar .reset-workspace {
+    width: 36px;
+    min-width: 36px;
+    padding: 0;
+    justify-content: center;
+  }
+}
+@media (max-width: 600px) {
+  .topbar .reset-workspace {
+    min-height: 44px;
+  }
+  .workspace-empty {
+    padding: 24px;
+  }
+}
+.workspace-loading {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+}

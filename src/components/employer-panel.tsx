@@ -1,5 +1,5 @@
 'use client';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Download,
   LoaderCircle,
@@ -25,6 +25,7 @@ export function EmployerPanel({
   workforce,
   onChange,
   onProfileChange,
+  needsProfile = false,
 }: {
   profile: Profile;
   scenario: Scenario;
@@ -32,10 +33,13 @@ export function EmployerPanel({
   workforce: WorkforceSettings;
   onChange: (settings: WorkforceSettings) => void;
   onProfileChange: (profile: Profile) => void;
+  needsProfile?: boolean;
 }) {
   const { t, locale } = useI18n();
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState(false);
+  const exportRequest = useRef<AbortController | null>(null);
+  useEffect(() => () => exportRequest.current?.abort(), []);
   const { budget, slots } = workforce;
   const {
     team,
@@ -51,7 +55,9 @@ export function EmployerPanel({
     [profile, scenario, snapshot, workforce],
   );
   async function exportPdf() {
-    if (exporting) return;
+    if (exporting || needsProfile) return;
+    const controller = new AbortController();
+    exportRequest.current = controller;
     setExporting(true);
     setExportError(false);
     try {
@@ -65,22 +71,26 @@ export function EmployerPanel({
           snapshot: { ...snapshot, signals: [] },
           locale,
         }),
-        signal: AbortSignal.timeout(40000),
+        signal: AbortSignal.any([
+          controller.signal,
+          AbortSignal.timeout(40000),
+        ]),
       });
       if (
         !response.ok ||
         !response.headers.get('content-type')?.startsWith('application/pdf')
       )
         throw new Error('PDF export failed');
-      downloadFile(
-        'ArcTalent-workforce-plan.pdf',
-        await response.blob(),
-        'application/pdf',
-      );
+      const blob = await response.blob();
+      if (!controller.signal.aborted)
+        downloadFile('ArcTalent-workforce-plan.pdf', blob, 'application/pdf');
     } catch {
-      setExportError(true);
+      if (!controller.signal.aborted) setExportError(true);
     } finally {
-      setExporting(false);
+      if (exportRequest.current === controller) {
+        exportRequest.current = null;
+        if (!controller.signal.aborted) setExporting(false);
+      }
     }
   }
   return (
@@ -100,7 +110,7 @@ export function EmployerPanel({
         <button
           className="secondary"
           onClick={exportPdf}
-          disabled={exporting}
+          disabled={exporting || needsProfile}
           aria-busy={exporting}
         >
           {exporting ? (
@@ -111,6 +121,11 @@ export function EmployerPanel({
           {t(exporting ? 'Preparing PDF…' : 'Export plan (PDF)')}
         </button>
       </div>
+      {needsProfile && (
+        <p className="notice">
+          {t('Add your profile before exporting a learning plan.')}
+        </p>
+      )}
       {exportError && (
         <p role="alert" className="notice">
           {t('Could not download the PDF. Please try again.')}

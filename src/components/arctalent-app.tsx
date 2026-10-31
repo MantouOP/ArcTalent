@@ -32,6 +32,8 @@ import {
   Wallet,
   X,
   Home,
+  Eraser,
+  UserRound,
 } from 'lucide-react';
 import { baseline, baseProfile, roles, sdgUrl, updated } from '@/lib/catalogue';
 import {
@@ -61,6 +63,11 @@ import { StudyRhythm } from './study-rhythm';
 import { RouteSummary, RouteAnalytics } from './command-overview';
 import { CareerChat } from './career-chat';
 import { SettingsPage } from './settings-page';
+import { useProfilePictures } from './profile-pictures-provider';
+import {
+  createFreshWorkspace,
+  restoreFreshWorkspace,
+} from '@/lib/workspace-defaults';
 import { ProfileAvatar } from './profile-avatar';
 import { CourseLink } from './course-link';
 import { CareerGoalPanel } from './career-goal-panel';
@@ -102,7 +109,12 @@ export function ArcTalentApp({
   initialView?: View;
 }) {
   const { t, locale } = useI18n();
+  const { resetPictures } = useProfilePictures();
   const { preferences: displayPreferences } = useDisplayPreferences();
+  const [needsSetup, setNeedsSetup] = useState(false);
+  const [workspaceRevision, setWorkspaceRevision] = useState(0);
+  const [confirmWorkspaceReset, setConfirmWorkspaceReset] = useState(false);
+  const exportRequest = useRef<AbortController | null>(null);
   const [settingsSection, setSettingsSection] =
     useState<SettingsSection>('profile');
   const [exporting, setExporting] = useState(false);
@@ -138,6 +150,19 @@ export function ArcTalentApp({
       const raw = localStorage.getItem('arctalent-v1');
       if (raw) {
         const saved = JSON.parse(raw);
+        const fresh = restoreFreshWorkspace(saved);
+        if (fresh) {
+          setProfile(fresh.profile);
+          setNeedsSetup(true);
+          setScenario(fresh.scenario);
+          setSnapshot(fresh.snapshot);
+          setWorkforce(fresh.workforce);
+          setCustomGoal(null);
+          setFollowTop(true);
+          if (initialView === 'explore') setView('settings');
+          setReady(true);
+          return;
+        }
         const p = profileSchema.safeParse(saved.profile),
           s = snapshotSchema.safeParse(saved.snapshot);
         if (p.success) setProfile(p.data);
@@ -178,6 +203,7 @@ export function ArcTalentApp({
             followTop,
             workforce,
             customGoal,
+            needsSetup,
           }),
         );
       } catch {
@@ -192,7 +218,9 @@ export function ArcTalentApp({
     followTop,
     workforce,
     customGoal,
+    needsSetup,
   ]);
+  useEffect(() => () => exportRequest.current?.abort(), []);
   useEffect(() => {
     if (!toast) return;
     const timer = setTimeout(() => setToast(''), 7000);
@@ -277,6 +305,8 @@ export function ArcTalentApp({
   function reset({ keepView = false } = {}) {
     revision.current++;
     setBusy(false);
+    setNeedsSetup(false);
+    setWorkspaceRevision((value) => value + 1);
     setProfile({
       ...baseProfile,
       skills: { ...baseProfile.skills },
@@ -295,6 +325,35 @@ export function ArcTalentApp({
     setView('explore');
     setToast('Demo reset to Aina’s starting profile.');
   }
+  function resetWorkspace() {
+    const fresh = createFreshWorkspace();
+    revision.current++;
+    exportRequest.current?.abort();
+    exportRequest.current = null;
+    setExporting(false);
+    setExportError(false);
+    setBusy(false);
+    setProfile(fresh.profile);
+    setNeedsSetup(true);
+    setScenario(fresh.scenario);
+    setSnapshot(fresh.snapshot);
+    setPrevious(null);
+    setSelected(defaultRole);
+    setFollowTop(true);
+    setWorkforce(fresh.workforce);
+    setCustomGoal(null);
+    setFunding('all');
+    setSdgFocus('all');
+    setQuery('');
+    setShowAll(false);
+    setDetails(null);
+    resetPictures();
+    setWorkspaceRevision((value) => value + 1);
+    setConfirmWorkspaceReset(false);
+    setSettingsSection('profile');
+    navigate('settings');
+    setToast('Workspace cleared. Enter your own profile to build a plan.');
+  }
   function complete(id: string) {
     saveProfile({
       ...profile,
@@ -308,10 +367,17 @@ export function ArcTalentApp({
   }
   function saveProfile(next: Profile) {
     setProfile(next);
+    setNeedsSetup(false);
     setWorkforce((current) => updateWorkforceProfile(current, next));
   }
   async function exportPlan() {
+    if (needsSetup) {
+      setToast('Add your profile before exporting a learning plan.');
+      return;
+    }
     if (exporting) return;
+    const controller = new AbortController();
+    exportRequest.current = controller;
     setExporting(true);
     setExportError(false);
     try {
@@ -327,22 +393,26 @@ export function ArcTalentApp({
           funding,
           locale,
         }),
-        signal: AbortSignal.timeout(40000),
+        signal: AbortSignal.any([
+          controller.signal,
+          AbortSignal.timeout(40000),
+        ]),
       });
       if (
         !response.ok ||
         !response.headers.get('content-type')?.startsWith('application/pdf')
       )
         throw new Error('PDF export failed');
-      downloadFile(
-        'ArcTalent-learning-plan.pdf',
-        await response.blob(),
-        'application/pdf',
-      );
+      const file = await response.blob();
+      if (controller.signal.aborted) return;
+      downloadFile('ArcTalent-learning-plan.pdf', file, 'application/pdf');
     } catch {
-      setExportError(true);
+      if (!controller.signal.aborted) setExportError(true);
     } finally {
-      setExporting(false);
+      if (exportRequest.current === controller) {
+        exportRequest.current = null;
+        setExporting(false);
+      }
     }
   }
   const visibleMatches = matches
@@ -352,6 +422,15 @@ export function ArcTalentApp({
       ),
     )
     .slice(0, showAll ? matches.length : 3);
+  const blankPersonalView =
+    needsSetup && ['explore', 'pathway', 'impact'].includes(view);
+  if (!ready)
+    return (
+      <main id="main-content" className="workspace-loading" aria-busy="true">
+        <strong>ArcTalent</strong>
+        <p role="status">{t('Loading your workspace…')}</p>
+      </main>
+    );
   return (
     <div className="app-shell">
       <a href="#main-content" className="skip-link">
@@ -425,7 +504,7 @@ export function ArcTalentApp({
         >
           <ProfileAvatar profile={profile} />
           <div>
-            <strong>{profile.name}</strong>
+            <strong>{profile.name || t('Your profile')}</strong>
             <small>{t('Synthetic demo profile')}</small>
           </div>
           <button
@@ -469,18 +548,35 @@ export function ArcTalentApp({
               <span className="reset-label">{t('Reset demo')}</span>
             </button>
             <button
+              type="button"
+              className="text-button reset-workspace"
+              disabled={!ready}
+              onClick={() => setConfirmWorkspaceReset(true)}
+              aria-label={t('Reset workspace to default')}
+              title={t('Reset workspace to default')}
+            >
+              <Eraser size={15} aria-hidden="true" />
+              <span className="reset-default-label">
+                {t('Reset to Default')}
+              </span>
+            </button>
+            <button
               className="avatar small-avatar profile-avatar-button"
               aria-label={t('Open my profile')}
               onClick={() => openSettings('profile')}
             >
-              <ProfileAvatar
-                profile={profile}
-                className="profile-avatar-fill"
-              />
+              {needsSetup ? (
+                <UserRound size={18} aria-hidden="true" />
+              ) : (
+                <ProfileAvatar
+                  profile={profile}
+                  className="profile-avatar-fill"
+                />
+              )}
             </button>
           </div>
         </header>
-        <main id="main-content">
+        <main id="main-content" key={workspaceRevision}>
           <div className="page-intro">
             <div>
               <span className="eyebrow">
@@ -506,33 +602,35 @@ export function ArcTalentApp({
                           : t('Settings')}
               </h1>
               <p>
-                {view === 'explore'
-                  ? t(
-                      '{0}, explore where your skills can take you across different AI futures.',
-                      { 0: profile.name },
-                    )
-                  : view === 'pathway'
+                {blankPersonalView
+                  ? t('Add your details to get started.')
+                  : view === 'explore'
                     ? t(
-                        'A practical route that respects your time, budget and the skills you already have.',
+                        '{0}, explore where your skills can take you across different AI futures.',
+                        { 0: profile.name },
                       )
-                    : view === 'team'
+                    : view === 'pathway'
                       ? t(
-                          'Connect individual growth to a thoughtful workforce learning plan.',
+                          'A practical route that respects your time, budget and the skills you already have.',
                         )
-                      : view === 'impact'
+                      : view === 'team'
                         ? t(
-                            'Live checks of the targets in our proposal, recalculated by the same engine as your pathway.',
+                            'Connect individual growth to a thoughtful workforce learning plan.',
                           )
-                        : view === 'evidence'
+                        : view === 'impact'
                           ? t(
-                              'Every source has a date. Every assumption has an explanation.',
+                              'Live checks of the targets in our proposal, recalculated by the same engine as your pathway.',
                             )
-                          : t(
-                              'Your profile and skills shape every recommendation. Language, display and demo data settings are here too.',
-                            )}
+                          : view === 'evidence'
+                            ? t(
+                                'Every source has a date. Every assumption has an explanation.',
+                              )
+                            : t(
+                                'Your profile and skills shape every recommendation. Language, display and demo data settings are here too.',
+                              )}
               </p>
             </div>
-            {view !== 'settings' && (
+            {view !== 'settings' && !blankPersonalView && (
               <div className="scenario-box">
                 <label id="scenario-label">
                   {t('EXPLORE AN AI FUTURE')} <Info size={13} />
@@ -567,7 +665,7 @@ export function ArcTalentApp({
               </div>
             )}
           </div>
-          {view !== 'settings' && (
+          {view !== 'settings' && !blankPersonalView && (
             <div
               className={`evidence-strip ${snapshot.kind === 'simulation' ? 'simulated' : ''}`}
             >
@@ -601,7 +699,29 @@ export function ArcTalentApp({
               </button>
             </div>
           )}
-          {view === 'explore' && (
+          {blankPersonalView && (
+            <section className="panel workspace-empty">
+              <UserRound size={28} aria-hidden="true" />
+              <h2>{t('Your workspace is ready for your data.')}</h2>
+              <p>
+                {t(
+                  'Add your profile or build your own team to start planning.',
+                )}
+              </p>
+              <div className="workspace-reset-actions">
+                <button
+                  className="primary"
+                  onClick={() => openSettings('profile')}
+                >
+                  {t('Enter my profile')}
+                </button>
+                <button className="secondary" onClick={() => navigate('team')}>
+                  {t('Build my team')}
+                </button>
+              </div>
+            </section>
+          )}
+          {view === 'explore' && !needsSetup && (
             <>
               <div className="stats-grid">
                 <div className="stat">
@@ -941,7 +1061,7 @@ export function ArcTalentApp({
               </section>
             </>
           )}
-          {view === 'pathway' && (
+          {view === 'pathway' && !needsSetup && (
             <>
               <AutoReplanBanner
                 profile={profile}
@@ -1355,6 +1475,7 @@ export function ArcTalentApp({
           {view === 'team' && (
             <EmployerPanel
               profile={profile}
+              needsProfile={needsSetup}
               scenario={scenario}
               snapshot={snapshot}
               workforce={workforce}
@@ -1364,7 +1485,7 @@ export function ArcTalentApp({
               }}
             />
           )}
-          {view === 'impact' && (
+          {view === 'impact' && !needsSetup && (
             <ImpactScorecard
               profile={profile}
               scenario={scenario}
@@ -1387,6 +1508,7 @@ export function ArcTalentApp({
               onBaseline={() => useSnapshot(baseline)}
               onApply={useSnapshot}
               candidates={candidates}
+              showPersonalComparisons={!needsSetup}
             />
           )}
           {view === 'settings' && (
@@ -1425,7 +1547,9 @@ export function ArcTalentApp({
             </span>
             <span>
               {t(
-                'Synthetic profiles · Human decisions · Evidence you can inspect',
+                needsSetup
+                  ? 'Add your details to get started.'
+                  : 'Synthetic profiles · Human decisions · Evidence you can inspect',
               )}{' '}
             </span>
           </footer>
@@ -1444,23 +1568,54 @@ export function ArcTalentApp({
           </button>
         </div>
       )}
-      <CareerChat
-        customGoal={customGoal}
-        funding={funding}
-        context={{
-          profile,
-          scenario,
-          snapshot,
-          active,
-          plan,
-          shared,
-          workforce,
-          candidates,
-        }}
-        onNavigate={(next) =>
-          next === 'profile' ? openSettings('profile') : navigate(next)
-        }
-      />
+      {!needsSetup && (
+        <CareerChat
+          key={workspaceRevision}
+          customGoal={customGoal}
+          funding={funding}
+          context={{
+            profile,
+            scenario,
+            snapshot,
+            active,
+            plan,
+            shared,
+            workforce,
+            candidates,
+          }}
+          onNavigate={(next) =>
+            next === 'profile' ? openSettings('profile') : navigate(next)
+          }
+        />
+      )}
+      {confirmWorkspaceReset && (
+        <Modal
+          title="Start with a blank workspace?"
+          onClose={() => setConfirmWorkspaceReset(false)}
+        >
+          <p>
+            {t(
+              'This clears the profiles, skills, career goals, learning activity, team plans and profile pictures saved in this browser. Any open CV draft and chat will also be cleared.',
+            )}
+          </p>
+          <p>
+            {t(
+              'Language and accessibility preferences are kept. You can load sample data again with Reset demo.',
+            )}
+          </p>
+          <div className="workspace-reset-actions">
+            <button
+              className="secondary"
+              onClick={() => setConfirmWorkspaceReset(false)}
+            >
+              {t('Cancel')}
+            </button>
+            <button className="primary" onClick={resetWorkspace}>
+              {t('Clear and start fresh')}
+            </button>
+          </div>
+        </Modal>
+      )}
       {details && (
         <Modal
           title={roleLabel(details.role, t)}

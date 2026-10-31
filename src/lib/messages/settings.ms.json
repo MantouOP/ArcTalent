@@ -69,5 +69,19 @@
   "Capybara avatar": "Avatar kapibara",
   "Penguin avatar": "Avatar penguin",
   "Owl avatar": "Avatar burung hantu",
-  "Axolotl avatar": "Avatar aksolotl"
+  "Axolotl avatar": "Avatar aksolotl",
+  "Loading your workspace…": "Memuatkan ruang kerja anda…",
+  "Your profile": "Profil anda",
+  "Add your details to get started.": "Masukkan butiran anda untuk bermula.",
+  "Reset workspace to default": "Kembali ke ruang kerja lalai",
+  "Start with a blank workspace?": "Mulakan dengan ruang kerja kosong?",
+  "This clears the profiles, skills, career goals, learning activity, team plans and profile pictures saved in this browser. Any open CV draft and chat will also be cleared.": "Ini memadam profil, kemahiran, matlamat kerjaya, aktiviti pembelajaran, pelan pasukan dan gambar profil yang disimpan dalam pelayar ini. Draf CV dan perbualan yang terbuka juga akan dipadam.",
+  "Language and accessibility preferences are kept. You can load sample data again with Reset demo.": "Keutamaan bahasa dan kebolehcapaian dikekalkan. Anda boleh memuatkan semula data contoh melalui Tetapkan semula demo.",
+  "Clear and start fresh": "Padam dan mula semula",
+  "Workspace cleared. Enter your own profile to build a plan.": "Ruang kerja dikosongkan. Masukkan profil anda untuk membina pelan.",
+  "Your workspace is ready for your data.": "Ruang kerja anda sedia untuk data anda.",
+  "Add your profile or build your own team to start planning.": "Tambah profil anda atau bina pasukan sendiri untuk mula merancang.",
+  "Enter my profile": "Masukkan profil saya",
+  "Build my team": "Bina pasukan saya",
+  "Add your profile before exporting a learning plan.": "Tambah profil anda sebelum mengeksport pelan pembelajaran."
 }

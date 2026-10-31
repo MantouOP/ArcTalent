@@ -19,11 +19,13 @@ import {
 type PictureContext = {
   pictures: ProfilePictures['pictures'];
   setPicture: (profileId: string, picture: ProfilePicture | null) => void;
+  resetPictures: () => void;
   storage: 'checking' | 'saved' | 'unavailable';
 };
 const Context = createContext<PictureContext>({
   pictures: {},
   setPicture: () => {},
+  resetPictures: () => {},
   storage: 'checking',
 });
 export function ProfilePicturesProvider({
@@ -60,9 +62,12 @@ export function ProfilePicturesProvider({
     },
     [],
   );
+  const resetPictures = useCallback(() => {
+    setSaved(restoreProfilePictures());
+  }, []);
   const value = useMemo(
-    () => ({ pictures: saved.pictures, setPicture, storage }),
-    [saved, setPicture, storage],
+    () => ({ pictures: saved.pictures, setPicture, resetPictures, storage }),
+    [saved, setPicture, resetPictures, storage],
   );
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }

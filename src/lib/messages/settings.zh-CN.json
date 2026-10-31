@@ -69,5 +69,19 @@
   "Capybara avatar": "水豚头像",
   "Penguin avatar": "企鹅头像",
   "Owl avatar": "猫头鹰头像",
-  "Axolotl avatar": "美西螈头像"
+  "Axolotl avatar": "美西螈头像",
+  "Loading your workspace…": "正在加载你的工作区…",
+  "Your profile": "你的个人资料",
+  "Add your details to get started.": "填写你的资料以开始使用。",
+  "Reset workspace to default": "将工作区恢复默认",
+  "Start with a blank workspace?": "从空白工作区开始？",
+  "This clears the profiles, skills, career goals, learning activity, team plans and profile pictures saved in this browser. Any open CV draft and chat will also be cleared.": "这将清除保存在此浏览器中的个人资料、技能、职业目标、学习活动、团队计划和头像。当前打开的简历草稿和聊天也会清除。",
+  "Language and accessibility preferences are kept. You can load sample data again with Reset demo.": "语言和无障碍偏好将保留。你可以通过“重置演示”重新加载示例数据。",
+  "Clear and start fresh": "清除并重新开始",
+  "Workspace cleared. Enter your own profile to build a plan.": "工作区已清空。填写你的资料以创建学习计划。",
+  "Your workspace is ready for your data.": "工作区已准备好，等待你填写资料。",
+  "Add your profile or build your own team to start planning.": "添加个人资料或创建自己的团队，开始规划。",
+  "Enter my profile": "填写我的资料",
+  "Build my team": "创建我的团队",
+  "Add your profile before exporting a learning plan.": "请先添加个人资料，再导出学习计划。"
 }

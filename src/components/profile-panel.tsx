@@ -295,7 +295,9 @@ export function ProfilePanel({
                   )}
                   {profileOptions.map((p) => (
                     <option value={p.id} key={p.id}>
-                      {p.name} · {t(p.currentRole)}
+                      {p.name
+                        ? `${p.name} · ${t(p.currentRole)}`
+                        : t('Your profile')}
                     </option>
                   ))}
                 </select>
@@ -338,10 +340,14 @@ export function ProfilePanel({
             <div className="settings-identity">
               <ProfileAvatar profile={profile} />
               <div>
-                <h2>{profile.name}</h2>
+                <h2>{profile.name || t('Your profile')}</h2>
                 <p>
                   {profile.currentRole ? `${t(profile.currentRole)} · ` : ''}
-                  {t('Synthetic demo profile')}
+                  {t(
+                    profile.name
+                      ? 'Synthetic demo profile'
+                      : 'Add your details to get started.',
+                  )}
                 </p>
               </div>
             </div>

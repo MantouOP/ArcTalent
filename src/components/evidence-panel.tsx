@@ -25,6 +25,7 @@ export function EvidencePanel({
   onBaseline,
   onApply,
   candidates = roles,
+  showPersonalComparisons = true,
 }: {
   profile: Profile;
   scenario: Scenario;
@@ -36,6 +37,7 @@ export function EvidencePanel({
   onBaseline: () => void;
   onApply: (snapshot: Snapshot) => void;
   candidates?: Role[];
+  showPersonalComparisons?: boolean;
 }) {
   const { t, locale } = useI18n();
   const dateLocale =
@@ -43,9 +45,10 @@ export function EvidencePanel({
   const [all, setAll] = useState(false);
   const customNotice =
     'User-entered planning assumptions, not verified market evidence.';
-  const changes = previous
-    ? diffSnapshots(profile, scenario, previous, snapshot, candidates)
-    : [];
+  const changes =
+    previous && showPersonalComparisons
+      ? diffSnapshots(profile, scenario, previous, snapshot, candidates)
+      : [];
   return (
     <>
       <div className="section-title">
@@ -196,7 +199,7 @@ export function EvidencePanel({
           </External>
         </div>
       </section>
-      {previous && (
+      {previous && showPersonalComparisons && (
         <section className="panel">
           <h2>{t('What changed, exactly?')}</h2>
           <p className="muted">

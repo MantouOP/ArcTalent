@@ -45,16 +45,9 @@ await check('production workspace renders', async () => {
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /ArcTalent/);
-  assert.match(html, /Language \/ Bahasa \/ 语言/);
-  assert.match(html, /value="en"/);
-  assert.match(html, /value="ms"/);
-  assert.match(html, /value="zh-CN"/);
-  assert.match(html, /简体中文/);
-  assert.ok(html.includes('Open settings'), 'Settings launcher is rendered');
-  assert.ok(
-    html.includes('Open career assistant'),
-    'Career assistant launcher is rendered',
-  );
+  assert.match(html, /Loading your workspace/);
+  assert.match(html, /aria-busy="true"/);
+  assert.doesNotMatch(html, /Administrative assistant|Aina/);
 });
 await check('health reports actual extraction mode', async () => {
   const response = await fetch(origin + '/api/health');
