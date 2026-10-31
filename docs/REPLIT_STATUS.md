@@ -2,6 +2,14 @@
 
 Verified on **31 October and 1 November 2026 (MYT)** in the [team project](https://replit.com/@EmmanuelHeng/ArcTalent).
 
+## Card layout and completed-course polish — live
+
+Completed-course rows no longer stack their text: the title and provider sit beside the Undo button with the course link below. Course and explorer cards expand to fit the panel width, and explorer card borders and the folder tab no longer collide or overlap. These are interface changes only (three stylesheets, `globals.css` and the completed-course markup in one component); no API route, data or engine file changed.
+
+Source `ce314b7` builds on `6569bfb` and adds `069bfb6` and `ce314b7`. Replit matched **294/294 tracked files** against Git blob hashes before and after locked installation, **255 unit tests**, the typecheck, a production build and **39 production integration checks**, all passing in the release folder. `artifact.toml` now selects `artifacts/arctalent-release-ce314b7`; the prior configuration is retained as `artifact.toml.pre-ce314b7-backup`, and the two `!artifacts/arctalent-release-…` lines in `.replitignore` now name that release. Secrets were unchanged. A local run of the same commit also passed 255 unit tests, the typecheck, a production build (16/16 static pages) and the 39 production checks, and GitHub Actions passed.
+
+Replit reported **success**, and the live site began serving the release at about 03:04 MYT on 1 November 2026. The **39 production integration checks passed against the live URL**, `/api/health` reports all five AI features configured, and all seven live stylesheet bundles have the same content-hashed file names as a local production build of the commit.
+
 ## Inline destinations, budget suggestion, per-member report upload and homepage cards — live
 
 The redeployment table takes **inline custom destinations**: choose "+ Custom destination…" and type any role. A destination that maps to the catalogue applies at once, and an unmapped one asks for review. The SME planner can **suggest a starting budget** from a target team size, gap coverage and role slot cap; this is a deterministic planning heuristic, not a model answer. A **report can be uploaded for one member** (Word, PDF or text) to update that person's skill levels, shown as a before-and-after change. The Evidence panel's custom demand snapshot asks the configured AI provider, or a local calculation, for modelled record counts, and the public job and research feeds keep skill-matched items. The homepage pathway preview is redrawn with bordered cards.

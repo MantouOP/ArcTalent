@@ -2,7 +2,7 @@
 
 **Add-on to the preliminary declaration** ([`submission/SDC2026_XenoForce_TechDeclaration.pdf`](../submission/SDC2026_XenoForce_TechDeclaration.pdf), 25 October 2026). The sections follow the organiser's template (1–8) so each entry can be copied into the official form. Entries marked **NEW** were added after the preliminary round; entries marked **CORRECTED** fix something the preliminary declaration got wrong. Unmarked entries are unchanged.
 
-Describes the application at source commit `6569bfb` (repository `main`, 1 November 2026). Which release is live, and how it was verified, is recorded in [REPLIT_STATUS.md](REPLIT_STATUS.md). Answers with a word limit keep the preliminary template's limit.
+Describes the application at source commit `ce314b7` (repository `main`, 1 November 2026). Which release is live, and how it was verified, is recorded in [REPLIT_STATUS.md](REPLIT_STATUS.md). Answers with a word limit keep the preliminary template's limit.
 
 ## 1. Team & project overview
 
@@ -198,7 +198,7 @@ Team leader: Emmanuel Heng Zi Teng. The signature and date are completed in the 
 
 ## Appendix C — Evidence of human review and decisions
 
-Git history on `main` at `6569bfb` has 103 commits: MantouOP 83 (the team leader's repository account), Dihom Chan Dyi Hong 8, Emmanuel Heng 7 (all pull-request merges) and "Codex (AI-assisted)" 5. Roles for all four members are in the [README](../README.md#team--xeno-force).
+Git history on `main` at `ce314b7` has 107 commits: MantouOP 87 (the team leader's repository account), Dihom Chan Dyi Hong 8, Emmanuel Heng 7 (all pull-request merges) and "Codex (AI-assisted)" 5. Roles for all four members are in the [README](../README.md#team--xeno-force).
 
 | Date           | Who                 | Decision or review                                                                                                                                                                                                | Evidence                                                                                  |
 | -------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |

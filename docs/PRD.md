@@ -2,7 +2,7 @@
 
 **Team Xeno Force** · Domain 1, The Aiversecity Future-Ready Workforce Domain · SDG 8 (supporting SDG 4, 9 and 10)
 
-This revises the preliminary proposal ([`submission/SDC2026_XenoForce_Preliminary.pdf`](../submission/SDC2026_XenoForce_Preliminary.pdf), 25 October 2026). It records what changed since the preliminary round, why, and how each preliminary promise stands today. It describes the application at source commit `6569bfb` (repository `main`, 1 November 2026); the dated release record is in [REPLIT_STATUS.md](REPLIT_STATUS.md). The problem, solution and design-thinking answers keep the preliminary template's word limits so they can be pasted into the official form.
+This revises the preliminary proposal ([`submission/SDC2026_XenoForce_Preliminary.pdf`](../submission/SDC2026_XenoForce_Preliminary.pdf), 25 October 2026). It records what changed since the preliminary round, why, and how each preliminary promise stands today. It describes the application at source commit `ce314b7` (repository `main`, 1 November 2026); the dated release record is in [REPLIT_STATUS.md](REPLIT_STATUS.md). The problem, solution and design-thinking answers keep the preliminary template's word limits so they can be pasted into the official form.
 
 ## 1. Team & project overview
 
@@ -200,7 +200,7 @@ The benchmark covers eight fictional workers and a fictional company. **No pilot
 
 ## 11. Verification and evidence
 
-- **Tests:** 255 unit tests pass at `6569bfb` (run on 1 November 2026). The GitHub Actions workflow `Verify ArcTalent` (format check, typecheck, unit tests, production build, production API checks) passed for that commit.
+- **Tests:** 255 unit tests pass at `ce314b7` (run on 1 November 2026). The GitHub Actions workflow `Verify ArcTalent` (format check, typecheck, unit tests, production build, production API checks) passed for that commit.
 - **Releases:** each release folder is checked in Replit against its Git commit (file hashes), and the live site is checked with the production API checks; see [REPLIT_STATUS.md](REPLIT_STATUS.md).
 - **Benchmark:** `npm run impact` reproduces [IMPACT.md](IMPACT.md); it matched the committed file on 1 November 2026.
 - **Sources:** [SOURCES.md](SOURCES.md) lists every course, video, occupation and cost assumption with check dates.
